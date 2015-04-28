@@ -21,11 +21,11 @@ import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.reader.CSSReader;
 import com.helger.css.writer.CSSWriterSettings;
 
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -169,14 +169,13 @@ public class RTLCSSConverterTest {
 		return sb.toString();
 	}
 
-	protected String read(InputStream inputStream) throws Exception {
-		return IOUtils.toString(inputStream, "UTF-8");
-	}
-
 	protected String read(String fileName) throws Exception {
 		Class<?> clazz = getClass();
 
-		return read(clazz.getResourceAsStream("dependencies/" + fileName));
+		Path path = Paths.get(
+			clazz.getResource("dependencies/" + fileName).toURI());
+
+		return new String(Files.readAllBytes(path));
 	}
 
 }

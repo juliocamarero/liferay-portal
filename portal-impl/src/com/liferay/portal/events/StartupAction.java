@@ -17,8 +17,7 @@ package com.liferay.portal.events;
 import com.liferay.portal.cache.bootstrap.ClusterLinkBootstrapLoaderHelperUtil;
 import com.liferay.portal.fabric.server.FabricServerUtil;
 import com.liferay.portal.jericho.CachedLoggerProvider;
-import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
-import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.SimpleAction;
 import com.liferay.portal.kernel.log.Log;
@@ -44,6 +43,11 @@ import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.messageboards.util.MBMessageIndexer;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceReference;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.registry.ServiceTrackerCustomizer;
 import com.liferay.taglib.servlet.JspFactorySwapper;
 
 import javax.portlet.MimeResponse;
@@ -79,41 +83,13 @@ public class StartupAction extends SimpleAction {
 
 		// Portal resiliency
 
-		DistributedRegistry.registerDistributed(
-			ComponentConstants.COMPONENT_CONTEXT, Direction.DUPLEX,
-			MatchType.POSTFIX);
-		DistributedRegistry.registerDistributed(
-			MimeResponse.MARKUP_HEAD_ELEMENT, Direction.DUPLEX,
-			MatchType.EXACT);
-		DistributedRegistry.registerDistributed(
-			PortletRequest.LIFECYCLE_PHASE, Direction.DUPLEX, MatchType.EXACT);
-		DistributedRegistry.registerDistributed(WebKeys.class);
+		Registry registry = RegistryUtil.getRegistry();
 
-		Intraband intraband = MPIHelperUtil.getIntraband();
+		ServiceTracker<MessageBus, MessageBus> messageBusServiceTracker =
+			registry.trackServices(
+				MessageBus.class, new MessageBusServiceTrackerCustomizer());
 
-		intraband.registerDatagramReceiveHandler(
-			SystemDataType.MAILBOX.getValue(),
-			new MailboxDatagramReceiveHandler());
-
-		MessageBus messageBus = (MessageBus)PortalBeanLocatorUtil.locate(
-			MessageBus.class.getName());
-
-		intraband.registerDatagramReceiveHandler(
-			SystemDataType.MESSAGE.getValue(),
-			new MessageDatagramReceiveHandler(messageBus));
-
-		intraband.registerDatagramReceiveHandler(
-			SystemDataType.PROXY.getValue(),
-			new IntrabandProxyDatagramReceiveHandler());
-
-		intraband.registerDatagramReceiveHandler(
-			SystemDataType.RPC.getValue(), new RPCDatagramReceiveHandler());
-
-		// Portal fabric
-
-		if (PropsValues.PORTAL_FABRIC_ENABLED) {
-			FabricServerUtil.start();
-		}
+		messageBusServiceTracker.open();
 
 		// Shutdown hook
 
@@ -176,9 +152,12 @@ public class StartupAction extends SimpleAction {
 
 		// Background tasks
 
-		if (!ClusterMasterExecutorUtil.isEnabled()) {
-			BackgroundTaskLocalServiceUtil.cleanUpBackgroundTasks();
-		}
+		ServiceTracker<ClusterMasterExecutor, ClusterMasterExecutor>
+			clusterMasterExecutorServiceTracker = registry.trackServices(
+				ClusterMasterExecutor.class,
+				new ClusterMasterExecutorServiceTrackerCustomizer());
+
+		clusterMasterExecutorServiceTracker.open();
 
 		// Liferay JspFactory
 
@@ -189,6 +168,110 @@ public class StartupAction extends SimpleAction {
 		CachedLoggerProvider.install();
 	}
 
+	protected void initializePortalResiliency(MessageBus messageBus) {
+		try {
+			DistributedRegistry.registerDistributed(
+				ComponentConstants.COMPONENT_CONTEXT, Direction.DUPLEX,
+				MatchType.POSTFIX);
+			DistributedRegistry.registerDistributed(
+				MimeResponse.MARKUP_HEAD_ELEMENT, Direction.DUPLEX,
+				MatchType.EXACT);
+			DistributedRegistry.registerDistributed(
+				PortletRequest.LIFECYCLE_PHASE, Direction.DUPLEX,
+				MatchType.EXACT);
+			DistributedRegistry.registerDistributed(WebKeys.class);
+
+			Intraband intraband = MPIHelperUtil.getIntraband();
+
+			intraband.registerDatagramReceiveHandler(
+				SystemDataType.MAILBOX.getValue(),
+				new MailboxDatagramReceiveHandler());
+
+			intraband.registerDatagramReceiveHandler(
+				SystemDataType.MESSAGE.getValue(),
+				new MessageDatagramReceiveHandler(messageBus));
+
+			intraband.registerDatagramReceiveHandler(
+				SystemDataType.PROXY.getValue(),
+				new IntrabandProxyDatagramReceiveHandler());
+
+			intraband.registerDatagramReceiveHandler(
+				SystemDataType.RPC.getValue(), new RPCDatagramReceiveHandler());
+
+			if (PropsValues.PORTAL_FABRIC_ENABLED) {
+				FabricServerUtil.start();
+			}
+		}
+		catch (Exception e) {
+			throw new IllegalStateException(
+				"Unable to initialize portal resiliency", e);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(StartupAction.class);
+
+	private class ClusterMasterExecutorServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer
+			<ClusterMasterExecutor, ClusterMasterExecutor> {
+
+		@Override
+		public ClusterMasterExecutor addingService(
+			ServiceReference<ClusterMasterExecutor> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			ClusterMasterExecutor clusterMasterExecutor = registry.getService(
+				serviceReference);
+
+			if (!clusterMasterExecutor.isEnabled()) {
+				BackgroundTaskLocalServiceUtil.cleanUpBackgroundTasks();
+			}
+
+			return clusterMasterExecutor;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<ClusterMasterExecutor> serviceReference,
+			ClusterMasterExecutor clusterMasterExecutor) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<ClusterMasterExecutor> serviceReference,
+			ClusterMasterExecutor clusterMasterExecutor) {
+		}
+
+	}
+
+	private class MessageBusServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<MessageBus, MessageBus> {
+
+		@Override
+		public MessageBus addingService(
+			ServiceReference<MessageBus> serviceReference) {
+
+			Registry registry = RegistryUtil.getRegistry();
+
+			MessageBus messageBus = registry.getService(serviceReference);
+
+			initializePortalResiliency(messageBus);
+
+			return messageBus;
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<MessageBus> serviceReference,
+			MessageBus messageBus) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<MessageBus> serviceReference,
+			MessageBus messageBus) {
+		}
+
+	}
 
 }

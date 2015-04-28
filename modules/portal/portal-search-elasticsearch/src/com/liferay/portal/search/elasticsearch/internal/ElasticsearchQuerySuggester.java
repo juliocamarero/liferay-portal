@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseQuerySuggester;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.QuerySuggester;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
@@ -50,7 +49,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = QuerySuggester.class)
+@Component(immediate = true, service = ElasticsearchQuerySuggester.class)
 public class ElasticsearchQuerySuggester extends BaseQuerySuggester {
 
 	@Reference
