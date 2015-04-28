@@ -174,8 +174,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		page.setCompanyId(user.getCompanyId());
 		page.setUserId(user.getUserId());
 		page.setUserName(user.getFullName());
-		page.setCreateDate(serviceContext.getCreateDate(now));
-		page.setModifiedDate(serviceContext.getModifiedDate(now));
 		page.setNodeId(nodeId);
 		page.setTitle(title);
 		page.setVersion(version);

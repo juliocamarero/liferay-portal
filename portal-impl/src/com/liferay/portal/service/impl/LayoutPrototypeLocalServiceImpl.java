@@ -33,7 +33,6 @@ import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.base.LayoutPrototypeLocalServiceBaseImpl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +56,6 @@ public class LayoutPrototypeLocalServiceImpl
 		// Layout prototype
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		Date now = new Date();
 
 		long layoutPrototypeId = counterLocalService.increment();
 
@@ -68,8 +66,6 @@ public class LayoutPrototypeLocalServiceImpl
 		layoutPrototype.setCompanyId(companyId);
 		layoutPrototype.setUserId(userId);
 		layoutPrototype.setUserName(user.getFullName());
-		layoutPrototype.setCreateDate(serviceContext.getCreateDate(now));
-		layoutPrototype.setModifiedDate(serviceContext.getModifiedDate(now));
 		layoutPrototype.setNameMap(nameMap);
 		layoutPrototype.setDescriptionMap(descriptionMap);
 		layoutPrototype.setActive(active);
@@ -275,8 +271,6 @@ public class LayoutPrototypeLocalServiceImpl
 		LayoutPrototype layoutPrototype =
 			layoutPrototypePersistence.findByPrimaryKey(layoutPrototypeId);
 
-		layoutPrototype.setModifiedDate(
-			serviceContext.getModifiedDate(new Date()));
 		layoutPrototype.setNameMap(nameMap);
 		layoutPrototype.setDescriptionMap(descriptionMap);
 		layoutPrototype.setActive(active);
@@ -287,7 +281,6 @@ public class LayoutPrototypeLocalServiceImpl
 
 		Layout layout = layoutPrototype.getLayout();
 
-		layout.setModifiedDate(layoutPrototype.getModifiedDate());
 		layout.setNameMap(nameMap);
 
 		layoutPersistence.update(layout);
