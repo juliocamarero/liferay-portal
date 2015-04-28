@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.sitememberships;
+package com.liferay.site.memberships.web.portlet;
 
 import com.liferay.portal.MembershipRequestCommentsException;
 import com.liferay.portal.NoSuchGroupException;
