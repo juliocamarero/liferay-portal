@@ -572,10 +572,13 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 						id: '<portlet:namespace />selectGroup',
 						title: '<liferay-ui:message arguments="site" key="select-x" />',
 
-						<portlet:renderURL var="groupSelectorURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-							<portlet:param name="struts_action" value="/sites_admin/select_site" />
-							<portlet:param name="groupId" value='<%= (group != null) ? String.valueOf(group.getGroupId()) : "0" %>' />
-						</portlet:renderURL>
+						<%
+						PortletURL groupSelectorURL = PortletProviderUtil.getPortletURL(request, Group.class.getName(), PortletProvider.Action.BROWSE);
+
+						groupSelectorURL.setParameter("includeCurrentGroup", Boolean.FALSE.toString());
+						groupSelectorURL.setParameter("groupId", Boolean.FALSE.toString());
+						groupSelectorURL.setWindowState(LiferayWindowState.POP_UP);
+						%>
 
 						uri: '<%= groupSelectorURL.toString() %>'
 					},
