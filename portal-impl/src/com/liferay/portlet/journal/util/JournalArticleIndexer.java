@@ -15,9 +15,6 @@
 package com.liferay.portlet.journal.util;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -59,7 +56,9 @@ import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
 import com.liferay.portlet.dynamicdatamapping.util.FieldsToDDMFormValuesConverterUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleDisplay;
+import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -476,16 +475,11 @@ public class JournalArticleIndexer extends BaseIndexer {
 			return;
 		}
 
-		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-			int status = article.getStatus();
-
-			if (!article.isIndexable() ||
-				((status != WorkflowConstants.STATUS_APPROVED) &&
-				 (status != WorkflowConstants.STATUS_IN_TRASH))) {
+		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS &&
+			!article.isIndexable()) {
 
 				deleteDocument(
 					article.getCompanyId(), article.getResourcePrimKey());
-			}
 		}
 
 		if (allVersions) {
@@ -602,16 +596,10 @@ public class JournalArticleIndexer extends BaseIndexer {
 			articles = new ArrayList<>();
 
 			JournalArticle latestIndexableArticle =
-				JournalArticleLocalServiceUtil.fetchLatestArticle(
-					article.getResourcePrimKey(),
-					new int[] {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					});
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					article.getResourcePrimKey());
 
-			if ((latestIndexableArticle != null) &&
-				latestIndexableArticle.isIndexable()) {
-
+			if (latestIndexableArticle != null) {
 				articles.add(latestIndexableArticle);
 			}
 		}
@@ -668,10 +656,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected boolean isHead(JournalArticle article) {
-		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-			return true;
-		}
-
 		JournalArticle latestArticle =
 			JournalArticleLocalServiceUtil.fetchLatestArticle(
 				article.getResourcePrimKey(),
@@ -693,49 +677,62 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected void reindexArticles(long companyId) throws PortalException {
-		final ActionableDynamicQuery actionableDynamicQuery =
-			JournalArticleLocalServiceUtil.getActionableDynamicQuery();
+		if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
+			final ActionableDynamicQuery actionableDynamicQuery =
+				JournalArticleLocalServiceUtil.getActionableDynamicQuery();
 
-		actionableDynamicQuery.setAddCriteriaMethod(
-			new ActionableDynamicQuery.AddCriteriaMethod() {
+			actionableDynamicQuery.setCompanyId(companyId);
+			actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
 
-				@Override
-				public void addCriteria(DynamicQuery dynamicQuery) {
-					if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-						return;
+					@Override
+					public void performAction(Object object)
+						throws PortalException {
+
+						JournalArticle article = (JournalArticle)object;
+
+						Document document = getDocument(article);
+
+						actionableDynamicQuery.addDocument(document);
 					}
 
-					Property statusProperty = PropertyFactoryUtil.forName(
-						"status");
+				});
+			actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
-					Integer[] statuses = {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					};
+			actionableDynamicQuery.performActions();
+		}
+		else {
+			final ActionableDynamicQuery actionableDynamicQuery =
+				JournalArticleResourceLocalServiceUtil.getActionableDynamicQuery();
 
-					dynamicQuery.add(statusProperty.in(statuses));
-				}
+			actionableDynamicQuery.setCompanyId(companyId);
+			actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
 
-			});
-		actionableDynamicQuery.setCompanyId(companyId);
-		actionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod() {
+					@Override
+					public void performAction(Object object)
+						throws PortalException {
 
-				@Override
-				public void performAction(Object object)
-					throws PortalException {
+						JournalArticleResource articleResource =
+							(JournalArticleResource)object;
 
-					JournalArticle article = (JournalArticle)object;
+						JournalArticle article =
+							JournalArticleLocalServiceUtil
+								.fetchLatestIndexableArticle(
+									articleResource.getResourcePrimKey());
 
-					Document document = getDocument(article);
+						if (article != null) {
+							Document document = getDocument(article);
 
-					actionableDynamicQuery.addDocument(document);
-				}
+							actionableDynamicQuery.addDocument(document);
+						}
+					}
 
-			});
-		actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+				});
+			actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
-		actionableDynamicQuery.performActions();
+			actionableDynamicQuery.performActions();
+		}
 	}
 
 	protected void reindexArticleVersions(JournalArticle article)

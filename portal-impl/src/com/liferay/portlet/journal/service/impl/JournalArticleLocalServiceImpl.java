@@ -1577,7 +1577,12 @@ public class JournalArticleLocalServiceImpl
 			resourcePrimKey, true, statuses, 0, 1, orderByComparator);
 
 		if (articles.isEmpty()) {
-			return null;
+			articles = journalArticlePersistence.findByR_I(
+				resourcePrimKey, true, 0, 1, orderByComparator);
+
+			if (articles.isEmpty()) {
+				return null;
+			}
 		}
 
 		return articles.get(0);
@@ -7625,7 +7630,7 @@ public class JournalArticleLocalServiceImpl
 			ddmStructureKey, true);
 
 		List<DDMStructure> folderDDMStructures =
-			ddmStructureLocalService.getJournalFolderStructures(
+			journalFolderLocalService.getDDMStructures(
 				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId), folderId,
 				restrictionType);
 
