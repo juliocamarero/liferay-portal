@@ -476,16 +476,11 @@ public class JournalArticleIndexer extends BaseIndexer {
 			return;
 		}
 
-		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-			int status = article.getStatus();
-
-			if (!article.isIndexable() ||
-				((status != WorkflowConstants.STATUS_APPROVED) &&
-				 (status != WorkflowConstants.STATUS_IN_TRASH))) {
+		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS &&
+			!article.isIndexable()) {
 
 				deleteDocument(
 					article.getCompanyId(), article.getResourcePrimKey());
-			}
 		}
 
 		if (allVersions) {
@@ -602,12 +597,8 @@ public class JournalArticleIndexer extends BaseIndexer {
 			articles = new ArrayList<>();
 
 			JournalArticle latestIndexableArticle =
-				JournalArticleLocalServiceUtil.fetchLatestArticle(
-					article.getResourcePrimKey(),
-					new int[] {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					});
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					article.getResourcePrimKey());
 
 			if ((latestIndexableArticle != null) &&
 				latestIndexableArticle.isIndexable()) {
