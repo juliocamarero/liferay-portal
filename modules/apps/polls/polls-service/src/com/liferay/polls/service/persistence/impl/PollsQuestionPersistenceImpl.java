@@ -41,11 +41,14 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2525,6 +2528,29 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 			String uuid = PortalUUIDUtil.generate();
 
 			pollsQuestion.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (pollsQuestion.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				pollsQuestion.setCreateDate(now);
+			}
+			else {
+				pollsQuestion.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!pollsQuestionModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				pollsQuestion.setModifiedDate(now);
+			}
+			else {
+				pollsQuestion.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;

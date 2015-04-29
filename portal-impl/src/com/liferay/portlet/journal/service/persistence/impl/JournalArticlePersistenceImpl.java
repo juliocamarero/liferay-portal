@@ -37,6 +37,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.journal.NoSuchArticleException;
@@ -29113,6 +29115,29 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			String uuid = PortalUUIDUtil.generate();
 
 			journalArticle.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (journalArticle.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				journalArticle.setCreateDate(now);
+			}
+			else {
+				journalArticle.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!journalArticleModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				journalArticle.setModifiedDate(now);
+			}
+			else {
+				journalArticle.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;

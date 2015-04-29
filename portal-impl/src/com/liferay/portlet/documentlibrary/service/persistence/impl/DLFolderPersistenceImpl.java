@@ -37,6 +37,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.service.persistence.impl.TableMapper;
 import com.liferay.portal.service.persistence.impl.TableMapperFactory;
@@ -51,6 +53,7 @@ import com.liferay.portlet.documentlibrary.service.persistence.DLFolderPersisten
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11038,6 +11041,28 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			String uuid = PortalUUIDUtil.generate();
 
 			dlFolder.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (dlFolder.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				dlFolder.setCreateDate(now);
+			}
+			else {
+				dlFolder.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!dlFolderModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				dlFolder.setModifiedDate(now);
+			}
+			else {
+				dlFolder.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

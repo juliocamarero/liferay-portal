@@ -33,6 +33,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.documentlibrary.NoSuchFileVersionException;
@@ -44,6 +46,7 @@ import com.liferay.portlet.documentlibrary.service.persistence.DLFileVersionPers
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -5748,6 +5751,29 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			String uuid = PortalUUIDUtil.generate();
 
 			dlFileVersion.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (dlFileVersion.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				dlFileVersion.setCreateDate(now);
+			}
+			else {
+				dlFileVersion.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!dlFileVersionModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				dlFileVersion.setModifiedDate(now);
+			}
+			else {
+				dlFileVersion.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;

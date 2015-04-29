@@ -40,6 +40,8 @@ import com.liferay.portal.model.MVCCModel;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.UserImpl;
 import com.liferay.portal.model.impl.UserModelImpl;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.GroupPersistence;
 import com.liferay.portal.service.persistence.OrganizationPersistence;
 import com.liferay.portal.service.persistence.RolePersistence;
@@ -7309,6 +7311,28 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			String uuid = PortalUUIDUtil.generate();
 
 			user.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (user.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				user.setCreateDate(now);
+			}
+			else {
+				user.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!userModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				user.setModifiedDate(now);
+			}
+			else {
+				user.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;
