@@ -600,9 +600,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
 					article.getResourcePrimKey());
 
-			if ((latestIndexableArticle != null) &&
-				latestIndexableArticle.isIndexable()) {
-
+			if (latestIndexableArticle != null) {
 				articles.add(latestIndexableArticle);
 			}
 		}
