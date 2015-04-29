@@ -1577,7 +1577,12 @@ public class JournalArticleLocalServiceImpl
 			resourcePrimKey, true, statuses, 0, 1, orderByComparator);
 
 		if (articles.isEmpty()) {
-			return null;
+			articles = journalArticlePersistence.findByR_I(
+				resourcePrimKey, true, 0, 1, orderByComparator);
+
+			if (articles.isEmpty()) {
+				return null;
+			}
 		}
 
 		return articles.get(0);
