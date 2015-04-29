@@ -12,37 +12,38 @@
  * details.
  */
 
-package com.liferay.site.navigation.language.web.provider;
+package com.liferay.portal.kernel.portlet;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.portlet.BasePortletProvider;
-import com.liferay.portal.kernel.portlet.ViewPortletProvider;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.site.navigation.language.web.constants.LanguagePortletKeys;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.PortletURLFactoryUtil;
 
-import org.osgi.service.component.annotations.Component;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(
-	immediate = true,
-	property = {
-		"model.class.name=com.liferay.portal.kernel.servlet.taglib.ui.LanguageEntry"
-	},
-	service = ViewPortletProvider.class
-)
-public class LanguageEntryViewPortletProvider
-	extends BasePortletProvider implements ViewPortletProvider {
+public abstract class BasePortletProvider implements PortletProvider {
 
 	@Override
-	public String getPortletId() {
-		return LanguagePortletKeys.LANGUAGE;
+	public PortletURL getPortletURL(HttpServletRequest request)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return PortletURLFactoryUtil.create(
+			request, getPortletId(), getPlid(themeDisplay),
+			PortletRequest.RENDER_PHASE);
 	}
 
-	@Override
 	protected long getPlid(ThemeDisplay themeDisplay) throws PortalException {
-		return themeDisplay.getPlid();
+		return PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId());
 	}
 
 }

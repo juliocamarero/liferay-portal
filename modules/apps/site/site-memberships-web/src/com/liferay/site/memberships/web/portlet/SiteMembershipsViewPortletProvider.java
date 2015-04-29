@@ -14,6 +14,7 @@
 
 package com.liferay.site.memberships.web.portlet;
 
+import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.ViewPortletProvider;
 import com.liferay.site.memberships.web.constants.SiteMembershipsPortletKeys;
 
@@ -27,7 +28,8 @@ import org.osgi.service.component.annotations.Component;
 	property = {"model.class.name=com.liferay.portal.model.MembershipRequest"},
 	service = ViewPortletProvider.class
 )
-public class SiteMembershipsViewPortletProvider implements ViewPortletProvider {
+public class SiteMembershipsViewPortletProvider
+	extends BasePortletProvider implements ViewPortletProvider {
 
 	@Override
 	public String getPortletId() {

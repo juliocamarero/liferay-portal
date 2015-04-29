@@ -14,9 +14,14 @@
 
 package com.liferay.site.memberships.web.portlet;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.EditPortletProvider;
 import com.liferay.site.memberships.web.constants.SiteMembershipsPortletKeys;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -34,6 +39,17 @@ public class SiteMembershipsEditPortletProvider
 	@Override
 	public String getPortletId() {
 		return SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN;
+	}
+
+	@Override
+	public PortletURL getPortletURL(HttpServletRequest request)
+		throws PortalException {
+
+		PortletURL portletURL = super.getPortletURL(request);
+
+		portletURL.setParameter("mvcPath", "/edit_site_assignments.jsp");
+
+		return portletURL;
 	}
 
 }
