@@ -59,7 +59,9 @@ import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
 import com.liferay.portlet.dynamicdatamapping.util.FieldsToDDMFormValuesConverterUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleDisplay;
+import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journal.service.permission.JournalArticlePermission;
 import com.liferay.portlet.trash.util.TrashUtil;
 
@@ -678,28 +680,62 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected void reindexArticles(long companyId) throws PortalException {
-		final ActionableDynamicQuery actionableDynamicQuery =
-			JournalArticleLocalServiceUtil.getActionableDynamicQuery();
+		if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
+			final ActionableDynamicQuery actionableDynamicQuery =
+				JournalArticleLocalServiceUtil.getActionableDynamicQuery();
 
-		actionableDynamicQuery.setCompanyId(companyId);
-		actionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod() {
+			actionableDynamicQuery.setCompanyId(companyId);
+			actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
 
-				@Override
-				public void performAction(Object object)
-					throws PortalException {
+					@Override
+					public void performAction(Object object)
+						throws PortalException {
 
-					JournalArticle article = (JournalArticle)object;
+						JournalArticle article = (JournalArticle)object;
 
-					Document document = getDocument(article);
+						Document document = getDocument(article);
 
-					actionableDynamicQuery.addDocument(document);
-				}
+						actionableDynamicQuery.addDocument(document);
+					}
 
-			});
-		actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+				});
+			actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
-		actionableDynamicQuery.performActions();
+			actionableDynamicQuery.performActions();
+		}
+		else {
+			final ActionableDynamicQuery actionableDynamicQuery =
+				JournalArticleResourceLocalServiceUtil.getActionableDynamicQuery();
+
+			actionableDynamicQuery.setCompanyId(companyId);
+			actionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.PerformActionMethod() {
+
+					@Override
+					public void performAction(Object object)
+						throws PortalException {
+
+						JournalArticleResource articleResource =
+							(JournalArticleResource)object;
+
+						JournalArticle article =
+							JournalArticleLocalServiceUtil
+								.fetchLatestIndexableArticle(
+									articleResource.getResourcePrimKey());
+
+						if (article != null) {
+							Document document = getDocument(article);
+
+							actionableDynamicQuery.addDocument(document);
+						}
+					}
+
+				});
+			actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+
+			actionableDynamicQuery.performActions();
+		}
 	}
 
 	protected void reindexArticleVersions(JournalArticle article)
