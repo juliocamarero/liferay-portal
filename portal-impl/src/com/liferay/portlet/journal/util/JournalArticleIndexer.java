@@ -691,6 +691,17 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 					JournalArticle article = (JournalArticle)object;
 
+					if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
+						article =
+							JournalArticleLocalServiceUtil
+								.fetchLatestIndexableArticle(
+									article.getResourcePrimKey());
+
+						if (article == null) {
+							return;
+						}
+					}
+
 					Document document = getDocument(article);
 
 					actionableDynamicQuery.addDocument(document);
