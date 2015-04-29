@@ -37,6 +37,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
@@ -48,6 +50,7 @@ import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplatePer
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11780,6 +11783,28 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 			String uuid = PortalUUIDUtil.generate();
 
 			ddmTemplate.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (ddmTemplate.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				ddmTemplate.setCreateDate(now);
+			}
+			else {
+				ddmTemplate.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!ddmTemplateModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				ddmTemplate.setModifiedDate(now);
+			}
+			else {
+				ddmTemplate.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

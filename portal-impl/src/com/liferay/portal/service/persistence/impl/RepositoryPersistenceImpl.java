@@ -38,11 +38,14 @@ import com.liferay.portal.model.MVCCModel;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.impl.RepositoryImpl;
 import com.liferay.portal.model.impl.RepositoryModelImpl;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.RepositoryPersistence;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2514,6 +2517,28 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 			String uuid = PortalUUIDUtil.generate();
 
 			repository.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (repository.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				repository.setCreateDate(now);
+			}
+			else {
+				repository.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!repositoryModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				repository.setModifiedDate(now);
+			}
+			else {
+				repository.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

@@ -38,11 +38,14 @@ import com.liferay.portal.model.EmailAddress;
 import com.liferay.portal.model.MVCCModel;
 import com.liferay.portal.model.impl.EmailAddressImpl;
 import com.liferay.portal.model.impl.EmailAddressModelImpl;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.EmailAddressPersistence;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -3993,6 +3996,28 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 			String uuid = PortalUUIDUtil.generate();
 
 			emailAddress.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (emailAddress.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				emailAddress.setCreateDate(now);
+			}
+			else {
+				emailAddress.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!emailAddressModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				emailAddress.setModifiedDate(now);
+			}
+			else {
+				emailAddress.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

@@ -37,6 +37,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchThreadException;
@@ -12731,6 +12733,28 @@ public class MBThreadPersistenceImpl extends BasePersistenceImpl<MBThread>
 			String uuid = PortalUUIDUtil.generate();
 
 			mbThread.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (mbThread.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				mbThread.setCreateDate(now);
+			}
+			else {
+				mbThread.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!mbThreadModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				mbThread.setModifiedDate(now);
+			}
+			else {
+				mbThread.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;
