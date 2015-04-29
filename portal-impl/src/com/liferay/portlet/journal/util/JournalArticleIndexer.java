@@ -15,9 +15,6 @@
 package com.liferay.portlet.journal.util;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -476,16 +473,11 @@ public class JournalArticleIndexer extends BaseIndexer {
 			return;
 		}
 
-		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-			int status = article.getStatus();
-
-			if (!article.isIndexable() ||
-				((status != WorkflowConstants.STATUS_APPROVED) &&
-				 (status != WorkflowConstants.STATUS_IN_TRASH))) {
+		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS &&
+			!article.isIndexable()) {
 
 				deleteDocument(
 					article.getCompanyId(), article.getResourcePrimKey());
-			}
 		}
 
 		if (allVersions) {
@@ -602,16 +594,10 @@ public class JournalArticleIndexer extends BaseIndexer {
 			articles = new ArrayList<>();
 
 			JournalArticle latestIndexableArticle =
-				JournalArticleLocalServiceUtil.fetchLatestArticle(
-					article.getResourcePrimKey(),
-					new int[] {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					});
+				JournalArticleLocalServiceUtil.fetchLatestIndexableArticle(
+					article.getResourcePrimKey());
 
-			if ((latestIndexableArticle != null) &&
-				latestIndexableArticle.isIndexable()) {
-
+			if (latestIndexableArticle != null) {
 				articles.add(latestIndexableArticle);
 			}
 		}
@@ -668,10 +654,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected boolean isHead(JournalArticle article) {
-		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-			return true;
-		}
-
 		JournalArticle latestArticle =
 			JournalArticleLocalServiceUtil.fetchLatestArticle(
 				article.getResourcePrimKey(),
@@ -696,27 +678,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 		final ActionableDynamicQuery actionableDynamicQuery =
 			JournalArticleLocalServiceUtil.getActionableDynamicQuery();
 
-		actionableDynamicQuery.setAddCriteriaMethod(
-			new ActionableDynamicQuery.AddCriteriaMethod() {
-
-				@Override
-				public void addCriteria(DynamicQuery dynamicQuery) {
-					if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-						return;
-					}
-
-					Property statusProperty = PropertyFactoryUtil.forName(
-						"status");
-
-					Integer[] statuses = {
-						WorkflowConstants.STATUS_APPROVED,
-						WorkflowConstants.STATUS_IN_TRASH
-					};
-
-					dynamicQuery.add(statusProperty.in(statuses));
-				}
-
-			});
 		actionableDynamicQuery.setCompanyId(companyId);
 		actionableDynamicQuery.setPerformActionMethod(
 			new ActionableDynamicQuery.PerformActionMethod() {
@@ -726,6 +687,17 @@ public class JournalArticleIndexer extends BaseIndexer {
 					throws PortalException {
 
 					JournalArticle article = (JournalArticle)object;
+
+					if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
+						article =
+							JournalArticleLocalServiceUtil.
+								fetchLatestIndexableArticle(
+									article.getResourcePrimKey());
+
+						if (article == null) {
+							return;
+						}
+					}
 
 					Document document = getDocument(article);
 
