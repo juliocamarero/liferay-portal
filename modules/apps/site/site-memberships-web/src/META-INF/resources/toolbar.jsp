@@ -59,18 +59,20 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 			<aui:nav-item dropdown="<%= true %>" iconCssClass="icon-plus" label="add-site-roles-to" selected='<%= toolbarItem.equals("assign-user-roles") %>'>
 
 				<%
-				String portletId = PortletProviderUtil.getPortletId(UserGroupRole.class.getName(), PortletProvider.Action.EDIT);
-				%>
+				PortletURL assignUserRolesURL = PortletProviderUtil.getPortletURL(request, UserGroupRole.class.getName(), PortletProvider.Action.EDIT);
 
-				<liferay-portlet:renderURL portletName="<%= portletId %>" var="assignUserRolesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-					<portlet:param name="className" value="<%= User.class.getName() %>" />
-				</liferay-portlet:renderURL>
+				assignUserRolesURL.setParameter("className", User.class.getName());
+				assignUserRolesURL.setWindowState(LiferayWindowState.POP_UP);
+				%>
 
 				<aui:nav-item href="<%= assignUserRolesURL %>" iconCssClass="icon-user" label="users" useDialog="<%= true %>" />
 
-				<liferay-portlet:renderURL portletName="<%= portletId %>" var="assignUserGroupRolesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-					<portlet:param name="className" value="<%= UserGroup.class.getName() %>" />
-				</liferay-portlet:renderURL>
+				<%
+				PortletURL assignUserGroupRolesURL = PortletProviderUtil.getPortletURL(request, UserGroupRole.class.getName(), PortletProvider.Action.EDIT);
+
+				assignUserGroupRolesURL.setParameter("className", UserGroup.class.getName());
+				assignUserGroupRolesURL.setWindowState(LiferayWindowState.POP_UP);
+				%>
 
 				<aui:nav-item href="<%= assignUserGroupRolesURL %>" iconCssClass="icon-globe" label="user-groups" useDialog="<%= true %>" />
 			</aui:nav-item>
