@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/sites_admin/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -28,7 +28,7 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 />
 
 <liferay-portlet:renderURL varImpl="portletURL">
-	<portlet:param name="struts_action" value="/sites_admin/select_team" />
+	<portlet:param name="mvcPath" value="/select_team.jsp" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="eventName" value="<%= eventName %>" />
 </liferay-portlet:renderURL>
