@@ -26,13 +26,15 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 String keywords = ParamUtil.getString(request, "keywords");
 
 boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisplayTerms.ADVANCED_SEARCH);
+
+boolean isSearch = Validator.isNull(keywords) && !advancedSearch;
 %>
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
 	<aui:nav-bar>
 		<aui:nav collapsible="<%= true %>" cssClass="nav-display-style-buttons navbar-nav" icon="th-list" id="displayStyleButtons">
 
-			<c:if test="<%= Validator.isNull(keywords) && !advancedSearch %>">
+			<c:if test="<%= !isSearch %>">
 				<liferay-util:include page="/display_style_buttons.jsp" servletContext="<%= application %>" />
 			</c:if>
 		</aui:nav>
@@ -61,7 +63,7 @@ boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, ArticleDisp
 
 			<liferay-util:include page="/add_button.jsp" servletContext="<%= application %>" />
 
-			<c:if test="<%= Validator.isNull(keywords) && !advancedSearch %>">
+			<c:if test="<%= !isSearch %>">
 				<liferay-util:include page="/sort_button.jsp" servletContext="<%= application %>" />
 			</c:if>
 
