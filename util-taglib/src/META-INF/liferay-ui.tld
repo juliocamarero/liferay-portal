@@ -1354,12 +1354,22 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>portletPreferences</name>
+			<name>selectedEntries</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>entry-selector-display</name>
+		<tag-class>com.liferay.taglib.ui.EntrySelectorDisplayTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>entries</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
