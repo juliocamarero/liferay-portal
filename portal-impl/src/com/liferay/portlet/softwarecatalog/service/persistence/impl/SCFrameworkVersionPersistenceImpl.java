@@ -34,6 +34,8 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.service.persistence.impl.TableMapper;
 import com.liferay.portal.service.persistence.impl.TableMapperFactory;
@@ -48,6 +50,7 @@ import com.liferay.portlet.softwarecatalog.service.persistence.SCProductVersionP
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2518,6 +2521,30 @@ public class SCFrameworkVersionPersistenceImpl extends BasePersistenceImpl<SCFra
 		boolean isNew = scFrameworkVersion.isNew();
 
 		SCFrameworkVersionModelImpl scFrameworkVersionModelImpl = (SCFrameworkVersionModelImpl)scFrameworkVersion;
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (scFrameworkVersion.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				scFrameworkVersion.setCreateDate(now);
+			}
+			else {
+				scFrameworkVersion.setCreateDate(serviceContext.getCreateDate(
+						now));
+			}
+		}
+
+		if (!scFrameworkVersionModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				scFrameworkVersion.setModifiedDate(now);
+			}
+			else {
+				scFrameworkVersion.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
+		}
 
 		Session session = null;
 

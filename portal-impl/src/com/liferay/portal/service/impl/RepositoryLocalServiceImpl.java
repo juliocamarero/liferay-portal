@@ -41,7 +41,6 @@ import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,7 +60,6 @@ public class RepositoryLocalServiceImpl
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		Date now = new Date();
 
 		long repositoryId = counterLocalService.increment();
 
@@ -72,8 +70,6 @@ public class RepositoryLocalServiceImpl
 		repository.setCompanyId(user.getCompanyId());
 		repository.setUserId(user.getUserId());
 		repository.setUserName(user.getFullName());
-		repository.setCreateDate(now);
-		repository.setModifiedDate(now);
 		repository.setClassNameId(classNameId);
 		repository.setName(name);
 		repository.setDescription(description);
@@ -328,12 +324,9 @@ public class RepositoryLocalServiceImpl
 			long repositoryId, String name, String description)
 		throws PortalException {
 
-		Date now = new Date();
-
 		Repository repository = repositoryPersistence.findByPrimaryKey(
 			repositoryId);
 
-		repository.setModifiedDate(now);
 		repository.setName(name);
 		repository.setDescription(description);
 
@@ -342,7 +335,6 @@ public class RepositoryLocalServiceImpl
 		DLFolder dlFolder = dlFolderPersistence.findByPrimaryKey(
 			repository.getDlFolderId());
 
-		dlFolder.setModifiedDate(now);
 		dlFolder.setName(name);
 		dlFolder.setDescription(description);
 

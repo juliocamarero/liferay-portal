@@ -43,6 +43,8 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.impl.RoleImpl;
 import com.liferay.portal.model.impl.RoleModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.GroupPersistence;
 import com.liferay.portal.service.persistence.RolePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
@@ -50,6 +52,7 @@ import com.liferay.portal.service.persistence.UserPersistence;
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8537,6 +8540,28 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			String uuid = PortalUUIDUtil.generate();
 
 			role.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (role.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				role.setCreateDate(now);
+			}
+			else {
+				role.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!roleModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				role.setModifiedDate(now);
+			}
+			else {
+				role.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

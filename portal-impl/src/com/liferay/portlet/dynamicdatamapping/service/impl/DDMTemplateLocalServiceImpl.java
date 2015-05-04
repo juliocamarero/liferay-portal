@@ -56,7 +56,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -175,7 +174,6 @@ public class DDMTemplateLocalServiceImpl
 		// Template
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		Date now = new Date();
 
 		if (Validator.isNull(templateKey)) {
 			templateKey = String.valueOf(counterLocalService.increment());
@@ -213,8 +211,6 @@ public class DDMTemplateLocalServiceImpl
 		template.setCompanyId(user.getCompanyId());
 		template.setUserId(user.getUserId());
 		template.setUserName(user.getFullName());
-		template.setCreateDate(serviceContext.getCreateDate(now));
-		template.setModifiedDate(serviceContext.getModifiedDate(now));
 		template.setClassNameId(classNameId);
 		template.setClassPK(classPK);
 		template.setResourceClassNameId(resourceClassNameId);
@@ -1296,8 +1292,6 @@ public class DDMTemplateLocalServiceImpl
 
 		DDMTemplate template = ddmTemplateLocalService.getDDMTemplate(
 			templateId);
-
-		template.setModifiedDate(serviceContext.getModifiedDate(null));
 
 		if ((template.getClassPK() == 0) && (classPK > 0)) {
 

@@ -42,6 +42,8 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.blogs.NoSuchEntryException;
@@ -17859,6 +17861,28 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			String uuid = PortalUUIDUtil.generate();
 
 			blogsEntry.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (blogsEntry.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				blogsEntry.setCreateDate(now);
+			}
+			else {
+				blogsEntry.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!blogsEntryModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				blogsEntry.setModifiedDate(now);
+			}
+			else {
+				blogsEntry.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		long userId = GetterUtil.getLong(PrincipalThreadLocal.getName());

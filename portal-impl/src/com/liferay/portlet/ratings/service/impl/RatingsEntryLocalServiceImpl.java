@@ -152,7 +152,6 @@ public class RatingsEntryLocalServiceImpl
 		if (entry != null) {
 			oldScore = entry.getScore();
 
-			entry.setModifiedDate(serviceContext.getModifiedDate(now));
 			entry.setScore(score);
 
 			ratingsEntryPersistence.update(entry);
@@ -180,8 +179,6 @@ public class RatingsEntryLocalServiceImpl
 			entry.setCompanyId(user.getCompanyId());
 			entry.setUserId(user.getUserId());
 			entry.setUserName(user.getFullName());
-			entry.setCreateDate(serviceContext.getCreateDate(now));
-			entry.setModifiedDate(serviceContext.getModifiedDate(now));
 			entry.setClassNameId(classNameId);
 			entry.setClassPK(classPK);
 			entry.setScore(score);

@@ -284,8 +284,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		message.setCompanyId(user.getCompanyId());
 		message.setUserId(user.getUserId());
 		message.setUserName(userName);
-		message.setCreateDate(serviceContext.getCreateDate(now));
-		message.setModifiedDate(serviceContext.getModifiedDate(now));
 
 		if (threadId > 0) {
 			message.setThreadId(threadId);

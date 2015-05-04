@@ -35,6 +35,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.wiki.exception.NoSuchNodeException;
@@ -46,6 +48,7 @@ import com.liferay.wiki.service.persistence.WikiNodePersistence;
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -4677,6 +4680,28 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 			String uuid = PortalUUIDUtil.generate();
 
 			wikiNode.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (wikiNode.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				wikiNode.setCreateDate(now);
+			}
+			else {
+				wikiNode.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!wikiNodeModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				wikiNode.setModifiedDate(now);
+			}
+			else {
+				wikiNode.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

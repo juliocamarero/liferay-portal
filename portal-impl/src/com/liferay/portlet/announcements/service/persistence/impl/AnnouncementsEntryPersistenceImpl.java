@@ -42,6 +42,8 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.announcements.NoSuchEntryException;
@@ -53,6 +55,7 @@ import com.liferay.portlet.announcements.service.persistence.AnnouncementsEntryP
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -4919,6 +4922,30 @@ public class AnnouncementsEntryPersistenceImpl extends BasePersistenceImpl<Annou
 			String uuid = PortalUUIDUtil.generate();
 
 			announcementsEntry.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (announcementsEntry.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				announcementsEntry.setCreateDate(now);
+			}
+			else {
+				announcementsEntry.setCreateDate(serviceContext.getCreateDate(
+						now));
+			}
+		}
+
+		if (!announcementsEntryModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				announcementsEntry.setModifiedDate(now);
+			}
+			else {
+				announcementsEntry.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		long userId = GetterUtil.getLong(PrincipalThreadLocal.getName());

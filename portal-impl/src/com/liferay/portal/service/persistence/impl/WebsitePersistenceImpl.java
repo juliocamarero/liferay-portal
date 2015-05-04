@@ -38,11 +38,14 @@ import com.liferay.portal.model.MVCCModel;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.model.impl.WebsiteImpl;
 import com.liferay.portal.model.impl.WebsiteModelImpl;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.WebsitePersistence;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -3980,6 +3983,28 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 			String uuid = PortalUUIDUtil.generate();
 
 			website.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (website.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				website.setCreateDate(now);
+			}
+			else {
+				website.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!websiteModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				website.setModifiedDate(now);
+			}
+			else {
+				website.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;

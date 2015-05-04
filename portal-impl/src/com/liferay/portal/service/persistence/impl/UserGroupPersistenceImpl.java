@@ -41,6 +41,8 @@ import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.impl.UserGroupImpl;
 import com.liferay.portal.model.impl.UserGroupModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.GroupPersistence;
 import com.liferay.portal.service.persistence.TeamPersistence;
 import com.liferay.portal.service.persistence.UserGroupPersistence;
@@ -49,6 +51,7 @@ import com.liferay.portal.service.persistence.UserPersistence;
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -4225,6 +4228,28 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 			String uuid = PortalUUIDUtil.generate();
 
 			userGroup.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (userGroup.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				userGroup.setCreateDate(now);
+			}
+			else {
+				userGroup.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!userGroupModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				userGroup.setModifiedDate(now);
+			}
+			else {
+				userGroup.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		Session session = null;
