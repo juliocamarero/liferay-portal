@@ -42,11 +42,14 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12048,6 +12051,29 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			String uuid = PortalUUIDUtil.generate();
 
 			bookmarksEntry.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (bookmarksEntry.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				bookmarksEntry.setCreateDate(now);
+			}
+			else {
+				bookmarksEntry.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!bookmarksEntryModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				bookmarksEntry.setModifiedDate(now);
+			}
+			else {
+				bookmarksEntry.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;

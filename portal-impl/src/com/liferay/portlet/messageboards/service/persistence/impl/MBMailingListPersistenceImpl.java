@@ -33,6 +33,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchMailingListException;
@@ -44,6 +46,7 @@ import com.liferay.portlet.messageboards.service.persistence.MBMailingListPersis
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2432,6 +2435,29 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 			String uuid = PortalUUIDUtil.generate();
 
 			mbMailingList.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (mbMailingList.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				mbMailingList.setCreateDate(now);
+			}
+			else {
+				mbMailingList.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!mbMailingListModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				mbMailingList.setModifiedDate(now);
+			}
+			else {
+				mbMailingList.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;

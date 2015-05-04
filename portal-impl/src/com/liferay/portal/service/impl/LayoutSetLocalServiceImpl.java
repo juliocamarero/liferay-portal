@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,16 +57,12 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 
 		Group group = groupPersistence.findByPrimaryKey(groupId);
 
-		Date now = new Date();
-
 		long layoutSetId = counterLocalService.increment();
 
 		LayoutSet layoutSet = layoutSetPersistence.create(layoutSetId);
 
 		layoutSet.setGroupId(groupId);
 		layoutSet.setCompanyId(group.getCompanyId());
-		layoutSet.setCreateDate(now);
-		layoutSet.setModifiedDate(now);
 		layoutSet.setPrivateLayout(privateLayout);
 
 		layoutSet = initLayoutSet(layoutSet);
@@ -261,8 +256,6 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
 			groupId, privateLayout);
 
-		layoutSet.setModifiedDate(new Date());
-
 		PortalUtil.updateImageId(layoutSet, logo, bytes, "logoId", 0, 0, 0);
 
 		return layoutSetPersistence.update(layoutSet);
@@ -319,8 +312,6 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 
 		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
 			groupId, privateLayout);
-
-		layoutSet.setModifiedDate(new Date());
 
 		if (Validator.isNull(themeId)) {
 			themeId = ThemeFactoryUtil.getDefaultRegularThemeId(
@@ -386,7 +377,6 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
 			groupId, privateLayout);
 
-		layoutSet.setModifiedDate(new Date());
 		layoutSet.setPageCount(pageCount);
 
 		layoutSetPersistence.update(layoutSet);
@@ -402,7 +392,6 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 		LayoutSet layoutSet = layoutSetPersistence.findByG_P(
 			groupId, privateLayout);
 
-		layoutSet.setModifiedDate(new Date());
 		layoutSet.setSettings(settings);
 
 		layoutSetPersistence.update(layoutSet);

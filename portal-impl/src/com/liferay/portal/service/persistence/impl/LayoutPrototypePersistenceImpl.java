@@ -40,11 +40,14 @@ import com.liferay.portal.model.MVCCModel;
 import com.liferay.portal.model.impl.LayoutPrototypeImpl;
 import com.liferay.portal.model.impl.LayoutPrototypeModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.LayoutPrototypePersistence;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -3938,6 +3941,29 @@ public class LayoutPrototypePersistenceImpl extends BasePersistenceImpl<LayoutPr
 			String uuid = PortalUUIDUtil.generate();
 
 			layoutPrototype.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (layoutPrototype.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				layoutPrototype.setCreateDate(now);
+			}
+			else {
+				layoutPrototype.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!layoutPrototypeModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				layoutPrototype.setModifiedDate(now);
+			}
+			else {
+				layoutPrototype.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;

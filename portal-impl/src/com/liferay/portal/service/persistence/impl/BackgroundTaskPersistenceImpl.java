@@ -38,11 +38,14 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.MVCCModel;
 import com.liferay.portal.model.impl.BackgroundTaskImpl;
 import com.liferay.portal.model.impl.BackgroundTaskModelImpl;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.BackgroundTaskPersistence;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -7213,6 +7216,29 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		boolean isNew = backgroundTask.isNew();
 
 		BackgroundTaskModelImpl backgroundTaskModelImpl = (BackgroundTaskModelImpl)backgroundTask;
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (backgroundTask.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				backgroundTask.setCreateDate(now);
+			}
+			else {
+				backgroundTask.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!backgroundTaskModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				backgroundTask.setModifiedDate(now);
+			}
+			else {
+				backgroundTask.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
+		}
 
 		Session session = null;
 
