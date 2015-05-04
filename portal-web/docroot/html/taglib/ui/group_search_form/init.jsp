@@ -14,12 +14,6 @@
  */
 --%>
 
-<aui:nav-bar>
-	<aui:nav cssClass="navbar-nav" searchContainer="<%= searchContainer %>">
-		<%@ include file="/html/portlet/sites_admin/toolbar_content.jspf" %>
-	</aui:nav>
+<%@ include file="/html/taglib/init.jsp" %>
 
-	<aui:nav-bar-search>
-		<liferay-ui:group-search-form />
-	</aui:nav-bar-search>
-</aui:nav-bar>
+<%@ page import="com.liferay.portlet.usersadmin.search.GroupDisplayTerms" %>

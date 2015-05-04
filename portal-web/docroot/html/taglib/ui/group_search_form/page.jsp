@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/users_admin/init.jsp" %>
+<%@ include file="/html/taglib/ui/group_search_form/init.jsp" %>
 
 <%
 GroupSearch searchContainer = (GroupSearch)request.getAttribute("liferay-ui:search:searchContainer");
@@ -23,10 +23,9 @@ GroupDisplayTerms displayTerms = (GroupDisplayTerms)searchContainer.getDisplayTe
 %>
 
 <liferay-ui:search-toggle
-	autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
 	buttonLabel="search"
 	displayTerms="<%= displayTerms %>"
-	id="toggle_id_users_admin_group_search"
+	id="toggle_id_group_search"
 >
 	<aui:fieldset>
 		<aui:input inlineField="<%= true %>" name="<%= GroupDisplayTerms.NAME %>" size="30" value="<%= displayTerms.getName() %>" />

@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,14 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<aui:nav-bar>
-	<aui:nav cssClass="navbar-nav" searchContainer="<%= searchContainer %>">
-		<%@ include file="/html/portlet/sites_admin/toolbar_content.jspf" %>
-	</aui:nav>
+package com.liferay.taglib.ui;
 
-	<aui:nav-bar-search>
-		<liferay-ui:group-search-form />
-	</aui:nav-bar-search>
-</aui:nav-bar>
+/**
+ * @author Eudaldo Alonso
+ */
+public class GroupSearchFormTag<R> extends SearchFormTag<R> {
+
+	@Override
+	protected String getPage() {
+		return _PAGE;
+	}
+
+	private static final String _PAGE =
+		"/html/taglib/ui/group_search_form/page.jsp";
+
+}
