@@ -24,13 +24,13 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.iframe.web.configuration.IFrameConfiguration" %><%@
+page import="com.liferay.iframe.web.configuration.IFramePortletInstanceConfiguration" %><%@
 page import="com.liferay.iframe.web.constants.IFrameWebKeys" %><%@
 page import="com.liferay.iframe.web.util.IFrameUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.util.CharPool" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
-page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
@@ -51,44 +51,45 @@ page import="java.util.List" %>
 WindowState windowState = liferayPortletRequest.getWindowState();
 
 IFrameConfiguration iFrameConfiguration = (IFrameConfiguration)renderRequest.getAttribute(IFrameConfiguration.class.getName());
+IFramePortletInstanceConfiguration iFramePortletInstanceConfiguration = portletDisplay.getPortletInstanceConfiguration(IFramePortletInstanceConfiguration.class);
 
-String src = portletPreferences.getValue("src", StringPool.BLANK);
+String src = iFramePortletInstanceConfiguration.src();
 
-boolean relative = GetterUtil.getBoolean(portletPreferences.getValue("relative", StringPool.BLANK));
+boolean relative = iFramePortletInstanceConfiguration.relative();
 
-boolean auth = GetterUtil.getBoolean(portletPreferences.getValue("auth", null), iFrameConfiguration.auth());
-String authType = portletPreferences.getValue("authType", iFrameConfiguration.authType());
-String formMethod = portletPreferences.getValue("formMethod", iFrameConfiguration.formMethod());
-String userNameField = portletPreferences.getValue("userNameField", StringPool.BLANK);
-String passwordField = portletPreferences.getValue("passwordField", StringPool.BLANK);
+boolean auth = iFramePortletInstanceConfiguration.auth();
+String authType = iFramePortletInstanceConfiguration.authType(iFrameConfiguration.authType());
+String formMethod = iFramePortletInstanceConfiguration.formMethod(iFrameConfiguration.formMethod());
+String userNameField = iFramePortletInstanceConfiguration.userNameField();
+String passwordField = iFramePortletInstanceConfiguration.passwordField();
 
 String userName = null;
 String password = null;
 
 if (authType.equals("basic")) {
-	userName = portletPreferences.getValue("basicUserName", StringPool.BLANK);
-	password = portletPreferences.getValue("basicPassword", StringPool.BLANK);
+	userName = iFramePortletInstanceConfiguration.basicUserName();
+	password = iFramePortletInstanceConfiguration.basicPassword();
 }
 else {
-	userName = portletPreferences.getValue("formUserName", StringPool.BLANK);
-	password = portletPreferences.getValue("formPassword", StringPool.BLANK);
+	userName = iFramePortletInstanceConfiguration.formUserName();
+	password = iFramePortletInstanceConfiguration.formPassword();
 }
 
-String hiddenVariables = portletPreferences.getValue("hiddenVariables", StringUtil.merge(iFrameConfiguration.hiddenVariables(), StringPool.SEMICOLON));
-boolean resizeAutomatically = GetterUtil.getBoolean(portletPreferences.getValue("resizeAutomatically", StringPool.TRUE));
-String heightMaximized = GetterUtil.getString(portletPreferences.getValue("heightMaximized", "600"));
-String heightNormal = GetterUtil.getString(portletPreferences.getValue("heightNormal", "600"));
-String width = GetterUtil.getString(portletPreferences.getValue("width", "100%"));
+String hiddenVariables = iFramePortletInstanceConfiguration.hiddenVariables(StringUtil.merge(iFrameConfiguration.hiddenVariables(), StringPool.SEMICOLON));
+boolean resizeAutomatically = iFramePortletInstanceConfiguration.resizeAutomatically();
+String heightMaximized = iFramePortletInstanceConfiguration.heightMaximized();
+String heightNormal = iFramePortletInstanceConfiguration.heightNormal();
+String width = iFramePortletInstanceConfiguration.width();
 
-String alt = portletPreferences.getValue("alt", StringPool.BLANK);
-String border = portletPreferences.getValue("border", "0");
-String bordercolor = portletPreferences.getValue("bordercolor", "#000000");
-String frameborder = portletPreferences.getValue("frameborder", "0");
-String hspace = portletPreferences.getValue("hspace", "0");
-String longdesc = portletPreferences.getValue("longdesc", StringPool.BLANK);
-String scrolling = portletPreferences.getValue("scrolling", "auto");
-String title = portletPreferences.getValue("title", StringPool.BLANK);
-String vspace = portletPreferences.getValue("vspace", "0");
+String alt = iFramePortletInstanceConfiguration.alt();
+String border = iFramePortletInstanceConfiguration.border();
+String bordercolor = iFramePortletInstanceConfiguration.bordercolor();
+String frameborder = iFramePortletInstanceConfiguration.frameborder();
+String hspace = iFramePortletInstanceConfiguration.hspace();
+String longdesc = iFramePortletInstanceConfiguration.longdesc();
+String scrolling = iFramePortletInstanceConfiguration.scrolling();
+String title = iFramePortletInstanceConfiguration.title();
+String vspace = iFramePortletInstanceConfiguration.vspace();
 
 List<String> iframeVariables = new ArrayList<String>();
 
