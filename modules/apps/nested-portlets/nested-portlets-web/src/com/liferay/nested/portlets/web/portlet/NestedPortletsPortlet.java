@@ -17,10 +17,12 @@ package com.liferay.nested.portlets.web.portlet;
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration;
+import com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration;
 import com.liferay.nested.portlets.web.upgrade.NestedPortletWebUpgrade;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -34,6 +36,7 @@ import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
 
@@ -47,7 +50,6 @@ import java.util.regex.Pattern;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -94,11 +96,29 @@ public class NestedPortletsPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		PortletPreferences portletPreferences = renderRequest.getPreferences();
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-		String layoutTemplateId = portletPreferences.getValue(
-			"layoutTemplateId",
-			_nestedPortletsConfiguration.layoutTemplateDefault());
+		String layoutTemplateId = StringPool.BLANK;
+
+		try {
+			NestedPortletsPortletInstanceConfiguration
+				nestedPortletsPortletInstanceConfiguration =
+					portletDisplay.getPortletInstanceConfiguration(
+						NestedPortletsPortletInstanceConfiguration.class);
+
+			layoutTemplateId =
+				nestedPortletsPortletInstanceConfiguration.layoutTemplateId();
+		}
+		catch (SettingsException e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(e, e);
+			}
+		}
+
+		if (Validator.isNull(layoutTemplateId)) {
+			layoutTemplateId =
+				_nestedPortletsConfiguration.layoutTemplateDefault();
+		}
 
 		String templateId = StringPool.BLANK;
 		String templateContent = StringPool.BLANK;

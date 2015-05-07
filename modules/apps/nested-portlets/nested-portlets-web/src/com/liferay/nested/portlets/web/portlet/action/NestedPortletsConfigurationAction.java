@@ -17,6 +17,7 @@ package com.liferay.nested.portlets.web.portlet.action;
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration;
+import com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration;
 import com.liferay.nested.portlets.web.constants.NestedPortletsPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
@@ -30,6 +31,7 @@ import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
@@ -46,7 +48,6 @@ import java.util.regex.Pattern;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
-import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -82,11 +83,23 @@ public class NestedPortletsConfigurationAction
 		String portletResource = ParamUtil.getString(
 			actionRequest, "portletResource");
 
-		PortletPreferences portletPreferences = actionRequest.getPreferences();
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		String oldLayoutTemplateId = portletPreferences.getValue(
-			"layoutTemplateId",
-			_nestedPortletsConfiguration.layoutTemplateDefault());
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		NestedPortletsPortletInstanceConfiguration
+			nestedPortletsPortletInstanceConfiguration =
+				portletDisplay.getPortletInstanceConfiguration(
+					NestedPortletsPortletInstanceConfiguration.class);
+
+		String oldLayoutTemplateId =
+			nestedPortletsPortletInstanceConfiguration.layoutTemplateId();
+
+		if (Validator.isNull(oldLayoutTemplateId)) {
+			oldLayoutTemplateId =
+				_nestedPortletsConfiguration.layoutTemplateDefault();
+		}
 
 		if (!oldLayoutTemplateId.equals(layoutTemplateId)) {
 			reorganizeNestedColumns(
