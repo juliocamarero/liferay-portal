@@ -2513,8 +2513,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			long userId, long plid, String friendlyURL, String languageId)
 		throws PortalException {
 
-		Date now = new Date();
-
 		Layout layout = layoutPersistence.findByPrimaryKey(plid);
 
 		friendlyURL = layoutLocalServiceHelper.getFriendlyURL(
@@ -2529,8 +2527,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			userId, layout.getCompanyId(), layout.getGroupId(),
 			layout.getPlid(), layout.isPrivateLayout(), friendlyURL, languageId,
 			new ServiceContext());
-
-		layout.setModifiedDate(now);
 
 		String defaultLanguageId = LocaleUtil.toLanguageId(
 			LocaleUtil.getSiteDefault());
@@ -2820,8 +2816,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			String typeSettings)
 		throws PortalException {
 
-		Date now = new Date();
-
 		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
 
 		typeSettingsProperties.fastLoad(typeSettings);
@@ -2831,7 +2825,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		Layout layout = layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
 
-		layout.setModifiedDate(now);
 		layout.setTypeSettings(typeSettingsProperties.toString());
 
 		layoutPersistence.update(layout);
@@ -2858,12 +2851,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			String colorSchemeId, String css, boolean wapTheme)
 		throws PortalException {
 
-		Date now = new Date();
-
 		Layout layout = layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
-
-		layout.setModifiedDate(now);
 
 		if (wapTheme) {
 			layout.setWapThemeId(themeId);
@@ -2894,11 +2883,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	public Layout updateName(Layout layout, String name, String languageId)
 		throws PortalException {
 
-		Date now = new Date();
-
 		layoutLocalServiceHelper.validateName(name, languageId);
 
-		layout.setModifiedDate(now);
 		layout.setName(name, LocaleUtil.fromLanguageId(languageId));
 
 		layoutPersistence.update(layout);
@@ -2910,7 +2896,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 				layoutPrototypeLocalService.getLayoutPrototype(
 					group.getClassPK());
 
-			layoutPrototype.setModifiedDate(now);
 			layoutPrototype.setName(
 				name, LocaleUtil.fromLanguageId(languageId));
 
@@ -2991,8 +2976,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		layoutLocalServiceHelper.validateParentLayoutId(
 			groupId, privateLayout, layoutId, parentLayoutId);
 
-		Date now = new Date();
-
 		Layout layout = layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
 
@@ -3004,7 +2987,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			layout.setPriority(priority);
 		}
 
-		layout.setModifiedDate(now);
 		layout.setParentLayoutId(parentLayoutId);
 
 		layoutPersistence.update(layout);
@@ -3028,8 +3010,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	@Override
 	public Layout updateParentLayoutId(long plid, long parentPlid)
 		throws PortalException {
-
-		Date now = new Date();
 
 		Layout layout = layoutPersistence.findByPrimaryKey(plid);
 
@@ -3059,7 +3039,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			layout.setPriority(priority);
 		}
 
-		layout.setModifiedDate(now);
 		layout.setParentLayoutId(parentLayoutId);
 
 		layoutPersistence.update(layout);

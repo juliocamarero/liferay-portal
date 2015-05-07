@@ -44,6 +44,8 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.messageboards.NoSuchMessageException;
@@ -55,6 +57,7 @@ import com.liferay.portlet.messageboards.service.persistence.MBMessagePersistenc
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18365,6 +18368,28 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 			String uuid = PortalUUIDUtil.generate();
 
 			mbMessage.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (mbMessage.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				mbMessage.setCreateDate(now);
+			}
+			else {
+				mbMessage.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!mbMessageModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				mbMessage.setModifiedDate(now);
+			}
+			else {
+				mbMessage.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
 		}
 
 		long userId = GetterUtil.getLong(PrincipalThreadLocal.getName());

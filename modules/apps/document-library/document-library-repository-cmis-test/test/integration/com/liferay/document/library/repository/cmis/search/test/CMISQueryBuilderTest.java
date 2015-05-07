@@ -84,10 +84,8 @@ public class CMISQueryBuilderTest {
 		_repositoryEntry.setCompanyId(serviceContext.getCompanyId());
 		_repositoryEntry.setUserId(serviceContext.getUserId());
 		_repositoryEntry.setUserName(StringUtil.randomString());
-		_repositoryEntry.setCreateDate(
-			serviceContext.getCreateDate(new Date()));
-		_repositoryEntry.setModifiedDate(
-			serviceContext.getModifiedDate(new Date()));
+		_repositoryEntry.setCreateDate(serviceContext.getCreateDate(null));
+		_repositoryEntry.setModifiedDate(serviceContext.getModifiedDate(null));
 		_repositoryEntry.setRepositoryId(_repository.getRepositoryId());
 		_repositoryEntry.setMappedId(_MAPPED_ID);
 

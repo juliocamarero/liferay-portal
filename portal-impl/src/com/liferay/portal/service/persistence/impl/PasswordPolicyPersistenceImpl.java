@@ -41,11 +41,14 @@ import com.liferay.portal.model.PasswordPolicy;
 import com.liferay.portal.model.impl.PasswordPolicyImpl;
 import com.liferay.portal.model.impl.PasswordPolicyModelImpl;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.persistence.PasswordPolicyPersistence;
 
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -3631,6 +3634,29 @@ public class PasswordPolicyPersistenceImpl extends BasePersistenceImpl<PasswordP
 			String uuid = PortalUUIDUtil.generate();
 
 			passwordPolicy.setUuid(uuid);
+		}
+
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (passwordPolicy.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				passwordPolicy.setCreateDate(now);
+			}
+			else {
+				passwordPolicy.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!passwordPolicyModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				passwordPolicy.setModifiedDate(now);
+			}
+			else {
+				passwordPolicy.setModifiedDate(serviceContext.getModifiedDate(
+						now));
+			}
 		}
 
 		Session session = null;
