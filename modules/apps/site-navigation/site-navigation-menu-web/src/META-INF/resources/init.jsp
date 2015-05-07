@@ -30,13 +30,15 @@ page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PrefsParamUtil" %><%@
-page import="com.liferay.site.navigation.menu.web.configuration.NavigationMenuWebConfigurationUtil" %><%@
-page import="com.liferay.site.navigation.menu.web.configuration.NavigationMenuWebConfigurationValues" %>
+page import="com.liferay.site.navigation.menu.web.configuration.NavigationMenuWebConfiguration" %><%@
+page import="com.liferay.site.navigation.menu.web.configuration.NavigationMenuWebConfigurationUtil" %>
 
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
 
 <%
+NavigationMenuWebConfiguration navigationMenuWebConfiguration = (NavigationMenuWebConfiguration)renderRequest.getAttribute(NavigationMenuWebConfiguration.class.getName());
+
 String portletResource = ParamUtil.getString(request, "portletResource");
 
 String bulletStyle = PrefsParamUtil.getString(portletPreferences, renderRequest, "bulletStyle", GetterUtil.getString(themeDisplay.getThemeSetting("bullet-style"), "dots"));
