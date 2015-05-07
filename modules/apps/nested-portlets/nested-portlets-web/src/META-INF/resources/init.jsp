@@ -24,11 +24,12 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration" %><%@
+page import="com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration" %><%@
+page import="com.liferay.nested.portlets.web.display.context.NestedPortletsDisplayContext" %><%@
 page import="com.liferay.portal.kernel.log.Log" %><%@
 page import="com.liferay.portal.kernel.log.LogFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.template.StringTemplateResource" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
-page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
@@ -46,6 +47,9 @@ page import="com.liferay.portal.service.permission.LayoutPermissionUtil" %>
 
 <%
 NestedPortletsConfiguration nestedPortletsConfiguration = (NestedPortletsConfiguration)request.getAttribute(NestedPortletsConfiguration.class.getName());
+NestedPortletsPortletInstanceConfiguration nestedPortletsPortletInstanceConfiguration = portletDisplay.getPortletInstanceConfiguration(NestedPortletsPortletInstanceConfiguration.class);
+
+NestedPortletsDisplayContext nestedPortletsDisplayContext = new NestedPortletsDisplayContext(request, nestedPortletsConfiguration, nestedPortletsPortletInstanceConfiguration);
 %>
 
 <%@ include file="/init-ext.jsp" %>
