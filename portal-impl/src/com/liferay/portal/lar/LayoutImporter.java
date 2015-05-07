@@ -1012,16 +1012,13 @@ public class LayoutImporter {
 					portletDataContext.getParameterMap(),
 					PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE);
 
-				boolean privateLayout;
+				boolean privateLayout = portletDataContext.isPrivateLayout();
 
 				if (layoutsImportMode.equals(
 						PortletDataHandlerKeys.
 							LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE)) {
 
 					privateLayout = false;
-				}
-				else {
-					privateLayout = portletDataContext.isPrivateLayout();
 				}
 
 				Layout scopeLayout =
