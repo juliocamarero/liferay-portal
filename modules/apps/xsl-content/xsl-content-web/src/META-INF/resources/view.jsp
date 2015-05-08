@@ -18,8 +18,8 @@
 
 <%
 try {
-	xmlUrl = XSLContentUtil.replaceUrlTokens(themeDisplay, xmlUrl);
-	xslUrl = XSLContentUtil.replaceUrlTokens(themeDisplay, xslUrl);
+	String xmlUrl = XSLContentUtil.replaceUrlTokens(themeDisplay, xslContentDisplayContext.getXMLUrl());
+	String xslUrl = XSLContentUtil.replaceUrlTokens(themeDisplay, xslContentDisplayContext.getXSLUrl());
 
 	String content = XSLContentUtil.transform(xslContentConfiguration, new URL(xmlUrl), new URL(xslUrl));
 %>
