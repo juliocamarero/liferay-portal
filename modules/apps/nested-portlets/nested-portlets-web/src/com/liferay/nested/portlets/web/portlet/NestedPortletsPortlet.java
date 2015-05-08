@@ -18,6 +18,7 @@ import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration;
 import com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration;
+import com.liferay.nested.portlets.web.display.context.NestedPortletsDisplayContext;
 import com.liferay.nested.portlets.web.upgrade.NestedPortletWebUpgrade;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -38,6 +39,7 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 
 import java.io.IOException;
@@ -50,6 +52,7 @@ import java.util.regex.Pattern;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -93,21 +96,10 @@ public class NestedPortletsPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
 		String layoutTemplateId = StringPool.BLANK;
 
 		try {
-			NestedPortletsPortletInstanceConfiguration
-				nestedPortletsPortletInstanceConfiguration =
-					portletDisplay.getPortletInstanceConfiguration(
-						NestedPortletsPortletInstanceConfiguration.class);
-
-			layoutTemplateId =
-				nestedPortletsPortletInstanceConfiguration.layoutTemplateId();
+			layoutTemplateId = getLayoutTemplateId(renderRequest);
 		}
 		catch (SettingsException e) {
 			if (_log.isWarnEnabled()) {
@@ -115,15 +107,13 @@ public class NestedPortletsPortlet extends MVCPortlet {
 			}
 		}
 
-		if (Validator.isNull(layoutTemplateId)) {
-			layoutTemplateId =
-				_nestedPortletsConfiguration.layoutTemplateDefault();
-		}
-
 		String templateId = StringPool.BLANK;
 		String templateContent = StringPool.BLANK;
 
 		Map<String, String> columnIds = new HashMap<>();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		if (Validator.isNotNull(layoutTemplateId)) {
 			Theme theme = themeDisplay.getTheme();
@@ -239,6 +229,28 @@ public class NestedPortletsPortlet extends MVCPortlet {
 				}
 			}
 		}
+	}
+
+	protected String getLayoutTemplateId(PortletRequest portletRequest)
+		throws SettingsException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		NestedPortletsPortletInstanceConfiguration
+			nestedPortletsPortletInstanceConfiguration =
+				portletDisplay.getPortletInstanceConfiguration(
+					NestedPortletsPortletInstanceConfiguration.class);
+
+		NestedPortletsDisplayContext nestedPortletsDisplayContext =
+			new NestedPortletsDisplayContext(
+				PortalUtil.getHttpServletRequest(portletRequest),
+				_nestedPortletsConfiguration,
+				nestedPortletsPortletInstanceConfiguration);
+
+		return nestedPortletsDisplayContext.getLayoutTemplateId();
 	}
 
 	@Reference(unbind = "-")

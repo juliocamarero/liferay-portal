@@ -19,9 +19,11 @@ import aQute.bnd.annotation.metatype.Configurable;
 import com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration;
 import com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration;
 import com.liferay.nested.portlets.web.constants.NestedPortletsPortletKeys;
+import com.liferay.nested.portlets.web.display.context.NestedPortletsDisplayContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
+import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -48,6 +50,7 @@ import java.util.regex.Pattern;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -83,23 +86,7 @@ public class NestedPortletsConfigurationAction
 		String portletResource = ParamUtil.getString(
 			actionRequest, "portletResource");
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		NestedPortletsPortletInstanceConfiguration
-			nestedPortletsPortletInstanceConfiguration =
-				portletDisplay.getPortletInstanceConfiguration(
-					NestedPortletsPortletInstanceConfiguration.class);
-
-		String oldLayoutTemplateId =
-			nestedPortletsPortletInstanceConfiguration.layoutTemplateId();
-
-		if (Validator.isNull(oldLayoutTemplateId)) {
-			oldLayoutTemplateId =
-				_nestedPortletsConfiguration.layoutTemplateDefault();
-		}
+		String oldLayoutTemplateId = getOldLayoutTemplateId (actionRequest);
 
 		if (!oldLayoutTemplateId.equals(layoutTemplateId)) {
 			reorganizeNestedColumns(
@@ -188,6 +175,28 @@ public class NestedPortletsConfigurationAction
 		LayoutLocalServiceUtil.updateLayout(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
+	}
+
+	protected String getOldLayoutTemplateId(PortletRequest portletRequest)
+		throws SettingsException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		NestedPortletsPortletInstanceConfiguration
+			nestedPortletsPortletInstanceConfiguration =
+				portletDisplay.getPortletInstanceConfiguration(
+					NestedPortletsPortletInstanceConfiguration.class);
+
+		NestedPortletsDisplayContext nestedPortletsDisplayContext =
+			new NestedPortletsDisplayContext(
+				PortalUtil.getHttpServletRequest(portletRequest),
+				_nestedPortletsConfiguration,
+				nestedPortletsPortletInstanceConfiguration);
+
+		return nestedPortletsDisplayContext.getLayoutTemplateId();
 	}
 
 	private static final Pattern _pattern = Pattern.compile(
