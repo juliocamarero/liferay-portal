@@ -24,7 +24,6 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration" %><%@
-page import="com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration" %><%@
 page import="com.liferay.nested.portlets.web.display.context.NestedPortletsDisplayContext" %><%@
 page import="com.liferay.portal.kernel.log.Log" %><%@
 page import="com.liferay.portal.kernel.log.LogFactoryUtil" %><%@
@@ -47,9 +46,8 @@ page import="com.liferay.portal.service.permission.LayoutPermissionUtil" %>
 
 <%
 NestedPortletsConfiguration nestedPortletsConfiguration = (NestedPortletsConfiguration)request.getAttribute(NestedPortletsConfiguration.class.getName());
-NestedPortletsPortletInstanceConfiguration nestedPortletsPortletInstanceConfiguration = portletDisplay.getPortletInstanceConfiguration(NestedPortletsPortletInstanceConfiguration.class);
 
-NestedPortletsDisplayContext nestedPortletsDisplayContext = new NestedPortletsDisplayContext(request, nestedPortletsConfiguration, nestedPortletsPortletInstanceConfiguration);
+NestedPortletsDisplayContext nestedPortletsDisplayContext = new NestedPortletsDisplayContext(request, nestedPortletsConfiguration);
 %>
 
 <%@ include file="/init-ext.jsp" %>

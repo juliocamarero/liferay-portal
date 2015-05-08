@@ -16,11 +16,19 @@ package com.liferay.nested.portlets.web.display.context;
 
 import com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration;
 import com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration;
+import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.LayoutTemplate;
+import com.liferay.portal.plugin.PluginUtil;
+import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
+
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,15 +38,21 @@ import javax.servlet.http.HttpServletRequest;
 public class NestedPortletsDisplayContext {
 
 	public NestedPortletsDisplayContext(
-		HttpServletRequest request,
-		NestedPortletsConfiguration nestedPortletsConfiguration,
-		NestedPortletsPortletInstanceConfiguration
-			nestedPortletsPortletInstanceConfiguration) {
+			HttpServletRequest request,
+			NestedPortletsConfiguration nestedPortletsConfiguration)
+		throws SettingsException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			com.liferay.portal.util.WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		_nestedPortletsPortletInstanceConfiguration =
+			portletDisplay.getPortletInstanceConfiguration(
+				NestedPortletsPortletInstanceConfiguration.class);
 
 		_request = request;
 		_nestedPortletsConfiguration = nestedPortletsConfiguration;
-		_nestedPortletsPortletInstanceConfiguration =
-			nestedPortletsPortletInstanceConfiguration;
 	}
 
 	public String getLayoutTemplateId() {
@@ -46,9 +60,8 @@ public class NestedPortletsDisplayContext {
 			return _layoutTemplateId;
 		}
 
-		_layoutTemplateId = ParamUtil.getString(
-			_request, "layoutTemplateId",
-			_nestedPortletsPortletInstanceConfiguration.layoutTemplateId());
+		_layoutTemplateId =
+			_nestedPortletsPortletInstanceConfiguration.layoutTemplateId();
 
 		if (Validator.isNull(_layoutTemplateId)) {
 			_layoutTemplateId =
@@ -63,10 +76,9 @@ public class NestedPortletsDisplayContext {
 			return _portletSetupShowBorders;
 		}
 
-		_portletSetupShowBorders = ParamUtil.getBoolean(
-			_request, "portletSetupShowBorders",
+		_portletSetupShowBorders =
 			_nestedPortletsPortletInstanceConfiguration.
-				portletSetupShowBorders());
+				portletSetupShowBorders();
 
 		if (Validator.isNull(_portletSetupShowBorders)) {
 			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(

@@ -17,7 +17,6 @@ package com.liferay.nested.portlets.web.portlet;
 import aQute.bnd.annotation.metatype.Configurable;
 
 import com.liferay.nested.portlets.web.configuration.NestedPortletsConfiguration;
-import com.liferay.nested.portlets.web.configuration.NestedPortletsPortletInstanceConfiguration;
 import com.liferay.nested.portlets.web.display.context.NestedPortletsDisplayContext;
 import com.liferay.nested.portlets.web.upgrade.NestedPortletWebUpgrade;
 import com.liferay.portal.kernel.log.Log;
@@ -37,7 +36,6 @@ import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutTemplateLocalServiceUtil;
-import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
@@ -52,7 +50,6 @@ import java.util.regex.Pattern;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -99,7 +96,13 @@ public class NestedPortletsPortlet extends MVCPortlet {
 		String layoutTemplateId = StringPool.BLANK;
 
 		try {
-			layoutTemplateId = getLayoutTemplateId(renderRequest);
+			NestedPortletsDisplayContext nestedPortletsDisplayContext =
+				new NestedPortletsDisplayContext(
+					PortalUtil.getHttpServletRequest(renderRequest),
+					_nestedPortletsConfiguration);
+
+			layoutTemplateId =
+				nestedPortletsDisplayContext.getLayoutTemplateId();
 		}
 		catch (SettingsException e) {
 			if (_log.isWarnEnabled()) {
@@ -229,28 +232,6 @@ public class NestedPortletsPortlet extends MVCPortlet {
 				}
 			}
 		}
-	}
-
-	protected String getLayoutTemplateId(PortletRequest portletRequest)
-		throws SettingsException {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		NestedPortletsPortletInstanceConfiguration
-			nestedPortletsPortletInstanceConfiguration =
-				portletDisplay.getPortletInstanceConfiguration(
-					NestedPortletsPortletInstanceConfiguration.class);
-
-		NestedPortletsDisplayContext nestedPortletsDisplayContext =
-			new NestedPortletsDisplayContext(
-				PortalUtil.getHttpServletRequest(portletRequest),
-				_nestedPortletsConfiguration,
-				nestedPortletsPortletInstanceConfiguration);
-
-		return nestedPortletsDisplayContext.getLayoutTemplateId();
 	}
 
 	@Reference(unbind = "-")
