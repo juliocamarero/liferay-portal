@@ -24,7 +24,7 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.asset.categories.navigation.web.configuration.AssetCategoriesNavigationPortletInstanceConfiguration" %><%@
-page import="com.liferay.asset.categories.navigation.web.context.AssetCategoriesNavigationDisplayContext" %><%@
+page import="com.liferay.asset.categories.navigation.web.display.context.AssetCategoriesNavigationDisplayContext" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portlet.asset.model.AssetCategory" %>
 
