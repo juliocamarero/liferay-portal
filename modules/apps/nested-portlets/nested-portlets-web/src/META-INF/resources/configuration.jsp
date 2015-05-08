@@ -30,7 +30,7 @@
 		<%
 		int CELLS_PER_ROW = 4;
 
-		String layoutTemplateId = portletPreferences.getValue("layoutTemplateId", nestedPortletsConfiguration.layoutTemplateDefault());
+		String layoutTemplateId = nestedPortletsDisplayContext.getLayoutTemplateId();
 
 		List<LayoutTemplate> layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutTemplates(theme.getThemeId());
 
@@ -68,9 +68,7 @@
 	</aui:fieldset>
 
 	<%
-	boolean portletDecorateDefault = GetterUtil.getBoolean(themeDisplay.getThemeSetting("portlet-setup-show-borders-default"), true);
-
-	boolean portletSetupShowBorders = GetterUtil.getBoolean(portletPreferences.getValue("portletSetupShowBorders", String.valueOf(portletDecorateDefault)));
+	boolean portletSetupShowBorders = nestedPortletsDisplayContext.isPortletSetupShowBorders();
 	%>
 
 	<aui:fieldset label="display-settings">
