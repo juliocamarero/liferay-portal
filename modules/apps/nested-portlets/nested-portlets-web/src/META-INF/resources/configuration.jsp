@@ -67,12 +67,8 @@
 		</table>
 	</aui:fieldset>
 
-	<%
-	boolean portletSetupShowBorders = nestedPortletsDisplayContext.isPortletSetupShowBorders();
-	%>
-
 	<aui:fieldset label="display-settings">
-		<aui:input label="show-borders" name="preferences--portletSetupShowBorders--" type="checkbox" value="<%= portletSetupShowBorders %>" />
+		<aui:input label="show-borders" name="preferences--portletSetupShowBorders--" type="checkbox" value="<%= nestedPortletsDisplayContext.isPortletSetupShowBorders() %>" />
 	</aui:fieldset>
 
 	<aui:button-row>
