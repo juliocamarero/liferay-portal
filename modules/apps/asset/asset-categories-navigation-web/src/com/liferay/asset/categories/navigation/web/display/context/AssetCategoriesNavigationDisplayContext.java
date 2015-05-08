@@ -46,6 +46,8 @@ public class AssetCategoriesNavigationDisplayContext {
 	public AssetCategoriesNavigationDisplayContext(HttpServletRequest request)
 		throws SettingsException {
 
+		_request = request;
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -54,8 +56,6 @@ public class AssetCategoriesNavigationDisplayContext {
 		_assetCategoriesNavigationPortletInstanceConfiguration =
 			portletDisplay.getPortletInstanceConfiguration(
 				AssetCategoriesNavigationPortletInstanceConfiguration.class);
-
-		_request = request;
 	}
 
 	public List<AssetVocabulary> getAssetVocabularies() throws PortalException {
