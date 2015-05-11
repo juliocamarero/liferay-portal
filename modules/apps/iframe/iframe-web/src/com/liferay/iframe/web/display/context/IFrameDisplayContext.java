@@ -17,7 +17,6 @@ package com.liferay.iframe.web.display.context;
 import com.liferay.iframe.web.configuration.IFrameConfiguration;
 import com.liferay.iframe.web.configuration.IFramePortletInstanceConfiguration;
 import com.liferay.portal.kernel.settings.SettingsException;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -46,7 +45,6 @@ public class IFrameDisplayContext {
 				IFramePortletInstanceConfiguration.class);
 
 		_iFrameConfiguration = iFrameConfiguration;
-		_request = request;
 	}
 
 	public String getAlt() {
@@ -54,8 +52,7 @@ public class IFrameDisplayContext {
 			return _alt;
 		}
 
-		_alt = ParamUtil.getString(
-			_request, "alt", _iFramePortletInstanceConfiguration.alt());
+		_alt = _iFramePortletInstanceConfiguration.alt();
 
 		return _alt;
 	}
@@ -65,9 +62,7 @@ public class IFrameDisplayContext {
 			return _authType;
 		}
 
-		_authType = ParamUtil.getString(
-			_request, "authType",
-			_iFramePortletInstanceConfiguration.authType());
+		_authType = _iFramePortletInstanceConfiguration.authType();
 
 		if (Validator.isNull(_authType)) {
 			_authType = _iFrameConfiguration.authType();
@@ -81,9 +76,7 @@ public class IFrameDisplayContext {
 			return _basicPassword;
 		}
 
-		_basicPassword = ParamUtil.getString(
-			_request, "basicPassword",
-			_iFramePortletInstanceConfiguration.basicPassword());
+		_basicPassword = _iFramePortletInstanceConfiguration.basicPassword();
 
 		return _basicPassword;
 	}
@@ -93,9 +86,7 @@ public class IFrameDisplayContext {
 			return _basicUserName;
 		}
 
-		_basicUserName = ParamUtil.getString(
-			_request, "basicUserName",
-			_iFramePortletInstanceConfiguration.basicUserName());
+		_basicUserName = _iFramePortletInstanceConfiguration.basicUserName();
 
 		return _basicUserName;
 	}
@@ -105,8 +96,7 @@ public class IFrameDisplayContext {
 			return _border;
 		}
 
-		_border = ParamUtil.getString(
-			_request, "border", _iFramePortletInstanceConfiguration.border());
+		_border = _iFramePortletInstanceConfiguration.border();
 
 		return _border;
 	}
@@ -116,9 +106,7 @@ public class IFrameDisplayContext {
 			return _bordercolor;
 		}
 
-		_bordercolor = ParamUtil.getString(
-			_request, "borderColor",
-			_iFramePortletInstanceConfiguration.bordercolor());
+		_bordercolor = _iFramePortletInstanceConfiguration.bordercolor();
 
 		return _bordercolor;
 	}
@@ -128,9 +116,7 @@ public class IFrameDisplayContext {
 			return _formMethod;
 		}
 
-		_formMethod = ParamUtil.getString(
-			_request, "formMethod",
-			_iFramePortletInstanceConfiguration.formMethod());
+		_formMethod = _iFramePortletInstanceConfiguration.formMethod();
 
 		if (Validator.isNull(_formMethod)) {
 			_formMethod = _iFrameConfiguration.formMethod();
@@ -144,9 +130,7 @@ public class IFrameDisplayContext {
 			return _formPassword;
 		}
 
-		_formPassword = ParamUtil.getString(
-			_request, "formPassword",
-			_iFramePortletInstanceConfiguration.formPassword());
+		_formPassword = _iFramePortletInstanceConfiguration.formPassword();
 
 		return _formPassword;
 	}
@@ -156,9 +140,7 @@ public class IFrameDisplayContext {
 			return _formUserName;
 		}
 
-		_formUserName = ParamUtil.getString(
-			_request, "formUserName",
-			_iFramePortletInstanceConfiguration.formUserName());
+		_formUserName = _iFramePortletInstanceConfiguration.formUserName();
 
 		return _formUserName;
 	}
@@ -168,9 +150,7 @@ public class IFrameDisplayContext {
 			return _frameborder;
 		}
 
-		_frameborder = ParamUtil.getString(
-			_request, "frameborder",
-			_iFramePortletInstanceConfiguration.frameborder());
+		_frameborder = _iFramePortletInstanceConfiguration.frameborder();
 
 		return _frameborder;
 	}
@@ -180,9 +160,8 @@ public class IFrameDisplayContext {
 			return _heightMaximized;
 		}
 
-		_heightMaximized = ParamUtil.getString(
-			_request, "heightMaximized",
-			_iFramePortletInstanceConfiguration.heightMaximized());
+		_heightMaximized =
+			_iFramePortletInstanceConfiguration.heightMaximized();
 
 		return _heightMaximized;
 	}
@@ -192,9 +171,7 @@ public class IFrameDisplayContext {
 			return _heightNormal;
 		}
 
-		_heightNormal = ParamUtil.getString(
-			_request, "heightNormal",
-			_iFramePortletInstanceConfiguration.heightNormal());
+		_heightNormal = _iFramePortletInstanceConfiguration.heightNormal();
 
 		return _heightNormal;
 	}
@@ -204,9 +181,8 @@ public class IFrameDisplayContext {
 			return _hiddenVariables;
 		}
 
-		_hiddenVariables = ParamUtil.getString(
-			_request, "hiddenVariables",
-			_iFramePortletInstanceConfiguration.hiddenVariables());
+		_hiddenVariables =
+			_iFramePortletInstanceConfiguration.hiddenVariables();
 
 		if (Validator.isNull(_hiddenVariables)) {
 			_hiddenVariables = StringUtil.merge(
@@ -221,8 +197,7 @@ public class IFrameDisplayContext {
 			return _hspace;
 		}
 
-		_hspace = ParamUtil.getString(
-			_request, "hspace", _iFramePortletInstanceConfiguration.hspace());
+		_hspace = _iFramePortletInstanceConfiguration.hspace();
 
 		return _hspace;
 	}
@@ -232,9 +207,7 @@ public class IFrameDisplayContext {
 			return _longdesc;
 		}
 
-		_longdesc = ParamUtil.getString(
-			_request, "longdesc",
-			_iFramePortletInstanceConfiguration.longdesc());
+		_longdesc = _iFramePortletInstanceConfiguration.longdesc();
 
 		return _longdesc;
 	}
@@ -244,9 +217,7 @@ public class IFrameDisplayContext {
 			return _passwordField;
 		}
 
-		_passwordField = ParamUtil.getString(
-			_request, "passwordField",
-			_iFramePortletInstanceConfiguration.passwordField());
+		_passwordField = _iFramePortletInstanceConfiguration.passwordField();
 
 		return _passwordField;
 	}
@@ -256,9 +227,7 @@ public class IFrameDisplayContext {
 			return _scrolling;
 		}
 
-		_scrolling = ParamUtil.getString(
-			_request, "scrolling",
-			_iFramePortletInstanceConfiguration.scrolling());
+		_scrolling = _iFramePortletInstanceConfiguration.scrolling();
 
 		return _scrolling;
 	}
@@ -268,8 +237,7 @@ public class IFrameDisplayContext {
 			return _src;
 		}
 
-		_src = ParamUtil.getString(
-			_request, "src", _iFramePortletInstanceConfiguration.src());
+		_src = _iFramePortletInstanceConfiguration.src();
 
 		return _src;
 	}
@@ -279,8 +247,7 @@ public class IFrameDisplayContext {
 			return _title;
 		}
 
-		_title = ParamUtil.getString(
-			_request, "title", _iFramePortletInstanceConfiguration.title());
+		_title = _iFramePortletInstanceConfiguration.title();
 
 		return _title;
 	}
@@ -290,9 +257,7 @@ public class IFrameDisplayContext {
 			return _userNameField;
 		}
 
-		_userNameField = ParamUtil.getString(
-			_request, "userNameField",
-			_iFramePortletInstanceConfiguration.userNameField());
+		_userNameField = _iFramePortletInstanceConfiguration.userNameField();
 
 		return _userNameField;
 	}
@@ -302,8 +267,7 @@ public class IFrameDisplayContext {
 			return _vspace;
 		}
 
-		_vspace = ParamUtil.getString(
-			_request, "vspace", _iFramePortletInstanceConfiguration.vspace());
+		_vspace = _iFramePortletInstanceConfiguration.vspace();
 
 		return _vspace;
 	}
@@ -313,8 +277,7 @@ public class IFrameDisplayContext {
 			return _width;
 		}
 
-		_width = ParamUtil.getString(
-			_request, "width", _iFramePortletInstanceConfiguration.width());
+		_width = _iFramePortletInstanceConfiguration.width();
 
 		return _width;
 	}
@@ -324,8 +287,7 @@ public class IFrameDisplayContext {
 			return _auth;
 		}
 
-		_auth = ParamUtil.getBoolean(
-			_request, "auth", _iFramePortletInstanceConfiguration.auth());
+		_auth = _iFramePortletInstanceConfiguration.auth();
 
 		return _auth;
 	}
@@ -335,9 +297,7 @@ public class IFrameDisplayContext {
 			return _relative;
 		}
 
-		_relative = ParamUtil.getBoolean(
-			_request, "relative",
-			_iFramePortletInstanceConfiguration.relative());
+		_relative = _iFramePortletInstanceConfiguration.relative();
 
 		return _relative;
 	}
@@ -347,9 +307,8 @@ public class IFrameDisplayContext {
 			return _resizeAutomatically;
 		}
 
-		_resizeAutomatically = ParamUtil.getBoolean(
-			_request, "resizeAutomatically",
-			_iFramePortletInstanceConfiguration.resizeAutomatically());
+		_resizeAutomatically =
+			_iFramePortletInstanceConfiguration.resizeAutomatically();
 
 		return _resizeAutomatically;
 	}
@@ -375,7 +334,6 @@ public class IFrameDisplayContext {
 	private String _longdesc;
 	private String _passwordField;
 	private Boolean _relative;
-	private final HttpServletRequest _request;
 	private Boolean _resizeAutomatically;
 	private String _scrolling;
 	private String _src;
