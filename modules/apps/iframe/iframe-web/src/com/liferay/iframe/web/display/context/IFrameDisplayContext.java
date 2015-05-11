@@ -16,7 +16,13 @@ package com.liferay.iframe.web.display.context;
 
 import com.liferay.iframe.web.configuration.IFrameConfiguration;
 import com.liferay.iframe.web.configuration.IFramePortletInstanceConfiguration;
+import com.liferay.iframe.web.constants.IFrameWebKeys;
+import com.liferay.iframe.web.util.IFrameUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.settings.SettingsException;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.KeyValuePair;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -24,7 +30,12 @@ import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.WindowState;
 
 /**
  * @author Juergen Kappler
@@ -32,19 +43,21 @@ import javax.servlet.http.HttpServletRequest;
 public class IFrameDisplayContext {
 
 	public IFrameDisplayContext(
-			IFrameConfiguration iFrameConfiguration, HttpServletRequest request)
+			IFrameConfiguration iFrameConfiguration, PortletRequest request)
 		throws SettingsException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+		_themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
 		_iFramePortletInstanceConfiguration =
 			portletDisplay.getPortletInstanceConfiguration(
 				IFramePortletInstanceConfiguration.class);
 
 		_iFrameConfiguration = iFrameConfiguration;
+
+		_request = request;
 	}
 
 	public String getAlt() {
@@ -155,6 +168,23 @@ public class IFrameDisplayContext {
 		return _frameborder;
 	}
 
+	public String getHeight() {
+		if (_height != null) {
+			return _height;
+		}
+
+		String windowState = String.valueOf(_request.getWindowState());
+
+		if (windowState.equals(WindowState.MAXIMIZED)) {
+			_height = getHeightMaximized();
+		}
+		else {
+			_height = getHeightNormal();
+		}
+
+		return _height;
+	}
+
 	public String getHeightMaximized() {
 		if (_heightMaximized != null) {
 			return _heightMaximized;
@@ -192,6 +222,28 @@ public class IFrameDisplayContext {
 		return _hiddenVariables;
 	}
 
+	public List<KeyValuePair> getHiddenVariablesList() {
+		List<KeyValuePair> hiddenVariablesList = new ArrayList<>();
+
+		for (String hiddenVariable :
+			StringUtil.split(getHiddenVariables(), CharPool.SEMICOLON)) {
+
+			String hiddenKey = StringPool.BLANK;
+			String hiddenValue = StringPool.BLANK;
+
+			int pos = hiddenVariable.indexOf(StringPool.EQUAL);
+
+			if (pos != -1) {
+				hiddenKey = hiddenVariable.substring(0, pos);
+				hiddenValue = hiddenVariable.substring(pos + 1);
+			}
+
+			hiddenVariablesList.add(new KeyValuePair(hiddenKey, hiddenValue));
+		}
+
+		return hiddenVariablesList;
+	}
+
 	public String getHspace() {
 		if (_hspace != null) {
 			return _hspace;
@@ -202,6 +254,73 @@ public class IFrameDisplayContext {
 		return _hspace;
 	}
 
+	public String getIframeBaseSrc() {
+		if (_iframeBaseSrc != null) {
+			return _iframeBaseSrc;
+		}
+
+		_iframeBaseSrc = getIframeSrc();
+
+		int lastSlashPos = 0;
+
+		if (_iframeBaseSrc.length() > 6) {
+			lastSlashPos = _iframeBaseSrc.substring(7).lastIndexOf(
+				StringPool.SLASH);
+
+			if (lastSlashPos != -1) {
+				_iframeBaseSrc = _iframeBaseSrc.substring(0, lastSlashPos + 8);
+			}
+		}
+
+		return _iframeBaseSrc;
+	}
+
+	public String getIframeSrc() {
+		if (_iframeSrc != null) {
+			return _iframeSrc;
+		}
+
+		_iframeSrc = StringPool.BLANK;
+
+		if (isRelative()) {
+			_iframeSrc = _themeDisplay.getPathContext();
+		}
+
+		_iframeSrc += (String)_request.getAttribute(IFrameWebKeys.IFRAME_SRC);
+
+		if (!ListUtil.isEmpty(getIframeVariables())) {
+			if (_iframeSrc.contains(StringPool.QUESTION)) {
+				_iframeSrc += StringPool.AMPERSAND;
+			}
+			else {
+				_iframeSrc += StringPool.QUESTION;
+			}
+
+			_iframeSrc += StringUtil.merge(
+				getIframeVariables(), StringPool.AMPERSAND);
+		}
+
+		return _iframeSrc;
+	}
+
+	public List<String> getIframeVariables() {
+		List<String> iframeVariables = new ArrayList<>();
+
+		Enumeration<String> enu = _request.getParameterNames();
+
+		while (enu.hasMoreElements()) {
+			String name = enu.nextElement();
+
+			if (name.startsWith(_IFRAME_PREFIX)) {
+				iframeVariables.add(
+					name.substring(_IFRAME_PREFIX.length()).concat(
+						StringPool.EQUAL).concat(_request.getParameter(name)));
+			}
+		}
+
+		return iframeVariables;
+	}
+
 	public String getLongdesc() {
 		if (_longdesc != null) {
 			return _longdesc;
@@ -210,6 +329,41 @@ public class IFrameDisplayContext {
 		_longdesc = _iFramePortletInstanceConfiguration.longdesc();
 
 		return _longdesc;
+	}
+
+	public String getPassword() throws PortalException {
+		if (_password != null) {
+			return _password;
+		}
+
+		String authType = getAuthType();
+
+		if (authType.equals("basic")) {
+			_password = getBasicPassword();
+		}
+		else {
+			_password = getFormPassword();
+		}
+
+		if (Validator.isNull(_password)) {
+			return StringPool.BLANK;
+		}
+
+		int pos = _password.indexOf(StringPool.EQUAL);
+
+		if (pos != -1) {
+			String fieldValuePair = _password;
+
+			_passwordField = fieldValuePair.substring(0, pos);
+
+			_password = fieldValuePair.substring(pos + 1);
+		}
+
+		if (Validator.isNotNull(getPasswordField())) {
+			_password = IFrameUtil.getPassword(_request, _password);
+		}
+
+		return _password;
 	}
 
 	public String getPasswordField() {
@@ -250,6 +404,41 @@ public class IFrameDisplayContext {
 		_title = _iFramePortletInstanceConfiguration.title();
 
 		return _title;
+	}
+
+	public String getUserName() throws PortalException {
+		if (_userName != null) {
+			return _userName;
+		}
+
+		String authType = getAuthType();
+
+		if (authType.equals("basic")) {
+			_userName = getBasicUserName();
+		}
+		else {
+			_userName = getFormUserName();
+		}
+
+		if (Validator.isNull(_userName)) {
+			return StringPool.BLANK;
+		}
+
+		int pos = _userName.indexOf(StringPool.EQUAL);
+
+		if (pos != -1) {
+			String fieldValuePair = _userName;
+
+			_userNameField = fieldValuePair.substring(0, pos);
+
+			_userName = fieldValuePair.substring(pos + 1);
+		}
+
+		if (Validator.isNotNull(getUserNameField())) {
+			_userName = IFrameUtil.getUserName(_request, _userName);
+		}
+
+		return _userName;
 	}
 
 	public String getUserNameField() {
@@ -313,6 +502,8 @@ public class IFrameDisplayContext {
 		return _resizeAutomatically;
 	}
 
+	private static final String _IFRAME_PREFIX = "iframe_";
+
 	private String _alt;
 	private Boolean _auth;
 	private String _authType;
@@ -324,20 +515,27 @@ public class IFrameDisplayContext {
 	private String _formPassword;
 	private String _formUserName;
 	private String _frameborder;
+	private String _height;
 	private String _heightMaximized;
 	private String _heightNormal;
 	private String _hiddenVariables;
 	private String _hspace;
+	private String _iframeBaseSrc;
 	private final IFrameConfiguration _iFrameConfiguration;
 	private final IFramePortletInstanceConfiguration
 		_iFramePortletInstanceConfiguration;
+	private String _iframeSrc;
 	private String _longdesc;
+	private String _password;
 	private String _passwordField;
 	private Boolean _relative;
+	private final PortletRequest _request;
 	private Boolean _resizeAutomatically;
 	private String _scrolling;
 	private String _src;
+	private final ThemeDisplay _themeDisplay;
 	private String _title;
+	private String _userName;
 	private String _userNameField;
 	private String _vspace;
 	private String _width;

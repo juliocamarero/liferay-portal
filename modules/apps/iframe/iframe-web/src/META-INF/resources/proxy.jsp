@@ -16,12 +16,6 @@
 
 <%@ include file="/init.jsp" %>
 
-<%
-List<String> hiddenVariablesList = ListUtil.toList(StringUtil.split(iFrameDisplayContext.getHiddenVariables(), CharPool.SEMICOLON));
-
-hiddenVariablesList.addAll(iframeVariables);
-%>
-
 <html dir="<liferay-ui:message key="lang.dir" />">
 
 <head>
@@ -35,69 +29,22 @@ hiddenVariablesList.addAll(iframeVariables);
 <form action="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getSrc()) %>" method="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getFormMethod()) %>" name="fm">
 
 <%
-for (String hiddenVariable : hiddenVariablesList) {
-	String hiddenKey = StringPool.BLANK;
-	String hiddenValue = StringPool.BLANK;
+List<String> hiddenVariablesList = ListUtil.toList(StringUtil.split(iFrameDisplayContext.getHiddenVariables(), CharPool.SEMICOLON));
 
-	int pos = hiddenVariable.indexOf(StringPool.EQUAL);
+hiddenVariablesList.addAll(iFrameDisplayContext.getIframeVariables());
 
-	if (pos != -1) {
-		hiddenKey = hiddenVariable.substring(0, pos);
-		hiddenValue = hiddenVariable.substring(pos + 1);
-	}
+for (KeyValuePair hiddenVariable : iFrameDisplayContext.getHiddenVariablesList()) {
 %>
 
-	<input name="<%= HtmlUtil.escapeAttribute(hiddenKey) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(hiddenValue) %>" />
+	<input name="<%= HtmlUtil.escapeAttribute(hiddenVariable.getKey()) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(hiddenVariable.getValue()) %>" />
 
 <%
 }
-
-if (Validator.isNull(iFrameDisplayContext.getUserNameField())) {
-	int pos = userName.indexOf(StringPool.EQUAL);
-
-	if (pos != -1) {
-		String fieldValuePair = userName;
-
-		String userNameField = fieldValuePair.substring(0, pos);
-		userName = fieldValuePair.substring(pos + 1);
-
-		portletPreferences.setValue("userName", userName);
-		portletPreferences.setValue("userNameField", userNameField);
-
-		portletPreferences.store();
-	}
-}
-
-if (Validator.isNotNull(iFrameDisplayContext.getUserNameField())) {
-	userName = IFrameUtil.getUserName(renderRequest, userName);
-}
 %>
 
-<input name="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getUserNameField()) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(userName) %>" />
+<input name="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getUserNameField()) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getUserName()) %>" />
 
-<%
-if (Validator.isNull(iFrameDisplayContext.getPasswordField())) {
-	int pos = password.indexOf(StringPool.EQUAL);
-
-	if (pos != -1) {
-		String fieldValuePair = password;
-
-		String passwordField = fieldValuePair.substring(0, pos);
-		password = fieldValuePair.substring(pos + 1);
-
-		portletPreferences.setValue("password", password);
-		portletPreferences.setValue("passwordField", passwordField);
-
-		portletPreferences.store();
-	}
-}
-
-if (Validator.isNotNull(iFrameDisplayContext.getPasswordField())) {
-	password = IFrameUtil.getPassword(renderRequest, password);
-}
-%>
-
-<input name="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getPasswordField()) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(password) %>" />
+<input name="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getPasswordField()) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getPassword()) %>" />
 
 </form>
 
