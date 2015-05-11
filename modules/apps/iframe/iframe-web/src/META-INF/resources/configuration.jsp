@@ -40,6 +40,11 @@ String htmlAttributes =
 	<liferay-ui:panel-container extended="<%= true %>" id="iframeSettingsPanelContainer" persistState="<%= true %>">
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="iframeGeneralPanel" persistState="<%= true %>" title="general">
 			<aui:fieldset>
+
+				<%
+				WindowState windowState = liferayPortletRequest.getWindowState();
+				%>
+
 				<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) || windowState.equals(LiferayWindowState.POP_UP) %>" cssClass="lfr-input-text-container" label="source-url" name="preferences--src--" prefix="<%= iFrameDisplayContext.isRelative() ? StringPool.TRIPLE_PERIOD : StringPool.BLANK %>" type="text" value="<%= iFrameDisplayContext.getSrc() %>" />
 
 				<aui:input label="relative-to-context-path" name="preferences--relative--" type="checkbox" value="<%= iFrameDisplayContext.isRelative() %>" />
@@ -80,7 +85,7 @@ String htmlAttributes =
 									<aui:input cssClass="lfr-input-text-container" label="field-name" name="preferences--userNameField--" type="text" value="<%= iFrameDisplayContext.getUserNameField() %>" />
 								</td>
 								<td>
-									<aui:input cssClass="lfr-input-text-container" label="value" name="preferences--formUserName--" type="text" value="<%= userName %>" />
+									<aui:input cssClass="lfr-input-text-container" label="value" name="preferences--formUserName--" type="text" value="<%= iFrameDisplayContext.getFormUserName() %>" />
 								</td>
 							</tr>
 							</table>
@@ -93,7 +98,7 @@ String htmlAttributes =
 									<aui:input cssClass="lfr-input-text-container" label="field-name" name="preferences--passwordField--" type="text" value="<%= iFrameDisplayContext.getPasswordField() %>" />
 								</td>
 								<td>
-									<aui:input cssClass="lfr-input-text-container" label="value" name="preferences--formPassword--" type="text" value="<%= password %>" />
+									<aui:input cssClass="lfr-input-text-container" label="value" name="preferences--formPassword--" type="text" value="<%= iFrameDisplayContext.getFormPassword() %>" />
 								</td>
 							</tr>
 							</table>
@@ -103,9 +108,9 @@ String htmlAttributes =
 					</div>
 
 					<div id="<portlet:namespace />basicAuthOptions">
-						<aui:input cssClass="lfr-input-text-container" label="user-name" name="preferences--basicUserName--" type="text" value="<%= userName %>" />
+						<aui:input cssClass="lfr-input-text-container" label="user-name" name="preferences--basicUserName--" type="text" value="<%= iFrameDisplayContext.getBasicUserName() %>" />
 
-						<aui:input cssClass="lfr-input-text-container" label="password" name="preferences--basicPassword--" type="text" value="<%= password %>" />
+						<aui:input cssClass="lfr-input-text-container" label="password" name="preferences--basicPassword--" type="text" value="<%= iFrameDisplayContext.getBasicPassword() %>" />
 					</div>
 				</div>
 			</aui:fieldset>
