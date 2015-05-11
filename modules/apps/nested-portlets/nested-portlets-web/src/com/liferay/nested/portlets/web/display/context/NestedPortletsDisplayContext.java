@@ -71,6 +71,35 @@ public class NestedPortletsDisplayContext {
 		return _layoutTemplateId;
 	}
 
+	public List<LayoutTemplate> getLayoutTemplates() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			com.liferay.portal.util.WebKeys.THEME_DISPLAY);
+
+		List<LayoutTemplate> layoutTemplates =
+			LayoutTemplateLocalServiceUtil.getLayoutTemplates(
+				themeDisplay.getThemeId());
+
+		layoutTemplates = PluginUtil.restrictPlugins(
+			layoutTemplates, themeDisplay.getUser());
+
+		return ListUtil.filter(
+			layoutTemplates, new PredicateFilter<LayoutTemplate>() {
+
+				@Override
+				public boolean filter(LayoutTemplate layoutTemplate) {
+					return !(
+						getUnsupportedLayoutTemplates()).contains(
+							layoutTemplate.getLayoutTemplateId());
+				}
+
+		});
+	}
+
+	public List<String> getUnsupportedLayoutTemplates() {
+		return ListUtil.fromArray(
+			_nestedPortletsConfiguration.layoutTemplatesUnsupported());
+	}
+
 	public boolean isPortletSetupShowBorders() {
 		if (_portletSetupShowBorders != null) {
 			return _portletSetupShowBorders;

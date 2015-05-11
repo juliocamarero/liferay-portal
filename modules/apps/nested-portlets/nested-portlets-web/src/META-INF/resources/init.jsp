@@ -30,13 +30,10 @@ page import="com.liferay.portal.kernel.log.LogFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.template.StringTemplateResource" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
-page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %><%@
 page import="com.liferay.portal.model.LayoutTemplate" %><%@
-page import="com.liferay.portal.plugin.PluginUtil" %><%@
 page import="com.liferay.portal.security.permission.ActionKeys" %><%@
-page import="com.liferay.portal.service.LayoutTemplateLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.permission.LayoutPermissionUtil" %>
 
 <%@ page import="java.util.List" %>

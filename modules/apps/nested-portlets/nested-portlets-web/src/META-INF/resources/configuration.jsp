@@ -32,16 +32,11 @@
 
 		String layoutTemplateId = nestedPortletsDisplayContext.getLayoutTemplateId();
 
-		List<LayoutTemplate> layoutTemplates = LayoutTemplateLocalServiceUtil.getLayoutTemplates(theme.getThemeId());
-
-		layoutTemplates = PluginUtil.restrictPlugins(layoutTemplates, user);
-
-		List<String> unsupportedLayoutTemplates = ListUtil.fromArray(nestedPortletsConfiguration.layoutTemplatesUnsupported());
+		List<LayoutTemplate> layoutTemplates = nestedPortletsDisplayContext.getLayoutTemplates();
 
 		int i = 0;
 
 		for (LayoutTemplate layoutTemplate : layoutTemplates) {
-			if (!unsupportedLayoutTemplates.contains(layoutTemplate.getLayoutTemplateId())) {
 		%>
 
 				<c:if test="<%= (i % CELLS_PER_ROW) == 0 %>">
@@ -60,7 +55,6 @@
 
 		<%
 				i++;
-			}
 		}
 		%>
 
