@@ -121,8 +121,7 @@ public class IFramePortlet extends MVCPortlet {
 		throws PortalException {
 
 		IFrameDisplayContext iFrameDisplayContext = new IFrameDisplayContext(
-			_iFrameConfiguration,
-			PortalUtil.getHttpServletRequest(renderRequest));
+			_iFrameConfiguration, renderRequest);
 
 		String src = ParamUtil.getString(
 			renderRequest, "src", iFrameDisplayContext.getSrc());
