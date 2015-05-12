@@ -29,10 +29,6 @@
 <form action="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getSrc()) %>" method="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getFormMethod()) %>" name="fm">
 
 <%
-List<String> hiddenVariablesList = ListUtil.toList(StringUtil.split(iFrameDisplayContext.getHiddenVariables(), CharPool.SEMICOLON));
-
-hiddenVariablesList.addAll(iFrameDisplayContext.getIframeVariables());
-
 for (KeyValuePair hiddenVariable : iFrameDisplayContext.getHiddenVariablesList()) {
 %>
 

@@ -27,17 +27,12 @@
 page import="com.liferay.iframe.web.display.context.IFrameDisplayContext" %><%@
 page import="com.liferay.iframe.web.util.IFrameUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
-page import="com.liferay.portal.kernel.util.CharPool" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.KeyValuePair" %><%@
-page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
-page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %>
-
-<%@ page import="java.util.List" %>
 
 <%@ page import="javax.portlet.WindowState" %>
 
@@ -48,5 +43,6 @@ page import="com.liferay.portal.kernel.util.WebKeys" %>
 IFrameConfiguration iFrameConfiguration = (IFrameConfiguration)renderRequest.getAttribute(IFrameConfiguration.class.getName());
 
 IFrameDisplayContext iFrameDisplayContext = new IFrameDisplayContext(iFrameConfiguration, renderRequest);
+%>
 
 <%@ include file="/init-ext.jsp" %>

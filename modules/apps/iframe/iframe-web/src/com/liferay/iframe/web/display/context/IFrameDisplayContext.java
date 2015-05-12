@@ -46,6 +46,9 @@ public class IFrameDisplayContext {
 			IFrameConfiguration iFrameConfiguration, PortletRequest request)
 		throws SettingsException {
 
+		_iFrameConfiguration = iFrameConfiguration;
+		_request = request;
+
 		_themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -54,10 +57,6 @@ public class IFrameDisplayContext {
 		_iFramePortletInstanceConfiguration =
 			portletDisplay.getPortletInstanceConfiguration(
 				IFramePortletInstanceConfiguration.class);
-
-		_iFrameConfiguration = iFrameConfiguration;
-
-		_request = request;
 	}
 
 	public String getAlt() {
@@ -225,9 +224,12 @@ public class IFrameDisplayContext {
 	public List<KeyValuePair> getHiddenVariablesList() {
 		List<KeyValuePair> hiddenVariablesList = new ArrayList<>();
 
-		for (String hiddenVariable :
-			StringUtil.split(getHiddenVariables(), CharPool.SEMICOLON)) {
+		List<String> hiddenVariableStringList = ListUtil.toList(
+			StringUtil.split(getHiddenVariables(), CharPool.SEMICOLON));
 
+		hiddenVariableStringList.addAll(getIframeVariables());
+
+		for (String hiddenVariable : hiddenVariableStringList) {
 			String hiddenKey = StringPool.BLANK;
 			String hiddenValue = StringPool.BLANK;
 
@@ -288,17 +290,15 @@ public class IFrameDisplayContext {
 
 		_iframeSrc += (String)_request.getAttribute(IFrameWebKeys.IFRAME_SRC);
 
-		if (!ListUtil.isEmpty(getIframeVariables())) {
-			if (_iframeSrc.contains(StringPool.QUESTION)) {
-				_iframeSrc += StringPool.AMPERSAND;
-			}
-			else {
-				_iframeSrc += StringPool.QUESTION;
-			}
-
-			_iframeSrc += StringUtil.merge(
-				getIframeVariables(), StringPool.AMPERSAND);
+		if (_iframeSrc.contains(StringPool.QUESTION)) {
+			_iframeSrc += StringPool.AMPERSAND;
 		}
+		else if (!ListUtil.isEmpty(getIframeVariables())) {
+			_iframeSrc += StringPool.QUESTION;
+		}
+
+		_iframeSrc += StringUtil.merge(
+			getIframeVariables(), StringPool.AMPERSAND);
 
 		return _iframeSrc;
 	}
@@ -351,12 +351,14 @@ public class IFrameDisplayContext {
 
 		int pos = _password.indexOf(StringPool.EQUAL);
 
-		if (pos != -1) {
-			String fieldValuePair = _password;
+		if (Validator.isNull(getPasswordField())) {
+			if (pos != -1) {
+				String fieldValuePair = _password;
 
-			_passwordField = fieldValuePair.substring(0, pos);
+				_passwordField = fieldValuePair.substring(0, pos);
 
-			_password = fieldValuePair.substring(pos + 1);
+				_password = fieldValuePair.substring(pos + 1);
+			}
 		}
 
 		if (Validator.isNotNull(getPasswordField())) {
@@ -424,14 +426,16 @@ public class IFrameDisplayContext {
 			return StringPool.BLANK;
 		}
 
-		int pos = _userName.indexOf(StringPool.EQUAL);
+		if (Validator.isNull(getUserNameField())) {
+			int pos = _userName.indexOf(StringPool.EQUAL);
 
-		if (pos != -1) {
-			String fieldValuePair = _userName;
+			if (pos != -1) {
+				String fieldValuePair = _userName;
 
-			_userNameField = fieldValuePair.substring(0, pos);
+				_userNameField = fieldValuePair.substring(0, pos);
 
-			_userName = fieldValuePair.substring(pos + 1);
+				_userName = fieldValuePair.substring(pos + 1);
+			}
 		}
 
 		if (Validator.isNotNull(getUserNameField())) {
