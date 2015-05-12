@@ -38,6 +38,7 @@ import java.util.Map;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -151,9 +152,14 @@ public class IFramePortlet extends MVCPortlet {
 
 			String portletId = PortalUtil.getPortletId(renderRequest);
 
-			src =
-				"/proxy.jsp?p_l_id=" + themeDisplay.getPlid() + "&p_p_id=" +
-					portletId;
+			PortletURL proxyURL = renderResponse.createRenderURL();
+
+			proxyURL.setParameter("mvcPath", "/proxy.jsp");
+			proxyURL.setParameter(
+				"p_l_id", String.valueOf(themeDisplay.getPlid()));
+			proxyURL.setParameter("p_p_id", portletId);
+
+			src = proxyURL.toString();
 		}
 
 		return src;
