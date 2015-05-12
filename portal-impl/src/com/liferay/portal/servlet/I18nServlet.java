@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 
 import java.io.IOException;
@@ -81,7 +82,7 @@ public class I18nServlet extends HttpServlet {
 		throws IOException, ServletException {
 
 		try {
-			String[] i18nData = getI18nData(request);
+			String[] i18nData = getI18nData(request, response);
 
 			if ((i18nData == null) ||
 				!PortalUtil.isValidResourceId(i18nData[2])) {
@@ -126,7 +127,10 @@ public class I18nServlet extends HttpServlet {
 		}
 	}
 
-	protected String[] getI18nData(HttpServletRequest request) {
+	protected String[] getI18nData(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException, ServletException {
+
 		String path = GetterUtil.getString(request.getPathInfo());
 
 		if (Validator.isNull(path)) {
@@ -149,7 +153,14 @@ public class I18nServlet extends HttpServlet {
 
 		String i18nPath = StringPool.SLASH + i18nLanguageId;
 
-		Locale locale = LocaleUtil.fromLanguageId(i18nLanguageId);
+		boolean useDefault = PropsValues.LOCALE_USE_DEFAULT_IF_NOT_AVAILABLE;
+
+		Locale locale = LocaleUtil.fromLanguageId(
+			i18nLanguageId, true, useDefault);
+
+		if (Validator.isNull(locale) && !useDefault) {
+			return null;
+		}
 
 		if (Validator.isNull(locale.getCountry())) {
 
