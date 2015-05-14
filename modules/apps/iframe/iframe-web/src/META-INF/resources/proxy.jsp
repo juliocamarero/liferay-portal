@@ -29,7 +29,7 @@
 <form action="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getSrc()) %>" method="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getFormMethod()) %>" name="fm">
 
 <%
-for (KeyValuePair hiddenVariable : iFrameDisplayContext.getHiddenVariablesList()) {
+for (KeyValuePair hiddenVariable : iFrameDisplayContext.getHiddenVariablesKVP()) {
 %>
 
 	<input name="<%= HtmlUtil.escapeAttribute(hiddenVariable.getKey()) %>" type="hidden" value="<%= HtmlUtil.escapeAttribute(hiddenVariable.getValue()) %>" />

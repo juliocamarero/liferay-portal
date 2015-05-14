@@ -26,9 +26,9 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.WebKeys;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -221,15 +221,15 @@ public class IFrameDisplayContext {
 		return _hiddenVariables;
 	}
 
-	public List<KeyValuePair> getHiddenVariablesList() {
-		List<KeyValuePair> hiddenVariablesList = new ArrayList<>();
+	public List<KeyValuePair> getHiddenVariablesKVP() {
+		List<KeyValuePair> hiddenVariablesKVP = new ArrayList<>();
 
-		List<String> hiddenVariableStringList = ListUtil.toList(
+		List<String> hiddenVariableList = ListUtil.toList(
 			StringUtil.split(getHiddenVariables(), CharPool.SEMICOLON));
 
-		hiddenVariableStringList.addAll(getIframeVariables());
+		hiddenVariableList.addAll(getIframeVariables());
 
-		for (String hiddenVariable : hiddenVariableStringList) {
+		for (String hiddenVariable : hiddenVariableList) {
 			String hiddenKey = StringPool.BLANK;
 			String hiddenValue = StringPool.BLANK;
 
@@ -240,10 +240,10 @@ public class IFrameDisplayContext {
 				hiddenValue = hiddenVariable.substring(pos + 1);
 			}
 
-			hiddenVariablesList.add(new KeyValuePair(hiddenKey, hiddenValue));
+			hiddenVariablesKVP.add(new KeyValuePair(hiddenKey, hiddenValue));
 		}
 
-		return hiddenVariablesList;
+		return hiddenVariablesKVP;
 	}
 
 	public String getHspace() {
@@ -290,15 +290,17 @@ public class IFrameDisplayContext {
 
 		_iframeSrc += (String)_request.getAttribute(IFrameWebKeys.IFRAME_SRC);
 
-		if (_iframeSrc.contains(StringPool.QUESTION)) {
-			_iframeSrc += StringPool.AMPERSAND;
-		}
-		else if (!ListUtil.isEmpty(getIframeVariables())) {
-			_iframeSrc += StringPool.QUESTION;
-		}
+		if (!ListUtil.isEmpty(getIframeVariables())) {
+			if (_iframeSrc.contains(StringPool.QUESTION)) {
+				_iframeSrc += StringPool.AMPERSAND;
+			}
+			else {
+				_iframeSrc += StringPool.QUESTION;
+			}
 
-		_iframeSrc += StringUtil.merge(
-			getIframeVariables(), StringPool.AMPERSAND);
+			_iframeSrc += StringUtil.merge(
+				getIframeVariables(), StringPool.AMPERSAND);
+		}
 
 		return _iframeSrc;
 	}
@@ -349,9 +351,9 @@ public class IFrameDisplayContext {
 			return StringPool.BLANK;
 		}
 
-		int pos = _password.indexOf(StringPool.EQUAL);
-
 		if (Validator.isNull(getPasswordField())) {
+			int pos = _password.indexOf(StringPool.EQUAL);
+
 			if (pos != -1) {
 				String fieldValuePair = _password;
 

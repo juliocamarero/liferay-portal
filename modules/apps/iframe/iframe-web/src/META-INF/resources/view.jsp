@@ -23,7 +23,7 @@
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div>
+		<div class="iframe-container">
 			<iframe alt="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getAlt()) %>" border="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getBorder()) %>" bordercolor="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getBordercolor()) %>" frameborder="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getFrameborder()) %>" height="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getHeight()) %>" hspace="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getHspace()) %>" id="<portlet:namespace />iframe" longdesc="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getLongdesc()) %>" name="<portlet:namespace />iframe" onload="<portlet:namespace />monitorIframe();" scrolling="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getScrolling()) %>" src="<%= HtmlUtil.escapeHREF(iFrameDisplayContext.getIframeSrc()) %>" title="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getTitle()) %>" vspace="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getVspace()) %>" width="<%= HtmlUtil.escapeAttribute(iFrameDisplayContext.getWidth()) %>">
 				<liferay-ui:message
 					arguments="<%= HtmlUtil.escape(iFrameDisplayContext.getIframeSrc()) %>"
