@@ -147,17 +147,9 @@ public class IFramePortlet extends MVCPortlet {
 			src = protocol + userName + ":" + password + "@" + url;
 		}
 		else {
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-
-			String portletId = PortalUtil.getPortletId(renderRequest);
-
 			PortletURL proxyURL = renderResponse.createRenderURL();
 
 			proxyURL.setParameter("mvcPath", "/proxy.jsp");
-			proxyURL.setParameter(
-				"p_l_id", String.valueOf(themeDisplay.getPlid()));
-			proxyURL.setParameter("p_p_id", portletId);
 
 			src = proxyURL.toString();
 		}
