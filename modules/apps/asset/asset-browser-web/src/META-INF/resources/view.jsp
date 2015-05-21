@@ -23,6 +23,7 @@ long refererAssetEntryId = ParamUtil.getLong(request, "refererAssetEntryId");
 String typeSelection = ParamUtil.getString(request, "typeSelection");
 long subtypeSelectionId = ParamUtil.getLong(request, "subtypeSelectionId");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectAsset");
+boolean includeNonListable = ParamUtil.getBoolean(request, "includeNonListable", false);
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
@@ -64,14 +65,14 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 			<liferay-ui:search-container-results>
 				<c:choose>
-					<c:when test="<%= AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE %>">
+					<c:when test="<%= includeNonListable || AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE %>">
 
 						<%
-						int assetEntriesTotal = AssetEntryLocalServiceUtil.getEntriesCount(selectedGroupIds, new long[] {assetRendererFactory.getClassNameId()}, searchTerms.getKeywords(), searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), searchTerms.isAdvancedSearch(), searchTerms.isAndOperator());
+						int assetEntriesTotal = AssetEntryLocalServiceUtil.getEntriesCount(selectedGroupIds, new long[] {assetRendererFactory.getClassNameId()}, searchTerms.getKeywords(), searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), searchTerms.isAdvancedSearch(), searchTerms.isAndOperator(), includeNonListable);
 
 						searchContainer.setTotal(assetEntriesTotal);
 
-						List<AssetEntry> assetEntries = AssetEntryLocalServiceUtil.getEntries(selectedGroupIds, new long[] {assetRendererFactory.getClassNameId()}, searchTerms.getKeywords(), searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), searchTerms.isAdvancedSearch(), searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd(), "modifiedDate", "title", "DESC", "ASC");
+						List<AssetEntry> assetEntries = AssetEntryLocalServiceUtil.getEntries(selectedGroupIds, new long[] {assetRendererFactory.getClassNameId()}, searchTerms.getKeywords(), searchTerms.getUserName(), searchTerms.getTitle(), searchTerms.getDescription(), searchTerms.isAdvancedSearch(), searchTerms.isAndOperator(), includeNonListable, searchContainer.getStart(), searchContainer.getEnd(), "modifiedDate", "title", "DESC", "ASC");
 
 						searchContainer.setResults(assetEntries);
 						%>
