@@ -22,15 +22,21 @@
 	</macrodef>
 
 	<macrodef name="compile-java">
-		<attribute name="javac.classpathref" />
-		<attribute name="javac.destdir" />
-		<attribute name="javac.srcdir" />
-		<element name="post-compile" optional="true" />
+		<sequential>
+			<compile-java-cmd />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compile-java-cmd">
+		<attribute default="project.classpath" name="javac.classpathref" />
+		<attribute default="classes" name="javac.destdir" />
+		<attribute default="src" name="javac.srcdir" />
+		<element name="compile-java-post" optional="true" />
 
 		<sequential>
 			<if>
 				<not>
-					<uptodate property="compile.uptodate" targetfile="classes/.touch">
+					<uptodate targetfile="classes/.touch">
 						<srcfiles dir="${basedir}" includes="bnd.bnd,build.xml,ivy.xml,src/**/*.*" />
 					</uptodate>
 				</not>
@@ -80,9 +86,73 @@
 						</then>
 					</if>
 
-					<post-compile />
+					<compile-java-post />
 
 					<echo file="@{javac.destdir}/.touch"></echo>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="jar-marco">
+		<sequential>
+			<jar-marco-cmd />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="jar-marco-cmd">
+		<element name="jar-post" optional="true" />
+		<element name="jar-pre" optional="true" />
+
+		<sequential>
+			<if>
+				<not>
+					<uptodate targetfile="${jar.file}.jar">
+						<srcfiles dir="${basedir}" includes="bnd.bnd,build.xml,ivy.xml,src/**/*.*" />
+					</uptodate>
+				</not>
+				<then>
+					<compile-java />
+
+					<jar-pre />
+
+					<if>
+						<available file="bnd.bnd" />
+						<then>
+							<manifest-helper />
+
+							<bndexpand propertyfile="${project.dir}/common.bnd" />
+
+							<bnd eclipse="false" exceptions="true" failok="false" inherit="true" output="${jar.file}.jar">
+								<bndfiles>
+									<fileset dir=".">
+										<include name="bnd.bnd" />
+									</fileset>
+								</bndfiles>
+								<classpath>
+									<pathelement location="classes" />
+								</classpath>
+								<property name="-sourcepath" value="." />
+							</bnd>
+
+							<baseline-jar
+								bndFile="bnd.bnd"
+								bndRootFile="${project.dir}/common.bnd"
+								newJarFile="${jar.file}.jar"
+							/>
+						</then>
+						<else>
+							<antcall target="manifest" />
+
+							<jar
+								basedir="classes"
+								jarfile="${jar.file}.jar"
+								manifest="classes/META-INF/MANIFEST.MF"
+							/>
+						</else>
+					</if>
+
+					<jar-post />
 				</then>
 			</if>
 		</sequential>
@@ -101,33 +171,10 @@
 		</else>
 	</if>
 
-	<target name="check-deploy-uptodate" depends="check-jar-uptodate">
-		<if>
-			<available file="${jar.file}.jar" />
-			<then>
-				<uptodate property="deploy.uptodate" srcfile="${jar.file}.jar" targetfile="${deploy.dir}/${jar.file}.jar" />
-			</then>
-		</if>
-	</target>
-
-	<target name="check-jar-uptodate">
-		<if>
-			<uptodate targetfile="classes/.touch">
-				<srcfiles dir="${basedir}" includes="bnd.bnd,build.xml,ivy.xml,src/**/*.*" />
-			</uptodate>
-			<then>
-				<uptodate property="jar.uptodate" srcfile="classes/.touch" targetfile="${jar.file}.jar" />
-			</then>
-			<else>
-				<property name="jar.uptodate" value="false" />
-			</else>
-		</if>
-
-		<condition property="deploy.uptodate" value="false">
-			<not>
-				<equals arg1="${jar.uptodate}" arg2="true" />
-			</not>
-		</condition>
+	<target name="check-deploy-uptodate">
+		<uptodate property="deploy.uptodate" targetfile="${deploy.dir}/${jar.file}.jar">
+			<srcfiles dir="${basedir}" includes="bnd.bnd,build.xml,ivy.xml,src/**/*.*" />
+		</uptodate>
 	</target>
 
 	<target name="clean">
@@ -135,53 +182,17 @@
 	</target>
 
 	<target name="compile">
-		<compile-java
-			javac.classpathref="project.classpath"
-			javac.destdir="classes"
-			javac.srcdir="src"
-		/>
+		<compile-java />
 	</target>
 
-	<target name="deploy" depends="check-deploy-uptodate,jar" unless="${deploy.uptodate}">
+	<target name="deploy" depends="check-deploy-uptodate" unless="${deploy.uptodate}">
+		<jar-marco />
+
 		<copy file="${jar.file}.jar" todir="${deploy.dir}" preservelastmodified="true" />
 	</target>
 
-	<target name="jar" depends="check-jar-uptodate,compile" unless="${jar.uptodate}">
-		<if>
-			<available file="bnd.bnd" />
-			<then>
-				<manifest-helper />
-
-				<bndexpand propertyfile="${project.dir}/common.bnd" />
-
-				<bnd eclipse="false" exceptions="true" failok="false" inherit="true" output="${jar.file}.jar">
-					<bndfiles>
-						<fileset dir=".">
-							<include name="bnd.bnd" />
-						</fileset>
-					</bndfiles>
-					<classpath>
-						<pathelement location="classes" />
-					</classpath>
-					<property name="-sourcepath" value="." />
-				</bnd>
-
-				<baseline-jar
-					bndFile="bnd.bnd"
-					bndRootFile="${project.dir}/common.bnd"
-					newJarFile="${jar.file}.jar"
-				/>
-			</then>
-			<else>
-				<antcall target="manifest" />
-
-				<jar
-					basedir="classes"
-					jarfile="${jar.file}.jar"
-					manifest="classes/META-INF/MANIFEST.MF"
-				/>
-			</else>
-		</if>
+	<target name="jar">
+		<jar-marco />
 	</target>
 
 	<target name="jar-javadoc" depends="javadoc">

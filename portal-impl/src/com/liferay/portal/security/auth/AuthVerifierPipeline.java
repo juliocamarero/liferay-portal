@@ -17,7 +17,6 @@ package com.liferay.portal.security.auth;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -70,8 +69,7 @@ public class AuthVerifierPipeline {
 		Registry registry = RegistryUtil.getRegistry();
 
 		Filter filter = registry.getFilter(
-			"(&(objectClass=" + AuthVerifier.class.getName() +
-				")(urls.includes=*))");
+			"(objectClass=" + AuthVerifier.class.getName() + ")");
 
 		_serviceTracker = registry.trackServices(
 			filter, new AuthVerifierTrackerCustomizer());
@@ -325,7 +323,7 @@ public class AuthVerifierPipeline {
 			authVerifierConfiguration.setAuthVerifierClassName(
 				authVerifierClass.getName());
 			authVerifierConfiguration.setProperties(
-				PropertiesUtil.fromMap(serviceReference.getProperties()));
+				_loadProperties(serviceReference, authVerifierClass.getName()));
 
 			_authVerifierConfigurations.add(0, authVerifierConfiguration);
 
@@ -345,7 +343,9 @@ public class AuthVerifierPipeline {
 			newAuthVerifierConfiguration.setAuthVerifierClassName(
 				authVerifierConfiguration.getAuthVerifierClassName());
 			newAuthVerifierConfiguration.setProperties(
-				PropertiesUtil.fromMap(serviceReference.getProperties()));
+				_loadProperties(
+					serviceReference,
+					authVerifierConfiguration.getAuthVerifierClassName()));
 
 			if (_authVerifierConfigurations.remove(authVerifierConfiguration)) {
 				_authVerifierConfigurations.add(
@@ -363,6 +363,36 @@ public class AuthVerifierPipeline {
 			registry.ungetService(serviceReference);
 
 			_authVerifierConfigurations.remove(authVerifierConfiguration);
+		}
+
+		private Properties _loadProperties(
+			ServiceReference<AuthVerifier> serviceReference,
+			String authVerifierClassName) {
+
+			Properties properties = new Properties();
+
+			String authVerifierPropertyName = getAuthVerifierPropertyName(
+				authVerifierClassName);
+
+			Map<String, Object> serviceReferenceProperties =
+				serviceReference.getProperties();
+
+			for (String key : serviceReferenceProperties.keySet()) {
+				String propertiesKey = key;
+
+				if (key.startsWith(authVerifierPropertyName)) {
+					propertiesKey = key.substring(
+						authVerifierPropertyName.length());
+				}
+
+				Object value = serviceReferenceProperties.get(key);
+
+				if (value instanceof String) {
+					properties.setProperty(propertiesKey, (String)value);
+				}
+			}
+
+			return properties;
 		}
 
 	}

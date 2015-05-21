@@ -11,20 +11,20 @@
 		<fileset dir="${project.dir}/lib/development" includes="catalina.jar,jasper.jar,tomcat-coyote.jar" />
 	</path>
 
+	<macrodef name="compile-java">
+		<sequential>
+			<compile-java-cmd
+				javac.classpathref="web.classpath"
+			/>
+		</sequential>
+	</macrodef>
+
 	<target name="clean">
 		<clean-common>
 			<clean-extra>
 				<delete file="${deploy.dir}/${jar.file}.jar" />
 			</clean-extra>
 		</clean-common>
-	</target>
-
-	<target name="compile">
-		<compile-java
-			javac.classpathref="web.classpath"
-			javac.destdir="classes"
-			javac.srcdir="src"
-		/>
 	</target>
 
 	<target name="deploy">

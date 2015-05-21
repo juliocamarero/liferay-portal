@@ -352,6 +352,19 @@ public class VerifyProperties extends VerifyProcess {
 			"display.templates.config", "com.liferay.asset.tags.navigation.web"
 		},
 
+		// Auth Verifiers
+
+		new String[] {
+			"auth.verifier.DigestAuthenticationAuthVerifier.hosts.allowed",
+			"auth.verifier.DigestAuthenticationAuthVerifier.hosts.allowed",
+			"com.liferay.portal.security.auth.verifier"
+		},
+		new String[] {
+			"auth.verifier.DigestAuthenticationAuthVerifier.urls.includes",
+			"auth.verifier.DigestAuthenticationAuthVerifier.urls.includes",
+			"com.liferay.portal.security.auth.verifier"
+		},
+
 		// Bookmarks
 
 		new String[] {
@@ -1160,10 +1173,14 @@ public class VerifyProperties extends VerifyProcess {
 		"sites.form.update.main", "sites.form.update.miscellaneous",
 		"sites.form.update.seo", "staging.lock.enabled",
 		"table.mapper.cacheless.mapping.table.names", "tck.url",
-		"webdav.storage.class", "webdav.storage.show.edit.url",
-		"webdav.storage.show.view.url", "webdav.storage.tokens",
-		"wiki.email.page.added.signature", "wiki.email.page.updated.signature",
-		"xss.allow"
+		"users.form.add.identification", "users.form.add.main",
+		"users.form.add.miscellaneous", "users.form.my.account.identification",
+		"users.form.my.account.main", "users.form.my.account.miscellaneous",
+		"users.form.update.identification", "users.form.update.main",
+		"users.form.update.miscellaneous", "webdav.storage.class",
+		"webdav.storage.show.edit.url", "webdav.storage.show.view.url",
+		"webdav.storage.tokens", "wiki.email.page.added.signature",
+		"wiki.email.page.updated.signature", "xss.allow"
 	};
 
 	private static final String[] _OBSOLETE_SYSTEM_KEYS = new String[] {

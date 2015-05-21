@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -87,6 +88,11 @@ public class DDLRecordAssetRenderer extends BaseAssetRenderer {
 	@Override
 	public long getGroupId() {
 		return _record.getGroupId();
+	}
+
+	@Override
+	public String getStatusLabel() {
+		return WorkflowConstants.getStatusLabel(_recordVersion.getStatus());
 	}
 
 	@Override
