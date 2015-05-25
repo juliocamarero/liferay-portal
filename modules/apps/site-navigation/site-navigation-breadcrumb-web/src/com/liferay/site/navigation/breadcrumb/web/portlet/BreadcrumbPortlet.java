@@ -14,19 +14,33 @@
 
 package com.liferay.site.navigation.breadcrumb.web.portlet;
 
+import aQute.bnd.annotation.metatype.Configurable;
+
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.site.navigation.breadcrumb.web.configuration.BreadcrumbWebConfiguration;
 import com.liferay.site.navigation.breadcrumb.web.upgrade.BreadcrumbWebUpgrade;
 
-import javax.portlet.Portlet;
+import java.io.IOException;
 
+import java.util.Map;
+
+import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
  */
 @Component(
-	immediate = true,
+	configurationPid = "com.liferay.site.navigation.breadcrumb.web.configuration.BreadcrumbWebConfiguration",
+	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
 	property = {
 		"com.liferay.portlet.add-default-resource=true",
 		"com.liferay.portlet.ajaxable=false",
@@ -53,9 +67,30 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class BreadcrumbPortlet extends MVCPortlet {
 
+	@Override
+	public void doView(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		renderRequest.setAttribute(
+			BreadcrumbWebConfiguration.class.getName(),
+			_breadcrumbWebConfiguration);
+
+		super.doView(renderRequest, renderResponse);
+	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_breadcrumbWebConfiguration = Configurable.createConfigurable(
+			BreadcrumbWebConfiguration.class, properties);
+	}
+
 	@Reference(unbind = "-")
 	protected void setBreadcrumbWebUpgrade(
 		BreadcrumbWebUpgrade breadcrumbWebUpgrade) {
 	}
+
+	private volatile BreadcrumbWebConfiguration _breadcrumbWebConfiguration;
 
 }

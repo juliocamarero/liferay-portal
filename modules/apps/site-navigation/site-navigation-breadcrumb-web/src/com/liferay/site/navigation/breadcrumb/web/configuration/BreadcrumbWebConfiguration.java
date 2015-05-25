@@ -27,4 +27,7 @@ public interface BreadcrumbWebConfiguration {
 	@Meta.AD(deflt = "breadcrumb-horizontal-ftl", required = false)
 	public String ddmTemplateKeyDefault();
 
+	@Meta.AD(deflt = "ddmTemplate_BREADCRUMB-HORIZONTAL-FTL", required = false)
+	public String defaultDisplayStyle();
+
 }
