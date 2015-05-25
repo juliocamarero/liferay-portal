@@ -210,9 +210,6 @@ public class EditLayoutsAction extends PortletAction {
 					redirect, actionResponse.getNamespace() + "closeRedirect",
 					closeRedirect);
 			}
-			else if (cmd.equals("display_order")) {
-				updateDisplayOrder(actionRequest);
-			}
 			else if (cmd.equals("reset_merge_fail_count_and_merge")) {
 				resetMergeFailCountAndMerge(actionRequest);
 			}
@@ -640,24 +637,6 @@ public class EditLayoutsAction extends PortletAction {
 		}
 
 		return closeRedirect;
-	}
-
-	protected void updateDisplayOrder(ActionRequest actionRequest)
-		throws Exception {
-
-		long groupId = ParamUtil.getLong(actionRequest, "groupId");
-		boolean privateLayout = ParamUtil.getBoolean(
-			actionRequest, "privateLayout");
-		long parentLayoutId = ParamUtil.getLong(
-			actionRequest, "parentLayoutId");
-		long[] layoutIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "layoutIds"), 0L);
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		LayoutServiceUtil.setLayouts(
-			groupId, privateLayout, parentLayoutId, layoutIds, serviceContext);
 	}
 
 	protected Object[] updateLayout(
