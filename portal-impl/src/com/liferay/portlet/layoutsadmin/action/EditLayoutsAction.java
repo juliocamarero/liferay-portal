@@ -50,13 +50,11 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.ThemeFactoryUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ColorScheme;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutPrototype;
-import com.liferay.portal.model.LayoutRevision;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.model.ThemeSetting;
@@ -68,7 +66,6 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.LayoutPrototypeServiceUtil;
-import com.liferay.portal.service.LayoutRevisionLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -215,9 +212,6 @@ public class EditLayoutsAction extends PortletAction {
 			}
 			else if (cmd.equals("display_order")) {
 				updateDisplayOrder(actionRequest);
-			}
-			else if (cmd.equals("enable")) {
-				enableLayout(actionRequest);
 			}
 			else if (cmd.equals("reset_customized_view")) {
 				LayoutTypePortlet layoutTypePortlet =
@@ -470,41 +464,6 @@ public class EditLayoutsAction extends PortletAction {
 				itr.remove();
 			}
 		}
-	}
-
-	protected void enableLayout(ActionRequest actionRequest) throws Exception {
-		long incompleteLayoutRevisionId = ParamUtil.getLong(
-			actionRequest, "incompleteLayoutRevisionId");
-
-		LayoutRevision incompleteLayoutRevision =
-			LayoutRevisionLocalServiceUtil.getLayoutRevision(
-				incompleteLayoutRevisionId);
-
-		long layoutBranchId = ParamUtil.getLong(
-			actionRequest, "layoutBranchId",
-			incompleteLayoutRevision.getLayoutBranchId());
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
-
-		LayoutRevisionLocalServiceUtil.updateLayoutRevision(
-			serviceContext.getUserId(),
-			incompleteLayoutRevision.getLayoutRevisionId(), layoutBranchId,
-			incompleteLayoutRevision.getName(),
-			incompleteLayoutRevision.getTitle(),
-			incompleteLayoutRevision.getDescription(),
-			incompleteLayoutRevision.getKeywords(),
-			incompleteLayoutRevision.getRobots(),
-			incompleteLayoutRevision.getTypeSettings(),
-			incompleteLayoutRevision.getIconImage(),
-			incompleteLayoutRevision.getIconImageId(),
-			incompleteLayoutRevision.getThemeId(),
-			incompleteLayoutRevision.getColorSchemeId(),
-			incompleteLayoutRevision.getWapThemeId(),
-			incompleteLayoutRevision.getWapColorSchemeId(),
-			incompleteLayoutRevision.getCss(), serviceContext);
 	}
 
 	protected String getColorSchemeId(
