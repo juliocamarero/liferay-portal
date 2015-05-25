@@ -213,22 +213,8 @@ public class EditLayoutsAction extends PortletAction {
 			else if (cmd.equals("display_order")) {
 				updateDisplayOrder(actionRequest);
 			}
-			else if (cmd.equals("reset_customized_view")) {
-				LayoutTypePortlet layoutTypePortlet =
-					themeDisplay.getLayoutTypePortlet();
-
-				if ((layoutTypePortlet != null) &&
-					layoutTypePortlet.isCustomizable() &&
-					layoutTypePortlet.isCustomizedView()) {
-
-					layoutTypePortlet.resetUserPreferences();
-				}
-			}
 			else if (cmd.equals("reset_merge_fail_count_and_merge")) {
 				resetMergeFailCountAndMerge(actionRequest);
-			}
-			else if (cmd.equals("reset_prototype")) {
-				SitesUtil.resetPrototype(themeDisplay.getLayout());
 			}
 
 			MultiSessionMessages.add(
