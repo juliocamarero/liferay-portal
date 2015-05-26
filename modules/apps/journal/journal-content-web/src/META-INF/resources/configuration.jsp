@@ -149,6 +149,7 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 			selectWebContentURL.setParameter("selectedGroupIds", StringUtil.merge(PortalUtil.getSharedContentSiteGroupIds(company.getCompanyId(), scopeGroupId, user.getUserId())));
 			selectWebContentURL.setParameter("typeSelection", JournalArticle.class.getName());
 			selectWebContentURL.setParameter("eventName", "selectContent");
+			selectWebContentURL.setParameter("includeNonListable", String.valueOf(true));
 			selectWebContentURL.setWindowState(LiferayWindowState.POP_UP);
 			%>
 

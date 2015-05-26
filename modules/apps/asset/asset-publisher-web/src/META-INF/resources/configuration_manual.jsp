@@ -126,6 +126,7 @@ String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortl
 								assetBrowserURL.setParameter("groupId", String.valueOf(groupId));
 								assetBrowserURL.setParameter("selectedGroupIds", String.valueOf(groupId));
 								assetBrowserURL.setParameter("eventName", eventName);
+								assetBrowserURL.setParameter("includeNonListable", String.valueOf(true));
 								assetBrowserURL.setPortletMode(PortletMode.VIEW);
 								assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
 
