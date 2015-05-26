@@ -26,6 +26,21 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class InputAssetLinksTag extends AssetLinksTag {
 
+	public boolean getIncludeNonListable() {
+		return _includeNonListable;
+	}
+
+	public void setIncludeNonListable(boolean includeNonListable) {
+		_includeNonListable = includeNonListable;
+	}
+
+	@Override
+	protected void cleanUp() {
+		super.cleanUp();
+
+		_includeNonListable = false;
+	}
+
 	@Override
 	protected String getPage() {
 		return _PAGE;
@@ -36,6 +51,7 @@ public class InputAssetLinksTag extends AssetLinksTag {
 		long assetEntryId = getAssetEntryId();
 		String className = getClassName();
 		long classPK = getClassPK();
+		boolean includeNonListable = getIncludeNonListable();
 
 		if ((assetEntryId <= 0) && (classPK > 0)) {
 			try {
@@ -55,9 +71,14 @@ public class InputAssetLinksTag extends AssetLinksTag {
 			String.valueOf(assetEntryId));
 		request.setAttribute(
 			"liferay-ui:input-asset-links:className", className);
+		request.setAttribute(
+			"liferay-ui:input-asset-links:includeNonListable",
+			includeNonListable);
 	}
 
 	private static final String _PAGE =
 		"/html/taglib/ui/input_asset_links/page.jsp";
+
+	private boolean _includeNonListable;
 
 }
