@@ -83,7 +83,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 	if (liveGroup.isUser()) {
 		PortletURL userTabs1URL = renderResponse.createRenderURL();
 
-		userTabs1URL.setParameter("struts_action", "/my_pages/edit_layouts");
+		userTabs1URL.setParameter("struts_action", "/layouts_admin/edit_layouts");
 		userTabs1URL.setParameter("tabs1", layoutsAdminDisplayContext.getTabs1());
 		userTabs1URL.setParameter("backURL", layoutsAdminDisplayContext.getBackURL());
 		userTabs1URL.setParameter("groupId", String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()));

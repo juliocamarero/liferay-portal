@@ -845,23 +845,6 @@
 			<forward name="portlet.my_account.view" path="portlet.my_account.view" />
 		</action>
 
-		<!-- My Pages -->
-
-		<action path="/my_pages/edit_layout_set" type="com.liferay.portlet.layoutsadmin.action.EditLayoutSetAction">
-			<forward name="portlet.layouts_admin.edit_layouts" path="portlet.layouts_admin.edit_layouts" />
-			<forward name="portlet.layouts_admin.error" path="portlet.layouts_admin.error" />
-		</action>
-
-		<action path="/my_pages/edit_layouts" type="com.liferay.portlet.layoutsadmin.action.EditLayoutsAction">
-			<forward name="portlet.layouts_admin.edit_layouts" path="portlet.layouts_admin.edit_layouts" />
-			<forward name="portlet.layouts_admin.error" path="portlet.layouts_admin.error" />
-		</action>
-
-		<action path="/my_pages/view" type="com.liferay.portlet.mypages.action.ViewAction">
-			<forward name="portlet.my_pages.edit_layouts" path="portlet.layouts_admin.edit_layouts" />
-			<forward name="portlet.my_pages.view" path="portlet.my_account.view" />
-		</action>
-
 		<!-- News -->
 
 		<action path="/news/edit" type="com.liferay.portlet.news.action.EditPreferencesAction">
