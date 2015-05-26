@@ -258,6 +258,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 						<liferay-ui:input-asset-links
 							className="<%= BlogsEntry.class.getName() %>"
 							classPK="<%= entryId %>"
+							includeNonListable="<%= true %>"
 						/>
 					</div>
 

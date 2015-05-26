@@ -444,6 +444,7 @@ else {
 					<liferay-ui:input-asset-links
 						className="<%= DLFileEntry.class.getName() %>"
 						classPK="<%= assetClassPK %>"
+						includeNonListable="<%= true %>"
 					/>
 				</aui:fieldset>
 			</liferay-ui:panel>

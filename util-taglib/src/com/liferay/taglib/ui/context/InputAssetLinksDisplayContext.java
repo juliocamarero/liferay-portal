@@ -71,6 +71,9 @@ public class InputAssetLinksDisplayContext {
 		_assetEntryId = GetterUtil.getLong(
 			(String)_request.getAttribute(
 				"liferay-ui:input-asset-links:assetEntryId"));
+		_includeNonListableAssets = GetterUtil.getBoolean(
+			_request.getAttribute(
+				"liferay-ui:input-asset-links:includeNonListable"));
 		_portletRequest = (PortletRequest)_request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST);
 		_themeDisplay = (ThemeDisplay)_request.getAttribute(
@@ -317,6 +320,8 @@ public class InputAssetLinksDisplayContext {
 				PortalUtil.getSharedContentSiteGroupIds(
 					_themeDisplay.getCompanyId(), groupId,
 					_themeDisplay.getUserId())));
+		portletURL.setParameter(
+			"includeNonListable", String.valueOf(_includeNonListableAssets));
 
 		if (_assetEntryId > 0) {
 			portletURL.setParameter(
@@ -485,6 +490,7 @@ public class InputAssetLinksDisplayContext {
 	private final long _assetEntryId;
 	private List<AssetLink> _assetLinks;
 	private String _eventName;
+	private final boolean _includeNonListableAssets;
 	private final PageContext _pageContext;
 	private final PortletRequest _portletRequest;
 	private String _randomNamespace;
