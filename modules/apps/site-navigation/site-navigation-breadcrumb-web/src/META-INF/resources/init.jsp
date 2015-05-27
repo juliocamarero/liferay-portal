@@ -24,13 +24,16 @@
 <%@ page import="com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
+page import="com.liferay.site.navigation.breadcrumb.web.configuration.BreadcrumbWebConfiguration" %><%@
 page import="com.liferay.site.navigation.breadcrumb.web.context.BreadcrumbDisplayContext" %>
 
 <liferay-theme:defineObjects />
 <portlet:defineObjects/>
 
 <%
-BreadcrumbDisplayContext breadcrumbDisplayContext = new BreadcrumbDisplayContext(request);
+BreadcrumbWebConfiguration breadcrumbWebConfiguration = (BreadcrumbWebConfiguration)request.getAttribute(BreadcrumbWebConfiguration.class.getName());
+
+BreadcrumbDisplayContext breadcrumbDisplayContext = new BreadcrumbDisplayContext(breadcrumbWebConfiguration, request);
 %>
 
 <%@ include file="/init-ext.jsp" %>

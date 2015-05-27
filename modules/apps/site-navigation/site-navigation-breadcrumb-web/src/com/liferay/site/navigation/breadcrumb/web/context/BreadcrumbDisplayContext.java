@@ -18,11 +18,13 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.settings.SettingsException;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateUtil;
 import com.liferay.site.navigation.breadcrumb.web.configuration.BreadcrumbPortletInstanceConfiguration;
+import com.liferay.site.navigation.breadcrumb.web.configuration.BreadcrumbWebConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,9 +33,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class BreadcrumbDisplayContext {
 
-	public BreadcrumbDisplayContext(HttpServletRequest request)
+	public BreadcrumbDisplayContext(
+			BreadcrumbWebConfiguration breadcrumbWebConfiguration,
+			HttpServletRequest request)
 		throws SettingsException {
 
+		_breadcrumbWebConfiguration = breadcrumbWebConfiguration;
 		_request = request;
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
@@ -69,6 +74,10 @@ public class BreadcrumbDisplayContext {
 		_displayStyle = ParamUtil.getString(
 			_request, "displayStyle",
 			_breadcrumbPortletInstanceConfiguration.displayStyle());
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = _breadcrumbWebConfiguration.defaultDisplayStyle();
+		}
 
 		return _displayStyle;
 	}
@@ -170,6 +179,7 @@ public class BreadcrumbDisplayContext {
 
 	private final BreadcrumbPortletInstanceConfiguration
 		_breadcrumbPortletInstanceConfiguration;
+	private final BreadcrumbWebConfiguration _breadcrumbWebConfiguration;
 	private String _ddmTemplateKey;
 	private String _displayStyle;
 	private long _displayStyleGroupId;
