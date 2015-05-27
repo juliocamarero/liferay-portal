@@ -15,8 +15,6 @@
 package com.liferay.productivity.center.service.panel;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.util.JavaConstants;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.service.PortletLocalService;
 import com.liferay.portal.util.PortletKeys;
@@ -48,15 +46,12 @@ public class MyPagesPanelApp extends BaseControlPanelEntryPanelApp {
 
 	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(
-			locale,
-			JavaConstants.JAVAX_PORTLET_TITLE + StringPool.PERIOD +
-				getPortletId());
+		return LanguageUtil.get(locale, "my-pages");
 	}
 
 	@Override
 	public String getPortletId() {
-		return PortletKeys.MY_PAGES;
+		return PortletKeys.LAYOUTS_ADMIN;
 	}
 
 	@Override

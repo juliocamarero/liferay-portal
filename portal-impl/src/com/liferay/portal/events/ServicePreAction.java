@@ -1019,12 +1019,12 @@ public class ServicePreAction extends Action {
 				themeDisplay.setShowPageSettingsIcon(true);
 
 				LiferayPortletURL pageSettingsURL = new PortletURLImpl(
-					request, PortletKeys.GROUP_PAGES, controlPanelPlid,
+					request, PortletKeys.LAYOUTS_ADMIN, controlPanelPlid,
 					PortletRequest.RENDER_PHASE);
 
 				pageSettingsURL.setDoAsGroupId(scopeGroupId);
 				pageSettingsURL.setParameter(
-					"struts_action", "/group_pages/edit_layouts");
+					"struts_action", "/layouts_admin/edit_layouts");
 
 				if (layout.isPrivateLayout()) {
 					pageSettingsURL.setParameter("tabs1", "private-pages");

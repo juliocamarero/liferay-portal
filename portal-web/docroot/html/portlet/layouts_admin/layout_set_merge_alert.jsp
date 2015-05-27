@@ -69,11 +69,10 @@ List<Layout> mergeFailFriendlyURLLayouts = SitesUtil.getMergeFailFriendlyURLLayo
 		<liferay-ui:message key="modify-the-friendly-url-of-the-pages-to-allow-their-propagation-from-the-site-template" />
 
 		<ul>
-			<liferay-portlet:renderURL portletName="<%= PortletKeys.GROUP_PAGES %>" varImpl="editLayoutsURL">
-				<portlet:param name="struts_action" value="/group_pages/edit_layouts" />
+			<liferay-portlet:renderURL portletName="<%= PortletKeys.LAYOUTS_ADMIN %>" varImpl="editLayoutsURL">
+				<portlet:param name="struts_action" value="/layouts_admin/edit_layouts" />
 				<portlet:param name="tabs1" value='<%= layoutSet.isPrivateLayout() ? "private-pages" : "public-pages" %>' />
 				<portlet:param name="redirect" value="<%= redirect %>" />
-				<portlet:param name="closeRedirect" value="<%= redirect %>" />
 				<portlet:param name="backURL" value="<%= redirect %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 			</liferay-portlet:renderURL>
