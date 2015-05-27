@@ -87,8 +87,8 @@
 							%>
 
 							<liferay-ui:section>
-								<liferay-portlet:renderURL plid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" portletName="<%= PortletKeys.GROUP_PAGES %>" varImpl="newPageURL" windowState="<%= WindowState.NORMAL.toString() %>">
-									<portlet:param name="struts_action" value="/group_pages/edit_layouts" />
+								<liferay-portlet:renderURL plid="<%= PortalUtil.getControlPanelPlid(company.getCompanyId()) %>" portletName="<%= PortletKeys.LAYOUTS_ADMIN %>" varImpl="newPageURL" windowState="<%= WindowState.NORMAL.toString() %>">
+									<portlet:param name="struts_action" value="/layouts_admin/edit_layouts" />
 									<portlet:param name="tabs1" value='<%= layout.isPrivateLayout() ? "private-pages" : "public-pages" %>' />
 									<portlet:param name="groupId" value="<%= String.valueOf(groupDisplayContextHelper.getLiveGroupId()) %>" />
 									<portlet:param name="selPlid" value="<%= String.valueOf(selPlid) %>" />
