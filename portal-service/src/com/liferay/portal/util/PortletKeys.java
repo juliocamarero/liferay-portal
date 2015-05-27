@@ -74,8 +74,6 @@ public class PortletKeys {
 
 	public static final String FRIENDS_DIRECTORY = "186";
 
-	public static final String GROUP_PAGES = "156";
-
 	public static final String GROUP_STATISTICS = "181";
 
 	public static final String IMAGE_UPLOADER = "195";
