@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.grouppages;
+package com.liferay.portlet.layoutsadmin;
 
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
@@ -29,7 +29,7 @@ import com.liferay.portlet.BaseControlPanelEntry;
  * @author Sergio González
  * @author Tibor Lipusz
  */
-public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {
+public class LayoutsAdminControlPanelEntry extends BaseControlPanelEntry {
 
 	@Override
 	protected boolean hasAccessPermissionDenied(
