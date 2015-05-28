@@ -26,10 +26,14 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.security.auth.AuthException;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.auth.RemoteAuthException;
-import com.liferay.portlet.layoutsadmin.action.EditLayoutsAction;
+import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.layoutsadmin.util.LayoutsPermissionUtil;
 import com.liferay.portlet.sites.action.ActionUtil;
 
 import javax.portlet.ActionRequest;
@@ -51,7 +55,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Raymond Augé
  * @author Levente Hudák
  */
-public class PublishLayoutsAction extends EditLayoutsAction {
+public class PublishLayoutsAction extends PortletAction {
 
 	@Override
 	public void processAction(
@@ -60,14 +64,23 @@ public class PublishLayoutsAction extends EditLayoutsAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
 		try {
-			checkPermissions(actionRequest);
+			Group group = ActionUtil.getGroup(actionRequest);
+
+			long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
+
+			LayoutsPermissionUtil.checkPermissions(
+				themeDisplay.getPermissionChecker(), group,
+				themeDisplay.getLayout(), selPlid, cmd);
 		}
 		catch (PrincipalException pe) {
 			return;
 		}
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 		String closeRedirect = ParamUtil.getString(

@@ -22,15 +22,18 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.LayoutBranchServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.layoutsadmin.action.EditLayoutsAction;
+import com.liferay.portlet.layoutsadmin.util.LayoutsPermissionUtil;
+import com.liferay.portlet.sites.action.ActionUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +54,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Brian Wing Shun Chan
  * @author Julio Camarero
  */
-public class EditLayoutBranchAction extends EditLayoutsAction {
+public class EditLayoutBranchAction extends PortletAction {
 
 	@Override
 	public void processAction(
@@ -60,14 +63,23 @@ public class EditLayoutBranchAction extends EditLayoutsAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
 		try {
-			checkPermissions(actionRequest);
+			Group group = ActionUtil.getGroup(actionRequest);
+
+			long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
+
+			LayoutsPermissionUtil.checkPermissions(
+				themeDisplay.getPermissionChecker(), group,
+				themeDisplay.getLayout(), selPlid, cmd);
 		}
 		catch (PrincipalException pe) {
 			return;
 		}
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
 			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
@@ -127,17 +139,16 @@ public class EditLayoutBranchAction extends EditLayoutsAction {
 		throws Exception {
 
 		try {
-			checkPermissions(renderRequest);
-		}
-		catch (PrincipalException pe) {
-			SessionErrors.add(
-				renderRequest, PrincipalException.class.getName());
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-			return actionMapping.findForward("portlet.staging_bar.error");
-		}
+			Group group = ActionUtil.getGroup(renderRequest);
 
-		try {
-			getGroup(renderRequest);
+			long selPlid = ParamUtil.getLong(renderRequest, "selPlid");
+
+			LayoutsPermissionUtil.checkPermission(
+				themeDisplay.getPermissionChecker(), group,
+				themeDisplay.getLayout(), selPlid);
 		}
 		catch (Exception e) {
 			if (e instanceof NoSuchGroupException ||
