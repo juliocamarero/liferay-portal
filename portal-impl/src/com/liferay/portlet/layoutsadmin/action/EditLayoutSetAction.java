@@ -43,6 +43,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.layoutsadmin.util.LayoutsPermissionUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.util.Map;
@@ -70,14 +71,24 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 			ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
 		try {
-			checkPermissions(actionRequest);
+			Group group = getGroup(actionRequest);
+
+			long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
+			long parentPlid = ParamUtil.getLong(actionRequest, "parentPlid");
+
+			LayoutsPermissionUtil.checkPermissions(
+				themeDisplay.getPermissionChecker(), group,
+				themeDisplay.getLayout(), selPlid, parentPlid, cmd);
 		}
 		catch (PrincipalException pe) {
 			return;
 		}
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
 		try {
 			if (cmd.equals(Constants.UPDATE)) {
@@ -117,17 +128,16 @@ public class EditLayoutSetAction extends EditLayoutsAction {
 		throws Exception {
 
 		try {
-			checkPermissions(renderRequest);
-		}
-		catch (PrincipalException pe) {
-			SessionErrors.add(
-				renderRequest, PrincipalException.class.getName());
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-			return actionMapping.findForward("portlet.layouts_admin.error");
-		}
+			Group group = getGroup(renderRequest);
 
-		try {
-			getGroup(renderRequest);
+			long selPlid = ParamUtil.getLong(renderRequest, "selPlid");
+
+			LayoutsPermissionUtil.checkPermission(
+				themeDisplay.getPermissionChecker(), group,
+				themeDisplay.getLayout(), selPlid);
 		}
 		catch (Exception e) {
 			if (e instanceof NoSuchGroupException ||

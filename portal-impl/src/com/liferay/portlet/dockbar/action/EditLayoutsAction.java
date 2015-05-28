@@ -19,11 +19,15 @@ import com.liferay.portal.kernel.servlet.MultiSessionMessages;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.layoutsadmin.util.LayoutsPermissionUtil;
+import com.liferay.portlet.sites.action.ActionUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import javax.portlet.ActionRequest;
@@ -36,8 +40,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author Eudaldo Alonso
  */
-public class EditLayoutsAction
-	extends com.liferay.portlet.layoutsadmin.action.EditLayoutsAction {
+public class EditLayoutsAction extends PortletAction {
 
 	@Override
 	public void processAction(
@@ -46,17 +49,23 @@ public class EditLayoutsAction
 			ActionResponse actionResponse)
 		throws Exception {
 
-		try {
-			checkPermissions(actionRequest);
-		}
-		catch (PrincipalException pe) {
-			return;
-		}
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
+
+		try {
+			Group group = ActionUtil.getGroup(actionRequest);
+
+			long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
+
+			LayoutsPermissionUtil.checkPermissions(
+				themeDisplay.getPermissionChecker(), group,
+				themeDisplay.getLayout(), selPlid, cmd);
+		}
+		catch (PrincipalException pe) {
+			return;
+		}
 
 		try {
 			if (cmd.equals("reset_customized_view")) {
