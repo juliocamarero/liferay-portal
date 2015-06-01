@@ -54,6 +54,22 @@ public class PermissionExporter {
 		return _instance;
 	}
 
+	public void exportPortletPermissions(
+			PortletDataContext portletDataContext, String portletId,
+			Layout layout, Element portletElement)
+		throws Exception {
+
+		String resourceName = PortletConstants.getRootPortletId(portletId);
+		String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
+			layout.getPlid(), portletId);
+
+		Element permissionsElement = portletElement.addElement("permissions");
+
+		exportPermissions(
+			portletDataContext, resourceName, resourcePrimKey,
+			permissionsElement);
+	}
+
 	protected void exportPermissions(
 			PortletDataContext portletDataContext, String resourceName,
 			String resourcePrimKey, Element permissionsElement)
@@ -136,22 +152,6 @@ public class PermissionExporter {
 			ExportImportPathUtil.getRootPath(portletDataContext) +
 				"/portlet-data-permissions.xml",
 			document.formattedString());
-	}
-
-	protected void exportPortletPermissions(
-			PortletDataContext portletDataContext, String portletId,
-			Layout layout, Element portletElement)
-		throws Exception {
-
-		String resourceName = PortletConstants.getRootPortletId(portletId);
-		String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
-			layout.getPlid(), portletId);
-
-		Element permissionsElement = portletElement.addElement("permissions");
-
-		exportPermissions(
-			portletDataContext, resourceName, resourcePrimKey,
-			permissionsElement);
 	}
 
 	private PermissionExporter() {
