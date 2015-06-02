@@ -59,6 +59,25 @@ public class PermissionImporter {
 		return _instance;
 	}
 
+	public void importPortletPermissions(
+			LayoutCache layoutCache, long companyId, long groupId, long userId,
+			Layout layout, Element portletElement, String portletId)
+		throws Exception {
+
+		Element permissionsElement = portletElement.element("permissions");
+
+		if ((layout != null) && (permissionsElement != null)) {
+			String resourceName = PortletConstants.getRootPortletId(portletId);
+
+			String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
+				layout.getPlid(), portletId);
+
+			importPermissions(
+				layoutCache, companyId, groupId, userId, layout, resourceName,
+				resourcePrimKey, permissionsElement, true);
+		}
+	}
+
 	protected Role checkRole(
 			LayoutCache layoutCache, long companyId, long groupId, long userId,
 			Element roleElement)
@@ -182,25 +201,6 @@ public class PermissionImporter {
 		ResourcePermissionLocalServiceUtil.setResourcePermissions(
 			companyId, resourceName, ResourceConstants.SCOPE_INDIVIDUAL,
 			resourcePrimKey, roleIdsToActionIds);
-	}
-
-	protected void importPortletPermissions(
-			LayoutCache layoutCache, long companyId, long groupId, long userId,
-			Layout layout, Element portletElement, String portletId)
-		throws Exception {
-
-		Element permissionsElement = portletElement.element("permissions");
-
-		if ((layout != null) && (permissionsElement != null)) {
-			String resourceName = PortletConstants.getRootPortletId(portletId);
-
-			String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
-				layout.getPlid(), portletId);
-
-			importPermissions(
-				layoutCache, companyId, groupId, userId, layout, resourceName,
-				resourcePrimKey, permissionsElement, true);
-		}
 	}
 
 	protected void readPortletDataPermissions(
