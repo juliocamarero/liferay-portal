@@ -20,7 +20,11 @@ import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Sergio González
@@ -50,5 +54,17 @@ public class SiteDetailsFormNavigatorEntry extends BaseSiteFormNavigatorEntry {
 	protected String getJspPath() {
 		return "/site/details.jsp";
 	}
+
+	@Override
+	protected ServletContext getServletContext(HttpServletRequest request) {
+		return _servletContext;
+	}
+
+	@Reference(target ="(osgi.web.contextpath=/o/sites-admin-web)")
+	protected void setServletContext(ServletContext servletContext) {
+		_servletContext = servletContext;
+	}
+
+	protected ServletContext _servletContext;
 
 }
