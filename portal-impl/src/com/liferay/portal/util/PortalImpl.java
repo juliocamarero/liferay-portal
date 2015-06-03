@@ -7392,12 +7392,6 @@ public class PortalImpl implements Portal {
 				updateLayout = true;
 			}
 
-			if (portletId.equals(PortletKeys.LAYOUTS_ADMIN) ||
-				portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
-
-				updateLayout = false;
-			}
-
 			if (updateLayout) {
 				LayoutClone layoutClone = LayoutCloneFactory.getInstance();
 
