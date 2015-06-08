@@ -91,7 +91,7 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 
 <aui:button name="webContentSelector" value="select-web-content" />
 
-<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL" />
+<liferay-portlet:actionURL name="editConfiguration" portletConfiguration="<%= true %>" var="configurationActionURL" />
 
 <liferay-portlet:renderURL portletConfiguration="<%= true %>" varImpl="configurationRenderURL" />
 
