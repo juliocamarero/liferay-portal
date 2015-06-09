@@ -34,6 +34,7 @@ import com.liferay.portal.struts.StrutsURLEncoder;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.portletconfiguration.util.ConfigurationRenderRequest;
 
 import java.io.IOException;
 
@@ -53,7 +54,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.liferay.portlet.portletconfiguration.util.ConfigurationRenderRequest;
 import org.apache.struts.Globals;
 
 /**
