@@ -18,21 +18,14 @@
 
 <%
 JournalArticle article = journalContentDisplayContext.getArticle();
+JournalArticleDisplay articleDisplay = journalContentDisplayContext.getArticleDisplay();
 
 String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
+
+String redirect = ParamUtil.getString(request, "redirect");
 %>
 
 <liferay-ui:error exception="<%= NoSuchArticleException.class %>" message="the-web-content-could-not-be-found" />
-
-<div class="alert alert-info">
-	<span class="displaying-help-message-holder <%= article == null ? StringPool.BLANK : "hide" %>">
-		<liferay-ui:message key="please-select-a-web-content-from-the-list-below" />
-	</span>
-
-	<span class="displaying-article-id-holder <%= article == null ? "hide" : StringPool.BLANK %>">
-		<liferay-ui:message key="displaying-content" />: <span class="displaying-article-id"><%= article != null ? article.getTitle(locale) : StringPool.BLANK %></span>
-	</span>
-</div>
 
 <c:if test="<%= article != null %>">
 
@@ -40,7 +33,61 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 	List<DDMTemplate> ddmTemplates = journalContentDisplayContext.getDDMTemplates();
 	%>
 
+	<%
+	String title = HtmlUtil.escapeAttribute(articleDisplay.getTitle());
+
+	String summary = HtmlUtil.escape(articleDisplay.getDescription());
+
+	summary = HtmlUtil.replaceNewLine(summary);
+
+	if (Validator.isNull(summary)) {
+		summary = HtmlUtil.stripHtml(articleDisplay.getContent());
+	}
+
+	summary = StringUtil.shorten(summary, 70);
+
+	//String imgURL = HtmlUtil.escapeAttribute(articleDisplay.getArticleDisplayImageURL(themeDisplay));
+	%>
+
+	<div class="row">
+		<div class="col-md-4 col-xs-12">
+			<p class="lead text-muted"><liferay-ui:message key="selected-web-content" /></p>
+			<div class="card-horizontal">
+				<div class="card-row">
+					<div class="card-col-5">
+						<img alt="thumbnail" class="img-responsive" src="<%= article.getSmallImageURL() %>">
+					</div>
+					<div class="card-col-7 card-col-gutters">
+						<h4><%= title %></h4>
+						<p><%= summary %></p>
+						<liferay-ui:user-display
+							displayStyle="2"
+							userId="<%= user.getUserId() %>"
+						/>
+					</div>
+				</div>
+			</div>
+			<aui:button name="webContentSelector" value="change" />
+		</div>
+	</div>
+
 	<c:if test="<%= !ddmTemplates.isEmpty() %>">
+		<div class="row">
+			<div class="col-md-12">
+				<p class="lead text-muted"><liferay-ui:message key="template" /></p>
+				<div class="media">
+			        <img alt="..." class="pull-left media-object" src="...">
+				    <div class="media-body">
+						<h4></h4>
+						<p>This is a description of the folder</p>
+					</div>
+				</div>
+				<aui:button name="webContentSelector" value="change" />
+			</div>
+		</div>
+	</c:if>
+
+	<!-- <c:if test="<%= !ddmTemplates.isEmpty() %>">
 		<aui:fieldset>
 			<liferay-ui:message key="override-default-template" />
 
@@ -127,10 +174,12 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 		</aui:field-wrapper>
 
 		<aui:input name="preferences--enableViewCountIncrement--" type="checkbox" value="<%= journalContentDisplayContext.isEnableViewCountIncrement() %>" />
-	</aui:fieldset>
+	</aui:fieldset> 
+-->
 
-	<aui:button-row>
+	<aui:button-row cssClass="dialog-footer">
 		<aui:button name="saveButton" type="submit" />
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
 

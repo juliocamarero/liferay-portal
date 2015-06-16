@@ -1155,6 +1155,10 @@
 
 			iframeBody.addClass('dialog-iframe-popup');
 
+			if (dialog.dialogIframeConfig && dialog.dialogIframeConfig.bodyCssClass) {
+				iframeBody.addClass(dialog.dialogIframeConfig.bodyCssClass);
+			}
+
 			var detachEventHandles = function() {
 				AArray.invoke(eventHandles, 'detach');
 
