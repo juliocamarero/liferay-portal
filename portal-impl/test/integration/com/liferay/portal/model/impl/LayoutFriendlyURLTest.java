@@ -277,6 +277,15 @@ public class LayoutFriendlyURLTest {
 		addLayout(_group.getGroupId(), false, friendlyURLMap);
 	}
 
+	@Test(expected = LayoutFriendlyURLsException.class)
+	public void testInvalidTooDeepFriendlyURL() throws Exception {
+		Map<Locale, String> friendlyURLMap = new HashMap<>();
+
+		friendlyURLMap.put(LocaleUtil.US, "/home/blogs");
+
+		addLayout(_group.getGroupId(), false, friendlyURLMap);
+	}
+
 	@Test
 	public void testMultipleInvalidFriendlyURLMapperURL() throws Exception {
 		Map<Locale, String> friendlyURLMap = new HashMap<>();
