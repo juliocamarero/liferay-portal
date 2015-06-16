@@ -410,13 +410,7 @@ public class LayoutFriendlyURLTest {
 
 		friendlyURLMap = new HashMap<>();
 
-		friendlyURLMap.put(LocaleUtil.US, "/home/blogs");
-
-		addLayout(_group.getGroupId(), false, friendlyURLMap);
-
-		friendlyURLMap = new HashMap<>();
-
-		friendlyURLMap.put(LocaleUtil.US, "/blogs/home");
+		friendlyURLMap.put(LocaleUtil.US, "/home");
 
 		addLayout(_group.getGroupId(), false, friendlyURLMap);
 	}
@@ -427,7 +421,7 @@ public class LayoutFriendlyURLTest {
 
 		Map<Locale, String> friendlyURLMap = new HashMap<>();
 
-		friendlyURLMap.put(LocaleUtil.SPAIN, "/blogs/two");
+		friendlyURLMap.put(LocaleUtil.SPAIN, "/blogs");
 		friendlyURLMap.put(LocaleUtil.US, "/two");
 
 		addLayout(_group.getGroupId(), false, friendlyURLMap);
