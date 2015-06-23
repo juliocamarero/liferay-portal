@@ -14,8 +14,10 @@
 
 package com.liferay.application.list;
 
+import com.liferay.application.list.util.URLBuilder;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
@@ -23,8 +25,16 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.PortletLocalService;
 import com.liferay.portlet.ControlPanelEntry;
+import com.liferay.portlet.PortletURLFactoryUtil;
 
 import java.util.Locale;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
+import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Adolfo Pérez
@@ -44,6 +54,29 @@ public abstract class BaseControlPanelEntryPanelApp implements PanelApp {
 			locale,
 			JavaConstants.JAVAX_PORTLET_TITLE + StringPool.PERIOD +
 				getPortletId());
+	}
+
+	@Override
+	public PortletURL getPortletURL(
+			HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException {
+
+		try {
+			LiferayPortletURL portletURL = PortletURLFactoryUtil.create(
+				request, getPortletId(), urlBuilder.getPlid(),
+				PortletRequest.RENDER_PHASE);
+
+			if (urlBuilder.getGroupId() > 0 ) {
+				portletURL.setDoAsGroupId(urlBuilder.getGroupId());
+			}
+
+			portletURL.setWindowState(WindowState.MAXIMIZED);
+
+			return portletURL;
+		}
+		catch (WindowStateException wse) {
+			throw new PortalException(wse);
+		}
 	}
 
 	@Override

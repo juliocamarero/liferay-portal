@@ -14,6 +14,7 @@
 
 package com.liferay.application.list;
 
+import com.liferay.application.list.util.URLBuilder;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
@@ -33,6 +34,11 @@ public class RootPanelCategory implements PanelCategory {
 
 	public static PanelCategory getInstance() {
 		return _instance;
+	}
+
+	@Override
+	public void buildURL(HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException {
 	}
 
 	@Override
