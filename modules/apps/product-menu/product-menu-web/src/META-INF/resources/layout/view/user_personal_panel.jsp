@@ -16,22 +16,6 @@
 
 <%@ include file="/layout/view/init.jsp" %>
 
-<c:choose>
-	<c:when test="<%= themeDisplay.isStatePopUp() %>">
-		<application-list-ui:panel-content portletId="<%= themeDisplay.getPpid() %>" />
-	</c:when>
-	<c:otherwise>
-		<aui:container cssClass="panel-manage-frontpage">
-			<aui:row>
-				<aui:col cssClass="panel-page-menu" width="<%= 25 %>">
-					<liferay-portlet:runtime portletName="<%= ProductMenuPortletKeys.PRODUCT_MENU %>" />
-				</aui:col>
-				<aui:col width="<%= 75 %>">
-					<application-list-ui:panel-content portletId="<%= themeDisplay.getPpid() %>" />
-				</aui:col>
-			</aui:row>
-		</aui:container>
-	</c:otherwise>
-</c:choose>
+<application-list-ui:panel-content portletId="<%= themeDisplay.getPpid() %>" />
 
 <liferay-ui:layout-common />
