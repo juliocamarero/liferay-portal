@@ -12,24 +12,42 @@
  * details.
  */
 
-package com.liferay.application.list;
+package com.liferay.application.list.util;
 
-import com.liferay.application.list.util.URLBuilder;
-import com.liferay.portal.kernel.exception.PortalException;
-
-import javax.portlet.PortletURL;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Adolfo Pérez
+ * @author Eudaldo Alonso
  */
-public interface PanelApp extends PanelEntry {
+public class URLBuilder {
 
-	public String getPortletId();
+	public URLBuilder(HttpServletRequest request) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-	public PortletURL getPortletURL(
-			HttpServletRequest request, URLBuilder urlBuilder)
-		throws PortalException;
+		_plid = themeDisplay.getPlid();
+	}
+
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public long getPlid() {
+		return _plid;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
+	public void setPlid(long plid) {
+		_plid = plid;
+	}
+
+	private long _groupId;
+	private long _plid;
 
 }
