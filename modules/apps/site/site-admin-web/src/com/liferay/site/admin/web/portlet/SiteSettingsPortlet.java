@@ -25,8 +25,6 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true,
 	property = {
 		"com.liferay.portlet.add-default-resource=true",
-		"com.liferay.portlet.control-panel-entry-category=site_administration.configuration",
-		"com.liferay.portlet.control-panel-entry-weight=1.0",
 		"com.liferay.portlet.css-class-wrapper=portlet-site-settings",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.icon=/icons/site_settings.png",

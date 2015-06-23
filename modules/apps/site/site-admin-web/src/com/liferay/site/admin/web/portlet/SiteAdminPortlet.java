@@ -121,8 +121,6 @@ import org.springframework.transaction.interceptor.TransactionAttribute;
 	immediate = true,
 	property = {
 		"com.liferay.portlet.add-default-resource=true",
-		"com.liferay.portlet.control-panel-entry-category=sites",
-		"com.liferay.portlet.control-panel-entry-weight=1.0",
 		"com.liferay.portlet.css-class-wrapper=portlet-site-admin",
 		"com.liferay.portlet.display-category=category.hidden",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
