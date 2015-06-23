@@ -24,6 +24,8 @@ $theme.include($body_top_include)
 	#dockbar()
 #end
 
+#product_menu()
+
 <div class="container-fluid" id="wrapper">
 	<div class="row">
 		<div class="col-md-12" id="content-wrapper">

@@ -20,6 +20,8 @@ ${theme.include(body_top_include)}
 
 <#if is_signed_in>
 	<@liferay.dockbar />
+
+	<@liferay.product_menu />
 </#if>
 
 <div class="container-fluid" id="wrapper">
