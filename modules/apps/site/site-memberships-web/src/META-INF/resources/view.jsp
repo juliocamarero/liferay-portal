@@ -23,6 +23,13 @@ String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
 String redirect = ParamUtil.getString(request, "redirect");
+
+if (Validator.isNull(redirect)) {
+	PortletURL portletURL = renderResponse.createRenderURL();
+
+	redirect = portletURL.toString();
+}
+
 boolean showBackURL = ParamUtil.getBoolean(request, "showBackURL", true);
 
 long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
@@ -39,16 +46,16 @@ long userGroupId = ParamUtil.getLong(request, "userGroupId");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
+portletURL.setParameter("mvcPath", "/view.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("tabs2", tabs2);
-portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
 PortletURL tabsURL = renderResponse.createRenderURL();
 
+tabsURL.setParameter("mvcPath", "/view.jsp");
 tabsURL.setParameter("tabs1", tabs1);
 tabsURL.setParameter("tabs2", "current");
-tabsURL.setParameter("redirect", redirect);
 tabsURL.setParameter("showBackURL", String.valueOf(showBackURL));
 
 request.setAttribute("edit_site_assignments.jsp-tabs1", tabs1);
@@ -86,7 +93,7 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 			<liferay-ui:tabs
 				names="summary,users,organizations,user-groups"
 				param="tabs1"
-				url="<%= tabsURL.toString() %>"
+				portletURL="<%= tabsURL %>"
 			/>
 		</c:if>
 	</c:when>
@@ -122,7 +129,6 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 
 						<portlet:renderURL var="viewMembershipRequestsURL">
 							<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
-							<portlet:param name="redirect" value="<%= currentURL %>" />
 							<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 						</portlet:renderURL>
 
