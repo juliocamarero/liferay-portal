@@ -68,7 +68,7 @@ public class ConfigurationPortletConfigurationIcon
 		sb.append("', '");
 		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "configuration"));
 		sb.append("', '");
-		sb.append("dialog-with-footer");
+		sb.append("dialog-with-footer, lexicon");
 		sb.append("'); return false;");
 
 		return sb.toString();

@@ -6,14 +6,16 @@
 
 @import "aui/alloy-font-awesome/scss/font-awesome";
 
-@import "aui/lexicon/lexicon/mixins/type";
-@import "aui/lexicon/lexicon/mixins/clearfix";
-@import "aui/lexicon/lexicon/mixins/figures";
-@import "aui/lexicon/lexicon/mixins/equal-height-columns";
-@import "aui/lexicon/lexicon/mixins/user-icons";
-@import "aui/lexicon/lexicon/type";
-@import "aui/lexicon/lexicon/equal-height-columns";
-@import "aui/lexicon/lexicon/cards";
-@import "aui/lexicon/lexicon/figures";
-@import "aui/lexicon/lexicon/user-icons";
-@import "aui/lexicon/lexicon/nameplates";
+.lexicon {
+	@import "aui/lexicon/lexicon/mixins/type";
+	@import "aui/lexicon/lexicon/mixins/clearfix";
+	@import "aui/lexicon/lexicon/mixins/figures";
+	@import "aui/lexicon/lexicon/mixins/equal-height-columns";
+	@import "aui/lexicon/lexicon/mixins/user-icons";
+	@import "aui/lexicon/lexicon/type";
+	@import "aui/lexicon/lexicon/equal-height-columns";
+	@import "aui/lexicon/lexicon/cards";
+	@import "aui/lexicon/lexicon/figures";
+	@import "aui/lexicon/lexicon/user-icons";
+	@import "aui/lexicon/lexicon/nameplates";
+}
