@@ -71,10 +71,6 @@ String redirect = ParamUtil.getString(request, "redirect");
 	<aui:input name="preferences--ddmTemplateKey--" type="hidden" value="<%= ddmTemplateKey %>" />
 
 	<aui:fieldset>
-		<aui:input name="portletId" type="resource" value="<%= journalContentDisplayContext.getPortletResource() %>" />
-	</aui:fieldset>
-
-	<aui:fieldset>
 		<aui:field-wrapper label="user-tools">
 			<liferay-ui:asset-addon-entry-selector
 				assetAddonEntries="<%= (List<AssetAddonEntry>)(List<?>)journalContentDisplayContext.getEnabledUserToolAssetAddonEntries() %>"
