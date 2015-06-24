@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 7.0.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_7_0_0.dtd">
+
+<routes>
+	<route>
+		<pattern>/membership_request/{groupId:\d+}/{p_u_i_d:\d+}/{membershipRequestId:\d+}/reply</pattern>
+		<implicit-parameter name="mvcPath">/reply_membership_request.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/membership_request/{groupId:\d+}/reply</pattern>
+		<implicit-parameter name="mvcPath">/reply_membership_request.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/{groupId:\d+}/requests</pattern>
+		<implicit-parameter name="mvcPath">/view_membership_requests.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/requests</pattern>
+		<implicit-parameter name="mvcPath">/view_membership_requests.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/{tabs1}/{showBackURL}/view</pattern>
+		<implicit-parameter name="mvcPath">/view.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+		<implicit-parameter name="tabs2">current</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/{groupId:\d+}/user/{p_u_i_d:\d+}/view</pattern>
+		<implicit-parameter name="mvcPath">/view.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+		<implicit-parameter name="tabs1">users</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/{groupId:\d+}/{tabs1}/{tabs2}/view</pattern>
+		<implicit-parameter name="mvcPath">/view.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/{groupId:\d+}/group/{userGroupId:\d+}/view</pattern>
+		<implicit-parameter name="mvcPath">/view.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+		<implicit-parameter name="tabs1">user-groups</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships/{tabs1}/{tabs2}/assign</pattern>
+		<ignored-parameter name="mvcPath" />
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/memberships</pattern>
+		<ignored-parameter name="mvcPath" />
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern></pattern>
+		<ignored-parameter name="mvcPath" />
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+</routes>
