@@ -20,11 +20,11 @@ import com.liferay.journal.model.JournalArticleImage;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.model.JournalContentSearch;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.service.JournalArticleImageLocalServiceUtil;
+import com.liferay.journal.service.JournalArticleImageLocalService;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
-import com.liferay.journal.service.JournalContentSearchLocalServiceUtil;
-import com.liferay.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.journal.service.JournalContentSearchLocalService;
+import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.journal.upgrade.JournalServiceUpgrade;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.portal.kernel.dao.db.DB;
@@ -52,13 +52,13 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.service.ResourceLocalServiceUtil;
+import com.liferay.portal.service.ResourceLocalService;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.verify.VerifyProcess;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetEntryLocalService;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalService;
 import com.liferay.portlet.dynamicdatamapping.NoSuchStructureException;
 import com.liferay.portlet.dynamicdatamapping.util.DDMFieldsCounter;
 
@@ -103,6 +103,25 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 	}
 
 	@Reference(unbind = "-")
+	protected void setAssetEntryLocalService(
+		AssetEntryLocalService assetEntryLocalService) {
+
+		_assetEntryLocalService = assetEntryLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setDLAppLocalService(DLAppLocalService dlAppLocalService) {
+		_dlAppLocalService = dlAppLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setJournalArticleImageLocalService(
+		JournalArticleImageLocalService journalArticleImageLocalService) {
+
+		_journalArticleImageLocalService = journalArticleImageLocalService;
+	}
+
+	@Reference(unbind = "-")
 	protected void setJournalArticleLocalService(
 		JournalArticleLocalService journalArticleLocalService) {
 
@@ -118,8 +137,29 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 	}
 
 	@Reference(unbind = "-")
+	protected void setJournalContentSearchLocalService(
+		JournalContentSearchLocalService journalContentSearchLocalService) {
+
+		_journalContentSearchLocalService = journalContentSearchLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setJournalFolderLocalService(
+		JournalFolderLocalService journalFolderLocalService) {
+
+		_journalFolderLocalService = journalFolderLocalService;
+	}
+
+	@Reference(unbind = "-")
 	protected void setJournalServiceUpgrade(
 		JournalServiceUpgrade journalServiceUpgrade) {
+	}
+
+	@Reference(unbind = "-")
+	protected void setResourceLocalService(
+		ResourceLocalService resourceLocalService) {
+
+		_resourceLocalService = resourceLocalService;
 	}
 
 	protected void updateContentSearch(long groupId, String portletId)
@@ -152,8 +192,8 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 					"articleId", null);
 
 				List<JournalContentSearch> contentSearches =
-					JournalContentSearchLocalServiceUtil.
-						getArticleContentSearches(groupId, articleId);
+					_journalContentSearchLocalService.getArticleContentSearches(
+						groupId, articleId);
 
 				if (contentSearches.isEmpty()) {
 					continue;
@@ -161,7 +201,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 
 				JournalContentSearch contentSearch = contentSearches.get(0);
 
-				JournalContentSearchLocalServiceUtil.updateContentSearch(
+				_journalContentSearchLocalService.updateContentSearch(
 					contentSearch.getGroupId(), contentSearch.isPrivateLayout(),
 					contentSearch.getLayoutId(), contentSearch.getPortletId(),
 					articleId, true);
@@ -244,7 +284,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 		String title = HttpUtil.decodeURL(HtmlUtil.escape(pathArray[4]));
 
 		try {
-			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+			FileEntry fileEntry = _dlAppLocalService.getFileEntry(
 				groupId, folderId, title);
 
 			Node node = dynamicContentElement.node(0);
@@ -318,7 +358,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 			dynamicContentElement.attributeValue("id"));
 
 		JournalArticleImage articleImage =
-			JournalArticleImageLocalServiceUtil.fetchJournalArticleImage(
+			_journalArticleImageLocalService.fetchJournalArticleImage(
 				articleImageId);
 
 		if (articleImage == null) {
@@ -327,7 +367,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 
 		articleImage.setElName(name + StringPool.UNDERLINE + index);
 
-		JournalArticleImageLocalServiceUtil.updateJournalArticleImage(
+		_journalArticleImageLocalService.updateJournalArticleImage(
 			articleImage);
 	}
 
@@ -354,7 +394,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 			return;
 		}
 
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
 			articleResource.getGroupId(), articleResource.getUuid());
 
 		if (assetEntry == null) {
@@ -519,12 +559,11 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 
 					JournalArticle article = (JournalArticle)object;
 
-					AssetEntry assetEntry =
-						AssetEntryLocalServiceUtil.fetchEntry(
-							JournalArticle.class.getName(),
-							article.getResourcePrimKey());
+					AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
+						JournalArticle.class.getName(),
+						article.getResourcePrimKey());
 
-					AssetEntryLocalServiceUtil.updateEntry(
+					_assetEntryLocalService.updateEntry(
 						assetEntry.getClassName(), assetEntry.getClassPK(),
 						null, assetEntry.isVisible());
 				}
@@ -692,7 +731,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 
 	protected void verifyFolderAssets() throws Exception {
 		List<JournalFolder> folders =
-			JournalFolderLocalServiceUtil.getNoAssetFolders();
+			_journalFolderLocalService.getNoAssetFolders();
 
 		if (_log.isDebugEnabled()) {
 			_log.debug(
@@ -701,7 +740,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 
 		for (JournalFolder folder : folders) {
 			try {
-				JournalFolderLocalServiceUtil.updateAsset(
+				_journalFolderLocalService.updateAsset(
 					folder.getUserId(), folder, null, null, null);
 			}
 			catch (Exception e) {
@@ -780,7 +819,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 			_journalArticleLocalService.getNoPermissionArticles();
 
 		for (JournalArticle article : articles) {
-			ResourceLocalServiceUtil.addResources(
+			_resourceLocalService.addResources(
 				article.getCompanyId(), 0, 0, JournalArticle.class.getName(),
 				article.getResourcePrimKey(), false, false, false);
 		}
@@ -790,7 +829,7 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 		long[] companyIds = PortalInstances.getCompanyIdsBySQL();
 
 		for (long companyId : companyIds) {
-			JournalFolderLocalServiceUtil.rebuildTree(companyId);
+			_journalFolderLocalService.rebuildTree(companyId);
 		}
 	}
 
@@ -828,8 +867,14 @@ public class JournalServiceVerifyProcess extends VerifyProcess {
 	private static final Pattern _friendlyURLPattern = Pattern.compile(
 		"[^a-z0-9_-]");
 
+	private AssetEntryLocalService _assetEntryLocalService;
+	private DLAppLocalService _dlAppLocalService;
+	private JournalArticleImageLocalService _journalArticleImageLocalService;
 	private JournalArticleLocalService _journalArticleLocalService;
 	private JournalArticleResourceLocalService
 		_journalArticleResourceLocalService;
+	private JournalContentSearchLocalService _journalContentSearchLocalService;
+	private JournalFolderLocalService _journalFolderLocalService;
+	private ResourceLocalService _resourceLocalService;
 
 }
