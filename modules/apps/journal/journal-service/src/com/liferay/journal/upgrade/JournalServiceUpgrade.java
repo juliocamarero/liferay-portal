@@ -14,6 +14,7 @@
 
 package com.liferay.journal.upgrade;
 
+import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.upgrade.v1_0_0.UpgradeClassNames;
 import com.liferay.journal.upgrade.v1_0_0.UpgradeJournal;
 import com.liferay.journal.upgrade.v1_0_0.UpgradeJournalArticleType;
@@ -50,6 +51,11 @@ public class JournalServiceUpgrade {
 	)
 	protected void setApplicationContext(
 		ApplicationContext applicationContext) {
+	}
+
+	@Reference(unbind = "-")
+	protected void setJournalArticleLocalService(
+		JournalArticleLocalService journalArticleLocalService) {
 	}
 
 	@Reference(unbind = "-")
