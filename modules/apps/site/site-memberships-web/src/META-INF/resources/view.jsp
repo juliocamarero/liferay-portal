@@ -23,7 +23,6 @@ String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
 String redirect = ParamUtil.getString(request, "redirect");
-boolean showBackURL = ParamUtil.getBoolean(request, "showBackURL", true);
 
 long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
@@ -49,7 +48,6 @@ PortletURL tabsURL = renderResponse.createRenderURL();
 tabsURL.setParameter("tabs1", tabs1);
 tabsURL.setParameter("tabs2", "current");
 tabsURL.setParameter("redirect", redirect);
-tabsURL.setParameter("showBackURL", String.valueOf(showBackURL));
 
 request.setAttribute("edit_site_assignments.jsp-tabs1", tabs1);
 request.setAttribute("edit_site_assignments.jsp-tabs2", tabs2);
