@@ -63,7 +63,7 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 String redirect = ParamUtil.getString(request, "redirect");
 %>
 
-<aui:form action="<%= configurationActionURL %>" method="post" name="fm">
+<aui:form action="<%= configurationActionURL %>" cssClass="<%= article == null ? "hidden" : ""%>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= configurationRenderURL %>" />
 	<aui:input name="preferences--assetEntryId--" type="hidden" value="<%= journalContentDisplayContext.getAssetEntryId() %>" />
@@ -149,6 +149,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 								$('.template-preview').removeClass('hidden');
 								form.fm('assetEntryId').val(event.assetentryid);
 								form.fm('ddmTemplateKey').val($('.template-preview .template-preview-content').attr('data-template-key'));
+								form.removeClass('hidden');
 							}
 						}
 					);
