@@ -14,7 +14,6 @@
 
 package com.liferay.journal.service.configuration.configurator;
 
-import com.liferay.journal.upgrade.JournalServiceUpgrade;
 import com.liferay.portal.service.configuration.ServiceComponentConfiguration;
 import com.liferay.portal.service.configuration.configurator.ServiceConfigurator;
 import com.liferay.portal.spring.extender.loader.ModuleResourceLoader;
@@ -53,11 +52,6 @@ public class JournalServiceConfigurator {
 		Bundle bundle = FrameworkUtil.getBundle(getClass());
 
 		return new ModuleResourceLoader(bundle);
-	}
-
-	@Reference(unbind = "-")
-	protected void setJournalServiceUpgrade(
-		JournalServiceUpgrade journalServiceUpgrade) {
 	}
 
 	@Reference(unbind = "-")
