@@ -13,33 +13,35 @@
 		<sequential>
 			<if>
 				<not>
-					<available file="libsass-3.1.0.zip" />
+					<available file="libsass-3.2.5.zip" />
 				</not>
 				<then>
 					<mirrors-get
-						dest="libsass-3.1.0.zip"
-						src="https://github.com/sass/libsass/archive/3.1.0.zip"
+						dest="libsass-3.2.5.zip"
+						src="https://github.com/sass/libsass/archive/3.2.5.zip"
 					/>
 				</then>
 			</if>
 
 			<unzip
 				dest="tmp"
-				src="libsass-3.1.0.zip"
+				src="libsass-3.2.5.zip"
 			/>
 
+<!--
 			<patch
-				dir="tmp/libsass-3.1.0"
+				dir="tmp/libsass-3.2.5"
 				patchfile="patches/LPS-52961.patch"
 			/>
+-->
 
 			<exec
 				command="@{libsass.make.exe} shared"
-				dir="tmp/libsass-3.1.0"
+				dir="tmp/libsass-3.2.5"
 			/>
 
 			<copy todir="resources/@{libsass.resources.dir}">
-				<fileset dir="tmp/libsass-3.1.0/lib">
+				<fileset dir="tmp/libsass-3.2.5/lib">
 					<filename name="@{libsass.lib.input.file}" />
 				</fileset>
 				<filtermapper>
@@ -106,16 +108,16 @@
 			</not>
 			<then>
 				<mirrors-get
-					dest="libsass-3.1.0.zip"
-					src="https://github.com/sass/libsass/archive/3.1.0.zip"
+					dest="libsass-3.2.5.zip"
+					src="https://github.com/sass/libsass/archive/3.2.5.zip"
 				/>
 
 				<unzip
 					dest="tmp"
-					src="libsass-3.1.0.zip"
+					src="libsass-3.2.5.zip"
 				/>
 
-				<delete file="libsass-3.1.0.zip" />
+				<delete file="libsass-3.2.5.zip" />
 
 				<mirrors-get
 					dest="jnaerator-0.11-shaded.jar"
@@ -123,7 +125,7 @@
 				/>
 
 				<java
-					dir="tmp/libsass-3.1.0"
+					dir="tmp/libsass-3.2.5"
 					jar="jnaerator-0.11-shaded.jar"
 					fork="true"
 					failonerror="true"
@@ -144,32 +146,6 @@
 				</concat>
 
 				<delete dir="tmp" />
-			</then>
-		</if>
-
-		<if>
-			<not>
-				<available file="test/unit/com/liferay/sass/compiler/jni/internal/dependencies/sass-spec" />
-			</not>
-			<then>
-				<mkdir dir="test/unit/com/liferay/sass/compiler/jni/internal/dependencies/sass-spec" />
-
-				<mirrors-get
-					dest="sass-spec.zip"
-					src="https://github.com/sass/sass-spec/archive/3818b9d686765461add05e996d990b085e15a348.zip"
-				/>
-
-				<unzip
-					dest="test/unit/com/liferay/sass/compiler/jni/internal/dependencies/sass-spec"
-					src="sass-spec.zip"
-				>
-					<patternset>
-						<include name="**/spec/basic/**" />
-					</patternset>
-					<cutdirsmapper dirs="3" />
-				</unzip>
-
-				<delete file="sass-spec.zip" />
 			</then>
 		</if>
 

@@ -61,29 +61,21 @@ public class JniSassCompilerTest {
 
 		Class<?> clazz = getClass();
 
-		URL url = clazz.getResource("dependencies/sass-spec");
+		URL url = clazz.getResource("dependencies/input.scss");
 
-		File sassSpecDir = new File(url.toURI());
+		File inputFile = new File(url.toURI());
 
-		for (File testDir : sassSpecDir.listFiles()) {
-			File inputFile = new File(testDir, "input.scss");
+		String actualOutput = sassCompiler.compileFile(
+			inputFile.getCanonicalPath(), "", "");
 
-			if (!inputFile.exists()) {
-				continue;
-			}
+		Assert.assertNotNull(actualOutput);
 
-			String actualOutput = sassCompiler.compileFile(
-				inputFile.getCanonicalPath(), "", "");
+		File expectedOutputFile = new File(inputFile.getParentFile(), "expected_output.css");
 
-			Assert.assertNotNull(actualOutput);
+		String expectedOutput = read(expectedOutputFile.toPath());
 
-			File expectedOutputFile = new File(testDir, "expected_output.css");
-
-			String expectedOutput = read(expectedOutputFile.toPath());
-
-			Assert.assertEquals(
-				stripNewLines(expectedOutput), stripNewLines(actualOutput));
-		}
+		Assert.assertEquals(
+			stripNewLines(expectedOutput), stripNewLines(actualOutput));
 	}
 
 	@Test
