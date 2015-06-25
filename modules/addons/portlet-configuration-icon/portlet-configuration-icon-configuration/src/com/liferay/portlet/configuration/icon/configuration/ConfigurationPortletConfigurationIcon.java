@@ -55,7 +55,7 @@ public class ConfigurationPortletConfigurationIcon
 	public String getOnClick() {
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-		StringBuilder sb = new StringBuilder(11);
+		StringBuilder sb = new StringBuilder(13);
 
 		sb.append("Liferay.Portlet.openWindow('#p_p_id_");
 		sb.append(portletDisplay.getId());
@@ -67,6 +67,8 @@ public class ConfigurationPortletConfigurationIcon
 		sb.append(portletDisplay.getNamespace());
 		sb.append("', '");
 		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "configuration"));
+		sb.append("', '");
+		sb.append("dialog-with-footer, lexicon");
 		sb.append("'); return false;");
 
 		return sb.toString();

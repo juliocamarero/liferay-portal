@@ -14,18 +14,19 @@
  */
 --%>
 
-<%@ include file="/html/taglib/ui/user_display/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
-<c:choose>
-	<c:when test="<%= displayStyle != 4 %>">
-			<c:if test="<%= showUserDetails %>">
-				</div>
-			</c:if>
-		</div>
-	</c:when>
-	<c:otherwise>
-				</div>
-			</div>
-		</div>
-	</c:otherwise>
-</c:choose>
+<%
+JournalArticle article = journalContentDisplayContext.getArticle();
+String articleId = article.getArticleId();
+%>
+
+<div id="<%= articleId %>-container">
+	<liferay-util:include page="/journal_article_resources.jsp" servletContext="<%= application %>">
+		<liferay-util:param name="articleId" value="<%= articleId %>" />
+	</liferay-util:include>
+
+	<liferay-util:include page="/journal_template_resources.jsp" servletContext="<%= application %>">
+		<liferay-util:param name="articleId" value="<%= articleId %>" />
+	</liferay-util:include>
+</div>

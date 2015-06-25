@@ -24,33 +24,45 @@ if (author) {
 if (Validator.isNull(url) && (userDisplay != null)) {
 	url = userDisplay.getDisplayURL(themeDisplay);
 }
+
+String taglibSrc = null;
+
+if (userDisplay != null) {
+	taglibSrc = userDisplay.getPortraitURL(themeDisplay);
+}
+else {
+	taglibSrc = UserConstants.getPortraitURL(themeDisplay.getPathImage(), true, 0, null);
+}
 %>
 
-<div class="display-style-<%= displayStyle %> taglib-user-display">
+<c:choose>
+	<c:when test="<%= displayStyle != 4 %>">
+		<div class="display-style-<%= displayStyle %> taglib-user-display">
+			<aui:a href="<%= url %>">
+				<span class="user-profile-image">
+					<span class="avatar <%= imageCssClass %>" style="background-image: url('<%= HtmlUtil.escape(taglibSrc) %>')"></span>
+				</span>
 
-	<%
-	String taglibSrc = null;
+				<c:if test="<%= showUserName %>">
+					<span class="user-name">
+						<%= (userDisplay != null) ? HtmlUtil.escape(userDisplay.getFullName()) : HtmlUtil.escape(userName) %>
+					</span>
+				</c:if>
+			</aui:a>
 
-	if (userDisplay != null) {
-		taglibSrc = userDisplay.getPortraitURL(themeDisplay);
-	}
-	else {
-		taglibSrc = UserConstants.getPortraitURL(themeDisplay.getPathImage(), true, 0, null);
-	}
-	%>
-
-	<aui:a href="<%= url %>">
-		<span class="user-profile-image">
-			<span class="avatar <%= imageCssClass %>" style="background-image: url('<%= HtmlUtil.escape(taglibSrc) %>')"></span>
-		</span>
-
-		<c:if test="<%= showUserName %>">
-			<span class="user-name">
-				<%= (userDisplay != null) ? HtmlUtil.escape(userDisplay.getFullName()) : HtmlUtil.escape(userName) %>
-			</span>
-		</c:if>
-	</aui:a>
-
-	<c:if test="<%= showUserDetails %>">
-		<div class="user-details">
-	</c:if>
+			<c:if test="<%= showUserDetails %>">
+				<div class="user-details">
+			</c:if>
+	</c:when>
+	<c:otherwise>
+		<div class="profile-header">
+			<div class="nameplate">
+				<div class="nameplate-field">
+					<div class="user-icon user-icon-lg user-icon-success">
+						<img alt="thumbnail" class="img-responsive <%= imageCssClass %>" src="<%= HtmlUtil.escape(taglibSrc) %>">
+					</div>
+				</div>
+				<div class="nameplate-content">
+					<div class="heading4"><%= (userDisplay != null) ? HtmlUtil.escape(userDisplay.getFullName()) : HtmlUtil.escape(userName) %></div>
+	</c:otherwise>
+</c:choose>
