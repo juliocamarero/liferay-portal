@@ -19,6 +19,12 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
+if (Validator.isNull(redirect)) {
+	PortletURL portletURL = renderResponse.createRenderURL();
+
+	redirect = portletURL.toString();
+}
+
 String tabs1 = ParamUtil.getString(request, "tabs1", "pending");
 
 int statusId = -1;
@@ -55,7 +61,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 <liferay-ui:tabs
 	names="pending,approved,denied"
-	url="<%= currentURL %>"
+	portletURL="<%= currentURLObj %>"
 />
 
 <%
