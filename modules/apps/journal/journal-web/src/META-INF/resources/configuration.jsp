@@ -17,11 +17,18 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String emailFromName = ParamUtil.getString(request, "preferences--emailFromName--", JournalUtil.getEmailFromName(portletPreferences, company.getCompanyId()));
-String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAddress--", JournalUtil.getEmailFromAddress(portletPreferences, company.getCompanyId()));
+JournalWebRequestHelper journalWebRequestHelper = new JournalWebRequestHelper(request);
+
+JournalGroupServiceSettings journalGroupServiceSettings = journalWebRequestHelper.getJournalGroupServiceSettings();
+
+String emailFromName = ParamUtil.getString(request, "preferences--emailFromName--", journalGroupServiceSettings.emailFromName());
+String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAddress--", journalGroupServiceSettings.emailFromAddress());
 %>
 
-<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL" />
+<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL">
+	<portlet:param name="serviceName" value="<%= JournalConstants.SERVICE_NAME %>" />
+	<portlet:param name="settingsScope" value="group" />
+</liferay-portlet:actionURL>
 
 <liferay-portlet:renderURL portletConfiguration="<%= true %>" var="configurationRenderURL" />
 
@@ -70,82 +77,82 @@ String emailFromAddress = ParamUtil.getString(request, "preferences--emailFromAd
 
 		<liferay-ui:section>
 			<liferay-ui:email-notification-settings
-				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleAddedBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_ADDED_BODY)) %>'
+				emailBody="<%= journalGroupServiceSettings.emailArticleAddedBodyXml() %>"
 				emailDefinitionTerms="<%= emailDefinitionTerms %>"
-				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleAddedEnabled--", JournalUtil.getEmailArticleAddedEnabled(portletPreferences)) %>'
+				emailEnabled="<%= journalGroupServiceSettings.emailArticleAddedEnabled() %>"
 				emailParam="emailArticleAdded"
-				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleAddedSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_ADDED_SUBJECT)) %>'
+				emailSubject="<%= journalGroupServiceSettings.emailArticleAddedSubjectXml() %>"
 			/>
 		</liferay-ui:section>
 
 		<liferay-ui:section>
 			<liferay-ui:email-notification-settings
-				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedFromFolderBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_MOVED_FROM_FOLDER_BODY)) %>'
+				emailBody="<%= journalGroupServiceSettings.emailArticleMovedFromFolderBodyXml() %>"
 				emailDefinitionTerms="<%= emailDefinitionTerms %>"
-				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleMovedFromFolderEnabled--", JournalUtil.getEmailArticleMovedFromFolderEnabled(portletPreferences)) %>'
+				emailEnabled="<%= journalGroupServiceSettings.emailArticleMovedFromFolderEnabled() %>"
 				emailParam="emailArticleMovedFromFolder"
-				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedFromFolderSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_MOVED_FROM_FOLDER_SUBJECT)) %>'
+				emailSubject="<%= journalGroupServiceSettings.emailArticleMovedFromFolderSubjectXml() %>"
 			/>
 		</liferay-ui:section>
 
 		<liferay-ui:section>
 			<liferay-ui:email-notification-settings
-				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedToFolderBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_MOVED_TO_FOLDER_BODY)) %>'
+				emailBody="<%= journalGroupServiceSettings.emailArticleMovedToFolderBodyXml() %>"
 				emailDefinitionTerms="<%= emailDefinitionTerms %>"
-				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleMovedToFolderEnabled--", JournalUtil.getEmailArticleMovedToFolderEnabled(portletPreferences)) %>'
+				emailEnabled="<%= journalGroupServiceSettings.emailArticleMovedToFolderEnabled() %>"
 				emailParam="emailArticleMovedToFolder"
-				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleMovedToFolderSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_MOVED_TO_FOLDER_SUBJECT)) %>'
+				emailSubject="<%= journalGroupServiceSettings.emailArticleMovedToFolderSubjectXml() %>"
 			/>
 		</liferay-ui:section>
 
 		<liferay-ui:section>
 			<liferay-ui:email-notification-settings
-				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleReviewBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_REVIEW_BODY)) %>'
+				emailBody="<%= journalGroupServiceSettings.emailArticleReviewBodyXml() %>"
 				emailDefinitionTerms="<%= emailDefinitionTerms %>"
-				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleReviewEnabled--", JournalUtil.getEmailArticleReviewEnabled(portletPreferences)) %>'
+				emailEnabled="<%= journalGroupServiceSettings.emailArticleReviewEnabled() %>"
 				emailParam="emailArticleReview"
-				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleReviewSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_REVIEW_SUBJECT)) %>'
+				emailSubject="<%= journalGroupServiceSettings.emailArticleReviewSubjectXml() %>"
 			/>
 		</liferay-ui:section>
 
 		<liferay-ui:section>
 			<liferay-ui:email-notification-settings
-				emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleUpdatedBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_UPDATED_BODY)) %>'
+				emailBody="<%= journalGroupServiceSettings.emailArticleUpdatedBodyXml() %>"
 				emailDefinitionTerms="<%= emailDefinitionTerms %>"
-				emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleUpdatedEnabled--", JournalUtil.getEmailArticleUpdatedEnabled(portletPreferences)) %>'
+				emailEnabled="<%= journalGroupServiceSettings.emailArticleUpdatedEnabled() %>"
 				emailParam="emailArticleUpdated"
-				emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleUpdatedSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_UPDATED_SUBJECT)) %>'
+				emailSubject="<%= journalGroupServiceSettings.emailArticleUpdatedSubjectXml() %>"
 			/>
 		</liferay-ui:section>
 
 		<c:if test="<%= WorkflowDefinitionLinkLocalServiceUtil.getWorkflowDefinitionLinksCount(themeDisplay.getCompanyId(), scopeGroupId, JournalFolder.class.getName()) > 0 %>">
 			<liferay-ui:section>
 				<liferay-ui:email-notification-settings
-					emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalDeniedBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_APPROVAL_DENIED_BODY)) %>'
+					emailBody="<%= journalGroupServiceSettings.emailArticleApprovalDeniedBodyXml() %>"
 					emailDefinitionTerms="<%= emailDefinitionTerms %>"
-					emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleApprovalDeniedEnabled--", JournalUtil.getEmailArticleApprovalDeniedEnabled(portletPreferences)) %>'
+					emailEnabled="<%= journalGroupServiceSettings.emailArticleApprovalDeniedEnabled() %>"
 					emailParam="emailArticleApprovalDenied"
-					emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalDeniedSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_APPROVAL_DENIED_SUBJECT)) %>'
+					emailSubject="<%= journalGroupServiceSettings.emailArticleApprovalDeniedSubjectXml() %>"
 				/>
 			</liferay-ui:section>
 
 			<liferay-ui:section>
 				<liferay-ui:email-notification-settings
-					emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalGrantedBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_APPROVAL_GRANTED_BODY)) %>'
+					emailBody="<%= journalGroupServiceSettings.emailArticleApprovalGrantedBodyXml() %>"
 					emailDefinitionTerms="<%= emailDefinitionTerms %>"
-					emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleApprovalGrantedEnabled--", JournalUtil.getEmailArticleApprovalGrantedEnabled(portletPreferences)) %>'
+					emailEnabled="<%= journalGroupServiceSettings.emailArticleApprovalGrantedEnabled() %>"
 					emailParam="emailArticleApprovalGranted"
-					emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalGrantedSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_APPROVAL_GRANTED_SUBJECT)) %>'
-				/>
+					emailSubject="<%= journalGroupServiceSettings.emailArticleApprovalGrantedSubjectXml() %>"
+					/>
 			</liferay-ui:section>
 
 			<liferay-ui:section>
 				<liferay-ui:email-notification-settings
-					emailBody='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalRequestedBody", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_APPROVAL_REQUESTED_BODY)) %>'
+					emailBody="<%= journalGroupServiceSettings.emailArticleApprovalRequestedBodyXml() %>"
 					emailDefinitionTerms="<%= emailDefinitionTerms %>"
-					emailEnabled='<%= ParamUtil.getBoolean(request, "preferences--emailArticleApprovalRequestedEnabled--", JournalUtil.getEmailArticleApprovalRequestedEnabled(portletPreferences)) %>'
+					emailEnabled="<%= journalGroupServiceSettings.emailArticleApprovalRequestedEnabled() %>"
 					emailParam="emailArticleApprovalRequested"
-					emailSubject='<%= LocalizationUtil.getLocalizationXmlFromPreferences(portletPreferences, renderRequest, "emailArticleApprovalRequestedSubject", "preferences", JournalServiceConfigurationUtil.getContent(JournalServiceConfigurationValues.EMAIL_ARTICLE_APPROVAL_REQUESTED_SUBJECT)) %>'
+					emailSubject="<%= journalGroupServiceSettings.emailArticleApprovalRequestedSubjectXml() %>"
 				/>
 			</liferay-ui:section>
 		</c:if>
