@@ -24,6 +24,7 @@ import com.liferay.journal.model.JournalStructureConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalArticleServiceUtil;
 import com.liferay.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.journal.settings.JournalGroupServiceSettings;
 import com.liferay.journal.transformer.JournalTransformer;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.portal.LocaleException;
@@ -487,6 +488,10 @@ public class JournalUtil {
 		return new DiffVersionsInfo(diffVersions, nextVersion, previousVersion);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleAddedBodyMap(
 		PortletPreferences preferences) {
 
@@ -497,6 +502,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleAddedEnabled(
 		PortletPreferences preferences) {
 
@@ -512,6 +521,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleAddedSubjectMap(
 		PortletPreferences preferences) {
 
@@ -522,6 +535,27 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	public static boolean getEmailArticleAnyEventEnabled(
+		JournalGroupServiceSettings journalGroupServiceSettings) {
+
+		if (journalGroupServiceSettings.emailArticleAddedEnabled() ||
+			journalGroupServiceSettings.emailArticleApprovalDeniedEnabled() ||
+			journalGroupServiceSettings.emailArticleApprovalGrantedEnabled() ||
+			journalGroupServiceSettings.emailArticleApprovalRequestedEnabled(
+				) ||
+			journalGroupServiceSettings.emailArticleReviewEnabled() ||
+			journalGroupServiceSettings.emailArticleUpdatedEnabled()) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #getEmailArticleAnyEventEnabled}
+	 */
+	@Deprecated
 	public static boolean getEmailArticleAnyEventEnabled(
 		PortletPreferences preferences) {
 
@@ -538,6 +572,10 @@ public class JournalUtil {
 		return false;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleApprovalDeniedBodyMap(
 		PortletPreferences preferences) {
 
@@ -549,6 +587,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleApprovalDeniedEnabled(
 		PortletPreferences preferences) {
 
@@ -564,6 +606,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleApprovalDeniedSubjectMap(
 		PortletPreferences preferences) {
 
@@ -576,6 +622,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleApprovalGrantedBodyMap(
 		PortletPreferences preferences) {
 
@@ -587,6 +637,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleApprovalGrantedEnabled(
 		PortletPreferences preferences) {
 
@@ -602,6 +656,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleApprovalGrantedSubjectMap(
 		PortletPreferences preferences) {
 
@@ -614,6 +672,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleApprovalRequestedBodyMap(
 		PortletPreferences preferences) {
 
@@ -626,6 +688,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleApprovalRequestedEnabled(
 		PortletPreferences preferences) {
 
@@ -641,6 +707,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String>
 		getEmailArticleApprovalRequestedSubjectMap(
 			PortletPreferences preferences) {
@@ -654,6 +724,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleMovedFromFolderBodyMap(
 		PortletPreferences preferences) {
 
@@ -666,6 +740,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleMovedFromFolderEnabled(
 		PortletPreferences preferences) {
 
@@ -681,6 +759,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleMovedFromFolderSubjectMap(
 		PortletPreferences preferences) {
 
@@ -693,6 +775,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleMovedToFolderBodyMap(
 		PortletPreferences preferences) {
 
@@ -705,6 +791,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleMovedToFolderEnabled(
 		PortletPreferences preferences) {
 
@@ -720,6 +810,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleMovedToFolderSubjectMap(
 		PortletPreferences preferences) {
 
@@ -732,6 +826,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleReviewBodyMap(
 		PortletPreferences preferences) {
 
@@ -742,6 +840,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleReviewEnabled(
 		PortletPreferences preferences) {
 
@@ -757,6 +859,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleReviewSubjectMap(
 		PortletPreferences preferences) {
 
@@ -767,6 +873,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleUpdatedBodyMap(
 		PortletPreferences preferences) {
 
@@ -777,6 +887,10 @@ public class JournalUtil {
 			JournalUtil.class.getClassLoader());
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static boolean getEmailArticleUpdatedEnabled(
 		PortletPreferences preferences) {
 
@@ -792,6 +906,10 @@ public class JournalUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by the new settings framework
+	 */
+	@Deprecated
 	public static Map<Locale, String> getEmailArticleUpdatedSubjectMap(
 		PortletPreferences preferences) {
 
