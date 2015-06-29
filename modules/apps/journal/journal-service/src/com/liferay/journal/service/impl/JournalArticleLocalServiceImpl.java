@@ -7076,22 +7076,6 @@ public class JournalArticleLocalServiceImpl
 			articleURL, article.getGroupId(), article.getFolderId(),
 			article.getArticleId());
 
-		PortletPreferences preferences =
-			ServiceContextUtil.getPortletPreferences(serviceContext);
-
-		if (preferences == null) {
-			long ownerId = article.getGroupId();
-			int ownerType = PortletKeys.PREFS_OWNER_TYPE_GROUP;
-			long plid = PortletKeys.PREFS_PLID_SHARED;
-			String portletId = PortletProviderUtil.getPortletId(
-				JournalArticle.class.getName(), PortletProvider.Action.EDIT);
-			String defaultPreferences = null;
-
-			preferences = portletPreferencesLocalService.getPreferences(
-				article.getCompanyId(), ownerId, ownerType, plid, portletId,
-				defaultPreferences);
-		}
-
 		if (action.equals("add") &&
 			journalGroupServiceSettings.emailArticleAddedEnabled()) {
 		}
