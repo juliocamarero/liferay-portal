@@ -47,7 +47,7 @@ boolean print = ((Boolean)request.getAttribute("view.jsp-print")).booleanValue()
 
 String defaultAssetPublisherPortletId = AssetUtil.getDefaultAssetPublisherId(layout);
 
-boolean defaultAssetPublisher = AssetUtil.isDefaultAssetPublisher(defaultAssetPublisherPortletId, portletId, portletResource);
+boolean defaultAssetPublisher = AssetUtil.isDefaultAssetPublisher(defaultAssetPublisherPortletId, portletDisplay.getId(), assetPublisherDisplayContext.getPortletResource());
 
 if (defaultAssetPublisher || Validator.isNull(defaultAssetPublisherPortletId) || !PortletPermissionUtil.contains(permissionChecker, layout, defaultAssetPublisherPortletId, ActionKeys.VIEW)) {
 	request.setAttribute(WebKeys.LAYOUT_ASSET_ENTRY, assetEntry);
