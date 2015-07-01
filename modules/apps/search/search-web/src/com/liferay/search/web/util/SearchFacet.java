@@ -19,7 +19,12 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 
+import java.io.IOException;
+
 import javax.portlet.ActionRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Eudaldo Alonso
@@ -55,6 +60,14 @@ public interface SearchFacet {
 	public String getTitle();
 
 	public double getWeight();
+
+	public abstract void includeConfiguration(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException;
+
+	public abstract void includeView(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException;
 
 	public void init(String searchConfiguration) throws Exception;
 
