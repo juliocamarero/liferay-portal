@@ -33,11 +33,6 @@ import org.osgi.service.component.annotations.Component;
 public class AssetTagsSearchFacet extends BaseSearchFacet {
 
 	@Override
-	public String getClassName() {
-		return AssetTagsSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/asset_tags.jsp";
 	}
@@ -81,11 +76,6 @@ public class AssetTagsSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getId() {
-		return AssetTagsSearchFacet.class.getName();
-	}
-
-	@Override
 	public JSONObject getJSONData(ActionRequest actionRequest) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -108,11 +98,6 @@ public class AssetTagsSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getLabel() {
-		return "tag";
-	}
-
-	@Override
-	public String getTitle() {
 		return "tag";
 	}
 

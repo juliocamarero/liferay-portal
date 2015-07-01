@@ -48,11 +48,6 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getClassName() {
-		return AssetEntriesSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/asset_entries.jsp";
 	}
@@ -102,11 +97,6 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getId() {
-		return AssetEntriesSearchFacet.class.getName();
-	}
-
-	@Override
 	public JSONObject getJSONData(ActionRequest actionRequest) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -135,11 +125,6 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getLabel() {
-		return "asset-type";
-	}
-
-	@Override
-	public String getTitle() {
 		return "asset-type";
 	}
 

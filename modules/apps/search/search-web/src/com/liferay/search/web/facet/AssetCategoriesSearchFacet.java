@@ -33,11 +33,6 @@ import org.osgi.service.component.annotations.Component;
 public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 
 	@Override
-	public String getClassName() {
-		return AssetCategoriesSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/asset_categories.jsp";
 	}
@@ -81,11 +76,6 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getId() {
-		return AssetCategoriesSearchFacet.class.getName();
-	}
-
-	@Override
 	public JSONObject getJSONData(ActionRequest actionRequest) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -108,11 +98,6 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getLabel() {
-		return "category";
-	}
-
-	@Override
-	public String getTitle() {
 		return "category";
 	}
 

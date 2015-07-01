@@ -33,11 +33,6 @@ import org.osgi.service.component.annotations.Component;
 public class UserSearchFacet extends BaseSearchFacet {
 
 	@Override
-	public String getClassName() {
-		return UserSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/users.jsp";
 	}
@@ -80,11 +75,6 @@ public class UserSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getId() {
-		return UserSearchFacet.class.getName();
-	}
-
-	@Override
 	public JSONObject getJSONData(ActionRequest actionRequest) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -104,11 +94,6 @@ public class UserSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getLabel() {
-		return "user";
-	}
-
-	@Override
-	public String getTitle() {
 		return "user";
 	}
 

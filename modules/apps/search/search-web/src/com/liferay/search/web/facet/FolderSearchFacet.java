@@ -33,11 +33,6 @@ import org.osgi.service.component.annotations.Component;
 public class FolderSearchFacet extends BaseSearchFacet {
 
 	@Override
-	public String getClassName() {
-		return FolderSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/folders.jsp";
 	}
@@ -81,11 +76,6 @@ public class FolderSearchFacet extends BaseSearchFacet {
 	}
 
 	@Override
-	public String getId() {
-		return FolderSearchFacet.class.getName();
-	}
-
-	@Override
 	public JSONObject getJSONData(ActionRequest actionRequest) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -105,11 +95,6 @@ public class FolderSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getLabel() {
-		return "folder";
-	}
-
-	@Override
-	public String getTitle() {
 		return "folder";
 	}
 

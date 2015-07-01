@@ -35,11 +35,6 @@ import org.osgi.service.component.annotations.Component;
 public class ModifiedSearchFacet extends BaseSearchFacet {
 
 	@Override
-	public String getClassName() {
-		return ModifiedSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/modified.jsp";
 	}
@@ -89,11 +84,6 @@ public class ModifiedSearchFacet extends BaseSearchFacet {
 	@Override
 	public String getFieldName() {
 		return Field.MODIFIED_DATE;
-	}
-
-	@Override
-	public String getId() {
-		return ModifiedSearchFacet.class.getName();
 	}
 
 	@Override

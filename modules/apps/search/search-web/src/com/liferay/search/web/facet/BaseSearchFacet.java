@@ -32,6 +32,13 @@ import com.liferay.search.web.util.SearchFacet;
 public abstract class BaseSearchFacet implements SearchFacet {
 
 	@Override
+	public String getClassName() {
+		Class<?> clazz = getClass();
+
+		return clazz.getName();
+	}
+
+	@Override
 	public String getConfigurationView() {
 		return StringPool.BLANK;
 	}
@@ -52,8 +59,18 @@ public abstract class BaseSearchFacet implements SearchFacet {
 	}
 
 	@Override
+	public String getId() {
+		return getClassName();
+	}
+
+	@Override
 	public String getOrder() {
 		return "OrderHitsDesc";
+	}
+
+	@Override
+	public String getTitle() {
+		return getLabel();
 	}
 
 	@Override

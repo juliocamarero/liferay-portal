@@ -33,11 +33,6 @@ import org.osgi.service.component.annotations.Component;
 public class ScopeSearchFacet extends BaseSearchFacet {
 
 	@Override
-	public String getClassName() {
-		return ScopeSearchFacet.class.getName();
-	}
-
-	@Override
 	public String getConfigurationView() {
 		return "/facets/configuration/scopes.jsp";
 	}
@@ -77,11 +72,6 @@ public class ScopeSearchFacet extends BaseSearchFacet {
 	@Override
 	public String getFieldName() {
 		return Field.GROUP_ID;
-	}
-
-	@Override
-	public String getId() {
-		return ScopeSearchFacet.class.getName();
 	}
 
 	@Override
