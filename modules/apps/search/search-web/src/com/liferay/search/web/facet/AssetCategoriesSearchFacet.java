@@ -24,17 +24,20 @@ import com.liferay.search.web.util.SearchFacet;
 
 import javax.portlet.ActionRequest;
 
+import javax.servlet.ServletContext;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
  */
 @Component(immediate = true, service = SearchFacet.class)
-public class AssetCategoriesSearchFacet extends BaseSearchFacet {
+public class AssetCategoriesSearchFacet extends BaseJSPSearchFacet {
 
 	@Override
 	public String getConfigurationView() {
-		return "/facets/configuration/asset_categories.jsp";
+		return _JSP_CONFIGURATION_PATH;
 	}
 
 	@Override
@@ -63,7 +66,7 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getDisplayView() {
-		return "/facets/view/asset_categories.jsp";
+		return _JSP_VIEW_PATH;
 	}
 
 	public String getFacetClassName() {
@@ -100,5 +103,19 @@ public class AssetCategoriesSearchFacet extends BaseSearchFacet {
 	public String getLabel() {
 		return "category";
 	}
+
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.search.web)", unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
+
+	private static final String _JSP_CONFIGURATION_PATH =
+		"/META-INF/resources/facets/configuration/asset_categories.jsp";
+
+	private static final String _JSP_VIEW_PATH =
+		"/META-INF/resources/facets/view/asset_categories.jsp";
 
 }

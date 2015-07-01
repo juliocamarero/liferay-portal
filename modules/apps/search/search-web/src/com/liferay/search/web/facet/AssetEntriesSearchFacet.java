@@ -31,6 +31,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.portlet.ActionRequest;
 
+import javax.servlet.ServletContext;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -41,7 +43,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Eudaldo Alonso
  */
 @Component(immediate = true, service = SearchFacet.class)
-public class AssetEntriesSearchFacet extends BaseSearchFacet {
+public class AssetEntriesSearchFacet extends BaseJSPSearchFacet {
 
 	public List<AssetRendererFactory> getAssetRendererFactories() {
 		return _assetRendererFactories;
@@ -49,7 +51,7 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getConfigurationView() {
-		return "/facets/configuration/asset_entries.jsp";
+		return _JSP_CONFIGURATION_PATH;
 	}
 
 	@Override
@@ -83,7 +85,7 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getDisplayView() {
-		return "/facets/view/asset_entries.jsp";
+		return _JSP_VIEW_PATH;
 	}
 
 	@Override
@@ -128,6 +130,14 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 		return "asset-type";
 	}
 
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.search.web)", unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
+
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
@@ -158,6 +168,12 @@ public class AssetEntriesSearchFacet extends BaseSearchFacet {
 
 		_assetRendererFactories.remove(assetRendererFactory);
 	}
+
+	private static final String _JSP_CONFIGURATION_PATH =
+		"/META-INF/resources/facets/configuration/asset_entries.jsp";
+
+	private static final String _JSP_VIEW_PATH =
+		"/META-INF/resources/facets/view/asset_entries.jsp";
 
 	private final List<AssetRendererFactory> _assetRendererFactories =
 		new CopyOnWriteArrayList<>();

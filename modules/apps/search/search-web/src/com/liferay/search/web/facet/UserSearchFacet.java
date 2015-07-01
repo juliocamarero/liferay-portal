@@ -24,17 +24,20 @@ import com.liferay.search.web.util.SearchFacet;
 
 import javax.portlet.ActionRequest;
 
+import javax.servlet.ServletContext;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
  */
 @Component(immediate = true, service = SearchFacet.class)
-public class UserSearchFacet extends BaseSearchFacet {
+public class UserSearchFacet extends BaseJSPSearchFacet {
 
 	@Override
 	public String getConfigurationView() {
-		return "/facets/configuration/users.jsp";
+		return _JSP_CONFIGURATION_PATH;
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class UserSearchFacet extends BaseSearchFacet {
 
 	@Override
 	public String getDisplayView() {
-		return "/facets/view/users.jsp";
+		return _JSP_VIEW_PATH;
 	}
 
 	public String getFacetClassName() {
@@ -96,5 +99,19 @@ public class UserSearchFacet extends BaseSearchFacet {
 	public String getLabel() {
 		return "user";
 	}
+
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.search.web)", unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
+
+	private static final String _JSP_CONFIGURATION_PATH =
+		"/META-INF/resources/facets/configuration/users.jsp";
+
+	private static final String _JSP_VIEW_PATH =
+		"/META-INF/resources/facets/view/users.jsp";
 
 }
