@@ -685,32 +685,31 @@ public class AssetPublisherUtil {
 			String portletName, int start, int end, boolean searchWithIndex)
 		throws Exception {
 
-		List<AssetEntry> results = new ArrayList<>();
-		int groupTotal = 0;
+		BaseModelSearchResult<AssetEntry> baseModelSearchResult = null;
 
 		if (searchWithIndex && (assetEntryQuery.getLinkedAssetEntryId() == 0) &&
 			!portletName.equals(
 				AssetPublisherPortletKeys.HIGHEST_RATED_ASSETS) &&
 			!portletName.equals(AssetPublisherPortletKeys.MOST_VIEWED_ASSETS)) {
 
-			BaseModelSearchResult<AssetEntry> baseModelSearchResult =
-				AssetUtil.searchAssetEntries(
-					request, assetEntryQuery, start, end);
-
-			groupTotal = baseModelSearchResult.getLength();
-
-			results = baseModelSearchResult.getBaseModels();
+			baseModelSearchResult = AssetUtil.searchAssetEntries(
+				request, assetEntryQuery, start, end);
 		}
 		else {
-			groupTotal = AssetEntryServiceUtil.getEntriesCount(assetEntryQuery);
+			int groupTotal = AssetEntryServiceUtil.getEntriesCount(
+				assetEntryQuery);
 
 			assetEntryQuery.setStart(start);
 			assetEntryQuery.setEnd(end);
 
-			results = AssetEntryServiceUtil.getEntries(assetEntryQuery);
+			List<AssetEntry> results = AssetEntryServiceUtil.getEntries(
+				assetEntryQuery);
+
+			baseModelSearchResult = new BaseModelSearchResult<>(
+				results, groupTotal);
 		}
 
-		return new BaseModelSearchResult<>(results, groupTotal);
+		return baseModelSearchResult;
 	}
 
 	public static BaseModelSearchResult<AssetEntry> getAssetEntryQueryResult(
