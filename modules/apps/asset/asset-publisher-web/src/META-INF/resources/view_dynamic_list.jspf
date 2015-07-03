@@ -38,13 +38,13 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 
 			int groupTotal = 0;
 
-			BaseModelSearchResult<AssetEntry> assetEntryQueryResult = AssetPublisherUtil.getAssetEntryQueryResult(portletPreferences, assetEntryQuery, classNameIds, start, end, request, portletName, assetCategory, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
+			BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetPublisherUtil.getAssetEntryQueryResult(portletPreferences, assetEntryQuery, classNameIds, start, end, request, portletName, assetCategory, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
 
-			groupTotal = assetEntryQueryResult.getLength();
+			groupTotal = baseModelSearchResult.getLength();
 
 			total += groupTotal;
 
-			results = assetEntryQueryResult.getBaseModels();
+			results = baseModelSearchResult.getBaseModels();
 
 			if (!results.isEmpty() && (start < groupTotal)) {
 				searchContainer.setResults(results);
@@ -62,8 +62,8 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 			}
 
 			if (groupTotal > 0) {
-				end = AssetPublisherUtil.getLimit(groupTotal, end);
-				start = AssetPublisherUtil.getLimit(groupTotal, start);
+				end = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, end);
+				start = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, start);
 			}
 
 			assetEntryQuery.setEnd(QueryUtil.ALL_POS);
@@ -75,13 +75,13 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 	else if (assetVocabularyId != -1) {
 		assetEntryQuery.setClassNameIds(classNameIds);
 
-		BaseModelSearchResult<AssetEntry> assetEntryQueryResult = AssetPublisherUtil.getAssetEntryQueryResult(assetEntryQuery, request, portletName, start, end, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
+		BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetPublisherUtil.getAssetEntryQueryResult(assetEntryQuery, request, portletName, start, end, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
 
-		total = assetEntryQueryResult.getLength();
+		total = baseModelSearchResult.getLength();
 
 		searchContainer.setTotal(total);
 
-		results = assetEntryQueryResult.getBaseModels();
+		results = baseModelSearchResult.getBaseModels();
 
 		if (!results.isEmpty() && (start < total)) {
 			searchContainer.setResults(results);
@@ -104,13 +104,13 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 
 			int groupTotal = 0;
 
-			BaseModelSearchResult<AssetEntry> assetEntryQueryResult = AssetPublisherUtil.getAssetEntryQueryResult(assetEntryQuery, request, portletName, start, end, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
+			BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetPublisherUtil.getAssetEntryQueryResult(assetEntryQuery, request, portletName, start, end, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
 
-			groupTotal = assetEntryQueryResult.getLength();
+			groupTotal = baseModelSearchResult.getLength();
 
 			total += groupTotal;
 
-			results = assetEntryQueryResult.getBaseModels();
+			results = baseModelSearchResult.getBaseModels();
 
 			searchContainer.setResults(results);
 
@@ -130,8 +130,8 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 
 			if (!portletName.equals(AssetPublisherPortletKeys.RECENT_CONTENT)) {
 				if (groupTotal > 0) {
-					end = AssetPublisherUtil.getLimit(groupTotal, end);
-					start = AssetPublisherUtil.getLimit(groupTotal, start);
+					end = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, end);
+					start = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, start);
 				}
 
 				assetEntryQuery.setEnd(QueryUtil.ALL_POS);

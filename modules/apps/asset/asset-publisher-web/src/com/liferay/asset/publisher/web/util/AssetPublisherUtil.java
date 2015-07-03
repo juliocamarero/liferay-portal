@@ -738,6 +738,19 @@ public class AssetPublisherUtil {
 		return baseModelSearchResult;
 	}
 
+	public static int getAssetEntryQueryResultLimit(int groupTotal, int limit) {
+		if (groupTotal > 0) {
+			if ((limit > 0) && (limit > groupTotal)) {
+				limit -= groupTotal;
+			}
+			else {
+				limit = 0;
+			}
+		}
+
+		return limit;
+	}
+
 	public static String[] getAssetTagNames(
 			PortletPreferences portletPreferences)
 		throws Exception {
@@ -1095,19 +1108,6 @@ public class AssetPublisherUtil {
 		}
 
 		return ArrayUtil.toLongArray(groupIds);
-	}
-
-	public static int getLimit(int groupTotal, int limit) {
-		if (groupTotal > 0) {
-			if ((limit > 0) && (limit > groupTotal)) {
-				limit -= groupTotal;
-			}
-			else {
-				limit = 0;
-			}
-		}
-
-		return limit;
 	}
 
 	public static String getScopeId(Group group, long scopeGroupId)
