@@ -14,6 +14,7 @@
 
 package com.liferay.asset.publisher.web.util;
 
+import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfigurationValues;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -45,7 +46,9 @@ import com.sun.syndication.feed.synd.SyndLinkImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
@@ -82,6 +85,35 @@ public class AssetRSSUtil {
 
 		String format = RSSUtil.getFeedTypeFormat(rssFeedType);
 		double version = RSSUtil.getFeedTypeVersion(rssFeedType);
+
+		Set<String> defaultOrderValues = new HashSet<String>();
+
+		defaultOrderValues.add("title");
+		defaultOrderValues.add("createDate");
+		defaultOrderValues.add("modifiedDate");
+		defaultOrderValues.add("publishDate");
+		defaultOrderValues.add("expirationDate");
+		defaultOrderValues.add("priority");
+
+		if (!AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX) {
+			defaultOrderValues.add("viewCount");
+			defaultOrderValues.add("ratings");
+		}
+
+		String orderByColumn1 = portletPreferences.getValue("orderByColumn1",
+				null);
+		String orderByColumn2 = portletPreferences.getValue("orderbyColumn2",
+				null);
+
+		if (!defaultOrderValues.contains(orderByColumn1)) {
+			portletPreferences.setValue("orderByColumn1", null);
+			portletPreferences.setValue("orderByType1", null);
+		}
+
+		if (!defaultOrderValues.contains(orderByColumn2)) {
+			portletPreferences.setValue("orderByColumn2", null);
+			portletPreferences.setValue("orderByType2", null);
+		}
 
 		String rss = exportToRSS(
 			portletRequest, portletResponse, rssName, null, format, version,
