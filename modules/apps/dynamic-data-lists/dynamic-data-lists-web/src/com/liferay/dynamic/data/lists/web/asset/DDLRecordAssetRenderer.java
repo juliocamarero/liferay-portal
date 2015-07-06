@@ -78,6 +78,11 @@ public class DDLRecordAssetRenderer extends BaseJSPAssetRenderer {
 	}
 
 	@Override
+	public Object getAsset() {
+		return _record;
+	}
+
+	@Override
 	public String getClassName() {
 		return DDLRecord.class.getName();
 	}

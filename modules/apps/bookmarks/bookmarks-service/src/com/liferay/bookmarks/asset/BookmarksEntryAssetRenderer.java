@@ -55,6 +55,11 @@ public class BookmarksEntryAssetRenderer
 	}
 
 	@Override
+	public Object getAsset() {
+		return _entry;
+	}
+
+	@Override
 	public String getClassName() {
 		return BookmarksEntry.class.getName();
 	}

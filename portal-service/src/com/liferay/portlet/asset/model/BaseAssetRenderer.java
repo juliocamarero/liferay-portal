@@ -66,6 +66,11 @@ public abstract class BaseAssetRenderer implements AssetRenderer {
 		return StringPool.BLANK;
 	}
 
+	@Override
+	public Object getAsset() {
+		return null;
+	}
+
 	public AssetRendererFactory getAssetRendererFactory() {
 		if (_assetRendererFactory != null) {
 			return _assetRendererFactory;

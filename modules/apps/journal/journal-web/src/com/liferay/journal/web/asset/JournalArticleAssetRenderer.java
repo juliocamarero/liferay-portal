@@ -93,6 +93,11 @@ public class JournalArticleAssetRenderer
 	}
 
 	@Override
+	public Object getAsset() {
+		return _article;
+	}
+
+	@Override
 	public String[] getAvailableLanguageIds() {
 		return _article.getAvailableLanguageIds();
 	}

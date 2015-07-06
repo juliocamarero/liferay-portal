@@ -47,6 +47,8 @@ public interface AssetRenderer extends Renderer {
 	@Deprecated
 	public String getAddToPagePortletId() throws Exception;
 
+	public Object getAsset();
+
 	public int getAssetRendererType();
 
 	public String[] getAvailableLanguageIds() throws Exception;

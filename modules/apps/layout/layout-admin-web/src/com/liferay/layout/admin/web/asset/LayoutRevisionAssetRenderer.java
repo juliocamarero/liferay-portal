@@ -63,6 +63,11 @@ public class LayoutRevisionAssetRenderer extends BaseJSPAssetRenderer {
 	}
 
 	@Override
+	public Object getAsset() {
+		return _layoutRevision;
+	}
+
+	@Override
 	public String getClassName() {
 		return LayoutRevision.class.getName();
 	}
