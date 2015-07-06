@@ -40,6 +40,7 @@ public class MBDiscussionAssetRenderer extends MBMessageAssetRenderer {
 		_message = message;
 	}
 
+	@Override
 	public Object getAsset() {
 		return _message;
 	}
