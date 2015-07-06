@@ -20,31 +20,32 @@ AssetEntryQuery assetEntryQuery = assetPublisherDisplayContext.getAssetEntryQuer
 int end = searchContainer.getEnd();
 int start = searchContainer.getStart();
 
-List<AssetEntry> results = new ArrayList<AssetEntry>();
 int total = 0;
-long[] classNameIds = assetPublisherDisplayContext.getClassNameIds();
 
 if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntryQuery.getLinkedAssetEntryId() > 0)) {
 	long assetVocabularyId = GetterUtil.getLong(portletPreferences.getValue("assetVocabularyId", null));
 
 	if (assetVocabularyId > 0) {
-
 		List<AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getVocabularyRootCategories(assetVocabularyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
-		assetEntryQuery.setClassNameIds(classNameIds);
+		assetEntryQuery.setClassNameIds(assetPublisherDisplayContext.getClassNameIds());
 
 		for (AssetCategory assetCategory : assetCategories) {
 			assetCategory = assetCategory.toEscapedModel();
 
-			int groupTotal = 0;
+			long[] oldAllCategoryIds = assetEntryQuery.getAllCategoryIds();
 
-			BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetPublisherUtil.getAssetEntryQueryResult(portletPreferences, assetEntryQuery, classNameIds, start, end, request, portletName, assetCategory, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
+			long[] newAllAssetCategoryIds = ArrayUtil.append(oldAllCategoryIds, assetCategory.getCategoryId());
 
-			groupTotal = baseModelSearchResult.getLength();
+			assetEntryQuery.setAllCategoryIds(newAllAssetCategoryIds);
+
+			BaseModelSearchResult<AssetEntry> baseModelSearchResult = assetPublisherDisplayContext.getAssetEntries(start, end);
+
+			int groupTotal = baseModelSearchResult.getLength();
 
 			total += groupTotal;
 
-			results = baseModelSearchResult.getBaseModels();
+			List<AssetEntry> results = baseModelSearchResult.getBaseModels();
 
 			if (!results.isEmpty() && (start < groupTotal)) {
 				searchContainer.setResults(results);
@@ -62,10 +63,22 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 			}
 
 			if (groupTotal > 0) {
-				end = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, end);
-				start = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, start);
+				if ((end > 0) && (end > groupTotal)) {
+					end -= groupTotal;
+				}
+				else {
+					end = 0;
+				}
+
+				if ((start > 0) && (start > groupTotal)) {
+					start -= groupTotal;
+				}
+				else {
+					start = 0;
+				}
 			}
 
+			assetEntryQuery.setAllCategoryIds(oldAllCategoryIds);
 			assetEntryQuery.setEnd(QueryUtil.ALL_POS);
 			assetEntryQuery.setStart(QueryUtil.ALL_POS);
 		}
@@ -73,15 +86,15 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 		searchContainer.setTotal(total);
 	}
 	else if (assetVocabularyId != -1) {
-		assetEntryQuery.setClassNameIds(classNameIds);
+		assetEntryQuery.setClassNameIds(assetPublisherDisplayContext.getClassNameIds());
 
-		BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetPublisherUtil.getAssetEntryQueryResult(assetEntryQuery, request, portletName, start, end, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
+		BaseModelSearchResult<AssetEntry> baseModelSearchResult = assetPublisherDisplayContext.getAssetEntries(start, end);
 
 		total = baseModelSearchResult.getLength();
 
 		searchContainer.setTotal(total);
 
-		results = baseModelSearchResult.getBaseModels();
+		List<AssetEntry> results = baseModelSearchResult.getBaseModels();
 
 		if (!results.isEmpty() && (start < total)) {
 			searchContainer.setResults(results);
@@ -97,26 +110,23 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 		}
 	}
 	else {
-		for (long classNameId : classNameIds) {
+		for (long classNameId : assetPublisherDisplayContext.getClassNameIds()) {
 			assetEntryQuery.setClassNameIds(new long[] {classNameId});
 
-			AssetRendererFactory groupAssetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassNameId(classNameId);
+			BaseModelSearchResult<AssetEntry> baseModelSearchResult = assetPublisherDisplayContext.getAssetEntries(start, end);
 
-			int groupTotal = 0;
-
-			BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetPublisherUtil.getAssetEntryQueryResult(assetEntryQuery, request, portletName, start, end, AssetPublisherWebConfigurationValues.SEARCH_WITH_INDEX);
-
-			groupTotal = baseModelSearchResult.getLength();
+			int groupTotal = baseModelSearchResult.getLength();
 
 			total += groupTotal;
 
-			results = baseModelSearchResult.getBaseModels();
-
-			searchContainer.setResults(results);
-
-			request.setAttribute("view.jsp-results", results);
+			List<AssetEntry> results = baseModelSearchResult.getBaseModels();
 
 			if (!results.isEmpty() && (start < groupTotal)) {
+				searchContainer.setResults(results);
+
+				request.setAttribute("view.jsp-results", results);
+
+				AssetRendererFactory groupAssetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassNameId(classNameId);
 %>
 
 				<h3 class="asset-entries-group-label"><%= ResourceActionsUtil.getModelResource(locale, groupAssetRendererFactory.getClassName()) %></h3>
@@ -130,8 +140,19 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 
 			if (!portletName.equals(AssetPublisherPortletKeys.RECENT_CONTENT)) {
 				if (groupTotal > 0) {
-					end = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, end);
-					start = AssetPublisherUtil.getAssetEntryQueryResultLimit(groupTotal, start);
+					if ((end > 0) && (end > groupTotal)) {
+						end -= groupTotal;
+					}
+					else {
+						end = 0;
+					}
+
+					if ((start > 0) && (start > groupTotal)) {
+						start -= groupTotal;
+					}
+					else {
+						start = 0;
+					}
 				}
 
 				assetEntryQuery.setEnd(QueryUtil.ALL_POS);
@@ -145,7 +166,7 @@ if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) || (assetEntry
 %>
 
 <c:if test="<%= total == 0 %>">
-	<liferay-ui:ddm-template-renderer className="<%= AssetEntry.class.getName() %>" displayStyle="<%= assetPublisherDisplayContext.getDisplayStyle() %>" displayStyleGroupId="<%= assetPublisherDisplayContext.getDisplayStyleGroupId() %>" entries="<%= results %>">
+	<liferay-ui:ddm-template-renderer className="<%= AssetEntry.class.getName() %>" displayStyle="<%= assetPublisherDisplayContext.getDisplayStyle() %>" displayStyleGroupId="<%= assetPublisherDisplayContext.getDisplayStyleGroupId() %>" entries="<%= new ArrayList<AssetEntry>() %>">
 
 		<%
 		boolean hasAddPortletURLs = GetterUtil.getBoolean(request.getAttribute("liferay-ui:asset-add-button:hasAddPortletURLs"));
