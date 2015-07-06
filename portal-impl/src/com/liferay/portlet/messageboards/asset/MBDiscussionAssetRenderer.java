@@ -40,7 +40,7 @@ public class MBDiscussionAssetRenderer extends MBMessageAssetRenderer {
 		_message = message;
 	}
 
-	public Object getEntry() {
+	public Object getAsset() {
 		return _message;
 	}
 
