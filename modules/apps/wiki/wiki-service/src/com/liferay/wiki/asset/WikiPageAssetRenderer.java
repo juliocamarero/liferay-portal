@@ -90,6 +90,11 @@ public class WikiPageAssetRenderer
 	}
 
 	@Override
+	public Object getAsset() {
+		return _page;
+	}
+
+	@Override
 	public String getClassName() {
 		return WikiPage.class.getName();
 	}

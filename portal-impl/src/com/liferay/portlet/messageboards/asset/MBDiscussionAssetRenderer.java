@@ -41,6 +41,11 @@ public class MBDiscussionAssetRenderer extends MBMessageAssetRenderer {
 	}
 
 	@Override
+	public Object getAsset() {
+		return _message;
+	}
+
+	@Override
 	public String getJspPath(HttpServletRequest request, String template) {
 		if (template.equals(TEMPLATE_ABSTRACT) ||
 			template.equals(TEMPLATE_FULL_CONTENT)) {

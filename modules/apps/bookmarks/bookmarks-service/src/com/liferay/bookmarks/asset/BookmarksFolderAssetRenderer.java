@@ -61,6 +61,11 @@ public class BookmarksFolderAssetRenderer
 	}
 
 	@Override
+	public Object getAsset() {
+		return _folder;
+	}
+
+	@Override
 	public String getClassName() {
 		return BookmarksFolder.class.getName();
 	}

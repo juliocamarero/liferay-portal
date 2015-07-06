@@ -55,6 +55,11 @@ public class MBMessageAssetRenderer
 	}
 
 	@Override
+	public Object getAsset() {
+		return _message;
+	}
+
+	@Override
 	public String getClassName() {
 		return MBMessage.class.getName();
 	}

@@ -50,6 +50,11 @@ public class MBCategoryAssetRenderer extends BaseJSPAssetRenderer {
 	}
 
 	@Override
+	public Object getAsset() {
+		return _category;
+	}
+
+	@Override
 	public String getClassName() {
 		return MBCategory.class.getName();
 	}

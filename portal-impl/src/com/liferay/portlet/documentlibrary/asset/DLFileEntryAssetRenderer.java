@@ -70,6 +70,11 @@ public class DLFileEntryAssetRenderer
 	}
 
 	@Override
+	public Object getAsset() {
+		return _fileEntry;
+	}
+
+	@Override
 	public String getClassName() {
 		return DLFileEntry.class.getName();
 	}
