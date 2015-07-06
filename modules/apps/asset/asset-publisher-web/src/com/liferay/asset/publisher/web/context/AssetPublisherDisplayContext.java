@@ -17,6 +17,7 @@ package com.liferay.asset.publisher.web.context;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfigurationValues;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
@@ -32,9 +33,11 @@ import com.liferay.portal.kernel.util.RSSUtil;
 import com.liferay.portal.kernel.util.StringComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -42,18 +45,22 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.ClassType;
 import com.liferay.portlet.asset.model.ClassTypeField;
 import com.liferay.portlet.asset.model.ClassTypeReader;
+import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -145,10 +152,9 @@ public class AssetPublisherDisplayContext {
 		return _allAssetTagNames;
 	}
 
-	public BaseModelSearchResult<AssetEntry> getAssetEntries(int start, int end)
+	public BaseModelSearchResult<AssetEntry> getAssetEntries(
+			AssetEntryQuery assetEntryQuery, int start, int end)
 		throws Exception {
-
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
 
 		if (isSearchWithIndex()) {
 			return AssetUtil.searchAssetEntries(
@@ -214,6 +220,27 @@ public class AssetPublisherDisplayContext {
 			themeDisplay.getUser(), _portletPreferences, _assetEntryQuery);
 
 		return _assetEntryQuery;
+	}
+
+	public List<Tuple> getAssetEntryResults(SearchContainer searchContainer)
+		throws Exception {
+
+		if (!showAssetEntryResults()) {
+			return Collections.emptyList();
+		}
+
+		long assetVocabularyId = GetterUtil.getLong(
+			_portletPreferences.getValue("assetVocabularyId", null));
+
+		if (assetVocabularyId > 0) {
+			return getAssetEntryResultsByVocabulary(
+				assetVocabularyId, searchContainer);
+		}
+		else if (assetVocabularyId <= -1) {
+			return getAssetEntryResultsByClassName(searchContainer);
+		}
+
+		return getAssetEntryResultsByDefault(searchContainer);
 	}
 
 	public String getAssetLinkBehavior() {
@@ -1098,6 +1125,176 @@ public class AssetPublisherDisplayContext {
 			"ddmStructureFieldValue", getDDMStructureFieldValue());
 	}
 
+	protected List<Tuple> getAssetEntryResultsByClassName(
+			SearchContainer searchContainer)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
+
+		List<Tuple> assetEntryResults = new ArrayList<>();
+
+		int end = searchContainer.getEnd();
+		int start = searchContainer.getStart();
+
+		int total = 0;
+
+		for (long classNameId : getClassNameIds()) {
+			assetEntryQuery.setClassNameIds(new long[] {classNameId});
+
+			BaseModelSearchResult<AssetEntry> baseModelSearchResult =
+				getAssetEntries(assetEntryQuery, start, end);
+
+			int groupTotal = baseModelSearchResult.getLength();
+
+			total += groupTotal;
+
+			List<AssetEntry> results = baseModelSearchResult.getBaseModels();
+
+			if (!results.isEmpty() && (start < groupTotal)) {
+				AssetRendererFactory groupAssetRendererFactory =
+					AssetRendererFactoryRegistryUtil.
+						getAssetRendererFactoryByClassNameId(classNameId);
+
+				String title = ResourceActionsUtil.getModelResource(
+					themeDisplay.getLocale(),
+					groupAssetRendererFactory.getClassName());
+
+				assetEntryResults.add(new Tuple(title, results));
+			}
+
+			String portletName = getPortletName();
+
+			if (!portletName.equals(AssetPublisherPortletKeys.RECENT_CONTENT)) {
+				if (groupTotal > 0) {
+					if ((end > 0) && (end > groupTotal)) {
+						end -= groupTotal;
+					}
+					else {
+						end = 0;
+					}
+
+					if ((start > 0) && (start > groupTotal)) {
+						start -= groupTotal;
+					}
+					else {
+						start = 0;
+					}
+				}
+
+				assetEntryQuery.setEnd(QueryUtil.ALL_POS);
+				assetEntryQuery.setStart(QueryUtil.ALL_POS);
+			}
+		}
+
+		searchContainer.setTotal(total);
+
+		return assetEntryResults;
+	}
+
+	protected List<Tuple> getAssetEntryResultsByDefault(
+			SearchContainer searchContainer)
+		throws Exception {
+
+		List<Tuple> assetEntryResults = new ArrayList<>();
+
+		int end = searchContainer.getEnd();
+		int start = searchContainer.getStart();
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
+
+		assetEntryQuery.setClassNameIds(getClassNameIds());
+
+		BaseModelSearchResult<AssetEntry> baseModelSearchResult =
+			getAssetEntries(assetEntryQuery, start, end);
+
+		int total = baseModelSearchResult.getLength();
+
+		searchContainer.setTotal(total);
+
+		List<AssetEntry> results = baseModelSearchResult.getBaseModels();
+
+		if (!results.isEmpty() && (start < total)) {
+			assetEntryResults.add(new Tuple(StringPool.BLANK, results));
+		}
+
+		return assetEntryResults;
+	}
+
+	protected List<Tuple> getAssetEntryResultsByVocabulary(
+			long assetVocabularyId, SearchContainer searchContainer)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
+
+		List<Tuple> assetEntryResults = new ArrayList<>();
+
+		List<AssetCategory> assetCategories =
+			AssetCategoryLocalServiceUtil.getVocabularyRootCategories(
+				assetVocabularyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				null);
+
+		assetEntryQuery.setClassNameIds(getClassNameIds());
+
+		int end = searchContainer.getEnd();
+		int start = searchContainer.getStart();
+
+		int total = 0;
+
+		for (AssetCategory assetCategory : assetCategories) {
+			long[] oldAllCategoryIds = assetEntryQuery.getAllCategoryIds();
+
+			long[] newAllAssetCategoryIds = ArrayUtil.append(
+				oldAllCategoryIds, assetCategory.getCategoryId());
+
+			assetEntryQuery.setAllCategoryIds(newAllAssetCategoryIds);
+
+			BaseModelSearchResult<AssetEntry> baseModelSearchResult =
+				getAssetEntries(assetEntryQuery, start, end);
+
+			int groupTotal = baseModelSearchResult.getLength();
+
+			total += groupTotal;
+
+			List<AssetEntry> results = baseModelSearchResult.getBaseModels();
+
+			if (!results.isEmpty() && (start < groupTotal)) {
+				String title = assetCategory.getTitle(themeDisplay.getLocale());
+
+				assetEntryResults.add(new Tuple(title, results));
+			}
+
+			if (groupTotal > 0) {
+				if ((end > 0) && (end > groupTotal)) {
+					end -= groupTotal;
+				}
+				else {
+					end = 0;
+				}
+
+				if ((start > 0) && (start > groupTotal)) {
+					start -= groupTotal;
+				}
+				else {
+					start = 0;
+				}
+			}
+
+			assetEntryQuery.setAllCategoryIds(oldAllCategoryIds);
+			assetEntryQuery.setEnd(QueryUtil.ALL_POS);
+			assetEntryQuery.setStart(QueryUtil.ALL_POS);
+		}
+
+		searchContainer.setTotal(total);
+
+		return assetEntryResults;
+	}
+
 	protected String getPortletName() {
 		PortletConfig portletConfig = (PortletConfig)_request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG);
@@ -1171,6 +1368,20 @@ public class AssetPublisherDisplayContext {
 
 			_ddmStructureFieldLabel = classTypeField.getLabel();
 		}
+	}
+
+	protected boolean showAssetEntryResults() throws Exception {
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
+
+		String portletName = getPortletName();
+
+		if (!portletName.equals(AssetPublisherPortletKeys.RELATED_ASSETS) ||
+			(assetEntryQuery.getLinkedAssetEntryId() > 0)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private Integer _abstractLength;
