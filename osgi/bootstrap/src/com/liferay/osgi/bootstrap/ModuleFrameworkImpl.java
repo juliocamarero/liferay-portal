@@ -751,6 +751,18 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 				fileName = fileName.substring(0, index);
 			}
 		}
+		else if (Validator.equals(url.getProtocol(), "vfs")) {
+
+			// JBoss EAP uses vfs protocol
+
+			int index = fileName.indexOf(".jar");
+
+			if (index > 0) {
+				index += 4;
+
+				fileName = fileName.substring(0, index);
+			}
+		}
 
 		return new File(fileName);
 	}
