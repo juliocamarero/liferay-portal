@@ -57,6 +57,7 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ValidatorException;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Iván Zaera
@@ -198,7 +199,7 @@ public abstract class SettingsConfigurationAction
 	public void setPreference(
 		PortletRequest portletRequest, String name, String value) {
 
-		setPreference(portletRequest, name, new String[] {value});
+		setPreference(portletRequest, name, new String[]{value});
 	}
 
 	public void setPreference(
@@ -218,18 +219,18 @@ public abstract class SettingsConfigurationAction
 		portletPreferencesMap.put(name, values);
 	}
 
-	protected PortletConfig getSelPortletConfig(PortletRequest portletRequest) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+	protected PortletConfig getSelPortletConfig(HttpServletRequest request) {
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		String portletResource = ParamUtil.getString(
-			portletRequest, "portletResource");
+			request, "portletResource");
 
 		Portlet selPortlet = PortletLocalServiceUtil.getPortletById(
 			themeDisplay.getCompanyId(), portletResource);
 
 		ServletContext servletContext =
-			(ServletContext)portletRequest.getAttribute(WebKeys.CTX);
+			(ServletContext) request.getAttribute(WebKeys.CTX);
 
 		PortletConfig selPortletConfig = PortletConfigFactoryUtil.create(
 			selPortlet, servletContext);

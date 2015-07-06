@@ -1,3 +1,4 @@
+<%@ page import="com.liferay.taglib.servlet.PipingServletResponse" %>
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -49,6 +50,6 @@ String returnToFullPageURL = ParamUtil.getString(request, "returnToFullPageURL")
 ConfigurationAction configurationAction = (ConfigurationAction)request.getAttribute(WebKeys.CONFIGURATION_ACTION);
 
 if (configurationAction != null) {
-	configurationAction.include(portletConfig, renderRequest, renderResponse);
+	configurationAction.include(portletConfig, request, new PipingServletResponse(pageContext));
 }
 %>
