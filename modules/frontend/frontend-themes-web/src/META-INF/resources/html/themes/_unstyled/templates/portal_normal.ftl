@@ -20,63 +20,82 @@ ${theme.include(body_top_include)}
 
 <#if is_signed_in>
 	<@liferay.dockbar />
-
-	<@liferay.product_menu />
 </#if>
 
-<div class="container-fluid" id="wrapper">
-	<header id="banner" role="banner">
-		<div id="heading">
-			<h1 class="site-title">
-				<a class="${logo_css_class}" href="${site_default_url}" title="<@liferay.language_format arguments="${site_name}" key="go-to-x" />">
-					<img alt="${logo_description}" height="${site_logo_height}" src="${site_logo}" width="${site_logo_width}" />
-				</a>
-
-				<#if show_site_name>
-					<span class="site-name" title="<@liferay.language_format arguments="${site_name}" key="go-to-x" />">
-						${site_name}
-					</span>
-				</#if>
-			</h1>
+<div class="sidenav-container open" id="mySidenavContainerId">
+	<div class="sidenav-menu-slider">
+		<div class="sidenav-menu sidebar sidebar-inverse product-menu">
+			<@liferay.product_menu />
 		</div>
+	</div>
 
-		<#if !is_signed_in>
-			<a data-redirect="${is_login_redirect_required?string}" href="${sign_in_url}" id="sign-in" rel="nofollow">${sign_in_text}</a>
-		</#if>
+	<div class="sidenav-content">
+		<div class="container-fluid" id="wrapper">
+			<header id="banner" role="banner">
+				<div id="heading">
+					<h1 class="site-title">
+						<a class="${logo_css_class}" href="${site_default_url}" title="<@liferay.language_format arguments="${site_name}" key="go-to-x" />">
+							<img alt="${logo_description}" height="${site_logo_height}" src="${site_logo}" width="${site_logo_width}" />
+						</a>
 
-		<#if has_navigation || is_signed_in>
-			<#include "${full_templates_path}/navigation.ftl" />
-		</#if>
-	</header>
+						<#if show_site_name>
+							<span class="site-name" title="<@liferay.language_format arguments="${site_name}" key="go-to-x" />">
+								${site_name}
+							</span>
+						</#if>
+					</h1>
+				</div>
 
-	<section id="content">
-		<h1 class="hide-accessible">${the_title}</h1>
+				<#if !is_signed_in>
+					<a data-redirect="${is_login_redirect_required?string}" href="${sign_in_url}" id="sign-in" rel="nofollow">${sign_in_text}</a>
+				</#if>
 
-		<nav id="breadcrumbs">
-			<@liferay.breadcrumbs />
-		</nav>
+				<#if has_navigation || is_signed_in>
+					<#include "${full_templates_path}/navigation.ftl" />
+				</#if>
+			</header>
 
-		<#if selectable>
-			${theme.include(content_include)}
-		<#else>
-			${portletDisplay.recycle()}
+			<section id="content">
+				<h1 class="hide-accessible">${the_title}</h1>
 
-			${portletDisplay.setTitle(the_title)}
+				<nav id="breadcrumbs">
+					<@liferay.breadcrumbs />
+				</nav>
 
-			${theme.wrapPortlet("portlet.ftl", content_include)}
-		</#if>
-	</section>
+				<#if selectable>
+					${theme.include(content_include)}
+				<#else>
+					${portletDisplay.recycle()}
 
-	<footer id="footer" role="contentinfo">
-		<p class="powered-by">
-			<@liferay.language key="powered-by" /> <a href="http://www.liferay.com" rel="external">Liferay</a>
-		</p>
-	</footer>
+					${portletDisplay.setTitle(the_title)}
+
+					${theme.wrapPortlet("portlet.ftl", content_include)}
+				</#if>
+			</section>
+
+			<footer id="footer" role="contentinfo">
+				<p class="powered-by">
+					<@liferay.language key="powered-by" /> <a href="http://www.liferay.com" rel="external">Liferay</a>
+				</p>
+			</footer>
+		</div>
+	</div>
 </div>
 
 ${theme.include(body_bottom_include)}
 
 ${theme.include(bottom_include)}
+
+<script>
+	AUI.$('#mySidenavContainerId').sideNavigation(
+		{
+            toggler: '#mySidenavToggleId',
+            type: 'fixed-push',
+            typeMobile: 'fixed',
+            width: '320px'
+		}
+	);
+</script>
 
 </body>
 
