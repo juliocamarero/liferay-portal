@@ -19,11 +19,13 @@
 <%
 PanelApp panelApp = (PanelApp)request.getAttribute("application-list-ui:panel-app:panelApp");
 
+PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
+
 String ppid = themeDisplay.getPpid();
 
-PortletURL portletURL = PortletURLFactoryUtil.create(request, panelApp.getPortletId(), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
+PanelAppURLBuilder panelAppURLBuilder = new PanelAppURLBuilder(panelApp, panelCategoryRegistry);
 
-portletURL.setWindowState(WindowState.MAXIMIZED);
+PortletURL portletURL = panelAppURLBuilder.getPortletURL(request);
 
 Portlet portlet = PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(), panelApp.getPortletId());
 %>
