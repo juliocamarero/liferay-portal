@@ -15,6 +15,7 @@
 package com.liferay.application.list.adapter;
 
 import com.liferay.application.list.PanelApp;
+import com.liferay.application.list.util.URLBuilder;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
@@ -30,6 +31,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Adolfo Pérez
@@ -87,6 +91,14 @@ public class PortletPanelAppAdapter implements PanelApp {
 	@Override
 	public String getPortletId() {
 		return _portletId;
+	}
+
+	@Override
+	public PortletURL getPortletURL(
+			HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException {
+
+		return null;
 	}
 
 	@Override

@@ -14,6 +14,7 @@
 
 package com.liferay.application.list;
 
+import com.liferay.application.list.util.URLBuilder;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -27,6 +28,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author Adolfo Pérez
  */
 public abstract class BasePanelCategory implements PanelCategory {
+
+	@Override
+	public void buildURL(HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException {
+	}
 
 	@Override
 	public boolean hasAccessPermission(
