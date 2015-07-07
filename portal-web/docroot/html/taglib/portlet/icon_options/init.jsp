@@ -19,4 +19,11 @@
 <%@ page import="com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon" %><%@
 page import="com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIconFactory" %><%@
 page import="com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIconTracker" %><%@
-page import="com.liferay.util.PropertyComparator" %>
+page import="com.liferay.util.PropertyComparator" %><%@
+page import="com.liferay.portal.kernel.util.Validator" %>
+
+<%
+String view = (String)request.getAttribute("liferay-ui:icon:view");
+String direction = (String)request.getAttribute("liferay-ui:icon:direction");
+Boolean showArrow = (Boolean)request.getAttribute("liferay-ui:icon:showArrow");
+%>

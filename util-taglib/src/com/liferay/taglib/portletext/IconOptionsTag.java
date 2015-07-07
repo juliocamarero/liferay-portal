@@ -16,6 +16,8 @@ package com.liferay.taglib.portletext;
 
 import com.liferay.taglib.ui.IconTag;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -23,10 +25,32 @@ public class IconOptionsTag extends IconTag {
 
 	@Override
 	protected String getPage() {
-		return _PAGE;
+		return "/html/taglib/portlet/icon_options/page.jsp";
 	}
 
-	private static final String _PAGE =
-		"/html/taglib/portlet/icon_options/page.jsp";
+	public void setShowArrow(Boolean showArrow) {
+		_showArrow = showArrow;
+	}
 
+	@Override
+	protected void setAttributes(HttpServletRequest request) {
+		super.setAttributes(request);
+		request.setAttribute("liferay-ui:icon:direction", _direction);
+		request.setAttribute("liferay-ui:icon:showArrow", _showArrow);
+	}
+
+	public void setDirection(String direction) {
+		_direction = direction;
+	}
+
+	@Override
+	protected void cleanUp() {
+		super.cleanUp();
+		_direction = "down";
+		_showArrow = true;
+	}
+
+	private static String _direction = "down";
+
+	private static Boolean _showArrow = true;
 }
