@@ -17,11 +17,20 @@ package com.liferay.product.menu.site.administration.application.list;
 import com.liferay.application.list.BaseJSPPanelCategory;
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
+import com.liferay.application.list.util.URLBuilder;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.service.GroupLocalService;
+import com.liferay.portal.service.LayoutLocalService;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -38,6 +47,23 @@ import org.osgi.service.component.annotations.Reference;
 	service = PanelCategory.class
 )
 public class SiteAdministrationCategory extends BaseJSPPanelCategory {
+
+	@Override
+	public void buildURL(HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Group userPersonalPanelGroup = _groupLocalService.getGroup(
+			themeDisplay.getCompanyId(), GroupConstants.CONTROL_PANEL);
+
+		long plid = _layoutLocalService.getDefaultPlid(
+			userPersonalPanelGroup.getGroupId(), true);
+
+		urlBuilder.setPlid(plid);
+		urlBuilder.setGroupId(themeDisplay.getScopeGroupId());
+	}
 
 	@Override
 	public String getIconCssClass() {
@@ -72,5 +98,20 @@ public class SiteAdministrationCategory extends BaseJSPPanelCategory {
 	public void setServletContext(ServletContext servletContext) {
 		super.setServletContext(servletContext);
 	}
+
+	@Reference(unbind = "-")
+	protected void setGroupLocalService(GroupLocalService groupLocalService) {
+		_groupLocalService = groupLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setLayoutLocalService(
+		LayoutLocalService layoutLocalService) {
+
+		_layoutLocalService = layoutLocalService;
+	}
+
+	private GroupLocalService _groupLocalService;
+	private LayoutLocalService _layoutLocalService;
 
 }
