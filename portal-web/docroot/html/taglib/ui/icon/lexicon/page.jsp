@@ -19,6 +19,7 @@
 <%
 boolean urlIsNotNull = Validator.isNotNull(url);
 %>
+
 <liferay-util:buffer var="linkContent">
 	<liferay-ui:message key="<%= message %>" localizeKey="<%= localizeMessage %>" />
 </liferay-util:buffer>
@@ -28,7 +29,7 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 		<li class="<%= cssClass %>" role="presentation">
 			<c:choose>
 				<c:when test="<%= urlIsNotNull %>">
-					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
+					<aui:a ariaRole="menuitem" cssClass="<%= linkCssClass %>" data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
 						<%= linkContent %>
 					</aui:a>
 				</c:when>
@@ -42,7 +43,7 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 		<li class="<%= cssClass %>" role="presentation">
 			<c:choose>
 				<c:when test="<%= urlIsNotNull %>">
-					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
+					<aui:a ariaRole="menuitem" cssClass="<%= linkCssClass %>" data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
 						<%= linkContent %>
 					</aui:a>
 				</c:when>
@@ -55,7 +56,7 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 	<c:otherwise>
 		<c:choose>
 			<c:when test="<%= urlIsNotNull %>">
-				<aui:a ariaRole="<%= ariaRole %>" cssClass='<%= linkCssClass %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
+				<aui:a ariaRole="<%= ariaRole %>" cssClass="<%= linkCssClass %>" data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
 					<span class="icon-cog icon-monospaced"></span>
 				</aui:a>
 			</c:when>

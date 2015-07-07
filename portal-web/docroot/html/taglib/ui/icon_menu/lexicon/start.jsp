@@ -15,9 +15,6 @@
 --%>
 <%@ include file="/html/taglib/init.jsp" %>
 
-<%@ page import="com.liferay.portal.kernel.util.Validator" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %>
-
 <%
 String cssClass = (String)request.getAttribute("liferay-ui:icon-menu:css-class");
 String message = (String)request.getAttribute("liferay-ui:icon-menu:message");

@@ -23,24 +23,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class IconOptionsTag extends IconTag {
 
-	@Override
-	protected String getPage() {
-		return "/html/taglib/portlet/icon_options/page.jsp";
+	public void setDirection(String direction) {
+		_direction = direction;
 	}
 
 	public void setShowArrow(Boolean showArrow) {
 		_showArrow = showArrow;
-	}
-
-	@Override
-	protected void setAttributes(HttpServletRequest request) {
-		super.setAttributes(request);
-		request.setAttribute("liferay-ui:icon:direction", _direction);
-		request.setAttribute("liferay-ui:icon:showArrow", _showArrow);
-	}
-
-	public void setDirection(String direction) {
-		_direction = direction;
 	}
 
 	@Override
@@ -50,7 +38,19 @@ public class IconOptionsTag extends IconTag {
 		_showArrow = true;
 	}
 
-	private static String _direction = "down";
+	@Override
+	protected String getPage() {
+		return "/html/taglib/portlet/icon_options/page.jsp";
+	}
 
+	@Override
+	protected void setAttributes(HttpServletRequest request) {
+		super.setAttributes(request);
+		request.setAttribute("liferay-ui:icon:direction", _direction);
+		request.setAttribute("liferay-ui:icon:showArrow", _showArrow);
+	}
+
+	private static String _direction = "down";
 	private static Boolean _showArrow = true;
+
 }
