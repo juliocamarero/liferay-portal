@@ -14,6 +14,9 @@
 
 package com.liferay.application.list;
 
+import com.liferay.application.list.util.URLBuilder;
+import com.liferay.portal.kernel.exception.PortalException;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author Adolfo Pérez
  */
 public interface PanelCategory extends PanelEntry {
+
+	public void buildURL(HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException;
 
 	public String getIconCssClass();
 

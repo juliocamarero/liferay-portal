@@ -14,11 +14,22 @@
 
 package com.liferay.application.list;
 
+import com.liferay.application.list.util.URLBuilder;
+import com.liferay.portal.kernel.exception.PortalException;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Adolfo Pérez
  */
 public interface PanelApp extends PanelEntry {
 
 	public String getPortletId();
+
+	public PortletURL getPortletURL(
+			HttpServletRequest request, URLBuilder urlBuilder)
+		throws PortalException;
 
 }

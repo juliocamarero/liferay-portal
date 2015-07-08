@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,4 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
+
+package com.liferay.portlet.admin.util;
+
+/**
+ * @author Eudaldo Alonso
+ */
+public class PortalProductMenuApplicationType {
+
+	public interface ProductMenu {
+
+		public static final String CLASS_NAME =
+			"com.liferay.portlet.admin.util." +
+				"PortalProductMenuApplicationType$ProductMenu";
+
+	}
+
+}
