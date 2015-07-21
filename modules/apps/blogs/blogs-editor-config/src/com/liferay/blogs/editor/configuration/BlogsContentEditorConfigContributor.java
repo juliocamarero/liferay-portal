@@ -15,6 +15,7 @@
 package com.liferay.blogs.editor.configuration;
 
 import com.liferay.blogs.item.selector.criterion.BlogsItemSelectorCriterion;
+import com.liferay.blogs.web.constants.BlogsPortletKeys;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.ItemSelectorReturnType;
@@ -24,13 +25,13 @@ import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCrite
 import com.liferay.portal.kernel.editor.configuration.BaseEditorConfigContributor;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigContributor;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.RequestBackedPortletURLFactory;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.portlet.PortletURL;
 
@@ -42,8 +43,9 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	property = {
-		"editor.config.key=contentEditor", "javax.portlet.name=33",
-		"javax.portlet.name=161"
+		"editor.config.key=contentEditor",
+		"javax.portlet.name=" + BlogsPortletKeys.BLOGS,
+		"javax.portlet.name=" + BlogsPortletKeys.BLOGS_ADMIN
 	},
 	service = EditorConfigContributor.class
 )
@@ -54,18 +56,17 @@ public class BlogsContentEditorConfigContributor
 	public void populateConfigJSONObject(
 		JSONObject jsonObject, Map<String, Object> inputEditorTaglibAttributes,
 		ThemeDisplay themeDisplay,
-		LiferayPortletResponse liferayPortletResponse) {
+		RequestBackedPortletURLFactory requestBackedPortletURLFactory) {
 
-		if (liferayPortletResponse != null) {
-			String name =
-				liferayPortletResponse.getNamespace() +
-					GetterUtil.getString(
-						(String)inputEditorTaglibAttributes.get(
-							"liferay-ui:input-editor:name"));
+		String namespace = GetterUtil.getString(
+			inputEditorTaglibAttributes.get(
+				"liferay-ui:input-editor:namespace"));
+		String name = GetterUtil.getString(
+			inputEditorTaglibAttributes.get("liferay-ui:input-editor:name"));
 
-			populateFileBrowserURL(
-				jsonObject, liferayPortletResponse, name + "selectDocument");
-		}
+		populateFileBrowserURL(
+			jsonObject, requestBackedPortletURLFactory,
+			namespace + name + "selectDocument");
 	}
 
 	@Reference(unbind = "-")
@@ -74,11 +75,13 @@ public class BlogsContentEditorConfigContributor
 	}
 
 	protected void populateFileBrowserURL(
-		JSONObject jsonObject, LiferayPortletResponse liferayPortletResponse,
+		JSONObject jsonObject,
+		RequestBackedPortletURLFactory requestBackedPortletURLFactory,
 		String eventName) {
 
-		Set<ItemSelectorReturnType>
-			blogsContentEditorDesiredItemSelectorReturnTypes = new HashSet<>();
+		List<ItemSelectorReturnType>
+			blogsContentEditorDesiredItemSelectorReturnTypes =
+				new ArrayList<>();
 
 		blogsContentEditorDesiredItemSelectorReturnTypes.add(
 			new UploadableFileReturnType());
@@ -99,8 +102,8 @@ public class BlogsContentEditorConfigContributor
 			blogsContentEditorDesiredItemSelectorReturnTypes);
 
 		PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
-			liferayPortletResponse, eventName, blogsItemSelectorCriterion,
-			imageItemSelectorCriterion);
+			requestBackedPortletURLFactory, eventName,
+			blogsItemSelectorCriterion, imageItemSelectorCriterion);
 
 		jsonObject.put(
 			"filebrowserImageBrowseLinkUrl", itemSelectorURL.toString());

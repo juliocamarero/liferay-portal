@@ -20,7 +20,7 @@ feature or API will be dropped in an upcoming version.
 replaces an old API, in spite of the old API being kept in Liferay Portal for
 backwards compatibility.
 
-*This document has been reviewed through commit `a432a58`.*
+*This document has been reviewed through commit `dd4de87`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -902,38 +902,6 @@ Each new exception provides its context and has all the necessary information
 about why the exception was thrown. For example, the
 `UserEmailAddressException.MustNotBeReserved` exception contains the problematic
 email address and the list of reserved email addresses.
-
----------------------------------------
-
-### Added Required Attribute paginationURL to the Tag liferay-ui:discussion
-- **Date:** 2015-Feb-05
-- **JIRA Ticket:** LPS-53313
-
-#### What changed?
-
-The `liferay-ui:discussion` tag now contains a new required attribute
-`paginationURL`.
-
-#### Who is affected?
-
-This affects all developers who are using this tag in their plugins.
-
-#### How should I update my code?
-
-You should include the new attribute `paginationURL` in the tag. This attribute
-holds a URL that returns an HTML fragment containing the next comments for
-portlets such as Asset Publisher, Blogs, Document Library, etc.
-
-If you are using the Liferay `MVCPortlet` class, you can use the following URL:
-
-    <portlet:resourceURL var="discussionPaginationURL">
-        <portlet:param name="invokeTaglibDiscussion"
-            value="<%= Boolean.TRUE.toString() %>" />
-    </portlet:resourceURL>
-
-#### Why was this change made?
-
-This change was made to support comment pagination.
 
 ---------------------------------------
 
@@ -2165,27 +2133,32 @@ renderers or workflow handlers with UIs written in FreeMarker or any other
 framework.
 
 ---------------------------------------
-### ADMIN_INSTANCES in PortletKeys renamed as PORTAL_INSTANCES
 
-- **Date:** July 8th, 2015
+### Renamed ADMIN_INSTANCE to PORTAL_INSTANCES in PortletKeys
+- **Date:** 2015-Jul-08
 - **JIRA Ticket:** LPS-56867
 
 #### What changed?
 
-Constant PortletKeys.ADMIN_INSTANCES renamed as  PortletKeys.PORTAL_INSTANCES.
+The constant `PortletKeys.ADMIN_INSTANCE` has been renamed as
+`PortletKeys.PORTAL_INSTANCES`.
 
 #### Who is affected?
 
-This affects developers using the old constant in their code, for example to 
-create a direct link to it. This is not common and most probably not a good 
-practice so it should probably not affect many people.
+This affects developers using the old constant in their code; for example,
+creating a direct link to it. This is not common and usually not a good
+practice, so this should not affect many people.
 
 #### How should I update my code?
 
-Rename the constant to PORTAL_INSTANCES whenever is used.
+You should rename the constant `ADMIN_INSTANCE` to `PORTAL_INSTANCES`
+everywhere it is used.
 
 #### Why was this change made?
 
-The old name was not accurate since it comes from the heritage of the portlet as
-part of the old "admin" portlet. Since Portal Instances is now extracted to its
-own module, the old name was clearly not fitting.
+This change was part of needed modifications to extract the Portal Instances
+portlet from the Admin portlet. The constant's old name was not accurate, since
+it originated from the old Admin portlet. Since the Portal Instances portlet
+is now extracted to its own module, the old name no longer resembles its usage.
+
+---------------------------------------

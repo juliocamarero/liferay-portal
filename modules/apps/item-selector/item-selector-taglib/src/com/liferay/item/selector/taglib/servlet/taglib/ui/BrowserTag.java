@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.taglib.util.IncludeTag;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.portlet.PortletURL;
 
@@ -37,7 +37,7 @@ import javax.servlet.jsp.PageContext;
 public class BrowserTag extends IncludeTag {
 
 	public void setDesiredItemSelectorReturnTypes(
-		Set<ItemSelectorReturnType> desiredItemSelectorReturnTypes) {
+		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes) {
 
 		_desiredItemSelectorReturnTypes = desiredItemSelectorReturnTypes;
 	}
@@ -69,6 +69,10 @@ public class BrowserTag extends IncludeTag {
 		_searchURL = searchURL;
 	}
 
+	public void setShowBreadcrumb(boolean showBreadcrumb) {
+		_showBreadcrumb = showBreadcrumb;
+	}
+
 	public void setTabName(String tabName) {
 		_tabName = tabName;
 	}
@@ -91,6 +95,7 @@ public class BrowserTag extends IncludeTag {
 		_itemSelectedEventName = null;
 		_searchContainer = null;
 		_searchURL = null;
+		_showBreadcrumb = false;
 		_tabName = null;
 		_uploadMessage = null;
 		_uploadURL = null;
@@ -149,8 +154,9 @@ public class BrowserTag extends IncludeTag {
 			getDraggableFileReturnType());
 		request.setAttribute(
 			"liferay-ui:item-selector-browser:existingFileEntryReturnType",
-			ItemSelectorBrowserReturnTypeUtil.getExistingFileEntryReturnType(
-				_desiredItemSelectorReturnTypes));
+			ItemSelectorBrowserReturnTypeUtil.
+				getFirstAvailableExistingFileEntryReturnType(
+					_desiredItemSelectorReturnTypes));
 		request.setAttribute(
 			"liferay-ui:item-selector-browser:itemSelectedEventName",
 			_itemSelectedEventName);
@@ -159,6 +165,8 @@ public class BrowserTag extends IncludeTag {
 			_searchContainer);
 		request.setAttribute(
 			"liferay-ui:item-selector-browser:searchURL", _searchURL);
+		request.setAttribute(
+			"liferay-ui:item-selector-browser:showBreadcrumb", _showBreadcrumb);
 		request.setAttribute(
 			"liferay-ui:item-selector-browser:tabName", _tabName);
 		request.setAttribute(
@@ -172,12 +180,13 @@ public class BrowserTag extends IncludeTag {
 
 	private static final String _PAGE = "/taglib/ui/browser/page.jsp";
 
-	private Set<ItemSelectorReturnType> _desiredItemSelectorReturnTypes;
+	private List<ItemSelectorReturnType> _desiredItemSelectorReturnTypes;
 	private String _displayStyle;
 	private PortletURL _displayStyleURL;
 	private String _itemSelectedEventName;
 	private SearchContainer<?> _searchContainer;
 	private PortletURL _searchURL;
+	private boolean _showBreadcrumb;
 	private String _tabName;
 	private String _uploadMessage;
 	private PortletURL _uploadURL;

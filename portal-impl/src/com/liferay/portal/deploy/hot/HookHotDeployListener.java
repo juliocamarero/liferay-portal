@@ -61,8 +61,6 @@ import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorConstants;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 import com.liferay.portal.kernel.struts.StrutsAction;
 import com.liferay.portal.kernel.struts.StrutsPortletAction;
-import com.liferay.portal.kernel.struts.path.AuthPublicPath;
-import com.liferay.portal.kernel.struts.path.DefaultAuthPublicPath;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.CharPool;
@@ -836,16 +834,28 @@ public class HookHotDeployListener
 			String servletContextName, Properties portalProperties)
 		throws Exception {
 
-		String[] publicPaths = StringUtil.split(
+		String[] authPublicPaths = StringUtil.split(
 			portalProperties.getProperty(AUTH_PUBLIC_PATHS));
 
-		for (String publicPath : publicPaths) {
-			AuthPublicPath authPublicPath = new DefaultAuthPublicPath(
-				publicPath);
-
+		for (String authPublicPath : authPublicPaths) {
 			registerService(
-				servletContextName, AUTH_PUBLIC_PATHS + publicPath,
-				AuthPublicPath.class, authPublicPath);
+				servletContextName, AUTH_PUBLIC_PATHS + authPublicPath,
+				Object.class, new Object());
+		}
+	}
+
+	protected void initAuthTokenWhiteListActions(
+			String servletContextName, Properties portalProperties)
+		throws Exception {
+
+		String[] authTokenIgnoreActions = StringUtil.split(
+			portalProperties.getProperty(AUTH_TOKEN_IGNORE_ACTIONS));
+
+		for (String authTokenIgnoreAction : authTokenIgnoreActions) {
+			registerService(
+				servletContextName,
+				AUTH_TOKEN_IGNORE_ACTIONS + authTokenIgnoreAction, Object.class,
+				new Object());
 		}
 	}
 
@@ -1590,6 +1600,10 @@ public class HookHotDeployListener
 
 		if (portalProperties.containsKey(PropsKeys.AUTH_PUBLIC_PATHS)) {
 			initAuthPublicPaths(servletContextName, portalProperties);
+		}
+
+		if (containsKey(portalProperties, AUTH_TOKEN_IGNORE_ACTIONS)) {
+			initAuthTokenWhiteListActions(servletContextName, portalProperties);
 		}
 
 		if (portalProperties.containsKey(PropsKeys.AUTH_TOKEN_IMPL)) {
@@ -2391,10 +2405,6 @@ public class HookHotDeployListener
 			PropsValues.LOCALES_ENABLED = PropsUtil.getArray(LOCALES_ENABLED);
 
 			LanguageUtil.init();
-		}
-
-		if (containsKey(portalProperties, AUTH_TOKEN_IGNORE_ACTIONS)) {
-			AuthTokenWhitelistUtil.resetPortletCSRFWhitelistActions();
 		}
 
 		if (containsKey(portalProperties, AUTH_TOKEN_IGNORE_ORIGINS)) {

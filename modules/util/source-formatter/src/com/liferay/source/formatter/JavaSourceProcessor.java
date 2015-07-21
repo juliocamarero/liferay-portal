@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.source.formatter.util.FileUtil;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
@@ -63,7 +64,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		while (true) {
 			y = annotation.indexOf(CharPool.CLOSE_CURLY_BRACE, y + 1);
 
-			if (!isInsideQuotes(annotation, y)) {
+			if (!ToolsUtil.isInsideQuotes(annotation, y)) {
 				break;
 			}
 		}
@@ -88,7 +89,9 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			while (true) {
 				z = parameterProperty.indexOf(CharPool.QUOTE, z + 1);
 
-				if ((z == -1) || !isInsideQuotes(parameterProperty, z)) {
+				if ((z == -1) ||
+					!ToolsUtil.isInsideQuotes(parameterProperty, z)) {
+
 					break;
 				}
 			}
@@ -1433,6 +1436,34 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					}
 				}
 
+				String trimmedLine = StringUtil.trimLeading(line);
+
+				if (!trimmedLine.startsWith(StringPool.DOUBLE_SLASH) &&
+					!trimmedLine.startsWith(StringPool.STAR)) {
+
+					if (line.contains(StringPool.TAB + StringPool.SPACE) &&
+						!previousLine.endsWith("&&") &&
+						!previousLine.endsWith("||") &&
+						!previousLine.contains(StringPool.TAB + "((") &&
+						!previousLine.contains(
+							StringPool.TAB + StringPool.LESS_THAN) &&
+						!previousLine.contains(
+							StringPool.TAB + StringPool.SPACE) &&
+						!previousLine.contains(StringPool.TAB + "for (") &&
+						!previousLine.contains(
+							StringPool.TAB + "implements ") &&
+						!previousLine.contains(StringPool.TAB + "throws ")) {
+
+						line = StringUtil.replace(
+							line, StringPool.TAB + StringPool.SPACE,
+							StringPool.TAB);
+					}
+
+					line = formatIncorrectSyntax(line, ",}", "}");
+
+					line = formatWhitespace(line, trimmedLine);
+				}
+
 				if (line.contains(StringPool.TAB + "for (") &&
 					line.contains(":") && !line.contains(" :")) {
 
@@ -1463,8 +1494,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				}
 
 				line = replacePrimitiveWrapperInstantiation(line);
-
-				String trimmedLine = StringUtil.trimLeading(line);
 
 				// LPS-45649
 
@@ -1596,28 +1625,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 				if (!trimmedLine.startsWith(StringPool.DOUBLE_SLASH) &&
 					!trimmedLine.startsWith(StringPool.STAR)) {
-
-					if (line.contains(StringPool.TAB + StringPool.SPACE) &&
-						!previousLine.endsWith("&&") &&
-						!previousLine.endsWith("||") &&
-						!previousLine.contains(StringPool.TAB + "((") &&
-						!previousLine.contains(
-							StringPool.TAB + StringPool.LESS_THAN) &&
-						!previousLine.contains(
-							StringPool.TAB + StringPool.SPACE) &&
-						!previousLine.contains(StringPool.TAB + "for (") &&
-						!previousLine.contains(
-							StringPool.TAB + "implements ") &&
-						!previousLine.contains(StringPool.TAB + "throws ")) {
-
-						line = StringUtil.replace(
-							line, StringPool.TAB + StringPool.SPACE,
-							StringPool.TAB);
-					}
-
-					line = formatIncorrectSyntax(line, ",}", "}");
-
-					line = formatWhitespace(line, trimmedLine);
 
 					if ((line.contains(" && ") || line.contains(" || ")) &&
 						line.endsWith(StringPool.OPEN_PARENTHESIS)) {
@@ -2694,7 +2701,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				return x;
 			}
 
-			if (isInsideQuotes(line, x)) {
+			if (ToolsUtil.isInsideQuotes(line, x)) {
 				continue;
 			}
 
@@ -2839,6 +2846,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			"**/com/liferay/portal/service/ServiceContext*.java",
 			"**/model/BaseModel.java", "**/model/impl/BaseModelImpl.java",
 			"**/portal-test/**/portal/service/**/*.java",
+			"**/portal-test-internal/**/portal/service/**/*.java",
 			"**/service/Base*.java",
 			"**/service/PersistedModelLocalService*.java",
 			"**/service/base/PrincipalBean.java",

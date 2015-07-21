@@ -118,19 +118,25 @@ public class VerifyDocumentLibraryTest extends BaseVerifyProcessTestCase {
 
 		DLFileEntryType dlFileEntryType = dlFileEntry.getDLFileEntryType();
 
-		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
+		List<com.liferay.portlet.dynamicdatamapping.DDMStructure>
+			ddmStructures = dlFileEntryType.getDDMStructures();
 
-		DDMStructure ddmStructure = ddmStructures.get(0);
+		com.liferay.portlet.dynamicdatamapping.DDMStructure ddmStructure =
+			ddmStructures.get(0);
 
-		ddmStructure.setCompanyId(12345);
+		DDMStructure modelDDMStructure =
+			DDMStructureLocalServiceUtil.getDDMStructure(
+				ddmStructure.getStructureId());
 
-		DDMStructureLocalServiceUtil.updateDDMStructure(ddmStructure);
+		modelDDMStructure.setCompanyId(12345);
+
+		DDMStructureLocalServiceUtil.updateDDMStructure(modelDDMStructure);
 
 		DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
 
 		DLFileEntryMetadata dlFileEntryMetadata =
 			DLFileEntryMetadataLocalServiceUtil.fetchFileEntryMetadata(
-				ddmStructure.getStructureId(),
+				modelDDMStructure.getStructureId(),
 				dlFileVersion.getFileVersionId());
 
 		Assert.assertNotNull(dlFileEntryMetadata);
@@ -139,7 +145,7 @@ public class VerifyDocumentLibraryTest extends BaseVerifyProcessTestCase {
 
 		dlFileEntryMetadata =
 			DLFileEntryMetadataLocalServiceUtil.fetchFileEntryMetadata(
-				ddmStructure.getStructureId(),
+				modelDDMStructure.getStructureId(),
 				dlFileVersion.getFileVersionId());
 
 		Assert.assertNull(dlFileEntryMetadata);
@@ -151,11 +157,14 @@ public class VerifyDocumentLibraryTest extends BaseVerifyProcessTestCase {
 
 		DLFileEntryType dlFileEntryType = dlFileEntry.getDLFileEntryType();
 
-		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
+		List<com.liferay.portlet.dynamicdatamapping.DDMStructure>
+			ddmStructures = dlFileEntryType.getDDMStructures();
 
-		DDMStructure ddmStructure = ddmStructures.get(0);
+		com.liferay.portlet.dynamicdatamapping.DDMStructure ddmStructure =
+			ddmStructures.get(0);
 
-		DDMStructureLocalServiceUtil.deleteDDMStructure(ddmStructure);
+		DDMStructureLocalServiceUtil.deleteDDMStructure(
+			ddmStructure.getStructureId());
 
 		DLFileVersion dlFileVersion = dlFileEntry.getFileVersion();
 
@@ -364,9 +373,11 @@ public class VerifyDocumentLibraryTest extends BaseVerifyProcessTestCase {
 				RandomTestUtil.randomString(), StringPool.BLANK, new long[0],
 				serviceContext);
 
-		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
+		List<com.liferay.portlet.dynamicdatamapping.DDMStructure>
+			ddmStructures = dlFileEntryType.getDDMStructures();
 
-		DDMStructure ddmStructure = ddmStructures.get(0);
+		com.liferay.portlet.dynamicdatamapping.DDMStructure ddmStructure =
+			ddmStructures.get(0);
 
 		Map<String, DDMFormValues> ddmFormValuesMap = getDDMFormValuesMap(
 			ddmStructure.getStructureKey(), user.getLocale());
@@ -431,12 +442,16 @@ public class VerifyDocumentLibraryTest extends BaseVerifyProcessTestCase {
 		return new VerifyDocumentLibrary();
 	}
 
-	protected void setUpPermissionThreadLocal() {
+	protected void setUpPermissionThreadLocal() throws Exception {
 		_originalPermissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
 
 		PermissionThreadLocal.setPermissionChecker(
 			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
 
 				@Override
 				public boolean hasOwnerPermission(

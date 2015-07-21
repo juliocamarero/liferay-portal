@@ -18,12 +18,12 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portlet.RequestBackedPortletURLFactory;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.portlet.PortletURL;
 
@@ -36,7 +36,7 @@ public abstract class BaseEditorConfigContributor
 
 	public PortletURL getItemSelectorPortletURL(
 		Map<String, Object> inputEditorTaglibAttributes,
-		LiferayPortletResponse liferayPortletResponse,
+		RequestBackedPortletURLFactory requestBackedPortletURLFactory,
 		ItemSelectorCriterion itemSelectorCriterion) {
 
 		boolean allowBrowseDocuments = GetterUtil.getBoolean(
@@ -47,8 +47,8 @@ public abstract class BaseEditorConfigContributor
 			return null;
 		}
 
-		Set<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
-			new HashSet<>();
+		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
+			new ArrayList<>();
 
 		desiredItemSelectorReturnTypes.add(new URLItemSelectorReturnType());
 
@@ -63,13 +63,18 @@ public abstract class BaseEditorConfigContributor
 				"liferay-ui:input-editor:inlineEdit"));
 
 		if (!inlineEdit) {
-			name = liferayPortletResponse.getNamespace() + name;
+			String namespace = GetterUtil.getString(
+				inputEditorTaglibAttributes.get(
+					"liferay-ui:input-editor:namespace"));
+
+			name = namespace + name;
 		}
 
 		ItemSelector itemSelector = getItemSelector();
 
 		return itemSelector.getItemSelectorURL(
-			liferayPortletResponse, name + "selectItem", itemSelectorCriterion);
+			requestBackedPortletURLFactory, name + "selectItem",
+			itemSelectorCriterion);
 	}
 
 	protected abstract ItemSelector getItemSelector();

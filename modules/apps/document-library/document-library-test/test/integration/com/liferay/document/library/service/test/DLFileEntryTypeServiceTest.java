@@ -53,6 +53,7 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUt
 import com.liferay.portlet.dynamicdatamapping.io.DDMFormXSDDeserializerUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMForm;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -161,11 +162,13 @@ public class DLFileEntryTypeServiceTest {
 				"Test Structure", StringPool.BLANK, new long[0],
 				serviceContext);
 
-		List<DDMStructure> ddmStructures = dlFileEntryType.getDDMStructures();
+		List<com.liferay.portlet.dynamicdatamapping.DDMStructure>
+			ddmStructures = dlFileEntryType.getDDMStructures();
 
 		Assert.assertEquals(1, ddmStructures.size());
 
-		DDMStructure ddmStructure = ddmStructures.get(0);
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
+			ddmStructures.get(0).getStructureId());
 
 		Locale[] availableLocales = LocaleUtil.fromLanguageIds(
 			ddmStructure.getAvailableLanguageIds());
@@ -337,12 +340,16 @@ public class DLFileEntryTypeServiceTest {
 			dlFileEntryType.getPrimaryKey(), dlFileEntry.getFileEntryTypeId());
 	}
 
-	protected void setUpPermissionThreadLocal() {
+	protected void setUpPermissionThreadLocal() throws Exception {
 		_originalPermissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
 
 		PermissionThreadLocal.setPermissionChecker(
 			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
 
 				@Override
 				public boolean hasOwnerPermission(

@@ -1,5 +1,7 @@
 alter table AssetEntry add listable BOOLEAN;
 
+alter table AssetTag add uuid_ VARCHAR(75);
+
 COMMIT_TRANSACTION;
 
 update AssetEntry set listable = TRUE;
@@ -162,5 +164,7 @@ update Region set regionCode = 'BB' where regionId = 4004 and regionCode = 'BR';
 update Region set name = 'Monza e Brianza', regionCode = 'MB' where regionId = 8060 and regionCode = 'MZ';
 
 alter table Subscription add groupId LONG;
+
+alter table Team add uuid_ VARCHAR(75);
 
 alter table UserNotificationEvent add actionRequired BOOLEAN;

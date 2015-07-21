@@ -11,6 +11,7 @@
 		<dirset dir="calendar" includes="*" />
 		<dirset dir="comments" includes="*" />
 		<dirset dir="configuration-admin" includes="*" />
+		<dirset dir="control-menu" includes="*" />
 		<dirset dir="control-panel" includes="*" />
 		<dirset dir="currency-converter" includes="*" />
 		<dirset dir="dictionary" includes="*" />
@@ -19,6 +20,7 @@
 		<dirset dir="dynamic-data-mapping" includes="*" />
 		<dirset dir="expando" includes="*" />
 		<dirset dir="export-import" includes="*" />
+		<dirset dir="flags" includes="*" />
 		<dirset dir="hello-velocity" includes="*" />
 		<dirset dir="iframe" includes="*" />
 		<dirset dir="invitation" includes="*" />
@@ -37,10 +39,13 @@
 		<dirset dir="password-generator" includes="*" />
 		<dirset dir="password-policies-admin" includes="*" />
 		<dirset dir="polls" includes="*" />
+		<dirset dir="portal-instances" includes="*" />
+		<dirset dir="portlet-configuration" includes="*" />
 		<dirset dir="portlet-css" includes="*" />
 		<dirset dir="portlet-display-template" includes="*" />
 		<dirset dir="product-menu" includes="*" />
 		<dirset dir="quick-note" includes="*" />
+		<dirset dir="ratings" includes="*" />
 		<dirset dir="roles" includes="*" />
 		<dirset dir="rss" includes="*" />
 		<dirset dir="search" includes="*" />
@@ -53,6 +58,7 @@
 		<dirset dir="translator" includes="*" />
 		<dirset dir="trash" includes="*" />
 		<dirset dir="unit-converter" includes="*" />
+		<dirset dir="user-groups-admin" includes="*" />
 		<dirset dir="user-personal-bar" includes="*" />
 		<dirset dir="web-proxy" includes="*" />
 		<dirset dir="wiki" includes="*" />

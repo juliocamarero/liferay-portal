@@ -13,6 +13,8 @@ dependencies {
 ext {
 	alloyBootstrapVersion = "3.2.0-2"
 	alloyVersion = "3.0.1"
+	lexiconVersion = "0.1.6"
+	lfrAMDLoaderVersion = "1.2.0"
 }
 
 liferay {
@@ -24,13 +26,13 @@ File thirdPartyDir = file("../../../portal-web/third-party")
 
 task buildAlloy(type: Copy)
 task buildAlloyBootstrap(type: Copy)
+task buildLexicon(type: Copy)
 task buildLfrAMDLoader(type: Copy)
 task downloadLfrAMDLoader(type: NpmTask)
 
 buildAlloy {
 	File alloyDestinationDir = new File(jsDestinationDir, "aui")
-
-	eachFile new StripPathSegmentsAction(1)
+	File alloyZipFile = new File(thirdPartyDir, "alloy-${alloyVersion}.zip")
 
 	doFirst {
 		delete alloyDestinationDir
@@ -54,14 +56,20 @@ buildAlloy {
 		}
 	}
 
-	from zipTree(new File(thirdPartyDir, "alloy-${alloyVersion}.zip"))
+	eachFile new StripPathSegmentsAction(1)
+	from zipTree(alloyZipFile)
 	include "build/**"
 	includeEmptyDirs = false
 	into alloyDestinationDir
+
+	onlyIf {
+		!FileUtil.isUpToDate(project, alloyZipFile, alloyDestinationDir)
+	}
 }
 
 buildAlloyBootstrap {
 	File alloyBootstrapDestinationDir = new File(jsDestinationDir, "bootstrap")
+	File bootstrapSassZipFile = new File(thirdPartyDir, "bootstrap-sass-${alloyBootstrapVersion}.zip")
 
 	doFirst {
 		delete alloyBootstrapDestinationDir
@@ -69,10 +77,33 @@ buildAlloyBootstrap {
 
 	eachFile new StripPathSegmentsAction(3)
 	exclude "bootstrap-sass-${alloyBootstrapVersion}/assets/javascripts/bootstrap-*.js"
-	from zipTree(new File(thirdPartyDir, "bootstrap-sass-${alloyBootstrapVersion}.zip"))
+	from zipTree(bootstrapSassZipFile)
 	include "bootstrap-sass-${alloyBootstrapVersion}/assets/javascripts/**"
 	includeEmptyDirs = false
 	into alloyBootstrapDestinationDir
+
+	onlyIf {
+		!FileUtil.isUpToDate(project, bootstrapSassZipFile, alloyBootstrapDestinationDir)
+	}
+}
+
+buildLexicon {
+	File lexiconDestinatioDir = new File(jsDestinationDir, "lexicon")
+	File lexiconZipFile = new File(thirdPartyDir, "lexicon-${lexiconVersion}.zip")
+
+	doFirst {
+		delete lexiconDestinatioDir
+	}
+
+	eachFile new StripPathSegmentsAction(1)
+	from zipTree(lexiconZipFile)
+	include "js/**"
+	includeEmptyDirs = false
+	into lexiconDestinatioDir
+
+	onlyIf {
+		!FileUtil.isUpToDate(project, lexiconZipFile, lexiconDestinatioDir)
+	}
 }
 
 buildLfrAMDLoader {
@@ -82,12 +113,13 @@ buildLfrAMDLoader {
 }
 
 downloadLfrAMDLoader {
-	args = ["install", "lfr-amd-loader"]
+	args = ["install", "lfr-amd-loader@\"${lfrAMDLoaderVersion}\""]
 	workingDir = node.nodeModulesDir
 }
 
 classes {
 	dependsOn buildAlloy
 	dependsOn buildAlloyBootstrap
+	dependsOn buildLexicon
 	dependsOn buildLfrAMDLoader
 }

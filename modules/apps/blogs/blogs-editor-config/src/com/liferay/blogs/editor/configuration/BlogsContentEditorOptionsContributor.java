@@ -14,10 +14,13 @@
 
 package com.liferay.blogs.editor.configuration;
 
+import com.liferay.blogs.web.constants.BlogsPortletKeys;
 import com.liferay.portal.kernel.editor.configuration.EditorOptions;
 import com.liferay.portal.kernel.editor.configuration.EditorOptionsContributor;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.RequestBackedPortletURLFactory;
 
 import java.util.Map;
 
@@ -31,8 +34,9 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	property = {
-		"editor.config.key=contentEditor", "javax.portlet.name=33",
-		"javax.portlet.name=161"
+		"editor.config.key=contentEditor",
+		"javax.portlet.name=" + BlogsPortletKeys.BLOGS,
+		"javax.portlet.name=" + BlogsPortletKeys.BLOGS_ADMIN
 	},
 	service = EditorOptionsContributor.class
 )
@@ -44,13 +48,16 @@ public class BlogsContentEditorOptionsContributor
 		EditorOptions editorOptions,
 		Map<String, Object> inputEditorTaglibAttributes,
 		ThemeDisplay themeDisplay,
-		LiferayPortletResponse liferayPortletResponse) {
+		RequestBackedPortletURLFactory requestBackedPortletURLFactory) {
 
-		if (liferayPortletResponse == null) {
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		if (Validator.isNull(portletDisplay.getId())) {
 			return;
 		}
 
-		PortletURL portletURL = liferayPortletResponse.createActionURL();
+		PortletURL portletURL = requestBackedPortletURLFactory.createActionURL(
+			portletDisplay.getId());
 
 		portletURL.setParameter(
 			ActionRequest.ACTION_NAME, "/blogs/upload_editor_image");
