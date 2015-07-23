@@ -3274,6 +3274,32 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>list-group-element</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>extraData</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>state</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
 		<name>list-group-element-item</name>
 		<tag-class>com.liferay.taglib.ui.ListGroupElementItemTag</tag-class>
 		<body-content>JSP</body-content>
