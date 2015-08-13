@@ -262,6 +262,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 	<tag>
 		<description>Creates a navigation list item component for navigating app view entries.</description>
@@ -3251,6 +3256,134 @@
 		</attribute>
 		<attribute>
 			<name>treeId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>list-group</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group-element</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>extraData</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>state</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group-element-item</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementItemTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>list-group-element-item-checkbox</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementItemCheckboxTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>list-group-element-item-icon</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementItemIconTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>iconCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>isImage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<name>icon</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
