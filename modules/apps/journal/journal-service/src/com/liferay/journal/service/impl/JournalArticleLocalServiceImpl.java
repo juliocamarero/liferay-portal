@@ -7733,7 +7733,8 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	protected void validateDDMStructureFields(
-			DDMStructure ddmStructure, long classNameId, Fields fields)
+			DDMStructure ddmStructure, long classNameId, Fields fields,
+			Locale[] locales)
 		throws PortalException {
 
 		for (com.liferay.dynamic.data.mapping.storage.Field field : fields) {
@@ -7741,33 +7742,30 @@ public class JournalArticleLocalServiceImpl
 				throw new StorageFieldNameException();
 			}
 
-			if (ddmStructure.getFieldRequired(field.getName()) &&
-				Validator.isNull(field.getValue()) &&
-				(classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT)) {
+			for (Locale locale : locales) {
+				if (ddmStructure.getFieldRequired(field.getName()) &&
+					Validator.isNull(field.getValue(locale)) &&
+					(classNameId ==
+						JournalArticleConstants.CLASSNAME_ID_DEFAULT)) {
 
-				throw new StorageFieldRequiredException();
+					throw new StorageFieldRequiredException(
+						"Required field value is not present for " + locale);
+				}
 			}
 		}
-	}
-
-	protected void validateDDMStructureFields(
-			DDMStructure ddmStructure, long classNameId,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		Fields fields = DDMUtil.getFields(
-			ddmStructure.getStructureId(), serviceContext);
-
-		validateDDMStructureFields(ddmStructure, classNameId, fields);
 	}
 
 	protected void validateDDMStructureFields(
 			DDMStructure ddmStructure, long classNameId, String content)
 		throws PortalException {
 
+		Locale[] contentLocales = LocaleUtil.fromLanguageIds(
+				LocalizationUtil.getAvailableLanguageIds(content));
+
 		Fields fields = DDMXMLUtil.getFields(ddmStructure, content);
 
-		validateDDMStructureFields(ddmStructure, classNameId, fields);
+		validateDDMStructureFields(
+			ddmStructure, classNameId, fields, contentLocales);
 	}
 
 	protected void validateDDMStructureId(
