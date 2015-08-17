@@ -28,7 +28,7 @@ PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempR
 	actionJsp="/folder_action.jsp"
 	actionJspServletContext="<%= application %>"
 	description="<%= folder.getDescription() %>"
-	displayStyle="icon"
+	displayStyle="folder-icon"
 	folder="<%= true %>"
 	rowCheckerId="<%= String.valueOf(folder.getFolderId()) %>"
 	rowCheckerName="<%= JournalFolder.class.getSimpleName() %>"
@@ -37,4 +37,5 @@ PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempR
 	thumbnailStyle="max-height: 128px; max-width: 128px;"
 	title="<%= HtmlUtil.escape(folder.getName()) %>"
 	url="<%= tempRowURL.toString() %>"
+	view="lexicon"
 />
