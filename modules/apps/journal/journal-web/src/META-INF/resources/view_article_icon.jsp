@@ -27,16 +27,19 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 <liferay-ui:app-view-entry
 	actionJsp="/article_action.jsp"
 	actionJspServletContext="<%= application %>"
+	author="<%= article.getUserName() %>"
+	authorId="<%= article.getUserId() %>"
 	description="<%= HtmlUtil.escape(article.getDescription(locale)) %>"
 	displayStyle="icon"
 	groupId="<%= article.getGroupId() %>"
+	modifiedDate="<%= article.getModifiedDate() %>"
 	rowCheckerId="<%= HtmlUtil.escape(article.getArticleId()) %>"
 	rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
 	showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
 	status="<%= article.getStatus() %>"
 	thumbnailDivStyle="height: 146px; width: 146px;"
 	thumbnailSrc='<%= Validator.isNotNull(articleImageURL) ? articleImageURL : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
-	thumbnailStyle="max-height: 128px; max-width: 128px;"
 	title="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
 	url="<%= tempRowURL.toString() %>"
+	view="lexicon"
 />
