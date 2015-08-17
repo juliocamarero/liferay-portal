@@ -24,6 +24,7 @@ long assetCategoryClassPK = GetterUtil.getLong(request.getAttribute("liferay-ui:
 String assetTagClassName = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-entry:assetTagClassName"));
 long assetTagClassPK = GetterUtil.getLong(request.getAttribute("liferay-ui:app-view-entry:assetTagClassPK"));
 String author = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-entry:author"));
+long authorId = GetterUtil.getLong(request.getAttribute("liferay-ui:app-view-entry:authorId"));
 String classTypeName = (String)request.getAttribute("liferay-ui:app-view-entry:classTypeName");
 Date createDate = GetterUtil.getDate(request.getAttribute("liferay-ui:app-view-entry:createDate"), DateFormatFactoryUtil.getDate(locale), null);
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:app-view-entry:cssClass"));

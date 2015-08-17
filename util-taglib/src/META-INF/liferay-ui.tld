@@ -89,6 +89,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>authorId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>A name for the entry type. This is displayed in descriptive view as <![CDATA[<code>Type: classTypeName</code>]]>.</description>
 			<name>classTypeName</name>
 			<required>false</required>
