@@ -28,7 +28,11 @@ else {
 	folder = (JournalFolder)request.getAttribute("view_entries.jsp-folder");
 }
 
-String folderImage = (String)request.getAttribute("view_entries.jsp-folderImage");
+String folderImage = "folder_empty_article";
+
+if (JournalServiceConfigurationValues.JOURNAL_FOLDER_ICON_CHECK_COUNT && (JournalFolderServiceUtil.getFoldersAndArticlesCount(scopeGroupId, curFolder.getFolderId()) > 0)) {
+	folderImage = "folder_full_article";
+}
 
 PortletURL rowURL = liferayPortletResponse.createRenderURL();
 
