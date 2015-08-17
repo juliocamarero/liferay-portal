@@ -53,10 +53,7 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 	</div>
 </c:if>
 
-<ul class="<%= searchContainer.getCssClass() %> tabular-list-group <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %>" id="<%= namespace + id %>SearchContainer">
-	<c:if test="<%= (headerNames != null) && Validator.isNotNull(headerNames.get(0)) %>">
-		<li class="list-group-heading"><liferay-ui:message key="<%= headerNames.get(0) %>" /></li>
-	</c:if>
+<ul class="list-unstyled <%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %>" id="<%= namespace + id %>SearchContainer">
 
 	<%
 	boolean allRowsIsChecked = true;
@@ -85,34 +82,40 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 		Map<String, Object> data = row.getData();
 	%>
 
-		<li class="list-group-item <%= GetterUtil.getString(row.getClassName()) %> <%= row.getCssClass() %> <%= rowIsChecked ? "active" : StringPool.BLANK %> <%= Validator.isNotNull(row.getState()) ? "list-group-item-" + row.getState() : StringPool.BLANK %>"  <%= AUIUtil.buildData(data) %>>
+		<li class="col-lg-4 <%= GetterUtil.getString(row.getClassName()) %> <%= row.getCssClass() %> <%= rowIsChecked ? "active" : StringPool.BLANK %>"  <%= AUIUtil.buildData(data) %>>
 			<c:if test="<%= rowChecker != null %>">
-				<div class="hidden-sm hidden-x list-group-item-field">
+				<div class="checkbox checkbox-default toggle-card-dm">
 					<aui:input checked="<%= rowIsChecked %>" cssClass="<%= rowChecker.getCssClass() %>" disabled="<%= rowChecker.isDisabled(row.getObject()) %>" id="<%= rowChecker.getRowIds() + row.getPrimaryKey() %>" label="" name="<%= rowChecker.getRowIds() %>" title="select" type="checkbox" useNamespace="<%= false %>" value="<%= row.getPrimaryKey() %>" wrapperCssClass="checkbox-default" />
-				</div>
 			</c:if>
 
-			<%
-			for (int j = 0; j < entries.size(); j++) {
-				com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(j);
+			<div class="card card-dm">
 
-				entry.setIndex(j);
+				<%
+				for (int j = 0; j < entries.size(); j++) {
+					com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(j);
 
-				request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY, entry);
-			%>
+					entry.setIndex(j);
 
-				<div class="<%= entry.getCssClass() %> <%= entry.getColspan() > 1 ? "list-group-item-content" : "list-group-item-field" %>">
+					request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY, entry);
+				%>
 
-					<%
-					entry.print(pageContext.getOut(), request, response);
-					%>
+					<div class="<%= entry.getCssClass() %>">
 
+						<%
+						entry.print(pageContext.getOut(), request, response);
+						%>
+
+					</div>
+
+				<%
+				}
+				%>
+
+			</div>
+
+			<c:if test="<%= rowChecker != null %>">
 				</div>
-
-			<%
-			}
-			%>
-
+			</c:if>
 		</li>
 
 	<%
@@ -123,7 +126,7 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 	}
 	%>
 
-	<li class="lfr-template list-group-item"></li>
+	<li class="col-lg-4"></li>
 </ul>
 
 <c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_BOTTOM && paginate %>">
