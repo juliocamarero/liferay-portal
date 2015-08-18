@@ -285,6 +285,10 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(articleSearchCo
 	</div>
 </c:if>
 
+<%
+String displayStyle = journalDisplayContext.getDisplayStyle();
+%>
+
 <liferay-ui:search-container
 	searchContainer="<%= articleSearchContainer %>"
 	totalVar="articleSearchContainerTotal"
@@ -328,7 +332,6 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(articleSearchCo
 
 				row.setPrimaryKey(HtmlUtil.escape(curArticle.getArticleId()));
 
-				String displayStyle = journalDisplayContext.getDisplayStyle();
 				%>
 
 				<c:choose>
