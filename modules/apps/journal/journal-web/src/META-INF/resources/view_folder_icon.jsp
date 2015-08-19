@@ -16,25 +16,45 @@
 
 <%@ include file="/init.jsp" %>
 
+<%@ taglib uri="http://liferay.com/tld/frontend" prefix="frontend" %>
+
 <%
-JournalFolder folder = (JournalFolder)request.getAttribute("view_entries.jsp-folder");
+ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
-String folderImage = (String)request.getAttribute("view_entries.jsp-folderImage");
+JournalFolder folder = null;
 
-PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempRowURL");
+if (row != null) {
+	folder = (JournalFolder)row.getObject();
+}
+else {
+	folder = (JournalFolder)request.getAttribute("view_entries.jsp-folder");
+}
+
+PortletURL rowURL = liferayPortletResponse.createRenderURL();
+
+rowURL.setParameter("redirect", currentURL);
+rowURL.setParameter("groupId", String.valueOf(folder.getGroupId()));
+rowURL.setParameter("folderId", String.valueOf(folder.getFolderId()));
+
+Map<String, Object> data = new HashMap<String, Object>();
+
+data.put("draggable", true);
+data.put("folder", true);
+data.put("folder-id", String.valueOf(folder.getFolderId()));
+data.put("title", HtmlUtil.escape(folder.getName()));
 %>
 
-<liferay-ui:app-view-entry
+<frontend:card
 	actionJsp="/folder_action.jsp"
 	actionJspServletContext="<%= application %>"
-	description="<%= folder.getDescription() %>"
-	displayStyle="icon"
-	folder="<%= true %>"
-	rowCheckerId="<%= String.valueOf(folder.getFolderId()) %>"
-	rowCheckerName="<%= JournalFolder.class.getSimpleName() %>"
+	checkboxCSSClass="entry-selector"
+	checkboxId="<%= String.valueOf(folder.getFolderId()) %>"
+	checkboxName="<%= RowChecker.ROW_IDS %>"
+	data="<%= data %>"
+	horizontal="<%= true %>"
+	image="icon-folder-close-alt"
+	imageCSSClass="icon-monospaced"
 	showCheckbox="<%= JournalFolderPermission.contains(permissionChecker, folder, ActionKeys.DELETE) || JournalFolderPermission.contains(permissionChecker, folder, ActionKeys.UPDATE) %>"
-	thumbnailSrc='<%= themeDisplay.getPathThemeImages() + "/file_system/large/" + folderImage + ".png" %>'
-	thumbnailStyle="max-height: 128px; max-width: 128px;"
 	title="<%= HtmlUtil.escape(folder.getName()) %>"
-	url="<%= tempRowURL.toString() %>"
+	url="<%= rowURL != null ? rowURL.toString() : null %>"
 />

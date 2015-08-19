@@ -10,7 +10,8 @@ Export-Package:\
 	com.liferay.journal.web.util
 Import-Package:\
 	javax.servlet;version='[2.3.0,4.0.0)',\
-	*
+    com.liferay.frontend.taglib.servlet.taglib,\
+    *
 Include-Resource:\
 	classes,\
 	META-INF/resources=src/META-INF/resources,\
