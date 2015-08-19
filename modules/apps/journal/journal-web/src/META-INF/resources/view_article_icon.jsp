@@ -16,6 +16,8 @@
 
 <%@ include file="/init.jsp" %>
 
+<%@ taglib uri="http://liferay.com/tld/frontend" prefix="frontend" %>
+
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
@@ -29,6 +31,25 @@ else {
 }
 
 String articleImageURL = article.getArticleImageURL(themeDisplay);
+
+String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
+
+Map<String, Object> data = new HashMap<String, Object>();
+
+data.put("draggable", true);
+data.put("folder", false);
+data.put("title", HtmlUtil.escape(article.getTitle(locale)));
+
+User userDisplay = UserLocalServiceUtil.fetchUserById(article.getUserId());
+
+String userImage;
+
+if (userDisplay != null) {
+	userImage = userDisplay.getPortraitURL(themeDisplay);
+}
+else {
+	userImage = UserConstants.getPortraitURL(themeDisplay.getPathImage(), true, 0, null);
+}
 %>
 
 <liferay-portlet:renderURL varImpl="rowURL">
@@ -42,22 +63,27 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
 </liferay-portlet:renderURL>
 
-<liferay-ui:app-view-entry
+<liferay-util:buffer var="statusText">
+	<aui:workflow-status showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" view="lexicon" />
+</liferay-util:buffer>
+
+<liferay-util:buffer var="headerText">
+	<liferay-ui:message arguments="<%= new String[] {LanguageUtil.getTimeDescription(locale, System.currentTimeMillis() - article.getModifiedDate().getTime(), true), HtmlUtil.escape(article.getUserName())} %>" key="x-ago-by-x" translateArguments="<%= false %>" />
+</liferay-util:buffer>
+
+<frontend:card 
 	actionJsp="/article_action.jsp"
 	actionJspServletContext="<%= application %>"
-	author="<%= article.getUserName() %>"
-	authorId="<%= article.getUserId() %>"
-	description="<%= HtmlUtil.escape(article.getDescription(locale)) %>"
-	displayStyle="icon"
-	groupId="<%= article.getGroupId() %>"
-	modifiedDate="<%= article.getModifiedDate() %>"
-	rowCheckerId="<%= HtmlUtil.escape(article.getArticleId()) %>"
-	rowCheckerName="<%= JournalArticle.class.getSimpleName() %>"
+	checkboxCSSClass="entry-selector"
+	checkboxId="<%= HtmlUtil.escape(article.getArticleId()) %>"
+	checkboxName="<%= RowChecker.ROW_IDS %>"
+	data="<%= data %>"
+	footer="<%= statusText %>"
+	header="<%= headerText %>"
+	image="<%= Validator.isNotNull(articleImageURL) ? articleImageURL : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>"
 	showCheckbox="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) || JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>"
-	status="<%= article.getStatus() %>"
-	thumbnailDivStyle="height: 146px; width: 146px;"
-	thumbnailSrc='<%= Validator.isNotNull(articleImageURL) ? articleImageURL : themeDisplay.getPathThemeImages() + "/file_system/large/article.png" %>'
+	smallImageCSSClass="user-icon user-icon-lg"
+	smallImageUrl="<%= userImage %>"
 	title="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
-	url="<%= rowURL != null ? rowURL : null %>"
-	view="lexicon"
+	url="<%= rowURL != null ? rowURL.toString() : null %>"
 />
