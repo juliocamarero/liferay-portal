@@ -82,14 +82,7 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 		Map<String, Object> data = row.getData();
 	%>
 
-		<li class="col-lg-4 <%= GetterUtil.getString(row.getClassName()) %> <%= row.getCssClass() %> <%= rowIsChecked ? "active" : StringPool.BLANK %>"  <%= AUIUtil.buildData(data) %>>
-			<c:if test="<%= rowChecker != null %>">
-				<div class="checkbox checkbox-default toggle-card-dm">
-					<aui:input checked="<%= rowIsChecked %>" cssClass="<%= rowChecker.getCssClass() %>" disabled="<%= rowChecker.isDisabled(row.getObject()) %>" id="<%= rowChecker.getRowIds() + row.getPrimaryKey() %>" label="" name="<%= rowChecker.getRowIds() %>" title="select" type="checkbox" useNamespace="<%= false %>" value="<%= row.getPrimaryKey() %>" wrapperCssClass="checkbox-default" />
-			</c:if>
-
-			<div class="card card-dm">
-
+		<li>
 				<%
 				for (int j = 0; j < entries.size(); j++) {
 					com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(j);
@@ -99,23 +92,13 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 					request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY, entry);
 				%>
 
-					<div class="<%= entry.getCssClass() %>">
-
 						<%
 						entry.print(pageContext.getOut(), request, response);
 						%>
 
-					</div>
-
 				<%
 				}
 				%>
-
-			</div>
-
-			<c:if test="<%= rowChecker != null %>">
-				</div>
-			</c:if>
 		</li>
 
 	<%
@@ -126,7 +109,7 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 	}
 	%>
 
-	<li class="col-lg-4"></li>
+	<li></li>
 </ul>
 
 <c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_BOTTOM && paginate %>">
