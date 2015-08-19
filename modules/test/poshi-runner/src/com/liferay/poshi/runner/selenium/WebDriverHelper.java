@@ -136,7 +136,8 @@ public class WebDriverHelper {
 				System.out.println(
 					"JAVA_SCRIPT_ERROR: " + javaScriptErrorValue);
 
-				exceptions.add(new PoshiRunnerWarningException(sb.toString()));
+				exceptions.add(new PoshiRunnerWarningException(
+					"JAVA_SCRIPT_ERROR: " + javaScriptErrorValue));
 			}
 		}
 
