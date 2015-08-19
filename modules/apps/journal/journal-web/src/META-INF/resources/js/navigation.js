@@ -19,9 +19,7 @@ AUI.add(
 
 						instance._journalContainer = journalContainer;
 
-						var checkBoxesId = [
-							config.rowIds
-						];
+						var checkBoxesId = config.rowIds;
 
 						var displayStyle = A.clone(config.displayStyle);
 

@@ -140,7 +140,10 @@ request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 			},
 			namespace: '<portlet:namespace />',
 			portletId: '<%= portletDisplay.getId() %>',
-			rowIds: '<portlet:namespace /><%= RowChecker.ROW_IDS %>',
+			rowIds: [
+				'<portlet:namespace /><%= RowChecker.ROW_IDS + JournalArticle.class.getSimpleName() %>',
+				'<portlet:namespace /><%= RowChecker.ROW_IDS + JournalFolder.class.getSimpleName() %>'
+			],
 			select: {
 				displayStyleCSSClass: 'list-group-item',
 				selectedCSSClass: 'active'
