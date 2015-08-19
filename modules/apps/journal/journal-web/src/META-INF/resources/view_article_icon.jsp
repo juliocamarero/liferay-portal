@@ -71,7 +71,7 @@ else {
 	<liferay-ui:message arguments="<%= new String[] {LanguageUtil.getTimeDescription(locale, System.currentTimeMillis() - article.getModifiedDate().getTime(), true), HtmlUtil.escape(article.getUserName())} %>" key="x-ago-by-x" translateArguments="<%= false %>" />
 </liferay-util:buffer>
 
-<frontend:card 
+<frontend:card
 	actionJsp="/article_action.jsp"
 	actionJspServletContext="<%= application %>"
 	checkboxCSSClass="entry-selector"

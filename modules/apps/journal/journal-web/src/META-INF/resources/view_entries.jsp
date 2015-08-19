@@ -331,7 +331,6 @@ String displayStyle = journalDisplayContext.getDisplayStyle();
 				row.setData(rowData);
 
 				row.setPrimaryKey(HtmlUtil.escape(curArticle.getArticleId()));
-
 				%>
 
 				<c:choose>

@@ -44,7 +44,7 @@ data.put("folder-id", String.valueOf(folder.getFolderId()));
 data.put("title", HtmlUtil.escape(folder.getName()));
 %>
 
-<frontend:card 
+<frontend:card
 	actionJsp="/folder_action.jsp"
 	actionJspServletContext="<%= application %>"
 	checkboxCSSClass="entry-selector"

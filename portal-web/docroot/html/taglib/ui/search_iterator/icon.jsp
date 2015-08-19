@@ -78,11 +78,10 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 		}
 
 		request.setAttribute("liferay-ui:search-container-row:rowId", id.concat(StringPool.UNDERLINE.concat(row.getRowId())));
-
-		Map<String, Object> data = row.getData();
 	%>
 
 		<li>
+
 				<%
 				for (int j = 0; j < entries.size(); j++) {
 					com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(j);
@@ -99,6 +98,7 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 				<%
 				}
 				%>
+
 		</li>
 
 	<%
