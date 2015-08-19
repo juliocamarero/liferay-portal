@@ -21,7 +21,7 @@
 		<div class="card-row card-row-padded entry-display-style <%= showCheckbox ? "selectable" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %> >
 			<div class="card-col-field">
 				<c:if test="<%= showCheckbox %>">
-					<aui:input cssClass="<%= checkboxCSSClass %>" id="<%= checkboxId %>" label="" name="<%= checkboxName %>" title="" type="checkbox" value="" wrappedField="<%= true %>" />
+					<aui:input cssClass="<%= checkboxCSSClass %>" id="<%= checkboxId %>" label="" name="<%= checkboxName %>" title="" type="checkbox" value="<%= checkboxId %>" wrappedField="<%= true %>" />
 				</c:if>
 			</div>
 			<div class="card-col-field">

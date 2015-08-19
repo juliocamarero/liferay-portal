@@ -18,7 +18,7 @@
 
 <div class="col-lg-4 entry-display-style <%= showCheckbox ? "selectable" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %>>
 	<div class="checkbox checkbox-default toggle-card-dm">
-		<aui:input cssClass="<%= checkboxCSSClass %>" id="<%= checkboxId %>" label="" name="<%= checkboxName %>" title="" type="checkbox" value="" wrappedField="<%= true %>" />
+		<aui:input cssClass="<%= checkboxCSSClass %>" id="<%= checkboxId %>" label="" name="<%= checkboxName %>" title="" type="checkbox" value="<%= checkboxId %>" wrappedField="<%= true %>" />
 
 		<div class="card card-dm toggle-card-container">
 			<div class="aspect-ratio">
