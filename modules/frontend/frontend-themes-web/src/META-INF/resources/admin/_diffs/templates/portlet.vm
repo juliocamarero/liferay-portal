@@ -10,7 +10,7 @@
 #set ($portlet_back_url = $htmlUtil.escapeHREF($portlet_display.getURLBack()))
 #set ($enable_portlet_descriptions = $sessionClicks.get($request, "enable-portlet-descriptions", "1"))
 #set ($show_portlet_description = $enable_portlet_descriptions == "1" && $sessionClicks.get($request, "show-portlet-description-$portlet_id", "1") == "1")
-#set ($valid_portlet_description = $validator.isNotNull($portlet_description) && $portlet_description.indexOf('javax.portlet.description') == -1)
+#set ($valid_portlet_description = $validator.isNotNull($portlet_description) && $portlet_description.indexOf('javax.portlet.description') == -1 && $portlet_description != $portlet_id)
 
 #if ($show_portlet_description)
 	#set ($portlet_title_icon_css_class = "hide")
