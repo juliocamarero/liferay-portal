@@ -571,8 +571,22 @@
 
 			var selector = 'input[type=checkbox]';
 
+			if (!_.isObject(except)) {
+				except = {
+					attr: 'name',
+					value: except
+				};
+			}
+
 			if (name) {
-				selector += '[name=' + name + ']';
+				if (!_.isObject(name)) {
+					name = {
+						attr: 'name',
+						value: name
+					};
+				}
+
+				selector += '[' + name.attr + '=' + name.value + ']';
 			}
 
 			return _.reduce(
@@ -582,7 +596,7 @@
 
 					var val = item.val();
 
-					if (val && item.attr('name') != except && item.prop('checked') == checked && !item.prop('disabled')) {
+					if (val && item.attr(except.attr) != except.value && item.prop('checked') == checked && !item.prop('disabled')) {
 						prev.push(val);
 					}
 
