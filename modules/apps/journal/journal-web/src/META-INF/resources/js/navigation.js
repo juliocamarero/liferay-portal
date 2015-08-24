@@ -58,6 +58,7 @@ AUI.add(
 								portletContainerId: portletContainerId,
 								portletGroup: 'journal',
 								processEntryIds: {
+									checkBoxesData: true,
 									checkBoxesIds: checkBoxesId,
 									entryIds: [
 										instance.ns('articleIds'),

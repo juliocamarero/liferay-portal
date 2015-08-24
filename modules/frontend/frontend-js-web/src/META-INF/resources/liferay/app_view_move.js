@@ -669,8 +669,26 @@ AUI.add(
 
 						var checkBoxesIds = processEntryIds.checkBoxesIds;
 
-						for (var i = 0; i < checkBoxesIds.length; i++) {
-							var listEntryIds = Util.listCheckedExcept(form, allRowsIdCheckbox, checkBoxesIds[i]);
+						var checkBoxesData = processEntryIds.checkBoxesData;
+
+						var checkBoxesLenght = checkBoxesData ? entryIds.length : checkBoxesIds.length;
+
+						for (var i = 0; i < checkBoxesLenght; i++) {
+							var listEntryIds;
+
+							if (checkBoxesData) {
+								listEntryIds = Util.listCheckedExcept(
+									form,
+									allRowsIdCheckbox,
+									{
+										attr: 'data-entryType',
+										value: entryIds[i]
+									}
+								);
+							}
+							else {
+								listEntryIds = Util.listCheckedExcept(form, allRowsIdCheckbox, checkBoxesIds[i]);
+							}
 
 							form.get(entryIds[i]).val(listEntryIds);
 						}
