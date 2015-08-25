@@ -169,4 +169,9 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<name>management-bar-header-right</name>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ManagementBarHeaderRightTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
 </taglib>
