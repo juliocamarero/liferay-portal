@@ -165,6 +165,31 @@
 		<body-content>JSP</body-content>
 	</tag>
 	<tag>
+		<name>management-bar-icon-button</name>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ManagementBarIconButtonTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>href</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>iconCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>management-bar-header</name>
 		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ManagementBarHeaderTag</tag-class>
 		<body-content>JSP</body-content>
