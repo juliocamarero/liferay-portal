@@ -15,10 +15,9 @@
 package com.liferay.frontend.taglib.servlet.taglib;
 
 import com.liferay.frontend.taglib.servlet.ServletContextUtil;
+import com.liferay.portal.kernel.dao.search.ResultRow;
 import com.liferay.portal.kernel.dao.search.RowChecker;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.taglib.search.ResultRow;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.util.Map;
@@ -110,6 +109,14 @@ public class CardTag extends IncludeTag {
 		servletContext = ServletContextUtil.getServletContext();
 	}
 
+	public void setResultRow(ResultRow resultRow) {
+		_resultRow = resultRow;
+	}
+
+	public void setRowChecker(RowChecker rowChecker) {
+		_rowChecker = rowChecker;
+	}
+
 	public void setShowCheckbox(boolean showCheckbox) {
 		_showCheckbox = showCheckbox;
 	}
@@ -152,6 +159,8 @@ public class CardTag extends IncludeTag {
 		_horizontal = false;
 		_imageUrl = null;
 		_imageCSSClass = null;
+		_resultRow = null;
+		_rowChecker = null;
 		_showCheckbox = true;
 		_smallImageCSSClass = null;
 		_smallImageUrl = null;
@@ -183,90 +192,21 @@ public class CardTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-frontend:card:actionJspServletContext",
 			getActionJspServletContext());
-
-		boolean checkboxChecked = false;
-
-		ResultRow resultRow = (ResultRow)request.getAttribute(
-			WebKeys.SEARCH_CONTAINER_RESULT_ROW);
-		RowChecker rowChecker = (RowChecker)request.getAttribute(
-			WebKeys.SEARCH_CONTAINER_RESULT_ROW_CHECKER);
-
-		if ((_checkboxChecked == null) && (resultRow != null) &&
-			(rowChecker != null)) {
-
-			checkboxChecked = rowChecker.isChecked(resultRow.getObject());
-		}
-		else {
-			checkboxChecked = _checkboxChecked.booleanValue();
-		}
-
 		request.setAttribute(
 			"liferay-frontend:card:checkboxChecked",
-			String.valueOf(checkboxChecked));
-
-		String checkboxCssClass = _checkboxCSSClass;
-
-		if (Validator.isNull(checkboxCssClass) && (rowChecker != null)) {
-			checkboxCssClass = rowChecker.getCssClass();
-		}
-
+			String.valueOf(_checkboxChecked));
 		request.setAttribute(
-			"liferay-frontend:card:checkboxCSSClass", checkboxCssClass);
-
-		Map<String, Object> checkboxData = _checkboxData;
-
-		if ((_checkboxData == null) && (resultRow != null) &&
-			(rowChecker != null)) {
-
-			checkboxData = rowChecker.getData(resultRow.getObject());
-		}
-
+			"liferay-frontend:card:checkboxCSSClass", _checkboxCSSClass);
 		request.setAttribute(
-			"liferay-frontend:card:checkboxData", checkboxData);
-
-		boolean checkboxDisabled = false;
-
-		if ((_checkboxDisabled == null) && (resultRow != null) &&
-			(rowChecker != null)) {
-
-			checkboxDisabled = rowChecker.isDisabled(resultRow.getObject());
-		}
-		else {
-			checkboxDisabled = _checkboxChecked.booleanValue();
-		}
-
+			"liferay-frontend:card:checkboxData", _checkboxData);
 		request.setAttribute(
 			"liferay-frontend:card:checkboxDisabled",
-			String.valueOf(checkboxDisabled));
-
-		String checkboxId = _checkboxId;
-
-		if (Validator.isNull(checkboxId) && (resultRow != null) &&
-			(rowChecker != null)) {
-
-			checkboxId = rowChecker.getRowIds() + resultRow.getPrimaryKey();
-		}
-
-		request.setAttribute("liferay-frontend:card:checkboxId", checkboxId);
-
-		String checkboxName = _checkboxName;
-
-		if (Validator.isNull(checkboxName) && (rowChecker != null)) {
-			checkboxName = rowChecker.getRowIds();
-		}
-
+			String.valueOf(_checkboxDisabled));
+		request.setAttribute("liferay-frontend:card:checkboxId", _checkboxId);
 		request.setAttribute(
-			"liferay-frontend:card:checkboxName", checkboxName);
-
-		String checkboxValue = _checkboxValue;
-
-		if (Validator.isNull(checkboxValue) && (resultRow != null)) {
-			checkboxValue = resultRow.getPrimaryKey();
-		}
-
+			"liferay-frontend:card:checkboxName", _checkboxName);
 		request.setAttribute(
-			"liferay-frontend:card:checkboxValue", checkboxValue);
-
+			"liferay-frontend:card:checkboxValue", _checkboxValue);
 		request.setAttribute("liferay-frontend:card:cssClass", _cssClass);
 		request.setAttribute("liferay-frontend:card:data", _data);
 		request.setAttribute("liferay-frontend:card:footer", _footer);
@@ -274,6 +214,8 @@ public class CardTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-frontend:card:imageCSSClass", _imageCSSClass);
 		request.setAttribute("liferay-frontend:card:imageUrl", _imageUrl);
+		request.setAttribute("liferay-frontend:card:resultRow", _resultRow);
+		request.setAttribute("liferay-frontend:card:rowChecker", _rowChecker);
 		request.setAttribute(
 			"liferay-frontend:card:showCheckbox", _showCheckbox);
 		request.setAttribute(
@@ -283,6 +225,8 @@ public class CardTag extends IncludeTag {
 		request.setAttribute("liferay-frontend:card:subtitle", _subtitle);
 		request.setAttribute("liferay-frontend:card:title", _title);
 		request.setAttribute("liferay-frontend:card:url", _url);
+
+		request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW, _resultRow);
 	}
 
 	private String _actionJsp;
@@ -301,6 +245,8 @@ public class CardTag extends IncludeTag {
 	private boolean _horizontal = false;
 	private String _imageCSSClass;
 	private String _imageUrl;
+	private ResultRow _resultRow;
+	private RowChecker _rowChecker;
 	private boolean _showCheckbox;
 	private String _smallImageCSSClass;
 	private String _smallImageUrl;
