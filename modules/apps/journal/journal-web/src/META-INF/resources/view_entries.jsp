@@ -338,6 +338,7 @@ String displayStyle = journalDisplayContext.getDisplayStyle();
 						<%@ include file="/article_columns_descriptive.jspf" %>
 					</c:when>
 					<c:when test='<%= displayStyle.equals("icon") %>'>
+						<% row.setCssClass("col-md-2 col-sm-4 col-xs-6"); %>
 						<%@ include file="/article_columns_icon.jspf" %>
 					</c:when>
 					<c:otherwise>
@@ -364,6 +365,7 @@ String displayStyle = journalDisplayContext.getDisplayStyle();
 						<%@ include file="/folder_columns_descriptive.jspf" %>
 					</c:when>
 					<c:when test='<%= displayStyle.equals("icon") %>'>
+						<% row.setCssClass("col-md-3 col-sm-4 col-xs-12"); %>
 						<%@ include file="/folder_columns_icon.jspf" %>
 					</c:when>
 					<c:otherwise>
