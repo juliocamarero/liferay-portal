@@ -243,7 +243,9 @@ public class RowChecker {
 			sb.append("disabled ");
 		}
 
-		sb.append("name=\"");
+		sb.append("class=\"");
+		sb.append(_cssClass);
+		sb.append("\" name=\"");
 		sb.append(name);
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(request.getLocale(), "select"));
