@@ -12,16 +12,16 @@
  * details.
  */
 
-package com.liferay.product.menu.control.panel.application.list;
+package com.liferay.product.navigation.control.panel.application.list;
 
-import com.liferay.application.list.BasePanelCategory;
-import com.liferay.application.list.PanelCategory;
+import com.liferay.application.list.BaseControlPanelEntryPanelApp;
+import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.constants.PanelCategoryKeys;
-import com.liferay.portal.kernel.language.LanguageUtil;
-
-import java.util.Locale;
+import com.liferay.portal.service.PortletLocalService;
+import com.liferay.portal.util.PortletKeys;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -29,26 +29,23 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"panel.category.key=" + PanelCategoryKeys.CONTROL_PANEL,
-		"service.ranking:Integer=400"
+		"panel.category.key=" + PanelCategoryKeys.CONTROL_PANEL_APPS,
+		"service.ranking:Integer=200"
 	},
-	service = PanelCategory.class
+	service = PanelApp.class
 )
-public class ConfigurationPanelCategory extends BasePanelCategory {
+public class LicenseManagerPanelApp extends BaseControlPanelEntryPanelApp {
 
 	@Override
-	public String getIconCssClass() {
-		return "icon-cog";
+	public String getPortletId() {
+		return PortletKeys.LICENSE_MANAGER;
 	}
 
-	@Override
-	public String getKey() {
-		return PanelCategoryKeys.CONTROL_PANEL_CONFIGURATION;
-	}
+	@Reference(unbind = "-")
+	protected void setPortletLocalService(
+		PortletLocalService portletLocalService) {
 
-	@Override
-	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "category.configuration");
+		this.portletLocalService = portletLocalService;
 	}
 
 }

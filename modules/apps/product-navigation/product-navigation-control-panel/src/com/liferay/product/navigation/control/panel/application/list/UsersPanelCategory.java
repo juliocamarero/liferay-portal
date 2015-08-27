@@ -12,16 +12,16 @@
  * details.
  */
 
-package com.liferay.product.menu.control.panel.application.list;
+package com.liferay.product.navigation.control.panel.application.list;
 
-import com.liferay.application.list.BaseControlPanelEntryPanelApp;
-import com.liferay.application.list.PanelApp;
+import com.liferay.application.list.BasePanelCategory;
+import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
-import com.liferay.portal.service.PortletLocalService;
-import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.kernel.language.LanguageUtil;
+
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -29,23 +29,26 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"panel.category.key=" + PanelCategoryKeys.CONTROL_PANEL_APPS,
-		"service.ranking:Integer=200"
+		"panel.category.key=" + PanelCategoryKeys.CONTROL_PANEL,
+		"service.ranking:Integer=100"
 	},
-	service = PanelApp.class
+	service = PanelCategory.class
 )
-public class LicenseManagerPanelApp extends BaseControlPanelEntryPanelApp {
+public class UsersPanelCategory extends BasePanelCategory {
 
 	@Override
-	public String getPortletId() {
-		return PortletKeys.LICENSE_MANAGER;
+	public String getIconCssClass() {
+		return "icon-group";
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
+	@Override
+	public String getKey() {
+		return PanelCategoryKeys.CONTROL_PANEL_USERS;
+	}
 
-		this.portletLocalService = portletLocalService;
+	@Override
+	public String getLabel(Locale locale) {
+		return LanguageUtil.get(locale, "category.users");
 	}
 
 }
