@@ -12,16 +12,17 @@
  * details.
  */
 
-package com.liferay.product.menu.my.space.application.list;
+package com.liferay.product.navigation.user.application.list;
 
-import com.liferay.application.list.BaseControlPanelEntryPanelApp;
-import com.liferay.application.list.PanelApp;
+import com.liferay.application.list.BasePanelCategory;
+import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
-import com.liferay.portal.service.PortletLocalService;
-import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.kernel.language.LanguageUtil;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Adolfo Pérez
@@ -29,23 +30,29 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"panel.category.key=" + PanelCategoryKeys.USER_MY_ACCOUNT,
-		"service.ranking:Integer=400"
+		"panel.category.key=" + PanelCategoryKeys.ROOT,
+		"service.ranking:Integer=200"
 	},
-	service = PanelApp.class
+	service = PanelCategory.class
 )
-public class MyWorkflowInstancesPanelApp extends BaseControlPanelEntryPanelApp {
+public class UserPanelCategory extends BasePanelCategory {
 
 	@Override
-	public String getPortletId() {
-		return PortletKeys.MY_WORKFLOW_INSTANCE;
+	public String getIconCssClass() {
+		return "icon-user";
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
+	@Override
+	public String getKey() {
+		return PanelCategoryKeys.USER;
+	}
 
-		this.portletLocalService = portletLocalService;
+	@Override
+	public String getLabel(Locale locale) {
+		ResourceBundle resourceBundle = ResourceBundle.getBundle(
+			"content.Language", locale);
+
+		return LanguageUtil.get(resourceBundle, "my-space");
 	}
 
 }

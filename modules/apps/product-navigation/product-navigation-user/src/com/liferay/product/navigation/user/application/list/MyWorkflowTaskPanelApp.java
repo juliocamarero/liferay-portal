@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.product.menu.my.space.application.list;
+package com.liferay.product.navigation.user.application.list;
 
 import com.liferay.application.list.BaseControlPanelEntryPanelApp;
 import com.liferay.application.list.PanelApp;
