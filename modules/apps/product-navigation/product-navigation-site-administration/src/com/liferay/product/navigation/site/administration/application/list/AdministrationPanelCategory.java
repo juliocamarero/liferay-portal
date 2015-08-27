@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.product.menu.site.administration.application.list;
+package com.liferay.product.navigation.site.administration.application.list;
 
-import com.liferay.application.list.BaseJSPPanelCategory;
+import com.liferay.application.list.BasePanelCategory;
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -22,14 +22,11 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.service.permission.GroupPermissionUtil;
+import com.liferay.portal.service.permission.PortalPermissionUtil;
 
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
-
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -37,31 +34,26 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"panel.category.key=" + PanelCategoryKeys.SITES,
+		"panel.category.key=" + PanelCategoryKeys.SITES_ALL_SITES,
 		"service.ranking:Integer=100"
 	},
 	service = PanelCategory.class
 )
-public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
+public class AdministrationPanelCategory extends BasePanelCategory {
 
 	@Override
 	public String getIconCssClass() {
-		return "icon-compass";
-	}
-
-	@Override
-	public String getJspPath() {
-		return "/META-INF/resources/sites/site_administration.jsp";
+		return "icon-sitemap";
 	}
 
 	@Override
 	public String getKey() {
-		return PanelCategoryKeys.SITE_ADMINISTRATION;
+		return PanelCategoryKeys.SITES_ADMINISTRATION_SITES;
 	}
 
 	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "site-administration");
+		return LanguageUtil.get(locale, "administration");
 	}
 
 	@Override
@@ -69,23 +61,13 @@ public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 			PermissionChecker permissionChecker, Group group)
 		throws PortalException {
 
-		if (GroupPermissionUtil.contains(
-				permissionChecker, group,
-				ActionKeys.VIEW_SITE_ADMINISTRATION)) {
+		if (PortalPermissionUtil.contains(
+				permissionChecker, ActionKeys.VIEW_CONTROL_PANEL)) {
 
 			return true;
 		}
 
 		return false;
-	}
-
-	@Override
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.product.menu.site.administration.service)",
-		unbind = "-"
-	)
-	public void setServletContext(ServletContext servletContext) {
-		super.setServletContext(servletContext);
 	}
 
 }
