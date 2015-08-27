@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"panel.category.key=" + PanelCategoryKeys.MY_SPACE},
+	property = {"panel.category.key=" + PanelCategoryKeys.USER},
 	service = PanelCategory.class
 )
 public class MyAccountPanelCategory extends BasePanelCategory {
@@ -40,7 +40,7 @@ public class MyAccountPanelCategory extends BasePanelCategory {
 
 	@Override
 	public String getKey() {
-		return PanelCategoryKeys.MY_SPACE_PRODUCTIVITY_CENTER;
+		return PanelCategoryKeys.USER_MY_ACCOUNT;
 	}
 
 	@Override
