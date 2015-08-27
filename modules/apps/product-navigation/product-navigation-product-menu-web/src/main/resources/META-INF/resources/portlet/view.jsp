@@ -35,13 +35,15 @@
 
 		<li class="<%= "col-xs-" + (12 / childPanelCategories.size()) %> <%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? "active" : StringPool.BLANK %>">
 			<a aria-expanded="true" data-toggle="tab" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>">
-				<div class="product-menu-tab-icon">
-					<span class="<%= childPanelCategory.getIconCssClass() %> icon-monospaced"></span>
-				</div>
+				<c:if test="<%= !childPanelCategory.includeHeader(request, new PipingServletResponse(pageContext)) %>">
+					<div class="product-menu-tab-icon">
+						<span class="<%= childPanelCategory.getIconCssClass() %> icon-monospaced"></span>
+					</div>
 
-				<div class="product-menu-tab-text">
-					<%= childPanelCategory.getLabel(locale) %>
-				</div>
+					<div class="product-menu-tab-text">
+						<%= childPanelCategory.getLabel(locale) %>
+					</div>
+				</c:if>
 			</a>
 		</li>
 
