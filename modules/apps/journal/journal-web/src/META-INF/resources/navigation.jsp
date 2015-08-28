@@ -26,7 +26,7 @@ long[] groupIds = PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId);
 String navigation = ParamUtil.getString(request, "navigation", "home");
 %>
 
-<aui:nav-bar view="lexicon">
+<aui:nav-bar cssClass="collapse-basic-search" view="lexicon">
 	<aui:nav cssClass="navbar-nav">
 		<portlet:renderURL var="viewArticlesHomeURL">
 			<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
@@ -92,6 +92,15 @@ String navigation = ParamUtil.getString(request, "navigation", "home");
 	</aui:nav>
 
 	<aui:nav-bar-search>
-		<liferay-util:include page="/article_search.jsp" servletContext="<%= application %>" />
+
+		<%
+		PortletURL portletURL = liferayPortletResponse.createRenderURL();
+
+		portletURL.setParameter("folderId", String.valueOf(folderId));
+		%>
+
+		<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
+			<liferay-util:include page="/article_search.jsp" servletContext="<%= application %>" />
+		</aui:form>
 	</aui:nav-bar-search>
 </aui:nav-bar>
