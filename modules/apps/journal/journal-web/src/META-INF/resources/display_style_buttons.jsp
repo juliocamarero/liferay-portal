@@ -31,10 +31,35 @@ displayStyleURL.setParameter("folderId", String.valueOf(folderId));
 if (!ddmStructureKey.equals("0")) {
 	displayStyleURL.setParameter("ddmStructureKey", ddmStructureKey);
 }
+
+for (String displayStyle : journalDisplayContext.getDisplayViews()) {
+	displayStyleURL.setParameter("displayStyle", displayStyle);
 %>
 
-<liferay-ui:app-view-display-style
-	displayStyle="<%= journalDisplayContext.getDisplayStyle() %>"
-	displayStyles="<%= journalDisplayContext.getDisplayViews() %>"
-	displayStyleURL="<%= displayStyleURL %>"
-/>
+	<aui:a
+		cssClass='<%= displayStyle.equals(journalDisplayContext.getDisplayStyle()) ? "active btn" : "btn" %>'
+		href="<%= displayStyleURL.toString() %>"
+		iconCssClass='<%= "icon-" + HtmlUtil.escapeAttribute(_getIcon(displayStyle)) %>'
+	/>
+
+<%
+}
+%>
+
+<%!
+private String _getIcon(String displayStyle) {
+	String displayStyleIcon = displayStyle;
+
+	if (displayStyle.equals("descriptive")) {
+		displayStyleIcon = "th-list";
+	}
+	else if (displayStyle.equals("icon")) {
+		displayStyleIcon = "th-large";
+	}
+	else if (displayStyle.equals("list")) {
+		displayStyleIcon = "align-justify";
+	}
+
+	return displayStyleIcon;
+}
+%>
