@@ -42,6 +42,8 @@ public interface SearchEntry {
 
 	public int getIndex();
 
+	public boolean getTruncate();
+
 	public String getValign();
 
 	public void print(
@@ -56,6 +58,8 @@ public interface SearchEntry {
 	public void setCssClass(String cssClass);
 
 	public void setIndex(int index);
+
+	public void setTruncate(boolean truncate);
 
 	public void setValign(String valign);
 
