@@ -2417,6 +2417,7 @@ public class PortletImpl extends PortletBaseImpl {
 		return _ajaxable;
 	}
 
+	@Override
 	public boolean isFullPageDisplayable() {
 		return _fullPageDisplayable;
 	}
@@ -3062,6 +3063,7 @@ public class PortletImpl extends PortletBaseImpl {
 		_friendlyURLRoutes = friendlyURLRoutes;
 	}
 
+	@Override
 	public void setFullPageDisplayable(boolean fullPageDisplayable) {
 		_fullPageDisplayable = fullPageDisplayable;
 	}
@@ -4146,9 +4148,6 @@ public class PortletImpl extends PortletBaseImpl {
 	 */
 	private String _friendlyURLRoutes;
 
-	/**
-	 * Identifies if the portlet can take the full page of the view.
-	 */
 	private boolean _fullPageDisplayable;
 
 	/**
