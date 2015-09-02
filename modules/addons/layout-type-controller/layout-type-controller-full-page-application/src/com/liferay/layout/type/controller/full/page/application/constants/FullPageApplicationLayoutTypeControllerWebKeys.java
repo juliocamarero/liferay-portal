@@ -19,7 +19,7 @@ package com.liferay.layout.type.controller.full.page.application.constants;
  */
 public class FullPageApplicationLayoutTypeControllerWebKeys {
 
-	public static final String FULL_PAGE_APPLICATION_PORTLET_LIST =
-		"FULL_PAGE_APPLICATION_PORTLET_LIST";
+	public static final String FULL_PAGE_APPLICATION_PORTLETS =
+		"FULL_PAGE_APPLICATION_PORTLETS";
 
 }

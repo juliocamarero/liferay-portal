@@ -28,9 +28,9 @@ ResourceBundle resourceBundle = ResourceBundle.getBundle("content.Language", the
 <aui:select label='<%= LanguageUtil.get(resourceBundle, "full-page-application") %>' name="TypeSettingsProperties--fullPageApplicationPortlet--" showEmptyOption="<%= true %>">
 
 	<%
-	List<Portlet> fullPageApplicationPortletList = (List<Portlet>)request.getAttribute(FullPageApplicationLayoutTypeControllerWebKeys.FULL_PAGE_APPLICATION_PORTLET_LIST);
+	List<Portlet> portlets = (List<Portlet>)request.getAttribute(FullPageApplicationLayoutTypeControllerWebKeys.FULL_PAGE_APPLICATION_PORTLETS);
 
-	for (Portlet portlet : fullPageApplicationPortletList) {
+	for (Portlet portlet : portlets) {
 	%>
 
 		<aui:option label="<%= portlet.getDisplayName() %>" selected="<%= (Validator.equals(selectedPortletId, portlet.getPortletId())) %>" value="<%= portlet.getPortletId() %>" />

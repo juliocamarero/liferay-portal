@@ -91,25 +91,27 @@ public class FullPageApplicationLayoutTypeController
 	protected void addAttributes(HttpServletRequest request) {
 		super.addAttributes(request);
 
-		List<Portlet> portletList = PortletLocalServiceUtil.getPortlets();
+		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets();
 
-		if (!portletList.isEmpty()) {
-			List<Portlet> fullPageDisplayablePortletList = ListUtil.filter(
-				portletList,
-				new PredicateFilter<Portlet>() {
-
-					@Override
-					public boolean filter(Portlet portlet) {
-						return portlet.isFullPageDisplayable();
-					}
-
-				});
-
-			request.setAttribute(
-				FullPageApplicationLayoutTypeControllerWebKeys.
-					FULL_PAGE_APPLICATION_PORTLET_LIST,
-				fullPageDisplayablePortletList);
+		if (portlets.isEmpty()) {
+			return;
 		}
+
+		portlets = ListUtil.filter(
+			portlets,
+			new PredicateFilter<Portlet>() {
+
+				@Override
+				public boolean filter(Portlet portlet) {
+					return portlet.isFullPageDisplayable();
+				}
+
+			});
+
+		request.setAttribute(
+			FullPageApplicationLayoutTypeControllerWebKeys.
+				FULL_PAGE_APPLICATION_PORTLETS,
+			portlets);
 	}
 
 	@Override
