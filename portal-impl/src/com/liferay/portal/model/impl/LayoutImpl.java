@@ -1048,7 +1048,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 	public boolean isTypeControlPanel() {
 		if (Validator.equals(getType(), LayoutConstants.TYPE_CONTROL_PANEL) ||
 			Validator.equals(
-				_getBaseLayoutType(), LayoutConstants.TYPE_CONTROL_PANEL)) {
+				_getLayoutTypeControllerType(),
+				LayoutConstants.TYPE_CONTROL_PANEL)) {
 
 			return true;
 		}
@@ -1060,7 +1061,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 	public boolean isTypeEmbedded() {
 		if (Validator.equals(getType(), LayoutConstants.TYPE_EMBEDDED) ||
 			Validator.equals(
-				_getBaseLayoutType(), LayoutConstants.TYPE_EMBEDDED)) {
+				_getLayoutTypeControllerType(),
+				LayoutConstants.TYPE_EMBEDDED)) {
 
 			return true;
 		}
@@ -1072,7 +1074,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 	public boolean isTypeLinkToLayout() {
 		if (Validator.equals(getType(), LayoutConstants.TYPE_LINK_TO_LAYOUT) ||
 			Validator.equals(
-				_getBaseLayoutType(), LayoutConstants.TYPE_LINK_TO_LAYOUT)) {
+				_getLayoutTypeControllerType(),
+				LayoutConstants.TYPE_LINK_TO_LAYOUT)) {
 
 			return true;
 		}
@@ -1084,7 +1087,7 @@ public class LayoutImpl extends LayoutBaseImpl {
 	public boolean isTypePanel() {
 		if (Validator.equals(getType(), LayoutConstants.TYPE_PANEL) ||
 			Validator.equals(
-				_getBaseLayoutType(), LayoutConstants.TYPE_PANEL)) {
+				_getLayoutTypeControllerType(), LayoutConstants.TYPE_PANEL)) {
 
 			return true;
 		}
@@ -1096,7 +1099,7 @@ public class LayoutImpl extends LayoutBaseImpl {
 	public boolean isTypePortlet() {
 		if (Validator.equals(getType(), LayoutConstants.TYPE_PORTLET) ||
 			Validator.equals(
-				_getBaseLayoutType(), LayoutConstants.TYPE_PORTLET)) {
+				_getLayoutTypeControllerType(), LayoutConstants.TYPE_PORTLET)) {
 
 			return true;
 		}
@@ -1207,13 +1210,13 @@ public class LayoutImpl extends LayoutBaseImpl {
 		}
 	}
 
-	private String _getBaseLayoutType() {
+	private String _getLayoutTypeControllerType() {
 		LayoutType layoutType = getLayoutType();
 
 		LayoutTypeController layoutTypeController =
 			layoutType.getLayoutTypeController();
 
-		return layoutTypeController.getBaseLayoutType();
+		return layoutTypeController.getType();
 	}
 
 	private LayoutTypePortlet _getLayoutTypePortletClone(

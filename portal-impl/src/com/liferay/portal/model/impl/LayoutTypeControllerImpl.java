@@ -80,11 +80,6 @@ public class LayoutTypeControllerImpl implements LayoutTypeController {
 	}
 
 	@Override
-	public String getBaseLayoutType() {
-		return StringPool.BLANK;
-	}
-
-	@Override
 	public String[] getConfigurationActionDelete() {
 		return _configurationActionDelete;
 	}
@@ -92,6 +87,11 @@ public class LayoutTypeControllerImpl implements LayoutTypeController {
 	@Override
 	public String[] getConfigurationActionUpdate() {
 		return _configurationActionUpdate;
+	}
+
+	@Override
+	public String getType() {
+		return StringPool.BLANK;
 	}
 
 	@Override

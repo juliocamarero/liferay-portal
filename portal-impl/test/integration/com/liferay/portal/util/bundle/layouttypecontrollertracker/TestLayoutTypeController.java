@@ -35,17 +35,17 @@ import org.osgi.service.component.annotations.Component;
 public class TestLayoutTypeController implements LayoutTypeController {
 
 	@Override
-	public String getBaseLayoutType() {
-		return null;
-	}
-
-	@Override
 	public String[] getConfigurationActionDelete() {
 		return null;
 	}
 
 	@Override
 	public String[] getConfigurationActionUpdate() {
+		return null;
+	}
+
+	@Override
+	public String getType() {
 		return null;
 	}
 

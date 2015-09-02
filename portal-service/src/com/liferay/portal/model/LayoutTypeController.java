@@ -24,11 +24,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface LayoutTypeController extends Serializable {
 
-	public String getBaseLayoutType();
-
 	public String[] getConfigurationActionDelete();
 
 	public String[] getConfigurationActionUpdate();
+
+	public String getType();
 
 	public String getURL();
 

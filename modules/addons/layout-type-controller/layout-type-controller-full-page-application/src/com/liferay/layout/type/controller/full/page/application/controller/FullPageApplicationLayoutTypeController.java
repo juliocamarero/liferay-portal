@@ -48,7 +48,7 @@ public class FullPageApplicationLayoutTypeController
 	extends BaseLayoutTypeControllerImpl {
 
 	@Override
-	public String getBaseLayoutType() {
+	public String getType() {
 		return LayoutConstants.TYPE_PORTLET;
 	}
 
