@@ -338,9 +338,9 @@ if (siteGroup.isStaged() && !siteGroup.isStagedRemotely() && !siteGroup.isStaged
 LayoutTypeController layoutTypeController = layoutTypePortlet.getLayoutTypeController();
 
 if (layoutTypeController.isFullPageDisplayable()) {
+	showCloseIcon = false;
 	showMaxIcon = false;
 	showMinIcon = false;
-	showCloseIcon = false;
 }
 
 portletDisplay.recycle();
