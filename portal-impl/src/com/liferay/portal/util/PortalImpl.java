@@ -345,7 +345,7 @@ public class PortalImpl implements Portal {
 			}
 		}
 		catch (Exception e) {
-			_log.error("Unable to read local server's IP addresses");
+			_log.error("Unable to determine server's IP addresses");
 
 			_log.error(e, e);
 		}
