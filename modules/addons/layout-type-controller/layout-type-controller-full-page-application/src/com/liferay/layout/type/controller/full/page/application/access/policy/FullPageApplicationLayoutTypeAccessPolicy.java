@@ -15,7 +15,6 @@
 package com.liferay.layout.type.controller.full.page.application.access.policy;
 
 import com.liferay.layout.type.controller.full.page.application.constants.FullPageApplicationLayoutTypeControllerConstants;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypeAccessPolicy;
 import com.liferay.portal.model.Portlet;
@@ -39,56 +38,49 @@ public class FullPageApplicationLayoutTypeAccessPolicy
 
 	@Override
 	public boolean isAddLayoutAllowed(
-			PermissionChecker permissionChecker, Layout layout)
-		throws PortalException {
+		PermissionChecker permissionChecker, Layout layout) {
 
 		return false;
 	}
 
 	@Override
 	public boolean isCustomizeLayoutAllowed(
-			PermissionChecker permissionChecker, Layout layout)
-		throws PortalException {
+		PermissionChecker permissionChecker, Layout layout) {
 
 		return false;
 	}
 
 	@Override
 	public boolean isDeleteLayoutAllowed(
-			PermissionChecker permissionChecker, Layout layout)
-		throws PortalException {
+		PermissionChecker permissionChecker, Layout layout) {
 
 		return false;
 	}
 
 	@Override
 	public boolean isUpdateLayoutAllowed(
-			PermissionChecker permissionChecker, Layout layout)
-		throws PortalException {
+		PermissionChecker permissionChecker, Layout layout) {
 
 		return false;
 	}
 
 	@Override
 	public boolean isViewLayoutAllowed(
-			PermissionChecker permissionChecker, Layout layout)
-		throws PortalException {
+		PermissionChecker permissionChecker, Layout layout) {
 
 		return true;
 	}
 
 	@Override
 	protected boolean hasAccessPermission(
-			HttpServletRequest request, Layout layout, Portlet portlet)
-		throws PortalException {
+		HttpServletRequest request, Layout layout, Portlet portlet) {
 
 		return true;
 	}
 
 	@Override
 	protected boolean isAccessAllowedToLayoutPortlet(
-			HttpServletRequest request, Layout layout, Portlet portlet)
-		throws PortalException {
+		HttpServletRequest request, Layout layout, Portlet portlet) {
 
 		return true;
 	}
