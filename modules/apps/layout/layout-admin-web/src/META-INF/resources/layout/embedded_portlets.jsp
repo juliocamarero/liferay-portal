@@ -41,8 +41,6 @@ RowChecker rowChecker = new RowChecker(liferayPortletResponse);
 rowChecker.setRowIds("removeEmbeddedPortletIds");
 %>
 
-<h3><liferay-ui:message key="embedded-portlets" /></h3>
-
 <portlet:actionURL name="deleteEmbeddedPortlets" var="deleteEmbeddedPortletsURL">
 	<portlet:param name="mvcPath" value="/layout/embedded_portlets.jsp" />
 </portlet:actionURL>
