@@ -17,8 +17,14 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String viewOrganizationsRedirect = ParamUtil.getString(request, "viewOrganizationsRedirect", themeDisplay.getURLControlPanel());
+String viewOrganizationsRedirect = ParamUtil.getString(request, "viewOrganizationsRedirect");
 String redirect = ParamUtil.getString(request, "redirect", viewOrganizationsRedirect);
+
+if (Validator.isNull(redirect)) {
+	PortletURL portletURL = renderResponse.createRenderURL();
+
+	redirect = portletURL.toString();
+}
 
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 boolean showBackURL = ParamUtil.getBoolean(request, "showBackURL", true);

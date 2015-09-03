@@ -30,7 +30,6 @@
 
 	<liferay-portlet:renderURL varImpl="addSiteURL">
 		<portlet:param name="mvcPath" value="/edit_site.jsp" />
-		<portlet:param name="redirect" value="<%= viewSitesURL %>" />
 	</liferay-portlet:renderURL>
 
 	<c:choose>

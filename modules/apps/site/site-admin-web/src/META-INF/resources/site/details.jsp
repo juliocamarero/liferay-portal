@@ -513,7 +513,6 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 		>
 			<portlet:renderURL var="rowURL">
 				<portlet:param name="mvcPath" value="/edit_site.jsp" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(curGroup.getGroupId()) %>" />
 			</portlet:renderURL>
 
