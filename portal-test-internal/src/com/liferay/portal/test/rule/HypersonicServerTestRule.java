@@ -44,7 +44,7 @@ public class HypersonicServerTestRule extends BaseTestRule<Server, Object> {
 		if (_HYPERSONIC) {
 			return Arrays.asList(
 				new String[] {
-					"portal:jdbc.default.url=".concat(_DATABASE_URL),
+					"portal:jdbc.default.url=" + _DATABASE_URL,
 					"portal:jdbc.default.username=sa",
 					"portal:jdbc.default.password="
 				});
@@ -70,9 +70,9 @@ public class HypersonicServerTestRule extends BaseTestRule<Server, Object> {
 	static {
 		Props props = new PropsImpl();
 
-		String jdbcDriver = props.get("jdbc.default.driverClassName");
+		String className = props.get("jdbc.default.driverClassName");
 
-		_HYPERSONIC = jdbcDriver.equals(jdbcDriver.class.getName());
+		_HYPERSONIC = className.equals(jdbcDriver.class.getName());
 
 		if (_HYPERSONIC) {
 			String jdbcURL = props.get("jdbc.default.url");
@@ -81,7 +81,7 @@ public class HypersonicServerTestRule extends BaseTestRule<Server, Object> {
 
 			if (index < 0) {
 				throw new ExceptionInInitializerError(
-					"Invalid HSQL jdbc url: " + jdbcURL);
+					"Invalid Hypersonic JDBC URL " + jdbcURL);
 			}
 
 			String databaseName = jdbcURL.substring(index + 1);
@@ -94,8 +94,7 @@ public class HypersonicServerTestRule extends BaseTestRule<Server, Object> {
 
 			_DATABASE_NAME = databaseName;
 			_DATABASE_URL =
-				HypersonicServerTestCallback.DATABASE_URL_BASE.concat(
-					_DATABASE_NAME);
+				HypersonicServerTestCallback.DATABASE_URL_BASE + _DATABASE_NAME;
 		}
 		else {
 			_DATABASE_NAME = null;

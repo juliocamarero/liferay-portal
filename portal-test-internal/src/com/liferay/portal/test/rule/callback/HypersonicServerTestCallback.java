@@ -55,7 +55,7 @@ public class HypersonicServerTestCallback
 		throws SQLException {
 
 		try (Connection connection = DriverManager.getConnection(
-				DATABASE_URL_BASE.concat(_databaseName), "sa", "");
+				DATABASE_URL_BASE + _databaseName, "sa", "");
 			Statement statement = connection.createStatement()) {
 
 			statement.execute("SHUTDOWN COMPACT");
@@ -81,7 +81,7 @@ public class HypersonicServerTestCallback
 
 					if (!_shutdownCountDownLatch.await(1, TimeUnit.MINUTES)) {
 						throw new IllegalStateException(
-							"Unable to shutdown HSQLDB " + _databaseName);
+							"Unable to shut down Hypersonic " + _databaseName);
 					}
 
 					return state;
@@ -108,32 +108,32 @@ public class HypersonicServerTestCallback
 
 		};
 
-		File hsqlHome = new File(_HSQL_HOME);
+		File hsqlHomeDir = new File(_HSQL_HOME);
 
-		hsqlHome.mkdirs();
+		hsqlHomeDir.mkdirs();
 
 		server.setErrWriter(
 			new UnsyncPrintWriter(
-				new File(hsqlHome, _databaseName.concat(".err.log"))));
+				new File(hsqlHomeDir, _databaseName + ".err.log")));
 		server.setLogWriter(
 			new UnsyncPrintWriter(
-				new File(hsqlHome, _databaseName.concat(".std.log"))));
+				new File(hsqlHomeDir, _databaseName + ".std.log")));
 
 		server.setDatabaseName(0, _databaseName);
-		server.setDatabasePath(0, _HSQL_HOME.concat(_databaseName));
+		server.setDatabasePath(0, _HSQL_HOME + _databaseName);
 
 		server.start();
 
 		if (!startCountDownLatch.await(1, TimeUnit.MINUTES)) {
 			throw new IllegalStateException(
-				"Unable to start up HSQLDB " + _databaseName);
+				"Unable to start up Hypersonic " + _databaseName);
 		}
 
 		return server;
 	}
 
-	private static final String _HSQL_HOME = PropsValues.LIFERAY_HOME.concat(
-		"/data/hsql/");
+	private static final String _HSQL_HOME =
+		PropsValues.LIFERAY_HOME + "/data/hsql/";
 
 	private final String _databaseName;
 
