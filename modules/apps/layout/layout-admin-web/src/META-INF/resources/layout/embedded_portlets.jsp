@@ -19,7 +19,20 @@
 <%
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
-List<Portlet> embeddedPortlets = (List<Portlet>)request.getAttribute("edit_pages.jsp-embeddedPortlets");
+List<Portlet> embeddedPortlets = new ArrayList<Portlet>();
+
+if (selLayout.isSupportsEmbeddedPortlets()) {
+
+	LayoutTypePortlet selLayoutTypePortlet = (LayoutTypePortlet)selLayout.getLayoutType();
+
+	List<String> portletIds = selLayoutTypePortlet.getPortletIds();
+
+	for (Portlet portlet : selLayoutTypePortlet.getAllPortlets(false)) {
+		if (!portletIds.contains(portlet.getPortletId())) {
+			embeddedPortlets.add(portlet);
+		}
+	}
+}
 
 RowChecker rowChecker = new RowChecker(liferayPortletResponse);
 

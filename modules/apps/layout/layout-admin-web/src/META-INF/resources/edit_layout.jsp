@@ -67,24 +67,6 @@ if (layoutRevision != null) {
 	}
 }
 
-if (selLayout.isSupportsEmbeddedPortlets()) {
-	List<Portlet> embeddedPortlets = new ArrayList<Portlet>();
-
-	LayoutTypePortlet selLayoutTypePortlet = (LayoutTypePortlet)selLayout.getLayoutType();
-
-	List<String> portletIds = selLayoutTypePortlet.getPortletIds();
-
-	for (Portlet portlet : selLayoutTypePortlet.getAllPortlets(false)) {
-		if (!portletIds.contains(portlet.getPortletId())) {
-			embeddedPortlets.add(portlet);
-		}
-	}
-
-	if (!embeddedPortlets.isEmpty()) {
-		request.setAttribute("edit_pages.jsp-embeddedPortlets", embeddedPortlets);
-	}
-}
-
 String displayStyle = ParamUtil.getString(request, "displayStyle");
 boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 %>
@@ -158,6 +140,17 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 						}
 					);
 				</aui:script>
+			</c:if>
+			<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.UPDATE) %>">
+				<portlet:renderURL var="embeddedPortletsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+					<portlet:param name="mvcPath" value="/layout/embedded_portlets.jsp" />
+					<portlet:param name="tabs1" value="<%= layoutsAdminDisplayContext.getTabs1() %>" />
+					<portlet:param name="groupId" value="<%= String.valueOf(selGroup.getGroupId()) %>" />
+					<portlet:param name="selPlid" value="<%= String.valueOf(selLayout.getPlid()) %>" />
+					<portlet:param name="privateLayout" value="<%= String.valueOf(selLayout.isPrivateLayout()) %>" />
+				</portlet:renderURL>
+
+				<aui:nav-item href="<%= embeddedPortletsURL %>" iconCssClass="icon-list" label="embedded-portlets" useDialog="<%= true %>" />
 			</c:if>
 		</aui:nav>
 	</aui:nav-bar>
