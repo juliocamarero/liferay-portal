@@ -27,13 +27,13 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 
 AssetRenderer<JournalArticle> assetRenderer = assetRendererFactory.getAssetRenderer(JournalArticleAssetRenderer.getClassPK(article));
 
-Map<String, Object> linkData = new HashMap<String, Object>();
+Map<String, Object> data = new HashMap<String, Object>();
 
-linkData.put("toggle", "tooltip");
-linkData.put("placement", "top");
+data.put("placement", "top");
+data.put("toggle", "tooltip");
 %>
 
-<aui:a data="<%= linkData %>" href="<%= rowURL.toString() %>" title="<%= HtmlUtil.escape(article.getTitle(locale)) %>">
+<aui:a data="<%= data %>" href="<%= rowURL.toString() %>" title="<%= HtmlUtil.escape(article.getTitle(locale)) %>">
 	<%= HtmlUtil.escape(article.getTitle(locale)) %>
 </aui:a>
 
