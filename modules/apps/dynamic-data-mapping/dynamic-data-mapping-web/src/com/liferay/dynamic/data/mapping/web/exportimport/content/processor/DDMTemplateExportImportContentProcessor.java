@@ -25,8 +25,9 @@ import org.osgi.service.component.annotations.Component;
  * @author Gergely Mathe
  */
 @Component(
-	property =
-		{"model.class.name=com.liferay.dynamic.data.mapping.model.DDMTemplate"},
+	property = {
+		"model.class.name=com.liferay.dynamic.data.mapping.model.DDMTemplate"
+	},
 	service = {
 		DDMTemplateExportImportContentProcessor.class,
 		ExportImportContentProcessor.class

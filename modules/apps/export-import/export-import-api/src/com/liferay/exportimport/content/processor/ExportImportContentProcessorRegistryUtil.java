@@ -76,7 +76,7 @@ public class ExportImportContentProcessorRegistryUtil {
 		Registry registry = RegistryUtil.getRegistry();
 
 		_serviceTracker = registry.trackServices(
-			(Class<ExportImportContentProcessor>)(Class)
+			(Class<ExportImportContentProcessor>)(Class<?>)
 				ExportImportContentProcessor.class,
 			new ExportImportContentProcessorServiceTrackerCustomizer());
 
@@ -105,7 +105,7 @@ public class ExportImportContentProcessorRegistryUtil {
 
 		ServiceRegistration<ExportImportContentProcessor>
 			serviceRegistration = registry.registerService(
-				(Class<ExportImportContentProcessor>)(Class)
+				(Class<ExportImportContentProcessor>)(Class<?>)
 					ExportImportContentProcessor.class,
 				exportImportContentProcessor);
 

@@ -58,7 +58,9 @@ public class JournalFeedExportImportContentProcessor
 		Group group = _groupLocalService.getGroup(
 			portletDataContext.getScopeGroupId());
 
-		String newGroupFriendlyURL = group.getFriendlyURL().substring(1);
+		String newGroupFriendlyURL = group.getFriendlyURL();
+
+		newGroupFriendlyURL = newGroupFriendlyURL.substring(1);
 
 		String[] friendlyURLParts = StringUtil.split(
 			feed.getTargetLayoutFriendlyUrl(), StringPool.FORWARD_SLASH);
@@ -113,7 +115,9 @@ public class JournalFeedExportImportContentProcessor
 		Group group = _groupLocalService.getGroup(
 			portletDataContext.getScopeGroupId());
 
-		String newGroupFriendlyURL = group.getFriendlyURL().substring(1);
+		String newGroupFriendlyURL = group.getFriendlyURL();
+
+		newGroupFriendlyURL = newGroupFriendlyURL.substring(1);
 
 		String[] friendlyURLParts = StringUtil.split(
 			feed.getTargetLayoutFriendlyUrl(), '/');
