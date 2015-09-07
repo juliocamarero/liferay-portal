@@ -74,12 +74,12 @@ public interface LayoutTypePortlet extends LayoutType {
 		List<Portlet> portlets, List<Portlet> startPortlets,
 		List<Portlet> endPortlets);
 
-	public List<Portlet> getAllPortlets() throws PortalException;
+	public List<Portlet> getAllPortlets();
 
 	public List<Portlet> getAllPortlets(boolean includeSystem)
 		throws PortalException;
 
-	public List<Portlet> getAllPortlets(String columnId) throws PortalException;
+	public List<Portlet> getAllPortlets(String columnId);
 
 	public Layout getLayoutSetPrototypeLayout();
 
@@ -140,7 +140,7 @@ public interface LayoutTypePortlet extends LayoutType {
 
 	public boolean hasModeViewPortletId(String portletId);
 
-	public boolean hasPortletId(String portletId) throws PortalException;
+	public boolean hasPortletId(String portletId);
 
 	public boolean hasPortletId(String portletId, boolean strict)
 		throws PortalException;
@@ -157,7 +157,7 @@ public interface LayoutTypePortlet extends LayoutType {
 
 	public boolean hasUpdatePermission();
 
-	public boolean isCacheable() throws PortalException;
+	public boolean isCacheable();
 
 	public boolean isColumnCustomizable(String columnId);
 
