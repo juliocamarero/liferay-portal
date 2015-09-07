@@ -760,6 +760,33 @@ public class LayoutTypePortletImpl
 	}
 
 	@Override
+	public boolean isPortletEmbedded(String portletId) {
+		List<Portlet> portlets = new ArrayList<>();
+
+		List<String> columns = getColumns();
+
+		for (int i = 0; i < columns.size(); i++) {
+			String columnId = columns.get(i);
+
+			portlets.addAll(getAllPortlets(columnId));
+		}
+
+		List<Portlet> staticPortlets = getStaticPortlets(
+			PropsKeys.LAYOUT_STATIC_PORTLETS_ALL);
+
+		List<Portlet> embeddedPortlets = getEmbeddedPortlets(
+			portlets, staticPortlets);
+
+		for (Portlet embeddedPortlet : embeddedPortlets) {
+			if (Validator.equals(embeddedPortlet.getPortletId(), portletId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
 	public void movePortletId(
 		long userId, String portletId, String columnId, int columnPos) {
 
