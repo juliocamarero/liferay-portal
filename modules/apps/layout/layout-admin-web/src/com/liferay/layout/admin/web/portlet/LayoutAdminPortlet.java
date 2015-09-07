@@ -307,7 +307,7 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		long layoutId = ParamUtil.getLong(actionRequest, "layoutId");
 
 		Layout layout = LayoutLocalServiceUtil.getLayout(
-				groupId, privateLayout, layoutId);
+			groupId, privateLayout, layoutId);
 
 		String[] removeEmbeddedPortletIds = ParamUtil.getParameterValues(
 			actionRequest, "removeEmbeddedPortletIds");

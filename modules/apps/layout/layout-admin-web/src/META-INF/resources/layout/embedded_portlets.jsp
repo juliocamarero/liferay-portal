@@ -118,5 +118,5 @@ rowChecker.setRowIds("removeEmbeddedPortletIds");
 		<liferay-ui:search-iterator type="none" />
 	</liferay-ui:search-container>
 
-	<aui:button data-actionname='deleteEmbeddedPortlets' name="delete" type="submit" value="delete" />
+	<aui:button data-actionname="deleteEmbeddedPortlets" name="delete" type="submit" value="delete" />
 </aui:form>
