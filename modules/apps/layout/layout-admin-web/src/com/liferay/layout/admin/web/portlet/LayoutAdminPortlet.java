@@ -299,9 +299,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 			WebKeys.THEME_DISPLAY);
 
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
-		long liveGroupId = ParamUtil.getLong(actionRequest, "liveGroupId");
-		long stagingGroupId = ParamUtil.getLong(
-			actionRequest, "stagingGroupId");
 		boolean privateLayout = ParamUtil.getBoolean(
 			actionRequest, "privateLayout");
 		long layoutId = ParamUtil.getLong(actionRequest, "layoutId");
