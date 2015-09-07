@@ -141,7 +141,7 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 					);
 				</aui:script>
 			</c:if>
-			<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.UPDATE) %>">
+			<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.UPDATE) || (selGroup.hasLocalOrRemoteStagingGroup() && GroupPermissionUtil.contains(permissionChecker, layoutsAdminDisplayContext.getStagingGroup(), ActionKeys.UPDATE)) %>">
 				<portlet:renderURL var="embeddedPortletsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="mvcPath" value="/layout/embedded_portlets.jsp" />
 					<portlet:param name="tabs1" value="<%= layoutsAdminDisplayContext.getTabs1() %>" />
