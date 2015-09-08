@@ -176,7 +176,7 @@ public class RowChecker {
 			return StringPool.BLANK;
 		}
 
-		StringBuilder sb = new StringBuilder(12);
+		StringBuilder sb = new StringBuilder(15);
 
 		sb.append("<input name=\"");
 		sb.append(name);
@@ -184,12 +184,16 @@ public class RowChecker {
 		sb.append(LanguageUtil.get(getLocale(request), "select-all"));
 		sb.append("\" type=\"checkbox\" ");
 		sb.append(HtmlUtil.buildData(_data));
-		sb.append("onClick=\"Liferay.Util.checkAll(");
-		sb.append("AUI().one(this).ancestor('");
-		sb.append(".table'), ");
+		sb.append("onClick=\"");
+		sb.append("(function() {");
+		sb.append("var ancestorTable;");
+		sb.append("ancestorTable = AUI().one(this).ancestor('.table');");
+		sb.append("if (ancestorTable) { Liferay.Util.checkAll(ancestorTable, ");
 		sb.append(checkBoxRowIds);
-		sb.append(", this, 'tr:not(.lfr-template)'");
-		sb.append(");\">");
+		sb.append(", this, 'tr:not(.lfr-template)'); }");
+		sb.append("}).apply(this);");
+		sb.append("\">");
+
 
 		return sb.toString();
 	}
@@ -231,7 +235,7 @@ public class RowChecker {
 		String name, String value, String checkBoxRowIds,
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<input ");
 
@@ -254,21 +258,27 @@ public class RowChecker {
 		sb.append("\" ");
 
 		if (Validator.isNotNull(_allRowIds)) {
-			sb.append("onClick=\"Liferay.Util.checkAllBox(");
-			sb.append("AUI().one(this).ancestor('");
-			sb.append(".table'), ");
-			sb.append(checkBoxRowIds);
-			sb.append(", ");
-			sb.append(checkBoxAllRowIds);
+
+			sb.append("onClick=\"");
+			sb.append("(function() {");
+			sb.append("var ancestorRow, ancestorTable;");
+			sb.append("ancestorTable = AUI().one(this).ancestor('.table');");
+			sb.append("ancestorRow = AUI().one(this).ancestor(");
+			sb.append("'tr:not(.lfr-template)'");
 			sb.append(");");
-			sb.append("AUI().one(this).ancestor('tr:not(.lfr-template)').");
-			sb.append("toggleClass('info');");
+			sb.append("if (ancestorTable) { Liferay.Util.checkAllBox(");
+			sb.append("ancestorTable, ");
+			sb.append(checkBoxRowIds);
+			sb.append(", " + checkBoxAllRowIds + "); }");
+			sb.append("if (ancestorRow) { ancestorRow.toggleClass('info'); }");
 
 			if (Validator.isNotNull(checkBoxPostOnClick)) {
 				sb.append(checkBoxPostOnClick);
 			}
-
+			
+			sb.append("}).apply(this);");
 			sb.append("\"");
+
 		}
 
 		sb.append(">");
