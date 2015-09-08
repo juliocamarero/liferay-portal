@@ -291,6 +291,31 @@ public class LayoutAdminPortlet extends MVCPortlet {
 			layout.getTypeSettingsProperties());
 	}
 
+	public void deleteEmbeddedPortlets(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long groupId = ParamUtil.getLong(actionRequest, "groupId");
+		boolean privateLayout = ParamUtil.getBoolean(
+			actionRequest, "privateLayout");
+		long layoutId = ParamUtil.getLong(actionRequest, "layoutId");
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(
+			groupId, privateLayout, layoutId);
+
+		String[] removeEmbeddedPortletIds = ParamUtil.getParameterValues(
+			actionRequest, "removeEmbeddedPortletIds");
+
+		if (removeEmbeddedPortletIds.length > 0) {
+			PortletLocalServiceUtil.deletePortlets(
+				themeDisplay.getCompanyId(), removeEmbeddedPortletIds,
+				layout.getPlid());
+		}
+	}
+
 	public void deleteLayout(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -437,15 +462,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 
 			LayoutServiceUtil.updateLayout(
 				groupId, privateLayout, layoutId, layout.getTypeSettings());
-		}
-
-		String[] removeEmbeddedPortletIds = ParamUtil.getParameterValues(
-			actionRequest, "removeEmbeddedPortletIds");
-
-		if (removeEmbeddedPortletIds.length > 0) {
-			PortletLocalServiceUtil.deletePortlets(
-				themeDisplay.getCompanyId(), removeEmbeddedPortletIds,
-				layout.getPlid());
 		}
 
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(
