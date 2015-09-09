@@ -24,7 +24,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 pageContext.setAttribute("portletURL", portletURL);
 %>
 
-<aui:form action="<%= portletURL.toString() %>" cssClass="form-search" method="get" name="fm">
+<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280 form-search" method="get" name="fm">
 	<liferay-portlet:renderURLParams varImpl="portletURL" />
 
 	<liferay-ui:search-container
@@ -83,12 +83,12 @@ pageContext.setAttribute("portletURL", portletURL);
 			/>
 
 			<liferay-ui:search-container-column-jsp
-				cssClass="entry-action"
+				cssClass="checkbox-cell entry-action"
 				path="/team_action.jsp"
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" view="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 
