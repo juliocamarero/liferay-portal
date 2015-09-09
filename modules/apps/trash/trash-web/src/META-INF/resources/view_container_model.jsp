@@ -80,7 +80,7 @@ renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelN
 	<liferay-ui:message arguments="<%= new Object[] {LanguageUtil.get(request, containerModelName), HtmlUtil.escape(trashRenderer.getTitle(locale))} %>" key="the-original-x-does-not-exist-anymore" translateArguments="<%= false %>" />
 </div>
 
-<aui:form method="post" name="selectContainerFm">
+<aui:form cssClass="container-fluid-1280" method="post" name="selectContainerFm">
 	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
 
 	<c:if test="<%= !rootContainerModelMovable %>">
