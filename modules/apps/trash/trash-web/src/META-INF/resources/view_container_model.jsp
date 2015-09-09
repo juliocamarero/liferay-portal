@@ -170,7 +170,7 @@ renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelN
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator />
+		<liferay-ui:search-iterator view="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 
