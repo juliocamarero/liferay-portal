@@ -69,6 +69,11 @@ containerURL.setParameter("classPK", String.valueOf(classPK));
 containerURL.setParameter("containerModelClassNameId", String.valueOf(containerModelClassNameId));
 
 TrashUtil.addContainerModelBreadcrumbEntries(request, liferayPortletResponse, containerModelClassName, containerModelId, containerURL);
+
+portletDisplay.setShowBackIcon(containerModel != null);
+portletDisplay.setURLBack(backURL);
+
+renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelName));
 %>
 
 <div class="alert alert-block">
@@ -76,12 +81,6 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, liferayPortletResponse, co
 </div>
 
 <aui:form method="post" name="selectContainerFm">
-	<liferay-ui:header
-		backURL="<%= backURL %>"
-		showBackURL="<%= containerModel != null %>"
-		title='<%= LanguageUtil.format(request, "select-x", containerModelName) %>'
-	/>
-
 	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
 
 	<c:if test="<%= !rootContainerModelMovable %>">
