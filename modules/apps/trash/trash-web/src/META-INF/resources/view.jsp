@@ -244,15 +244,13 @@ if (Validator.isNotNull(keywords)) {
 		<c:choose>
 			<c:when test="<%= Validator.isNotNull(trashRenderer.renderActions(renderRequest, renderResponse)) %>">
 				<liferay-ui:search-container-column-jsp
-					align="right"
-					cssClass="entry-action"
+					cssClass="checkbox-cell entry-action"
 					path="<%= trashRenderer.renderActions(renderRequest, renderResponse) %>"
 				/>
 			</c:when>
 			<c:when test="<%= entry.getRootEntry() == null %>">
 				<liferay-ui:search-container-column-jsp
-					align="right"
-					cssClass="entry-action"
+					cssClass="checkbox-cell entry-action"
 					path="/entry_action.jsp"
 				/>
 			</c:when>
@@ -299,7 +297,5 @@ if (Validator.isNotNull(keywords)) {
 		showParentGroups="<%= false %>"
 	/>
 
-	<div class="separator"><!-- --></div>
-
-	<liferay-ui:search-iterator type='<%= approximate ? "more" : "regular" %>' />
+	<liferay-ui:search-iterator type='<%= approximate ? "more" : "regular" %>' view="lexicon" />
 </liferay-ui:search-container>
