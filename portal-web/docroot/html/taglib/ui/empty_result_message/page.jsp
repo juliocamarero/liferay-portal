@@ -14,12 +14,14 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/html/taglib/ui/empty_result_message/init.jsp" %>
 
-<aui:nav-bar>
-	<aui:nav-bar-search>
-		<div class="form-search">
-			<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" placeholder='<%= LanguageUtil.get(request, "keywords") %>' />
-		</div>
-	</aui:nav-bar-search>
-</aui:nav-bar>
+<%
+String message = GetterUtil.getString((String)request.getAttribute("liferay-ui:empty-result-message:message"));
+%>
+
+<c:if test="<%= Validator.isNotNull(message) %>">
+	<div class="text-center white-box">
+		<span><liferay-ui:message key="<%= message %>" /></span>
+	</div>
+</c:if>
