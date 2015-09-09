@@ -36,7 +36,7 @@
 
 			<div class="card-col-content card-col-gutters">
 				<h4>
-					<aui:a href="<%= url %>" label="<%= HtmlUtil.escape(title) %>" />
+					<aui:a href="<%= url %>" label="<%= title %>" />
 				</h4>
 			</div>
 
