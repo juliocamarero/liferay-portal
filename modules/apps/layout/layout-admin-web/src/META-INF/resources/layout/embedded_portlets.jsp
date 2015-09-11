@@ -65,6 +65,7 @@ boolean showDeleteButton = !embeddedPortlets.isEmpty() && selGroup.hasLocalOrRem
 
 	<liferay-ui:search-container
 		deltaConfigurable="<%= false %>"
+		emptyResultsMessage="there-are-no-embedded-portlets-in-this-page"
 		rowChecker="<%= rowChecker %>"
 	>
 		<liferay-ui:search-container-results results="<%= embeddedPortlets %>" />
