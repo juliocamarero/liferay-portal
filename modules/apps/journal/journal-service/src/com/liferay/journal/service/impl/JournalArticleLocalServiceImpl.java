@@ -1447,12 +1447,9 @@ public class JournalArticleLocalServiceImpl
 		if (JournalServiceConfigurationValues.
 				JOURNAL_ARTICLE_EXPIRE_ALL_VERSIONS) {
 
-			Date latestArticleExpirationDate =
-				latestArticle.getExpirationDate();
+			Date expirationDate = latestArticle.getExpirationDate();
 
-			if ((latestArticleExpirationDate != null) &&
-					latestArticleExpirationDate.before(now)) {
-
+			if ((expirationDate != null) && expirationDate.before(now)) {
 				return latestArticle;
 			}
 		}
@@ -2720,12 +2717,9 @@ public class JournalArticleLocalServiceImpl
 		if (JournalServiceConfigurationValues.
 				JOURNAL_ARTICLE_EXPIRE_ALL_VERSIONS) {
 
-			Date latestArticleExpirationDate =
-				latestArticle.getExpirationDate();
+			Date expirationDate = latestArticle.getExpirationDate();
 
-			if ((latestArticleExpirationDate != null) &&
-					latestArticleExpirationDate.before(now)) {
-
+			if ((expirationDate != null) && expirationDate.before(now)) {
 				return latestArticle;
 			}
 		}
