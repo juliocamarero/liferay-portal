@@ -82,8 +82,6 @@ long layoutSetPrototypeId = ParamUtil.getLong(request, "layoutSetPrototypeId");
 if (layoutSetPrototypeId > 0) {
 	layoutSetPrototype = LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 }
-
-boolean showPrototypes = ParamUtil.getBoolean(request, "showPrototypes", true);
 %>
 
 <liferay-ui:success key='<%= SiteAdminPortletKeys.SITE_SETTINGS + "requestProcessed" %>' message="site-was-added" />
@@ -151,7 +149,6 @@ boolean showPrototypes = ParamUtil.getBoolean(request, "showPrototypes", true);
 	request.setAttribute("site.stagingGroupId", Long.valueOf(stagingGroupId));
 	request.setAttribute("site.liveGroupTypeSettings", liveGroupTypeSettings);
 	request.setAttribute("site.layoutSetPrototype", layoutSetPrototype);
-	request.setAttribute("site.showPrototypes", String.valueOf(showPrototypes));
 	%>
 
 	<liferay-ui:form-navigator

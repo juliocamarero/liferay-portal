@@ -20,7 +20,12 @@
 Group group = (Group)request.getAttribute("site.group");
 Group liveGroup = (Group)request.getAttribute("site.liveGroup");
 LayoutSetPrototype layoutSetPrototype = (LayoutSetPrototype)request.getAttribute("site.layoutSetPrototype");
-boolean showPrototypes = GetterUtil.getBoolean(request.getAttribute("site.showPrototypes"));
+
+boolean showPrototypes = false;
+
+if(layoutSetPrototype != null) {
+	showPrototypes = true;
+}
 
 long parentGroupId = ParamUtil.getLong(request, "parentGroupSearchContainerPrimaryKeys", (group != null) ? group.getParentGroupId() : GroupConstants.DEFAULT_PARENT_GROUP_ID);
 
