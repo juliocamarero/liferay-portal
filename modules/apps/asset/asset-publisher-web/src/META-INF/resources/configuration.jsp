@@ -217,9 +217,11 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 
 						data.put("href", siteBrowserURLString);
 						data.put("title", LanguageUtil.get(request, "sites"));
+
+						Group scopeGroup = themeDisplay.getScopeGroup();
 						%>
 
-						<c:if test="<%= !themeDisplay.getScopeGroup().isStagingGroup() %>">
+						<c:if test="<%= !scopeGroup.isStagingGroup() %>">
 							<liferay-ui:icon
 								cssClass="highlited scope-selector"
 								data="<%= data %>"
