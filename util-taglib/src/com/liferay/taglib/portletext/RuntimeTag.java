@@ -154,8 +154,14 @@ public class RuntimeTag extends TagSupport {
 				response, pageContext.getOut());
 		}
 
-		PortletInstance portletInstance = new PortletInstance(
-			portletName, instanceId);
+		PortletInstance portletInstance =
+			PortletInstance.fromPortletInstanceKey(portletName);
+
+		if (Validator.isNotNull(instanceId)) {
+			portletInstance = new PortletInstance(
+				portletInstance.getPortletName(), portletInstance.getUserId(),
+				instanceId);
+		}
 
 		RestrictPortletServletRequest restrictPortletServletRequest =
 			new RestrictPortletServletRequest(
