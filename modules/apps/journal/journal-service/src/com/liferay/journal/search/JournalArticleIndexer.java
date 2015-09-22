@@ -67,6 +67,8 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.io.Serializable;
@@ -456,6 +458,9 @@ public class JournalArticleIndexer
 	protected Document doGetDocument(JournalArticle journalArticle)
 		throws Exception {
 
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+			journalArticle.getClassName(), journalArticle.getClassPK());
+
 		Document document = getBaseModelDocument(CLASS_NAME, journalArticle);
 
 		long classPK = journalArticle.getId();
@@ -522,7 +527,19 @@ public class JournalArticleIndexer
 			"ddmTemplateKey", journalArticle.getDDMTemplateKey());
 		document.addDate("displayDate", journalArticle.getDisplayDate());
 		document.addKeyword("head", isHead(journalArticle));
-		document.addKeyword("headListable", isHeadListable(journalArticle));
+
+		boolean headListable = isHeadListable(journalArticle);
+
+		document.addKeyword("headListable", headListable);
+
+		// Scheduled article should be listable and visible in asset browser
+
+		if (headListable && journalArticle.isScheduled()) {
+			document.addKeyword("visible", true);
+		}
+		else if (assetEntry != null) {
+			document.addKeyword("visible", assetEntry.isVisible());
+		}
 
 		addDDMStructureAttributes(document, journalArticle);
 
@@ -790,7 +807,8 @@ public class JournalArticleIndexer
 				article.getResourcePrimKey(),
 				new int[] {
 					WorkflowConstants.STATUS_APPROVED,
-					WorkflowConstants.STATUS_IN_TRASH
+					WorkflowConstants.STATUS_IN_TRASH,
+					WorkflowConstants.STATUS_SCHEDULED
 				});
 
 		if ((latestArticle != null) &&
