@@ -269,6 +269,10 @@ public class LayoutLocalServiceHelper implements IdentifiableBean {
 		LayoutTypeController layoutTypeController =
 			LayoutTypeControllerTracker.getLayoutTypeController(type);
 
+		if (!layoutTypeController.isInstanceable()) {
+			throw new LayoutTypeException(LayoutTypeException.NOT_INSTANCEABLE);
+		}
+
 		if (!layoutTypeController.isParentable()) {
 			if (layoutPersistence.countByG_P_P(
 					groupId, privateLayout, layoutId) > 0) {
