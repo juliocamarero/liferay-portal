@@ -208,7 +208,8 @@ public class RuntimeTag extends TagSupport {
 			request.setAttribute(WebKeys.PORTLET_DECORATE, false);
 
 			Portlet portlet = getPortlet(
-				themeDisplay.getCompanyId(), portletInstance.getPortletName());
+				themeDisplay.getCompanyId(),
+				portletInstance.getPortletInstanceKey());
 
 			PortletPreferences renderPortletPreferences =
 				getRenderPortletPreferences(
