@@ -709,6 +709,12 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 						classNameLocalService.getClassNameId(Company.class)
 					},
 					null, new LinkedHashMap<String, Object>(), start, end));
+
+			if ((max != QueryUtil.ALL_POS) && (userSiteGroups.size() >= max)) {
+				return Collections.unmodifiableList(
+					ListUtil.subList(
+						ListUtil.unique(userSiteGroups), start, end));
+			}
 		}
 
 		if ((classNames == null) ||
@@ -722,6 +728,12 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			userSiteGroups.addAll(
 				groupLocalService.search(
 					user.getCompanyId(), null, groupParams, start, end));
+
+			if ((max != QueryUtil.ALL_POS) && (userSiteGroups.size() >= max)) {
+				return Collections.unmodifiableList(
+					ListUtil.subList(
+						ListUtil.unique(userSiteGroups), start, end));
+			}
 		}
 
 		if ((classNames == null) ||
@@ -765,6 +777,14 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 
 						filteredUserSiteGroupsCount++;
 					}
+				}
+
+				if ((max != QueryUtil.ALL_POS) &&
+					(userSiteGroups.size() >= max)) {
+
+					return Collections.unmodifiableList(
+						ListUtil.subList(
+							ListUtil.unique(userSiteGroups), start, end));
 				}
 			}
 		}
