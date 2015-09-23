@@ -542,6 +542,19 @@ public class UserImpl extends UserBaseImpl {
 		return getMySiteGroups(null, max);
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #getMySiteGroups(String[],
+	 *             int)}
+	 */
+	@Deprecated
+	@Override
+	public List<Group> getMySiteGroups(
+			String[] classNames, boolean includeControlPanel, int max)
+		throws PortalException {
+
+		return getMySiteGroups(classNames, max);
+	}
+
 	@Override
 	public List<Group> getMySiteGroups(String[] classNames, int max)
 		throws PortalException {
