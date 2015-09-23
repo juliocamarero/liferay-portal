@@ -700,6 +700,26 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		}
 
 		if ((classNames == null) ||
+			ArrayUtil.contains(classNames, User.class.getName())) {
+
+			if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED ||
+				PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
+
+				Group userGroup = user.getGroup();
+
+				userSiteGroups.add(userGroup);
+
+				if ((max != QueryUtil.ALL_POS) &&
+					(userSiteGroups.size() >= max)) {
+
+					return Collections.unmodifiableList(
+						ListUtil.subList(
+							ListUtil.unique(userSiteGroups), start, end));
+				}
+			}
+		}
+
+		if ((classNames == null) ||
 			ArrayUtil.contains(classNames, Company.class.getName())) {
 
 			userSiteGroups.addAll(
@@ -773,18 +793,6 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 						ListUtil.subList(
 							ListUtil.unique(userSiteGroups), start, end));
 				}
-			}
-		}
-
-		if ((classNames == null) ||
-			ArrayUtil.contains(classNames, User.class.getName())) {
-
-			if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED ||
-				PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) {
-
-				Group userGroup = user.getGroup();
-
-				userSiteGroups.add(0, userGroup);
 			}
 		}
 
