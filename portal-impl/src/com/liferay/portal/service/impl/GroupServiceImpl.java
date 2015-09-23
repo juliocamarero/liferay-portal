@@ -727,7 +727,11 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 
 			userSiteGroups.addAll(
 				groupLocalService.search(
-					user.getCompanyId(), null, groupParams, start, end));
+					user.getCompanyId(),
+					new long[] {
+						classNameLocalService.getClassNameId(Group.class)
+					},
+					null, groupParams, start, end));
 
 			if ((max != QueryUtil.ALL_POS) && (userSiteGroups.size() >= max)) {
 				return Collections.unmodifiableList(
@@ -739,43 +743,26 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		if ((classNames == null) ||
 			ArrayUtil.contains(classNames, Organization.class.getName())) {
 
-			int filteredUserSiteGroupsCount = 0;
-
 			List<Organization> userOrgs =
 				organizationLocalService.getOrganizations(
 					userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 			for (Organization organization : userOrgs) {
-				if (filteredUserSiteGroupsCount == max) {
-					break;
-				}
+				if (organization.hasPrivateLayouts() ||
+					organization.hasPublicLayouts()) {
 
-				if (!organization.hasPrivateLayouts() &&
-					!organization.hasPublicLayouts()) {
-
-					userSiteGroups.remove(organization.getGroup());
-
-					filteredUserSiteGroupsCount--;
-				}
-				else {
 					userSiteGroups.add(organization.getGroup());
-
-					filteredUserSiteGroupsCount++;
 				}
 
 				if (!PropsValues.ORGANIZATIONS_MEMBERSHIP_STRICT) {
 					for (Organization ancestorOrganization :
 							organization.getAncestors()) {
 
-						if (!ancestorOrganization.hasPrivateLayouts() &&
-							!ancestorOrganization.hasPublicLayouts()) {
+						if (ancestorOrganization.hasPrivateLayouts() ||
+							ancestorOrganization.hasPublicLayouts()) {
 
-							continue;
+							userSiteGroups.add(ancestorOrganization.getGroup());
 						}
-
-						userSiteGroups.add(ancestorOrganization.getGroup());
-
-						filteredUserSiteGroupsCount++;
 					}
 				}
 
