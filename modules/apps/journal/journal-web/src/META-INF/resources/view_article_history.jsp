@@ -19,8 +19,6 @@
 <%
 String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 
-String tabs1 = ParamUtil.getString(request, "tabs1", "web-content");
-
 String redirect = ParamUtil.getString(request, "redirect");
 
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
@@ -43,7 +41,6 @@ JournalArticle article = ActionUtil.getArticle(request);
 		PortletURL portletURL = renderResponse.createRenderURL();
 
 		portletURL.setParameter("mvcPath", "/view_article_history.jsp");
-		portletURL.setParameter("tabs1", tabs1);
 		portletURL.setParameter("redirect", redirect);
 		portletURL.setParameter("referringPortletResource", referringPortletResource);
 		portletURL.setParameter("groupId", String.valueOf(article.getGroupId()));
@@ -91,8 +88,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 
 		<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="fm">
 			<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
-			<aui:input name="groupId" type="hidden" />
-			<aui:input name="articleId" type="hidden" value="<%= article.getArticleId() %>" />
+			<aui:input name="groupId" type="hidden" value="<%= String.valueOf(article.getGroupId()) %>" />
 			<aui:input name="articleIds" type="hidden" />
 			<aui:input name="expireArticleIds" type="hidden" />
 
@@ -209,8 +205,6 @@ JournalArticle article = ActionUtil.getArticle(request);
 						if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-the-selected-version") %>')) {
 							var form = AUI.$(document.<portlet:namespace />fm);
 
-							form.fm('groupId').val('<%= String.valueOf(article.getGroupId()) %>');
-							form.fm('articleId').val('');
 							form.fm('articleIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
 							submitForm(form, '<portlet:actionURL name="deleteArticles"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
@@ -226,8 +220,6 @@ JournalArticle article = ActionUtil.getArticle(request);
 						if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-expire-the-selected-version") %>')) {
 							var form = AUI.$(document.<portlet:namespace />fm);
 
-							form.fm('groupId').val('<%= String.valueOf(article.getGroupId()) %>');
-							form.fm('articleId').val('');
 							form.fm('expireArticleIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
 							submitForm(form, '<portlet:actionURL name="expireArticles"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
