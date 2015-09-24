@@ -63,80 +63,82 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 	</div>
 </c:if>
 
-<ul class="<%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> list-unstyled" id="<%= namespace + id %>SearchContainer">
-
-	<%
-	request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_CHECKER, rowChecker);
-
-	boolean allRowsIsChecked = true;
-
-	for (int i = 0; i < resultRowsList.size(); i++) {
-		List<com.liferay.portal.kernel.dao.search.ResultRow> curResultRows = resultRowsList.get(i);
-	%>
-
-		<c:if test="<%= i != 0 %>">
-			</ul>
-
-			<ul class="<%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> list-unstyled" id="<%= namespace + id %>SearchContainer<%= i %>">>
-		</c:if>
+<div id="<%= namespace + id %>SearchContainer">
+	<ul class="<%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> list-unstyled">
 
 		<%
-		for (int j = 0; j < curResultRows.size(); j++) {
-			com.liferay.portal.kernel.dao.search.ResultRow row = curResultRows.get(j);
+		request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_CHECKER, rowChecker);
 
-			primaryKeysJSONArray.put(row.getPrimaryKey());
+		boolean allRowsIsChecked = true;
 
-			request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW, row);
-
-			List entries = row.getEntries();
-
-			boolean rowIsChecked = false;
-
-			if (rowChecker != null) {
-				rowIsChecked = rowChecker.isChecked(row.getObject());
-
-				if (!rowIsChecked) {
-					allRowsIsChecked = false;
-				}
-			}
-
-			request.setAttribute("liferay-ui:search-container-row:rowId", id.concat(StringPool.UNDERLINE.concat(row.getRowId())));
-
-			Map<String, Object> data = row.getData();
+		for (int i = 0; i < resultRowsList.size(); i++) {
+			List<com.liferay.portal.kernel.dao.search.ResultRow> curResultRows = resultRowsList.get(i);
 		%>
 
-			<li class="<%= GetterUtil.getString(row.getClassName()) %> <%= row.getCssClass() %> <%= rowIsChecked ? "active" : StringPool.BLANK %>"  <%= AUIUtil.buildData(data) %>>
+			<c:if test="<%= i != 0 %>">
+				</ul>
 
-				<%
-				for (int k = 0; k < entries.size(); k++) {
-					com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(k);
+				<ul class="<%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> list-unstyled">
+			</c:if>
 
-					entry.setIndex(k);
+			<%
+			for (int j = 0; j < curResultRows.size(); j++) {
+				com.liferay.portal.kernel.dao.search.ResultRow row = curResultRows.get(j);
 
-					request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY, entry);
-				%>
+				primaryKeysJSONArray.put(row.getPrimaryKey());
 
-						<%
-						entry.print(pageContext.getOut(), request, response);
-						%>
+				request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW, row);
 
-				<%
+				List entries = row.getEntries();
+
+				boolean rowIsChecked = false;
+
+				if (rowChecker != null) {
+					rowIsChecked = rowChecker.isChecked(row.getObject());
+
+					if (!rowIsChecked) {
+						allRowsIsChecked = false;
+					}
 				}
-				%>
 
-			</li>
+				request.setAttribute("liferay-ui:search-container-row:rowId", id.concat(StringPool.UNDERLINE.concat(row.getRowId())));
 
-	<%
-			request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
-			request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY);
+				Map<String, Object> data = row.getData();
+			%>
 
-			request.removeAttribute("liferay-ui:search-container-row:rowId");
+				<li class="<%= GetterUtil.getString(row.getClassName()) %> <%= row.getCssClass() %> <%= rowIsChecked ? "active" : StringPool.BLANK %>"  <%= AUIUtil.buildData(data) %>>
+
+					<%
+					for (int k = 0; k < entries.size(); k++) {
+						com.liferay.portal.kernel.dao.search.SearchEntry entry = (com.liferay.portal.kernel.dao.search.SearchEntry)entries.get(k);
+
+						entry.setIndex(k);
+
+						request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY, entry);
+					%>
+
+							<%
+							entry.print(pageContext.getOut(), request, response);
+							%>
+
+					<%
+					}
+					%>
+
+				</li>
+
+		<%
+				request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+				request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_ENTRY);
+
+				request.removeAttribute("liferay-ui:search-container-row:rowId");
+			}
 		}
-	}
-	%>
+		%>
 
-	<li></li>
-</ul>
+		<li></li>
+	</ul>
+</div>
 
 <c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_BOTTOM && paginate %>">
 	<div class="<%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> taglib-search-iterator-page-iterator-bottom">
