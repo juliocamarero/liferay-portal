@@ -25,6 +25,9 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 
+String orderByCol = ParamUtil.getString(request, "orderByCol", "version");
+String orderByType = ParamUtil.getString(request, "orderByType", "asc");
+
 JournalArticle article = ActionUtil.getArticle(request);
 %>
 
@@ -36,18 +39,26 @@ JournalArticle article = ActionUtil.getArticle(request);
 	</c:when>
 	<c:otherwise>
 
+		<%
+		PortletURL portletURL = renderResponse.createRenderURL();
+
+		portletURL.setParameter("mvcPath", "/view_article_history.jsp");
+		portletURL.setParameter("tabs1", tabs1);
+		portletURL.setParameter("redirect", redirect);
+		portletURL.setParameter("referringPortletResource", referringPortletResource);
+		portletURL.setParameter("groupId", String.valueOf(article.getGroupId()));
+		portletURL.setParameter("articleId", article.getArticleId());
+		%>
+
 		<liferay-frontend:management-bar
 			checkBoxContainerId="articleVersionsSearchContainer"
 			includeCheckBox="<%= true %>"
 		>
 			<liferay-frontend:management-bar-buttons>
-				<liferay-portlet:renderURL varImpl="displayStyleURL">
-					<liferay-portlet:param name="mvcPath" value="/view_article_history.jsp" />
-					<liferay-portlet:param name="redirect" value="<%= redirect %>" />
-					<liferay-portlet:param name="referringPortletResource" value="<%= referringPortletResource %>" />
-					<liferay-portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-					<liferay-portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-				</liferay-portlet:renderURL>
+
+				<%
+				PortletURL displayStyleURL = PortletURLUtil.clone(portletURL, renderResponse);
+				%>
 
 				<liferay-frontend:management-bar-display-buttons
 					displayStyleURL="<%= displayStyleURL %>"
@@ -55,6 +66,15 @@ JournalArticle article = ActionUtil.getArticle(request);
 					selectedDisplayStyle="<%= displayStyle %>"
 				/>
 			</liferay-frontend:management-bar-buttons>
+
+			<liferay-frontend:management-bar-filters>
+				<liferay-frontend:management-bar-sort
+					orderByCol="<%= orderByCol %>"
+					orderByType="<%= orderByType %>"
+					orderColumns='<%= new String[] {"version", "display-date", "modified-date"} %>'
+					portletURL="<%= portletURL %>"
+				/>
+			</liferay-frontend:management-bar-filters>
 
 			<liferay-frontend:management-bar-action-buttons>
 				<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) %>">
@@ -66,17 +86,6 @@ JournalArticle article = ActionUtil.getArticle(request);
 				</c:if>
 			</liferay-frontend:management-bar-action-buttons>
 		</liferay-frontend:management-bar>
-
-		<%
-		PortletURL portletURL = renderResponse.createRenderURL();
-
-		portletURL.setParameter("mvcPath", "/view_article_history.jsp");
-		portletURL.setParameter("tabs1", tabs1);
-		portletURL.setParameter("redirect", redirect);
-		portletURL.setParameter("referringPortletResource", referringPortletResource);
-		portletURL.setParameter("groupId", String.valueOf(article.getGroupId()));
-		portletURL.setParameter("articleId", article.getArticleId());
-		%>
 
 		<liferay-util:include page="/article_header.jsp" servletContext="<%= application %>" />
 
