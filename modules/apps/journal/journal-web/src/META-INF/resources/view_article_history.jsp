@@ -94,7 +94,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 
 			<liferay-ui:search-container
 				id="articleVersions"
-				rowChecker="<%= new RowChecker(renderResponse) %>"
+				rowChecker="<%= new EmptyOnClickRowChecker(renderResponse) %>"
 				searchContainer="<%= new ArticleSearch(renderRequest, portletURL) %>"
 				total="<%= JournalArticleServiceUtil.getArticlesCountByArticleId(article.getGroupId(), article.getArticleId()) %>"
 			>
