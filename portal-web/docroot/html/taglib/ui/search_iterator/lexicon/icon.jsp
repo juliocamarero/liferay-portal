@@ -64,7 +64,16 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 </c:if>
 
 <div id="<%= namespace + id %>SearchContainer">
-	<ul class="<%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> list-unstyled">
+
+	<%
+	String ulCssClass = searchContainer.getCssClass() + " row list-unstyled";
+
+	if (resultRows.isEmpty()) {
+		ulCssClass += " hide";
+	}
+	%>
+
+	<ul class="<%= ulCssClass %>">
 
 		<%
 		request.setAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW_CHECKER, rowChecker);
@@ -78,7 +87,7 @@ JSONArray primaryKeysJSONArray = JSONFactoryUtil.createJSONArray();
 			<c:if test="<%= i != 0 %>">
 				</ul>
 
-				<ul class="<%= searchContainer.getCssClass() %> <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %> list-unstyled">
+				<ul class="<%= ulCssClass %>">
 			</c:if>
 
 			<%
