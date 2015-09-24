@@ -34,6 +34,21 @@ JournalArticle article = ActionUtil.getArticle(request);
 	</c:when>
 	<c:otherwise>
 
+		<liferay-frontend:management-bar
+			checkBoxContainerId="articleVersionsSearchContainer"
+			includeCheckBox="<%= true %>"
+		>
+			<liferay-frontend:management-bar-action-buttons>
+				<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) %>">
+					<aui:a cssClass="btn" href="javascript:;" iconCssClass="icon-trash" id="deleteArticles" />
+				</c:if>
+
+				<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) %>">
+					<aui:a cssClass="btn" href="javascript:;" iconCssClass="icon-time" id="expireArticles" />
+				</c:if>
+			</liferay-frontend:management-bar-action-buttons>
+		</liferay-frontend:management-bar>
+
 		<%
 		PortletURL portletURL = renderResponse.createRenderURL();
 
@@ -55,6 +70,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 			<aui:input name="expireArticleIds" type="hidden" />
 
 			<liferay-ui:search-container
+				id="articleVersions"
 				rowChecker="<%= new RowChecker(renderResponse) %>"
 				searchContainer="<%= new ArticleSearch(renderRequest, portletURL) %>"
 				total="<%= JournalArticleServiceUtil.getArticlesCountByArticleId(article.getGroupId(), article.getArticleId()) %>"
@@ -117,26 +133,11 @@ JournalArticle article = ActionUtil.getArticle(request);
 					/>
 				</liferay-ui:search-container-row>
 
-				<c:if test="<%= !results.isEmpty() %>">
-					<aui:button-row>
-						<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) %>">
-							<aui:button disabled="<%= true %>" name="expire" onClick='<%= renderResponse.getNamespace() + "expireArticles();" %>' value="expire" />
-						</c:if>
-
-						<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) %>">
-							<aui:button disabled="<%= true %>" name="delete" onClick='<%= renderResponse.getNamespace() + "deleteArticles();" %>' value="delete" />
-						</c:if>
-					</aui:button-row>
-				</c:if>
-
 				<liferay-ui:search-iterator markupView="lexicon" />
 			</liferay-ui:search-container>
 		</aui:form>
 
 		<aui:script>
-			Liferay.Util.toggleSearchContainerButton('#<portlet:namespace />delete', '#<portlet:namespace /><%= searchContainerReference.getId() %>SearchContainer', document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
-			Liferay.Util.toggleSearchContainerButton('#<portlet:namespace />expire', '#<portlet:namespace /><%= searchContainerReference.getId() %>SearchContainer', document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
-
 			AUI.$('body').on(
 				'click',
 				'.compare-to-link a',
@@ -175,31 +176,37 @@ JournalArticle article = ActionUtil.getArticle(request);
 			);
 
 			<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) %>">
-				function <portlet:namespace />deleteArticles() {
-					if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-the-selected-version") %>')) {
-						var form = AUI.$(document.<portlet:namespace />fm);
+				$('#<portlet:namespace />deleteArticles').on(
+					'click',
+					function() {
+						if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-the-selected-version") %>')) {
+							var form = AUI.$(document.<portlet:namespace />fm);
 
-						form.fm('groupId').val('<%= String.valueOf(article.getGroupId()) %>');
-						form.fm('articleId').val('');
-						form.fm('articleIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
+							form.fm('groupId').val('<%= String.valueOf(article.getGroupId()) %>');
+							form.fm('articleId').val('');
+							form.fm('articleIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-						submitForm(form, '<portlet:actionURL name="deleteArticles"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
+							submitForm(form, '<portlet:actionURL name="deleteArticles"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
+						}
 					}
-				}
+				);
 			</c:if>
 
 			<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) %>">
-				function <portlet:namespace />expireArticles() {
-					if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-expire-the-selected-version") %>')) {
-						var form = AUI.$(document.<portlet:namespace />fm);
+				$('#<portlet:namespace />expireArticles').on(
+					'click',
+					function() {
+						if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-expire-the-selected-version") %>')) {
+							var form = AUI.$(document.<portlet:namespace />fm);
 
-						form.fm('groupId').val('<%= String.valueOf(article.getGroupId()) %>');
-						form.fm('articleId').val('');
-						form.fm('expireArticleIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
+							form.fm('groupId').val('<%= String.valueOf(article.getGroupId()) %>');
+							form.fm('articleId').val('');
+							form.fm('expireArticleIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-						submitForm(form, '<portlet:actionURL name="expireArticles"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
+							submitForm(form, '<portlet:actionURL name="expireArticles"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
+						}
 					}
-				}
+				);
 			</c:if>
 		</aui:script>
 	</c:otherwise>
