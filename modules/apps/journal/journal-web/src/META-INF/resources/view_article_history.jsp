@@ -47,7 +47,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 
 		<liferay-util:include page="/article_header.jsp" servletContext="<%= application %>" />
 
-		<aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
+		<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="fm">
 			<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 			<aui:input name="groupId" type="hidden" />
 			<aui:input name="articleId" type="hidden" value="<%= article.getArticleId() %>" />
@@ -112,7 +112,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 					/>
 
 					<liferay-ui:search-container-column-jsp
-						cssClass="entry-action"
+						cssClass="checkbox-cell entry-action"
 						path="/article_version_action.jsp"
 					/>
 				</liferay-ui:search-container-row>
@@ -129,7 +129,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 					</aui:button-row>
 				</c:if>
 
-				<liferay-ui:search-iterator />
+				<liferay-ui:search-iterator markupView="lexicon" />
 			</liferay-ui:search-container>
 		</aui:form>
 
