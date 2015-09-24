@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
+
 String tabs1 = ParamUtil.getString(request, "tabs1", "web-content");
 
 String redirect = ParamUtil.getString(request, "redirect");
@@ -38,6 +40,22 @@ JournalArticle article = ActionUtil.getArticle(request);
 			checkBoxContainerId="articleVersionsSearchContainer"
 			includeCheckBox="<%= true %>"
 		>
+			<liferay-frontend:management-bar-buttons>
+				<liferay-portlet:renderURL varImpl="displayStyleURL">
+					<liferay-portlet:param name="mvcPath" value="/view_article_history.jsp" />
+					<liferay-portlet:param name="redirect" value="<%= redirect %>" />
+					<liferay-portlet:param name="referringPortletResource" value="<%= referringPortletResource %>" />
+					<liferay-portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
+					<liferay-portlet:param name="articleId" value="<%= article.getArticleId() %>" />
+				</liferay-portlet:renderURL>
+
+				<liferay-frontend:management-bar-display-buttons
+					displayStyleURL="<%= displayStyleURL %>"
+					displayViews='<%= new String[] {"list"} %>'
+					selectedDisplayStyle="<%= displayStyle %>"
+				/>
+			</liferay-frontend:management-bar-buttons>
+
 			<liferay-frontend:management-bar-action-buttons>
 				<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) %>">
 					<aui:a cssClass="btn" href="javascript:;" iconCssClass="icon-trash" id="deleteArticles" />
@@ -133,7 +151,7 @@ JournalArticle article = ActionUtil.getArticle(request);
 					/>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator markupView="lexicon" />
+				<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 			</liferay-ui:search-container>
 		</aui:form>
 
