@@ -1046,7 +1046,7 @@ public class AssetPublisherUtil {
 		String[] scopeIds = portletPreferences.getValues(
 			"scopeIds", new String[] {SCOPE_ID_GROUP_PREFIX + scopeGroupId});
 
-		List<Long> groupIds = new ArrayList<>();
+		Set<Long> groupIds = new HashSet<>();
 
 		for (String scopeId : scopeIds) {
 			try {
@@ -1117,8 +1117,23 @@ public class AssetPublisherUtil {
 		long groupId = getGroupIdFromScopeId(
 			scopeId, layout.getGroupId(), layout.isPrivateLayout());
 
+		Group group = layout.getGroup();
+
+		if (group.isStagingGroup()) {
+			String defaultGroupScopeId =
+				SCOPE_ID_GROUP_PREFIX + GroupConstants.DEFAULT;
+
+			if (scopeId.equals(defaultGroupScopeId) ||
+				(groupId == companyGroupId)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
 		if (scopeId.startsWith(SCOPE_ID_CHILD_GROUP_PREFIX)) {
-			Group group = GroupLocalServiceUtil.getGroup(groupId);
+			group = GroupLocalServiceUtil.getGroup(groupId);
 
 			if (!group.hasAncestor(layout.getGroupId())) {
 				return false;
@@ -1131,7 +1146,7 @@ public class AssetPublisherUtil {
 				return false;
 			}
 
-			Group group = GroupLocalServiceUtil.getGroup(groupId);
+			group = GroupLocalServiceUtil.getGroup(groupId);
 
 			if (SitesUtil.isContentSharingWithChildrenEnabled(group)) {
 				return true;
