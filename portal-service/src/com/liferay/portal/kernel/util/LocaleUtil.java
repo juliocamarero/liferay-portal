@@ -148,10 +148,6 @@ public class LocaleUtil {
 		return getInstance()._getSiteDefault();
 	}
 
-	public static void init() {
-		getInstance()._init();
-	}
-
 	public static void setDefault(
 		String userLanguage, String userCountry, String userVariant) {
 
@@ -397,10 +393,6 @@ public class LocaleUtil {
 		}
 
 		return _getDefault();
-	}
-
-	private void _init() {
-		_locales.clear();
 	}
 
 	private void _setDefault(
