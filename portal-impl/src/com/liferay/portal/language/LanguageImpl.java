@@ -54,6 +54,8 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.collections.ServiceTrackerCollections;
+import com.liferay.registry.collections.ServiceTrackerMap;
 import com.liferay.registry.dependency.ServiceDependencyListener;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 
@@ -86,6 +88,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 @DoPrivileged
 public class LanguageImpl implements Language, Serializable {
+
+	public LanguageImpl() {
+		_resourceBundles = ServiceTrackerCollections.multiValueMap(
+			ResourceBundle.class, "language.id");
+
+		_resourceBundles.open();
+	}
 
 	public void afterPropertiesSet() {
 		ServiceDependencyManager serviceDependencyManager =
@@ -129,6 +138,10 @@ public class LanguageImpl implements Language, Serializable {
 		);
 
 		serviceDependencyManager.registerDependencies(MultiVMPool.class);
+	}
+
+	public void destroy() {
+		_resourceBundles.close();
 	}
 
 	@Override
@@ -481,6 +494,25 @@ public class LanguageImpl implements Language, Serializable {
 
 		if (value != null) {
 			return LanguageResources.fixValue(value);
+		}
+
+		if (value == null) {
+			List<ResourceBundle> resourceBundles = null;
+
+			try {
+				String languageId = LocaleUtil.toLanguageId(locale);
+
+				resourceBundles = _resourceBundles.getService(languageId);
+
+				for (ResourceBundle resourceBundle : resourceBundles) {
+					if (resourceBundle.containsKey(key)) {
+						return resourceBundle.getString(key);
+					}
+				}
+			}
+			catch (Exception e) {
+				_log.error(e, e);
+			}
 		}
 
 		if (value == null) {
@@ -1001,6 +1033,8 @@ public class LanguageImpl implements Language, Serializable {
 		_groupLanguageCodeLocalesMapMap = new ConcurrentHashMap<>();
 	private final Map<Long, Map<String, Locale>> _groupLanguageIdLocalesMap =
 		new ConcurrentHashMap<>();
+	private final ServiceTrackerMap<String, List<ResourceBundle>>
+		_resourceBundles;
 
 	private static class CompanyLocalesBag implements Serializable {
 
