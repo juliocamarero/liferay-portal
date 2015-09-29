@@ -73,7 +73,11 @@ for (int i = 0; i < results.size(); i++) {
 	PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 
 	if (Validator.isNotNull(curPortletResource)) {
-		if (actionId.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL) && !panelCategoryHelper.containsPortlet(curPortletId, PanelCategoryKeys.CONTROL_PANEL)) {
+		boolean containsControlPanelApp = panelCategoryHelper.containsPortlet(curPortletId, PanelCategoryKeys.CONTROL_PANEL);
+		boolean containsSiteAdministrationPanelApp = panelCategoryHelper.containsPortlet(curPortletId, PanelCategoryKeys.SITE_ADMINISTRATION);
+		boolean containsUserPanelApp = panelCategoryHelper.containsPortlet(curPortletId, PanelCategoryKeys.USER);
+
+		if (actionId.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL) && !(containsControlPanelApp || containsSiteAdministrationPanelApp || containsUserPanelApp)) {
 			continue;
 		}
 
