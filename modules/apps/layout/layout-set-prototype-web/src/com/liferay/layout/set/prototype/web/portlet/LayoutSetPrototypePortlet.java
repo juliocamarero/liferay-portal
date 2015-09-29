@@ -61,8 +61,6 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"com.liferay.portlet.control-panel-entry-category=sites",
-		"com.liferay.portlet.control-panel-entry-weight=2.0",
 		"com.liferay.portlet.css-class-wrapper=portlet-layout-set-prototype",
 		"com.liferay.portlet.display-category=category.hidden",
 		"com.liferay.portlet.icon=/icons/layout_set_prototypes.png",
