@@ -17,19 +17,19 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String deltaEntry = ParamUtil.getString(request, "deltaEntry");
-
-String navigation = ParamUtil.getString(request, "navigation", "home");
-
-long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folderId"));
-
 String ddmStructureKey = ParamUtil.getString(request, "ddmStructureKey");
+
+String deltaEntry = ParamUtil.getString(request, "deltaEntry");
 
 PortletURL displayStyleURL = renderResponse.createRenderURL();
 
+long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folderId"));
+
+String navigation = ParamUtil.getString(request, "navigation", "home");
+
 displayStyleURL.setParameter("deltaEntry", deltaEntry);
-displayStyleURL.setParameter("navigation", HtmlUtil.escapeJS(navigation));
 displayStyleURL.setParameter("folderId", String.valueOf(folderId));
+displayStyleURL.setParameter("navigation", HtmlUtil.escapeJS(navigation));
 
 if (!ddmStructureKey.equals("0")) {
 	displayStyleURL.setParameter("ddmStructureKey", ddmStructureKey);
