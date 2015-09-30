@@ -139,6 +139,20 @@ if (group != null) {
 	</div>
 </div>
 
+<%
+Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(themeDisplay.getCompanyId());
+
+PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
+
+String sitesAdministrationPortletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.CONTROL_PANEL, permissionChecker, companyGroup);
+
+PortletURL sitesAdministrationURL = null;
+
+if (Validator.isNotNull(sitesAdministrationPortletId)) {
+	sitesAdministrationURL = PortalUtil.getControlPanelPortletURL(request, companyGroup, sitesAdministrationPortletId, 0, PortletRequest.RENDER_PHASE);
+}
+%>
+
 <aui:script>
 	$('#<portlet:namespace />infoPanelId').sideNavigation(
 		{
@@ -159,7 +173,7 @@ if (group != null) {
 
 				form.fm('deleteGroupIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 
-				submitForm(form, '<portlet:actionURL name="deleteGroups" />');
+				submitForm(form, '<portlet:actionURL name="deleteGroups"><portlet:param name="redirect" value="<%= sitesAdministrationURL.toString() %>" /></portlet:actionURL>');
 			}
 		}
 	);

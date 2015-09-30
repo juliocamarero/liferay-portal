@@ -217,8 +217,21 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 	</c:if>
 
 	<c:if test="<%= !group.isCompany() && GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.DELETE) && !PortalUtil.isSystemGroup(group.getGroupKey()) %>">
+
+		<%
+		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(themeDisplay.getCompanyId());
+
+		String sitesAdministrationPortletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.CONTROL_PANEL, permissionChecker, companyGroup);
+
+		PortletURL sitesAdministrationURL = null;
+
+		if (Validator.isNotNull(sitesAdministrationPortletId)) {
+			sitesAdministrationURL = PortalUtil.getControlPanelPortletURL(request, companyGroup, sitesAdministrationPortletId, 0, PortletRequest.RENDER_PHASE);
+		}
+		%>
+
 		<portlet:actionURL name="deleteGroups" var="deleteURL">
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="redirect" value="<%= sitesAdministrationURL.toString() %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 		</portlet:actionURL>
 
