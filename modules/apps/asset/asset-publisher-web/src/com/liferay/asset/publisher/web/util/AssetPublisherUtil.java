@@ -1041,7 +1041,11 @@ public class AssetPublisherUtil {
 
 	public static long[] getGroupIds(
 		PortletPreferences portletPreferences, long scopeGroupId,
-		Layout layout) {
+		Layout layout) throws PortalException {
+
+		Group scopeGroup = GroupLocalServiceUtil.getGroup(scopeGroupId);
+
+		long scopeLiveGroupId = scopeGroup.getLiveGroupId();
 
 		String[] scopeIds = portletPreferences.getValues(
 			"scopeIds", new String[] {SCOPE_ID_GROUP_PREFIX + scopeGroupId});
@@ -1053,7 +1057,9 @@ public class AssetPublisherUtil {
 				long groupId = getGroupIdFromScopeId(
 					scopeId, scopeGroupId, layout.isPrivateLayout());
 
-				groupIds.add(groupId);
+				if (groupId != scopeLiveGroupId) {
+					groupIds.add(groupId);
+				}
 			}
 			catch (Exception e) {
 				continue;
