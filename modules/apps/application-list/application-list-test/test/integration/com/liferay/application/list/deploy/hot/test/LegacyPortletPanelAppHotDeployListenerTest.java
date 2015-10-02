@@ -20,7 +20,10 @@ import com.liferay.portal.kernel.deploy.hot.DependencyManagementThreadLocal;
 import com.liferay.portal.kernel.deploy.hot.HotDeployEvent;
 import com.liferay.portal.kernel.deploy.hot.HotDeployListener;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.model.impl.PortletImpl;
+import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -80,6 +83,8 @@ public class LegacyPortletPanelAppHotDeployListenerTest {
 		_hotDeployListener =
 			(LegacyPortletPanelAppHotDeployListener)registry.getService(
 				_serviceReference);
+
+		_servletContextName = StringUtil.randomString();
 	}
 
 	@After
@@ -96,6 +101,11 @@ public class LegacyPortletPanelAppHotDeployListenerTest {
 	public void testLegacyPortletWithControlPanelEntry() throws Exception {
 		int initialServiceRegistrationsSize =
 			_hotDeployListener.getServiceRegistrationsSize();
+
+		PortletLocalServiceUtil.deployRemotePortlet(
+			new PortletImpl(
+				TestPropsValues.getCompanyId(), "1_WAR_" + _servletContextName),
+			"category.hidden");
 
 		HotDeployEvent hotDeployEvent = getHotDeployEvent(
 			"classpath:/com/liferay/application/list/deploy/hot/test" +
@@ -147,7 +157,7 @@ public class LegacyPortletPanelAppHotDeployListenerTest {
 			location, classLoader);
 
 		ServletContext servletContext = new TestServletContext(
-			"/", resourceLoader);
+			"/", resourceLoader, _servletContextName);
 
 		return new HotDeployEvent(servletContext, classLoader);
 	}
@@ -155,6 +165,7 @@ public class LegacyPortletPanelAppHotDeployListenerTest {
 	private boolean _dependencyManagementEnabled;
 	private LegacyPortletPanelAppHotDeployListener _hotDeployListener;
 	private ServiceReference<HotDeployListener> _serviceReference;
+	private String _servletContextName;
 
 	private static class TestResourceLoader extends DefaultResourceLoader {
 
@@ -190,18 +201,21 @@ public class LegacyPortletPanelAppHotDeployListenerTest {
 	private static class TestServletContext extends MockServletContext {
 
 		public TestServletContext(
-			String resourceBasePath, ResourceLoader resourceLoader) {
+			String resourceBasePath, ResourceLoader resourceLoader,
+			String servletContextName) {
 
 			super(resourceBasePath, resourceLoader);
+
+			_servletContextName = servletContextName;
 		}
 
 		@Override
 		public String getServletContextName() {
-			return _SERVLET_CONTEXT_NAME;
+			return _servletContextName;
 		}
 
-		private static final String _SERVLET_CONTEXT_NAME =
-			StringUtil.randomString();
+		private String _servletContextName;
+
 
 	}
 
