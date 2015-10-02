@@ -175,8 +175,8 @@ public class PanelAppRegistry {
 			if (portlet != null) {
 				portlet.setControlPanelEntryCategory(panelCategoryKey);
 			}
-			else if (_log.isDebugEnabled()) {
-				_log.debug("Unable to get portlet " + panelApp.getPortletId());
+			else {
+				_log.error("Unable to get portlet " + panelApp.getPortletId());
 			}
 		}
 
