@@ -6282,8 +6282,6 @@ public class JournalArticleLocalServiceImpl
 
 				latestArticles.add(article);
 
-				String articleURL = StringPool.BLANK;
-
 				long ownerId = article.getGroupId();
 				int ownerType = PortletKeys.PREFS_OWNER_TYPE_GROUP;
 				long plid = PortletKeys.PREFS_PLID_SHARED;
@@ -6295,6 +6293,13 @@ public class JournalArticleLocalServiceImpl
 					portletPreferencesLocalService.getPreferences(
 						article.getCompanyId(), ownerId, ownerType, plid,
 						portletId);
+
+				String articleURL = PortalUtil.getControlPanelFullURL(
+					article.getGroupId(), portletId, null);
+
+				articleURL = buildArticleURL(
+					articleURL, article.getGroupId(), article.getFolderId(),
+					article.getArticleId());
 
 				sendEmail(
 					article, articleURL, preferences, "review",
