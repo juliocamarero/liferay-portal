@@ -5794,7 +5794,12 @@ public class JournalArticleLocalServiceImpl
 
 		Date modifiedDate = serviceContext.getModifiedDate();
 
-		article.setModifiedDate(modifiedDate);
+		if (modifiedDate != null) {
+			article.setModifiedDate(modifiedDate);
+		}
+		else {
+			article.setModifiedDate(serviceContext.getModifiedDate(now));
+		}
 
 		if (status == WorkflowConstants.STATUS_APPROVED) {
 			Date expirationDate = article.getExpirationDate();
