@@ -15,8 +15,14 @@
 package com.liferay.journal.web.portlet;
 
 import com.liferay.journal.constants.JournalPortletKeys;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.BrowsePortletProvider;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -33,6 +39,17 @@ public class JournalBrowsePortletProvider
 	@Override
 	public String getPortletName() {
 		return JournalPortletKeys.JOURNAL;
+	}
+
+	@Override
+	public PortletURL getPortletURL(HttpServletRequest request)
+		throws PortalException {
+
+		PortletURL portletURL = super.getPortletURL(request);
+
+		portletURL.setParameter("showEditActions", Boolean.FALSE.toString());
+
+		return portletURL;
 	}
 
 }
