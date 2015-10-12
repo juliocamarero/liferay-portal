@@ -88,6 +88,31 @@ public class PanelCategoryHelper {
 		return containsPortlet(portletId, PanelCategoryKeys.ROOT);
 	}
 
+	public boolean hasPanelApp(
+		String panelCategoryKey, PermissionChecker permissionChecker,
+		Group group) {
+
+		String firstPortletId = getFirstPortletId(
+			panelCategoryKey, permissionChecker, group);
+
+		if (firstPortletId != null) {
+			return true;
+		}
+
+		for (PanelCategory curPanelCategory :
+				_panelCategoryRegistry.getChildPanelCategories(
+					panelCategoryKey)) {
+
+			if (hasPanelApp(
+					curPanelCategory.getKey(), permissionChecker, group)) {
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private boolean hasPortlet(String portletId, String panelCategoryKey) {
 		Iterable<PanelApp> panelApps = _panelAppRegistry.getPanelApps(
 			panelCategoryKey);
