@@ -24,11 +24,11 @@ List<PanelCategory> childPanelCategories = panelCategoryRegistry.getChildPanelCa
 
 PanelCategory firstChildPanelCategory = childPanelCategories.get(0);
 
+PanelCategoryHelper panelCategoryHelper = new PanelCategoryHelper(panelAppRegistry, panelCategoryRegistry);
+
 String rootPanelCategoryKey = firstChildPanelCategory.getKey();
 
 if (Validator.isNotNull(themeDisplay.getPpid())) {
-	PanelCategoryHelper panelCategoryHelper = new PanelCategoryHelper(panelAppRegistry, panelCategoryRegistry);
-
 	for (PanelCategory panelCategory : panelCategoryRegistry.getChildPanelCategories(PanelCategoryKeys.ROOT)) {
 		if (panelCategoryHelper.containsPortlet(themeDisplay.getPpid(), panelCategory)) {
 			rootPanelCategoryKey = panelCategory.getKey();
@@ -52,6 +52,7 @@ if (Validator.isNotNull(themeDisplay.getPpid())) {
 
 	<%
 	for (PanelCategory childPanelCategory : childPanelCategories) {
+		if (panelCategoryHelper.hasPanelApp(childPanelCategory.getKey(), permissionChecker, themeDisplay.getScopeGroup())) {
 	%>
 
 		<li class="<%= "col-xs-" + (12 / childPanelCategories.size()) %> <%= rootPanelCategoryKey.equals(childPanelCategory.getKey()) ? "active" : StringPool.BLANK %>">
@@ -67,6 +68,7 @@ if (Validator.isNotNull(themeDisplay.getPpid())) {
 		</li>
 
 	<%
+		}
 	}
 	%>
 
@@ -76,7 +78,8 @@ if (Validator.isNotNull(themeDisplay.getPpid())) {
 	<div class="tab-content">
 
 		<%
-		for (PanelCategory childPanelCategory : childPanelCategories) {
+        for (PanelCategory childPanelCategory : childPanelCategories) {
+            if (panelCategoryHelper.hasPanelApp(childPanelCategory.getKey(), permissionChecker, themeDisplay.getScopeGroup())) {
 		%>
 
 			<div class="fade in tab-pane <%= rootPanelCategoryKey.equals(childPanelCategory.getKey()) ? "active" : StringPool.BLANK %>" id="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>">
@@ -84,6 +87,7 @@ if (Validator.isNotNull(themeDisplay.getPpid())) {
 			</div>
 
 		<%
+			}
 		}
 		%>
 
