@@ -266,7 +266,11 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 <%!
 private String _getHREF(String formName, String curParam, int cur, String jsCall, String url, String urlAnchor) throws Exception {
 	if (Validator.isNotNull(url)) {
-		return HtmlUtil.escape(url + curParam + "=" + cur + urlAnchor);
+		String timestamp = String.valueOf(DateUtil.newTime());
+
+		url = HttpUtil.addParameter(url, curParam, cur + urlAnchor);
+
+		return HtmlUtil.escape(url = HttpUtil.addParameter(url, "t", timestamp));
 	}
 
 	return "javascript:document." + formName + "." + curParam + ".value = '" + cur + "'; " + jsCall;
