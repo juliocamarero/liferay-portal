@@ -273,10 +273,14 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 
 <%!
 private String _getHREF(String formName, String curParam, int cur, String jsCall, String url, String urlAnchor) throws Exception {
+	String timestamp = String.valueOf(DateUtil.newTime());
+
 	String href = null;
 
 	if (Validator.isNotNull(url)) {
-		href = HtmlUtil.escape(url + curParam + "=" + cur + urlAnchor);
+		url = HttpUtil.addParameter(url, curParam, cur + urlAnchor);
+
+		href = HtmlUtil.escape(url = HttpUtil.addParameter(url, "t", timestamp));
 	}
 	else {
 		href = "javascript:document." + formName + "." + curParam + ".value = '" + cur + "'; " + jsCall;
