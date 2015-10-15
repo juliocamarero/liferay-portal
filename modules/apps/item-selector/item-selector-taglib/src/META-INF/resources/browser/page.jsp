@@ -308,8 +308,8 @@ PortletURL uploadURL = (PortletURL)request.getAttribute("liferay-item-selector:b
 
 									<liferay-ui:search-container-column-text colspan="<%= 3 %>">
 										<liferay-frontend:horizontal-card
-											imageCSSClass="icon-monospaced"
 											icon="icon-folder-close-alt"
+											imageCSSClass="icon-monospaced"
 											resultRow="<%= row %>"
 											text="<%= HtmlUtil.escape(folder.getName()) %>"
 											url="<%= viewFolderURL.toString() %>"
