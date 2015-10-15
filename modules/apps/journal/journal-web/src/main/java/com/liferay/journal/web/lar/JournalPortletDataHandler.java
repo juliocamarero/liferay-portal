@@ -14,6 +14,8 @@
 
 package com.liferay.journal.web.lar;
 
+import aQute.bnd.annotation.metatype.Configurable;
+
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
@@ -30,7 +32,7 @@ import com.liferay.journal.service.JournalFeedLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.journal.service.permission.JournalPermission;
 import com.liferay.journal.util.JournalContent;
-import com.liferay.journal.web.configuration.JournalWebConfigurationValues;
+import com.liferay.journal.web.configuration.JournalWebConfiguration;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -54,11 +56,13 @@ import com.liferay.portlet.exportimport.lar.StagedModelType;
 import com.liferay.portlet.exportimport.xstream.XStreamAliasRegistryUtil;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -97,6 +101,8 @@ import org.osgi.service.component.annotations.Reference;
  * @see    com.liferay.portlet.exportimport.lar.PortletDataHandler
  */
 @Component(
+	configurationPid = "com.liferay.journal.web.configuration.JournalWebConfiguration",
+	configurationPolicy = ConfigurationPolicy.OPTIONAL,
 	property = {"javax.portlet.name=" + JournalPortletKeys.JOURNAL},
 	service = PortletDataHandler.class
 )
@@ -105,7 +111,11 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "journal";
 
 	@Activate
-	protected void activate() {
+	protected void activate(Map<String, Object> properties) {
+		JournalWebConfiguration journalWebConfiguration =
+			Configurable.createConfigurable(
+				JournalWebConfiguration.class, properties);
+
 		setDataLocalized(true);
 		setDeletionSystemEventStagedModelTypes(
 			new StagedModelType(DDMStructure.class, JournalArticle.class),
@@ -122,8 +132,8 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 						NAMESPACE, "referenced-content"),
 					new PortletDataHandlerBoolean(
 						NAMESPACE, "version-history",
-						JournalWebConfigurationValues.
-							PUBLISH_VERSION_HISTORY_BY_DEFAULT)
+						journalWebConfiguration.
+							publishVersionHistoryByDefault())
 				},
 				JournalArticle.class.getName()),
 			new PortletDataHandlerBoolean(
@@ -139,7 +149,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				NAMESPACE, "folders", true, false, null,
 				JournalFolder.class.getName()));
 		setPublishToLiveByDefault(
-			JournalWebConfigurationValues.PUBLISH_TO_LIVE_BY_DEFAULT);
+			journalWebConfiguration.publishToLiveByDefault());
 
 		XStreamAliasRegistryUtil.register(
 			JournalArticleImpl.class, "JournalArticle");
