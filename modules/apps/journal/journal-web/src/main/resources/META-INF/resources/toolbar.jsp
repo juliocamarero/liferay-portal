@@ -18,8 +18,6 @@
 
 <%
 String searchContainerId = ParamUtil.getString(request, "searchContainerId");
-
-String keywords = ParamUtil.getString(request, "keywords");
 %>
 
 <liferay-frontend:management-bar
@@ -27,7 +25,9 @@ String keywords = ParamUtil.getString(request, "keywords");
 	searchContainerId="<%= searchContainerId %>"
 >
 	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" />
+		<c:if test="<%= journalDisplayContext.isShowInfoPanel() %>">
+			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" />
+		</c:if>
 
 		<c:if test="<%= Validator.isNull(keywords) %>">
 			<liferay-frontend:management-bar-display-buttons
@@ -43,7 +43,9 @@ String keywords = ParamUtil.getString(request, "keywords");
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" />
+		<c:if test="<%= journalDisplayContext.isShowInfoPanel() %>">
+			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" />
+		</c:if>
 
 		<%
 		String taglibURL = "javascript:" + renderResponse.getNamespace() + "deleteEntries();";
