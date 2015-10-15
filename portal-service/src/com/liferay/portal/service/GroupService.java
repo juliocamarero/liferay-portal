@@ -570,6 +570,22 @@ public interface GroupService extends BaseService {
 	public int getUserSitesGroupsCount() throws PortalException;
 
 	/**
+	* Returns the number of the guest or current user's groups
+	* &quot;sites&quot; associated with the group entity class names, including
+	* the Control Panel group if the user is permitted to view the Control
+	* Panel.
+	*
+	* @param userId the primary key of the user
+	* @param classNames the group entity class names (optionally
+	<code>null</code>).
+	* @return the number of user's groups &quot;sites&quot;
+	* @throws PortalException if a portal exception occurred
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getUserSitesGroupsCount(long userId,
+		java.lang.String[] classNames) throws PortalException;
+
+	/**
 	* Returns <code>true</code> if the user is associated with the group,
 	* including the user's inherited organizations and user groups. System and
 	* staged groups are not included.

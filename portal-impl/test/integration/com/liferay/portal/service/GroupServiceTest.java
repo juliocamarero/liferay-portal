@@ -440,6 +440,36 @@ public class GroupServiceTest {
 	}
 
 	@Test
+	public void testGetUserSitesGroupsCount() throws Exception {
+		UserTestUtil.addUser();
+
+		int initialSitesGroupsCount = GroupServiceUtil.getUserSitesGroupsCount(
+			TestPropsValues.getUserId(), null);
+
+		Group group = GroupTestUtil.addGroup();
+		Group group1 = GroupTestUtil.addGroup();
+
+		_groups.add(group);
+		_groups.add(group1);
+
+		GroupLocalServiceUtil.addUserGroups(
+			TestPropsValues.getUserId(),
+			new long[] {group.getGroupId(), group1.getGroupId()});
+
+		try {
+			Assert.assertEquals(
+				initialSitesGroupsCount + 2,
+				GroupServiceUtil.getUserSitesGroupsCount(
+					TestPropsValues.getUserId(), null));
+		}
+		finally {
+			GroupLocalServiceUtil.unsetUserGroups(
+				TestPropsValues.getUserId(),
+				new long[] {group.getGroupId(), group1.getGroupId()});
+		}
+	}
+
+	@Test
 	public void testGroupHasCurrentPageScopeDescriptiveName() throws Exception {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 
@@ -1111,6 +1141,9 @@ public class GroupServiceTest {
 
 	@DeleteAfterTestRun
 	private Group _group;
+
+	@DeleteAfterTestRun
+	private final List<Group> _groups = new ArrayList<>();
 
 	@DeleteAfterTestRun
 	private final List<Organization> _organizations = new ArrayList<>();
