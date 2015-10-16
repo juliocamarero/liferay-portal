@@ -422,7 +422,7 @@ public class AssetPublisherDisplayContext {
 			});
 	}
 
-	public long[] getGroupIds() {
+	public long[] getGroupIds() throws PortalException {
 		if (_groupIds == null) {
 			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 				WebKeys.THEME_DISPLAY);
