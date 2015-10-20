@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalService;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.RenderRequestImpl;
@@ -34,6 +34,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -84,7 +85,7 @@ public class MyPagesPortlet extends LayoutAdminPortlet {
 			String tabs1 = ParamUtil.getString(
 				dynamicRequest, "tabs1", "public-pages");
 
-			boolean hasPowerUserRole = RoleLocalServiceUtil.hasUserRole(
+			boolean hasPowerUserRole = _roleLocalService.hasUserRole(
 				user.getUserId(), user.getCompanyId(), RoleConstants.POWER_USER,
 				true);
 
@@ -109,5 +110,12 @@ public class MyPagesPortlet extends LayoutAdminPortlet {
 
 		super.doDispatch(renderRequest, renderResponse);
 	}
+
+	@Reference(unbind = "-")
+	protected void setRoleLocalService(RoleLocalService roleLocalService) {
+		_roleLocalService = roleLocalService;
+	}
+
+	private RoleLocalService _roleLocalService;
 
 }
