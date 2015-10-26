@@ -325,11 +325,20 @@ public class InputEditorTag extends IncludeTag {
 		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST);
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		if (portletRequest == null) {
-			return RequestBackedPortletURLFactoryUtil.create(request);
+			return RequestBackedPortletURLFactoryUtil.
+				createControlPanelPortletURLFactory(
+					request, themeDisplay.getScopeGroup(),
+					themeDisplay.getRefererPlid());
 		}
 
-		return RequestBackedPortletURLFactoryUtil.create(portletRequest);
+		return RequestBackedPortletURLFactoryUtil.
+			createControlPanelPortletURLFactory(
+				portletRequest, themeDisplay.getScopeGroup(),
+				themeDisplay.getRefererPlid());
 	}
 
 	protected String getToolbarSet() {

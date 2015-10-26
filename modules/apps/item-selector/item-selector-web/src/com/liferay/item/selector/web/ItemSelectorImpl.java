@@ -77,7 +77,10 @@ public class ItemSelectorImpl implements ItemSelector {
 			WebKeys.THEME_DISPLAY);
 
 		RequestBackedPortletURLFactory requestBackedPortletURLFactory =
-			RequestBackedPortletURLFactoryUtil.create(portletRequest);
+			RequestBackedPortletURLFactoryUtil.
+				createControlPanelPortletURLFactory(
+					portletRequest, themeDisplay.getScopeGroup(),
+					themeDisplay.getRefererPlid());
 
 		Map<String, String[]> parameters = portletRequest.getParameterMap();
 
