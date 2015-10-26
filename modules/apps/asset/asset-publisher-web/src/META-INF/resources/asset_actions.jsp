@@ -49,15 +49,13 @@ if (showEditURL && assetRenderer.hasEditPermission(permissionChecker)) {
 
 <c:if test="<%= editPortletURL != null %>">
 	<div class="asset-actions lfr-meta-actions">
-
-		<%
-		String taglibEditURL = "javascript:Liferay.Util.openWindow({id: '" + renderResponse.getNamespace() + "editAsset', title: '" + HtmlUtil.escapeJS(LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false)) + "', uri:'" + HtmlUtil.escapeJS(editPortletURL.toString()) + "'});";
-		%>
-
 		<liferay-ui:icon
 			iconCssClass="icon-edit-sign"
 			message='<%= showIconLabel ? HtmlUtil.render(LanguageUtil.format(request, "edit-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(assetRenderer.getTitle(locale))}, false)) : LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false) %>'
-			url="<%= taglibEditURL %>"
+			method="get"
+			label="<%= false %>"
+			url="<%= editPortletURL.toString() %>"
+			useDialog="<%= true %>"
 		/>
 	</div>
 </c:if>
