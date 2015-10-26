@@ -15,19 +15,25 @@
 package com.liferay.portlet;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
+import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Adolfo Pérez
+ * @author Roberto Díaz
  */
 public class RequestBackedPortletURLFactoryUtil {
 
@@ -50,6 +56,38 @@ public class RequestBackedPortletURLFactoryUtil {
 
 		return new LiferayPortletResponseRequestBackedPortletURLFactory(
 			PortalUtil.getLiferayPortletResponse(portletResponse));
+	}
+
+	public static RequestBackedPortletURLFactory
+		createControlPanelPortletURLFactory(
+			HttpServletRequest request, Group group, long refererPlid) {
+
+		return new RequestBackedControlPanelPortletURLFactory(
+			request, group, refererPlid);
+	}
+
+	public static RequestBackedPortletURLFactory
+		createControlPanelPortletURLFactory(
+			HttpServletRequest request, long companyId, long refererPlid) {
+
+		return new RequestBackedControlPanelPortletURLFactory(
+			request, companyId, refererPlid);
+	}
+
+	public static RequestBackedPortletURLFactory
+		createControlPanelPortletURLFactory(
+			PortletRequest portletRequest, Group group, long refererPlid) {
+
+		return new RequestBackedControlPanelPortletURLFactory(
+			portletRequest, group, refererPlid);
+	}
+
+	public static RequestBackedPortletURLFactory
+		createControlPanelPortletURLFactory(
+			PortletRequest portletRequest, long companyId, long refererPlid) {
+
+		return new RequestBackedControlPanelPortletURLFactory(
+			portletRequest, companyId, refererPlid);
 	}
 
 	private static class HttpServletRequestRequestBackedPortletURLFactory
@@ -117,6 +155,107 @@ public class RequestBackedPortletURLFactoryUtil {
 		}
 
 		private final LiferayPortletResponse _liferayPortletResponse;
+
+	}
+
+	private static class RequestBackedControlPanelPortletURLFactory
+		implements RequestBackedPortletURLFactory {
+
+		public RequestBackedControlPanelPortletURLFactory(
+			HttpServletRequest request, Group group, long refererPlid) {
+
+			this(group.getCompanyId(), group, refererPlid);
+
+			_request = request;
+		}
+
+		public RequestBackedControlPanelPortletURLFactory(
+			HttpServletRequest request, long companyId, long refererPlid) {
+
+			this(companyId, null, refererPlid);
+
+			_request = request;
+		}
+
+		public RequestBackedControlPanelPortletURLFactory(
+			PortletRequest portletRequest, Group group, long refererPlid) {
+
+			this(group.getCompanyId(), group, refererPlid);
+
+			_portletRequest = portletRequest;
+		}
+
+		public RequestBackedControlPanelPortletURLFactory(
+			PortletRequest portletRequest, long companyId, long refererPlid) {
+
+			this(companyId, null, refererPlid);
+
+			_portletRequest = portletRequest;
+		}
+
+		@Override
+		public PortletURL createActionURL(String portletId) {
+			return createControlPanelPortletURL(
+				portletId, PortletRequest.ACTION_PHASE);
+		}
+
+		@Override
+		public PortletURL createRenderURL(String portletId) {
+			return createControlPanelPortletURL(
+				portletId, PortletRequest.RENDER_PHASE);
+		}
+
+		@Override
+		public PortletURL createResourceURL(String portletId) {
+			return createControlPanelPortletURL(
+				portletId, PortletRequest.RESOURCE_PHASE);
+		}
+
+		protected PortletURL createControlPanelPortletURL(
+			String portletId, String lifecycle) {
+
+			LiferayPortletURL liferayPortletURL = null;
+
+			Layout controlPanelLayout = PortalUtil.getControlPanelLayout(
+				_companyId, _group);
+
+			if (_request != null) {
+				liferayPortletURL = PortletURLFactoryUtil.create(
+					_request, portletId, controlPanelLayout, lifecycle);
+			}
+			else {
+				liferayPortletURL = PortletURLFactoryUtil.create(
+					_portletRequest, portletId, controlPanelLayout, lifecycle);
+			}
+
+			liferayPortletURL.setLifecycle(lifecycle);
+
+			if (_refererPlid > 0) {
+				liferayPortletURL.setRefererPlid(_refererPlid);
+			}
+
+			try {
+				liferayPortletURL.setWindowState(WindowState.MAXIMIZED);
+			}
+			catch (WindowStateException wse) {
+			}
+
+			return liferayPortletURL;
+		}
+
+		private RequestBackedControlPanelPortletURLFactory(
+			long companyId, Group group, long refererPlid) {
+
+			_companyId = companyId;
+			_group = group;
+			_refererPlid = refererPlid;
+		}
+
+		private final long _companyId;
+		private final Group _group;
+		private PortletRequest _portletRequest;
+		private final long _refererPlid;
+		private HttpServletRequest _request;
 
 	}
 
