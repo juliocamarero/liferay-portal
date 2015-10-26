@@ -361,7 +361,8 @@ public class RuntimeTag extends TagSupport {
 		PortletPreferencesIds portletPreferencesIds =
 			PortletPreferencesFactoryUtil.getPortletPreferencesIds(
 				themeDisplay.getCompanyId(), themeDisplay.getSiteGroupId(),
-				themeDisplay.getPlid(), portlet.getPortletId(), settingsScope);
+				PortletKeys.PREFS_PLID_SHARED, portlet.getPortletId(),
+				settingsScope);
 
 		if (PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
 				portletPreferencesIds.getOwnerId(),
