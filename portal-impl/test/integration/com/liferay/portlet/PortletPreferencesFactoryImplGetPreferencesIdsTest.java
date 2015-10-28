@@ -17,12 +17,10 @@ package com.liferay.portlet;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
-import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.PortletPreferencesIds;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.ServiceContextThreadLocal;
@@ -194,23 +192,6 @@ public class PortletPreferencesFactoryImplGetPreferencesIdsTest {
 	@Test(expected = PrincipalException.MustHavePermission.class)
 	public void testPreferencesWithModeEditGuestInPrivateLayout()
 		throws Exception {
-
-		String portletId = TestPortletsPortletKeys.TEST_GROUP_PORTLET;
-
-		long siteGroupId = _layout.getGroupId();
-		boolean modeEditGuest = true;
-
-		PortletPreferencesFactoryUtil.getPortletPreferencesIds(
-			siteGroupId, TestPropsValues.getUserId(), _layout, portletId,
-			modeEditGuest);
-	}
-
-	@Test(expected = PrincipalException.MustHavePermission.class)
-	public void
-			testPreferencesWithModeEditGuestInPublicLayoutWithoutPermission()
-		throws Exception {
-
-		_layout = LayoutTestUtil.addLayout(_group, false);
 
 		String portletId = TestPortletsPortletKeys.TEST_GROUP_PORTLET;
 
