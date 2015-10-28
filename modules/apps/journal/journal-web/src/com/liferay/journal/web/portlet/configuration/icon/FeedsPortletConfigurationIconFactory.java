@@ -15,6 +15,7 @@
 package com.liferay.journal.web.portlet.configuration.icon;
 
 import com.liferay.portal.kernel.portlet.configuration.icon.BaseJSPPortletConfigurationIconFactory;
+import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIconFactory;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIconFactory;
 
@@ -29,29 +30,16 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = PortletConfigurationIconFactory.class)
 public class FeedsPortletConfigurationIconFactory
-	extends BaseJSPPortletConfigurationIconFactory {
+	extends BasePortletConfigurationIconFactory {
 
 	@Override
 	public PortletConfigurationIcon create(HttpServletRequest request) {
-		return new StructuresPortletConfigurationIcon(request);
-	}
-
-	@Override
-	public String getJspPath() {
-		return "/configuration/icon/feeds.jsp";
+		return new FeedsPortletConfigurationIcon(request);
 	}
 
 	@Override
 	public double getWeight() {
 		return 100.0;
-	}
-
-	@Override
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.journal.web)", unbind = "-"
-	)
-	public void setServletContext(ServletContext servletContext) {
-		super.setServletContext(servletContext);
 	}
 
 }

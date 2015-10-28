@@ -37,14 +37,15 @@ AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
 			redirectURL.setParameter("mvcPath", "/edit_content_redirect.jsp");
 
 			PortletURL editPortletURL = assetRenderer.getURLEdit((LiferayPortletRequest)renderRequest, (LiferayPortletResponse)renderResponse, LiferayWindowState.POP_UP, redirectURL);
-
-			String taglibEditURL = "javascript:Liferay.Util.openWindow({id: '" + renderResponse.getNamespace() + "editAsset', title: '" + HtmlUtil.escapeJS(LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false)) + "', uri:'" + HtmlUtil.escapeJS(editPortletURL.toString()) + "'});";
 			%>
 
 			<liferay-ui:icon
 				iconCssClass="icon-edit-sign"
+				label="<%= false %>"
 				message='<%= HtmlUtil.render(LanguageUtil.format(request, "edit-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(assetRenderer.getTitle(locale))}, false)) %>'
-				url="<%= taglibEditURL %>"
+				method="get"
+				url="<%= editPortletURL.toString() %>"
+				useDialog="<%= true %>"
 			/>
 		</div>
 	</c:if>

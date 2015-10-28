@@ -133,8 +133,6 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 				PortletURL latestArticleEditURL = latestArticleAssetRenderer.getURLEdit(liferayPortletRequest, liferayPortletResponse, LiferayWindowState.POP_UP, redirectURL);
 
 				latestArticleEditURL.setParameter("showHeader", Boolean.FALSE.toString());
-
-				String taglibEditArticleURL = "javascript:Liferay.Util.openWindow({dialog: {destroyOnHide: true}, id: '_" + HtmlUtil.escapeJS(portletDisplay.getId()) + "_editAsset', title: '" + HtmlUtil.escapeJS(HtmlUtil.escape(latestArticle.getTitle(locale))) + "', uri:'" + HtmlUtil.escapeJS(latestArticleEditURL.toString()) + "'});";
 				%>
 
 				<liferay-ui:icon
@@ -142,7 +140,9 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 					iconCssClass="icon-pencil"
 					label="<%= true %>"
 					message="edit"
-					url="<%= taglibEditArticleURL %>"
+					method="get"
+					url="<%= latestArticleEditURL.toString() %>"
+					useDialog="<%= true %>"
 				/>
 			</c:if>
 
@@ -163,16 +163,14 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 					<portlet:param name="showCacheableInput" value="<%= Boolean.TRUE.toString() %>" />
 				</liferay-portlet:renderURL>
 
-				<%
-				String taglibEditTemplateURL = "javascript:Liferay.Util.openWindow({id: '_" + HtmlUtil.escapeJS(portletDisplay.getId()) + "_editAsset', title: '" + HtmlUtil.escapeJS(HtmlUtil.escape(ddmTemplate.getName(locale))) + "', uri:'" + HtmlUtil.escapeJS(editTemplateURL.toString()) + "'});";
-				%>
-
 				<liferay-ui:icon
 					cssClass="lfr-icon-action"
 					iconCssClass="icon-edit"
 					label="<%= true %>"
 					message="edit-template"
-					url="<%= taglibEditTemplateURL %>"
+					method="get"
+					url="<%= editTemplateURL.toString() %>"
+					useDialog="<%= true %>"
 				/>
 			</c:if>
 
@@ -216,16 +214,14 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 						addArticleURL.setParameter("ddmStructureId", String.valueOf(ddmStructure.getStructureId()));
 					%>
 
-						<%
-						String taglibAddArticleURL = "javascript:Liferay.Util.openWindow({id: '_" + HtmlUtil.escapeJS(portletDisplay.getId()) + "_editAsset', title: '" + HtmlUtil.escapeJS(LanguageUtil.format(request, "new-x", ddmStructure.getName(locale))) + "', uri:'" + HtmlUtil.escapeJS(addArticleURL.toString()) + "'});";
-						%>
-
 						<liferay-ui:icon
 							cssClass="lfr-icon-action lfr-icon-action-add"
 							iconCssClass="<%= assetRendererFactory.getIconCssClass() %>"
 							label="<%= true %>"
 							message="<%= ddmStructure.getName(locale) %>"
-							url="<%= taglibAddArticleURL %>"
+							method="get"
+							url="<%= addArticleURL.toString() %>"
+							useDialog="<%= true %>"
 						/>
 
 					<%
