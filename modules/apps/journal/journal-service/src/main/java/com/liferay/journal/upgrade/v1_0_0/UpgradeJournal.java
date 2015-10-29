@@ -14,6 +14,7 @@
 
 package com.liferay.journal.upgrade.v1_0_0;
 
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,12 +33,16 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.LayoutPrototypeLocalService;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.dynamicdatamapping.DDMStructureManager;
 import com.liferay.portlet.dynamicdatamapping.DDMTemplateManager;
 import com.liferay.portlet.dynamicdatamapping.StorageEngineManager;
 import com.liferay.util.ContentUtil;
 import com.liferay.util.xml.XMLUtil;
+import org.osgi.service.component.annotations.Reference;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -134,6 +139,17 @@ public class UpgradeJournal extends UpgradeBaseJournal {
 			String localizedDescription, String definition, String layout,
 			String storageType)
 		throws Exception {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setUuid(uuid);
+
+		long userId = userLocalService.getDefaultUserId(companyId);
+
+
+
+		ddmStructureLocalService.addStructure(userId, groupId, PortalUtil.getClassNameId(
+							"com.liferay.portlet.journal.model.JournalArticle"), ddmStructureKey, localizedName, localizedDescriptionle);
 
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 
@@ -771,6 +787,24 @@ public class UpgradeJournal extends UpgradeBaseJournal {
 			DataAccess.cleanUp(con, ps, rs);
 		}
 	}
+
+	@Reference(unbind = "-")
+	protected void setDDMStructureLocalService(
+		DDMStructureLocalService ddmStructureLocalService) {
+
+		this.ddmStructureLocalService = ddmStructureLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setUserLocalService(
+		UserLocalService userLocalService) {
+
+		this.userLocalService = userLocalService;
+	}
+
+	protected DDMStructureLocalService ddmStructureLocalService;
+	protected UserLocalService userLocalService;
+
 
 	private static final String _CLASS_NAME_DDM_STRUCTURE =
 		"com.liferay.dynamic.data.mapping.model.DDMStructure";
