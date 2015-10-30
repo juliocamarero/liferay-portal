@@ -17,7 +17,6 @@ package com.liferay.journal.util.impl;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.permission.JournalArticlePermission;
-import com.liferay.journal.util.JournalContent;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.index.IndexEncoder;
@@ -282,7 +281,8 @@ public class JournalContentUtil {
 		_journalArticleLocalService = journalArticleLocalService;
 	}
 
-	protected static final String CACHE_NAME = JournalContent.class.getName();
+	protected static final String CACHE_NAME =
+		JournalContentUtil.class.getName();
 
 	private PortalCache<JournalContentKey, JournalArticleDisplay>
 			_getPortalCache() {

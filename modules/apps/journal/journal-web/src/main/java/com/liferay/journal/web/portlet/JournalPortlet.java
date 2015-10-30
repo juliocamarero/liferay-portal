@@ -52,6 +52,7 @@ import com.liferay.journal.service.JournalArticleService;
 import com.liferay.journal.service.JournalContentSearchLocalService;
 import com.liferay.journal.service.JournalFeedService;
 import com.liferay.journal.service.JournalFolderService;
+import com.liferay.journal.util.impl.JournalContentUtil;
 import com.liferay.journal.util.impl.JournalUtil;
 import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
 import com.liferay.journal.web.portlet.action.ActionUtil;
@@ -372,6 +373,9 @@ public class JournalPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		renderRequest.setAttribute(
+			JournalWebKeys.JOURNAL_CONTENT_UTIL, _journalContentUtil);
+
 		String path = getPath(renderRequest, renderResponse);
 
 		if (Validator.equals(path, "/edit_article.jsp")) {
@@ -459,7 +463,7 @@ public class JournalPortlet extends MVCPortlet {
 		}
 		else if (resourceID.equals("rss")) {
 			try {
-				byte[] xml = JournalRSSUtil.getRSS(
+				byte[] xml = _journalRSSUtil.getRSS(
 					resourceRequest, resourceResponse);
 
 				ServletResponseUtil.sendFile(
@@ -1273,6 +1277,13 @@ public class JournalPortlet extends MVCPortlet {
 	}
 
 	@Reference
+	protected void setJournalContentUtil(
+		JournalContentUtil journalContentUtil) {
+
+		_journalContentUtil = journalContentUtil;
+	}
+
+	@Reference
 	protected void setJournalFeedService(
 		JournalFeedService journalFeedService) {
 
@@ -1284,6 +1295,11 @@ public class JournalPortlet extends MVCPortlet {
 		JournalFolderService journalFolderService) {
 
 		_journalFolderService = journalFolderService;
+	}
+
+	@Reference
+	protected void setJournalRSSUtil(JournalRSSUtil journalRSSUtil) {
+		_journalRSSUtil = journalRSSUtil;
 	}
 
 	@Reference
@@ -1316,6 +1332,12 @@ public class JournalPortlet extends MVCPortlet {
 		_journalContentSearchLocalService = null;
 	}
 
+	protected void unsetJournalContentUtil(
+		JournalContentUtil journalContentUtil) {
+
+		_journalContentUtil = journalContentUtil;
+	}
+
 	protected void unsetJournalFeedService(
 		JournalFeedService journalFeedService) {
 
@@ -1326,6 +1348,10 @@ public class JournalPortlet extends MVCPortlet {
 		JournalFolderService journalFolderService) {
 
 		_journalFolderService = null;
+	}
+
+	protected void unsetJournalRSSUtil() {
+		_journalRSSUtil = null;
 	}
 
 	protected void unsetLayoutLocalService(
@@ -1359,8 +1385,10 @@ public class JournalPortlet extends MVCPortlet {
 	private ItemSelector _itemSelector;
 	private JournalArticleService _journalArticleService;
 	private JournalContentSearchLocalService _journalContentSearchLocalService;
+	private JournalContentUtil _journalContentUtil;
 	private JournalFeedService _journalFeedService;
 	private JournalFolderService _journalFolderService;
+	private JournalRSSUtil _journalRSSUtil;
 	private LayoutLocalService _layoutLocalService;
 	private TrashEntryService _trashEntryService;
 

@@ -9,7 +9,7 @@
 	<cache
 		eternal="false"
 		maxElementsInMemory="10000"
-		name="com.liferay.journal.util.JournalContent"
+		name="com.liferay.journal.util.impl.JournalContentUtil"
 		overflowToDisk="false"
 		timeToIdleSeconds="600"
 	>

@@ -25,8 +25,8 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.permission.JournalArticlePermission;
-import com.liferay.journal.util.JournalContentUtil;
 import com.liferay.journal.util.JournalConverter;
+import com.liferay.journal.util.impl.JournalContentUtil;
 import com.liferay.journal.util.impl.JournalUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -755,7 +755,7 @@ public class JournalArticleIndexer
 					WebKeys.THEME_DISPLAY);
 
 			JournalArticleDisplay articleDisplay =
-				JournalContentUtil.getDisplay(
+				_journalContentUtil.getDisplay(
 					groupId, articleId, version, null, Constants.VIEW,
 					LocaleUtil.toLanguageId(snippetLocale), 1,
 					portletRequestModel, themeDisplay);
@@ -844,6 +844,13 @@ public class JournalArticleIndexer
 	}
 
 	@Reference
+	protected void setJournalContentUtil(
+		JournalContentUtil journalContentUtil) {
+
+		_journalContentUtil = journalContentUtil;
+	}
+
+	@Reference
 	protected void setJournalConverter(JournalConverter journalConverter) {
 		_journalConverter = journalConverter;
 	}
@@ -853,6 +860,7 @@ public class JournalArticleIndexer
 
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private JournalArticleLocalService _journalArticleLocalService;
+	private JournalContentUtil _journalContentUtil;
 	private JournalConverter _journalConverter;
 
 }
