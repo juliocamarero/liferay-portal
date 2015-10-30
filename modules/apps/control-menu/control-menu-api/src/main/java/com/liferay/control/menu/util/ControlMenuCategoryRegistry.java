@@ -31,6 +31,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -69,35 +72,46 @@ public class ControlMenuCategoryRegistry {
 			return controlMenuCategories;
 		}
 
-		return ListUtil.filter(
-			controlMenuCategories,
-			new PredicateFilter<ControlMenuCategory>() {
+		List<ControlMenuCategory> filteredControlMenuCategories =
+			ListUtil.filter(
+				controlMenuCategories,
+				new PredicateFilter<ControlMenuCategory>() {
 
-				@Override
-				public boolean filter(ControlMenuCategory controlMenuCategory) {
-					try {
-						if (!controlMenuCategory.hasAccessPermission(request)) {
-							return false;
+					@Override
+					public boolean filter(
+						ControlMenuCategory controlMenuCategory) {
+
+						try {
+							if (!controlMenuCategory.hasAccessPermission(
+									request)) {
+
+								return false;
+							}
+
+							List<ControlMenuEntry> controlMenuEntries =
+								_controlMenuEntryRegistry.getControlMenuEntries(
+									controlMenuCategory, request);
+
+							if (controlMenuEntries.isEmpty()) {
+								return false;
+							}
+
+							return true;
+						}
+						catch (PortalException pe) {
+							_log.error(pe, pe);
 						}
 
-						List<ControlMenuEntry> controlMenuEntries =
-							_controlMenuEntryRegistry.getControlMenuEntries(
-								controlMenuCategory, request);
-
-						if (controlMenuEntries.isEmpty()) {
-							return false;
-						}
-
-						return true;
-					}
-					catch (PortalException pe) {
-						_log.error(pe, pe);
+						return false;
 					}
 
-					return false;
-				}
+				});
 
-			});
+		if (PortalUtil.isRightToLeft(request)) {
+			Collections.reverse(filteredControlMenuCategories);
+		}
+
+		return filteredControlMenuCategories;
 	}
 
 	@Activate
