@@ -74,6 +74,9 @@ public class ProductMenuDisplayContext {
 			PanelCategoryKeys.ROOT, _themeDisplay.getPermissionChecker(),
 			_themeDisplay.getScopeGroup());
 
+		_portletRequest.setAttribute(
+			ApplicationListWebKeys.PANEL_CATEGORIES, _childPanelCategories);
+
 		return _childPanelCategories;
 	}
 

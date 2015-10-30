@@ -26,33 +26,57 @@
 		<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" image="remove" url="javascript:;" />
 	</h4>
 
-	<ul class="nav nav-tabs product-menu-tabs">
+	<%
+	List<PanelCategory> childPanelCategories = productMenuDisplayContext.getChildPanelCategories();
+	%>
 
-		<%
-		List<PanelCategory> childPanelCategories = productMenuDisplayContext.getChildPanelCategories();
+	<c:choose>
+		<c:when test="<%= childPanelCategories.size() > 1 %>">
+			<ul class="nav nav-tabs product-menu-tabs">
 
-		for (PanelCategory childPanelCategory : childPanelCategories) {
-		%>
+				<%
+				for (PanelCategory childPanelCategory : childPanelCategories) {
+				%>
 
-			<li class="<%= "col-xs-" + (12 / childPanelCategories.size()) %> <%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? "active" : StringPool.BLANK %>">
-				<a aria-expanded="true" data-toggle="tab" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>">
-					<c:if test="<%= !childPanelCategory.includeHeader(request, new PipingServletResponse(pageContext)) %>">
-						<div class="product-menu-tab-icon">
-							<span class="<%= childPanelCategory.getIconCssClass() %> icon-monospaced"></span>
-						</div>
+					<li class="<%= "col-xs-" + (12 / childPanelCategories.size()) %> <%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? "active" : StringPool.BLANK %>">
+						<a aria-expanded="true" data-toggle="tab" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>">
+							<c:if test="<%= !childPanelCategory.includeHeader(request, new PipingServletResponse(pageContext)) %>">
+								<div class="product-menu-tab-icon">
+									<span class="<%= childPanelCategory.getIconCssClass() %> icon-monospaced"></span>
+								</div>
 
-						<div class="product-menu-tab-text">
+								<div class="product-menu-tab-text">
+									<%= childPanelCategory.getLabel(locale) %>
+								</div>
+							</c:if>
+						</a>
+					</li>
+
+				<%
+				}
+				%>
+
+			</ul>
+		</c:when>
+		<c:otherwise>
+
+			<%
+			PanelCategory childPanelCategory = childPanelCategories.get(0);
+			%>
+
+			<c:if test="<%= !childPanelCategory.includeHeader(request, new PipingServletResponse(pageContext)) %>">
+				<div class="nameplate">
+					<div class="nameplate-field">
+						<span class="<%= childPanelCategory.getIconCssClass() %> icon-monospaced"></span>
+					</div>
+
+					<div class="nameplate-content">
 							<%= childPanelCategory.getLabel(locale) %>
-						</div>
-					</c:if>
-				</a>
-			</li>
-
-		<%
-		}
-		%>
-
-	</ul>
+					</div>
+				</div>
+			</c:if>
+		</c:otherwise>
+	</c:choose>
 
 	<div class="sidebar-body">
 		<div class="tab-content">
