@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.portal.util.PortalUtil;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -67,7 +68,7 @@ public class ControlMenuEntryRegistry {
 			return controlMenuEntries;
 		}
 
-		return ListUtil.filter(
+		List<ControlMenuEntry> filteredControlMenuEntries = ListUtil.filter(
 			controlMenuEntries,
 			new PredicateFilter<ControlMenuEntry>() {
 
@@ -84,6 +85,12 @@ public class ControlMenuEntryRegistry {
 				}
 
 			});
+
+		if (PortalUtil.isRightToLeft(request)) {
+			Collections.reverse(filteredControlMenuEntries);
+		}
+
+		return filteredControlMenuEntries;
 	}
 
 	@Activate
