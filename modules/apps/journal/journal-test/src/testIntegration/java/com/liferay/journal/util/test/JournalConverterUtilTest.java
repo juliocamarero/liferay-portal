@@ -30,7 +30,7 @@ import com.liferay.dynamic.data.mapping.util.impl.DDMImpl;
 import com.liferay.dynamic.data.mapping.util.impl.DDMXMLImpl;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.test.util.JournalTestUtil;
-import com.liferay.journal.util.JournalConverter;
+import com.liferay.journal.util.impl.JournalConverterUtil;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -124,7 +124,7 @@ public class JournalConverterUtilTest {
 
 		Registry registry = RegistryUtil.getRegistry();
 
-		_journalConverter = registry.getService(JournalConverter.class);
+		_journalConverterUtil = registry.getService(JournalConverterUtil.class);
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class JournalConverterUtilTest {
 		String expectedContent = read(
 			"test-journal-content-boolean-repeatable-field.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -177,7 +177,7 @@ public class JournalConverterUtilTest {
 		String expectedContent = replaceLinksToLayoutsParameters(
 			read("test-journal-content-link-to-page-field.xml"), layouts);
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -198,7 +198,7 @@ public class JournalConverterUtilTest {
 
 		String expectedContent = read("test-journal-content-list-field.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -221,7 +221,7 @@ public class JournalConverterUtilTest {
 		String expectedContent = read(
 			"test-journal-content-multi-list-field.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -233,7 +233,7 @@ public class JournalConverterUtilTest {
 
 		String expectedContent = read("test-journal-content-nested-fields.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -255,7 +255,7 @@ public class JournalConverterUtilTest {
 		String expectedContent = read(
 			"test-journal-content-text-area-field.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -279,7 +279,7 @@ public class JournalConverterUtilTest {
 		String expectedContent = read(
 			"test-journal-content-text-box-repeatable-field.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -300,7 +300,7 @@ public class JournalConverterUtilTest {
 
 		String expectedContent = read("test-journal-content-text-field.xml");
 
-		String actualContent = _journalConverter.getContent(
+		String actualContent = _journalConverterUtil.getContent(
 			_ddmStructure, fields);
 
 		assertEquals(expectedContent, actualContent);
@@ -313,7 +313,7 @@ public class JournalConverterUtilTest {
 		DDMForm expectedDDMForm = DDMFormXSDDeserializerUtil.deserialize(
 			expectedXSD);
 
-		String actualXSD = _journalConverter.getDDMXSD(
+		String actualXSD = _journalConverterUtil.getDDMXSD(
 			read("test-journal-structure-all-fields.xml"));
 
 		validateDDMXSD(actualXSD);
@@ -341,7 +341,7 @@ public class JournalConverterUtilTest {
 		String content = read(
 			"test-journal-content-boolean-repeatable-field.xml");
 
-		Fields actualFields = _journalConverter.getDDMFields(
+		Fields actualFields = _journalConverterUtil.getDDMFields(
 			_ddmStructure, content);
 
 		Assert.assertEquals(expectedFields, actualFields);
@@ -395,7 +395,7 @@ public class JournalConverterUtilTest {
 		for (int i = 0; i < previewURLs.length; i++) {
 			element.addCDATA(previewURLs[i]);
 
-			Fields actualFields = _journalConverter.getDDMFields(
+			Fields actualFields = _journalConverterUtil.getDDMFields(
 				_ddmStructure, document.asXML());
 
 			Assert.assertEquals(expectedFields, actualFields);
@@ -434,7 +434,7 @@ public class JournalConverterUtilTest {
 		String content = replaceLinksToLayoutsParameters(
 			read("test-journal-content-link-to-page-field.xml"), layoutsMap);
 
-		Fields actualFields = _journalConverter.getDDMFields(
+		Fields actualFields = _journalConverterUtil.getDDMFields(
 			_ddmStructure, content);
 
 		Assert.assertEquals(expectedFields, actualFields);
@@ -455,7 +455,7 @@ public class JournalConverterUtilTest {
 
 		String content = read("test-journal-content-list-field.xml");
 
-		Fields actualFields = _journalConverter.getDDMFields(
+		Fields actualFields = _journalConverterUtil.getDDMFields(
 			_ddmStructure, content);
 
 		Assert.assertEquals(expectedFields, actualFields);
@@ -479,7 +479,7 @@ public class JournalConverterUtilTest {
 
 		String content = read("test-journal-content-multi-list-field.xml");
 
-		Fields actualFields = _journalConverter.getDDMFields(
+		Fields actualFields = _journalConverterUtil.getDDMFields(
 			_ddmStructure, content);
 
 		Assert.assertEquals(expectedFields, actualFields);
@@ -491,7 +491,7 @@ public class JournalConverterUtilTest {
 
 		String content = read("test-journal-content-nested-fields.xml");
 
-		Fields actualFields = _journalConverter.getDDMFields(
+		Fields actualFields = _journalConverterUtil.getDDMFields(
 			_ddmStructure, content);
 
 		Assert.assertEquals(expectedFields, actualFields);
@@ -504,7 +504,7 @@ public class JournalConverterUtilTest {
 		Map<String, Map<String, String>> expectedMap =
 			JournalTestUtil.getXsdMap(expectedXSD);
 
-		String actualXSD = _journalConverter.getJournalXSD(
+		String actualXSD = _journalConverterUtil.getJournalXSD(
 			read("test-ddm-structure-all-fields.xml"));
 
 		Map<String, Map<String, String>> actualMap = JournalTestUtil.getXsdMap(
@@ -1007,6 +1007,6 @@ public class JournalConverterUtilTest {
 	@DeleteAfterTestRun
 	private Group _group;
 
-	private JournalConverter _journalConverter;
+	private JournalConverterUtil _journalConverterUtil;
 
 }
