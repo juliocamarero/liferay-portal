@@ -21,4 +21,6 @@ public class JournalWebKeys {
 
 	public static final String ITEM_SELECTOR = "ITEM_SELECTOR";
 
+	public static final String JOURNAL_CONTENT_UTIL = "JOURNAL_CONTENT_UTIL";
+
 }
