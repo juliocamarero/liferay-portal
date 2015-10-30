@@ -14,7 +14,7 @@
 
 package com.liferay.journal.internal;
 
-import com.liferay.journal.util.JournalConverter;
+import com.liferay.journal.util.impl.JournalConverterUtil;
 import com.liferay.portlet.journal.util.JournalConverterManager;
 
 import java.util.Locale;
@@ -32,14 +32,16 @@ public class JournalConverterManagerImpl implements JournalConverterManager {
 	public String getDDMXSD(String journalXSD, Locale defaultLocale)
 		throws Exception {
 
-		return _journalConverter.getDDMXSD(journalXSD, defaultLocale);
+		return _journalConverterUtil.getDDMXSD(journalXSD, defaultLocale);
 	}
 
 	@Reference
-	protected void setJournalConverter(JournalConverter journalConverter) {
-		_journalConverter = journalConverter;
+	protected void setJournalConverterUtil(
+		JournalConverterUtil journalConverterUtil) {
+
+		_journalConverterUtil = journalConverterUtil;
 	}
 
-	private JournalConverter _journalConverter;
+	private JournalConverterUtil _journalConverterUtil;
 
 }
