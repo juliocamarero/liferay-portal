@@ -21,7 +21,6 @@ import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.dynamic.data.mapping.util.impl.DDMFieldsCounter;
 import com.liferay.dynamic.data.mapping.util.impl.DDMImpl;
-import com.liferay.journal.util.JournalConverter;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -68,9 +67,9 @@ import org.osgi.service.component.annotations.Reference;
  * @author Bruno Basto
  */
 @Component(immediate = true)
-public class JournalConverterImpl implements JournalConverter {
+public class JournalConverterUtil {
 
-	public JournalConverterImpl() {
+	public JournalConverterUtil() {
 		_ddmDataTypes = new HashMap<>();
 
 		_ddmDataTypes.put("boolean", "boolean");
@@ -116,7 +115,6 @@ public class JournalConverterImpl implements JournalConverter {
 		_journalTypesToDDMTypes.put("text_box", "textarea");
 	}
 
-	@Override
 	public String getContent(DDMStructure ddmStructure, Fields ddmFields)
 		throws Exception {
 
@@ -154,7 +152,6 @@ public class JournalConverterImpl implements JournalConverter {
 		return XMLUtil.formatXML(document.asXML());
 	}
 
-	@Override
 	public Fields getDDMFields(DDMStructure ddmStructure, Document document)
 		throws Exception {
 
@@ -182,21 +179,18 @@ public class JournalConverterImpl implements JournalConverter {
 		return ddmFields;
 	}
 
-	@Override
 	public Fields getDDMFields(DDMStructure ddmStructure, String content)
 		throws Exception {
 
 		return getDDMFields(ddmStructure, SAXReaderUtil.read(content));
 	}
 
-	@Override
 	public String getDDMXSD(String journalXSD) throws Exception {
 		Locale defaultLocale = LocaleUtil.getSiteDefault();
 
 		return getDDMXSD(journalXSD, defaultLocale);
 	}
 
-	@Override
 	public String getDDMXSD(String journalXSD, Locale defaultLocale)
 		throws Exception {
 
@@ -218,7 +212,6 @@ public class JournalConverterImpl implements JournalConverter {
 		return XMLUtil.formatXML(document);
 	}
 
-	@Override
 	public String getJournalXSD(String ddmXSD) throws Exception {
 		Document document = SAXReaderUtil.read(ddmXSD);
 
@@ -1049,7 +1042,7 @@ public class JournalConverterImpl implements JournalConverter {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		JournalConverterImpl.class);
+		JournalConverterUtil.class);
 
 	private final Map<String, String> _ddmDataTypes;
 	private final Map<String, String> _ddmMetadataAttributes;
