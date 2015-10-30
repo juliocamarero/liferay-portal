@@ -25,8 +25,8 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.permission.JournalArticlePermission;
-import com.liferay.journal.util.JournalContentUtil;
-import com.liferay.journal.util.JournalConverter;
+import com.liferay.journal.util.impl.JournalContentUtil;
+import com.liferay.journal.util.impl.JournalConverterUtil;
 import com.liferay.journal.util.impl.JournalUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -341,7 +341,7 @@ public class JournalArticleIndexer
 		DDMFormValues ddmFormValues = null;
 
 		try {
-			Fields fields = _journalConverter.getDDMFields(
+			Fields fields = _journalConverterUtil.getDDMFields(
 				ddmStructure, article.getDocument());
 
 			ddmFormValues = FieldsToDDMFormValuesConverterUtil.convert(
@@ -663,7 +663,7 @@ public class JournalArticleIndexer
 		DDMFormValues ddmFormValues = null;
 
 		try {
-			Fields fields = _journalConverter.getDDMFields(
+			Fields fields = _journalConverterUtil.getDDMFields(
 				ddmStructure, article.getDocument());
 
 			ddmFormValues = FieldsToDDMFormValuesConverterUtil.convert(
@@ -755,7 +755,7 @@ public class JournalArticleIndexer
 					WebKeys.THEME_DISPLAY);
 
 			JournalArticleDisplay articleDisplay =
-				JournalContentUtil.getDisplay(
+				_journalContentUtil.getDisplay(
 					groupId, articleId, version, null, Constants.VIEW,
 					LocaleUtil.toLanguageId(snippetLocale), 1,
 					portletRequestModel, themeDisplay);
@@ -844,8 +844,17 @@ public class JournalArticleIndexer
 	}
 
 	@Reference
-	protected void setJournalConverter(JournalConverter journalConverter) {
-		_journalConverter = journalConverter;
+	protected void setJournalContentUtil(
+		JournalContentUtil journalContentUtil) {
+
+		_journalContentUtil = journalContentUtil;
+	}
+
+	@Reference
+	protected void setJournalConverterUtil(
+		JournalConverterUtil journalConverterUtil) {
+
+		_journalConverterUtil = journalConverterUtil;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -853,6 +862,7 @@ public class JournalArticleIndexer
 
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private JournalArticleLocalService _journalArticleLocalService;
-	private JournalConverter _journalConverter;
+	private JournalContentUtil _journalContentUtil;
+	private JournalConverterUtil _journalConverterUtil;
 
 }

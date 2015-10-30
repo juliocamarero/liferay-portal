@@ -26,8 +26,8 @@ import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.base.JournalFolderLocalServiceBaseImpl;
-import com.liferay.journal.util.JournalValidatorUtil;
 import com.liferay.journal.util.comparator.FolderIdComparator;
+import com.liferay.journal.util.impl.JournalValidatorUtil;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -1453,7 +1453,7 @@ public class JournalFolderLocalServiceImpl
 			long folderId, long groupId, long parentFolderId, String name)
 		throws PortalException {
 
-		JournalValidatorUtil.validateFolderName(name);
+		journalValidatorUtil.validateFolderName(name);
 
 		JournalFolder folder = journalFolderPersistence.fetchByG_P_N(
 			groupId, parentFolderId, name);
@@ -1468,5 +1468,8 @@ public class JournalFolderLocalServiceImpl
 
 	@ServiceReference(type = DDMStructureLocalService.class)
 	protected DDMStructureLocalService ddmStructureLocalService;
+
+	@ServiceReference(type = JournalValidatorUtil.class)
+	protected JournalValidatorUtil journalValidatorUtil;
 
 }

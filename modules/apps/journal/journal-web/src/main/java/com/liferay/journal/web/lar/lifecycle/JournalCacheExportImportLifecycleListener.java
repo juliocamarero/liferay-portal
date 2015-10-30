@@ -15,12 +15,13 @@
 package com.liferay.journal.web.lar.lifecycle;
 
 import com.liferay.journal.constants.JournalPortletKeys;
-import com.liferay.journal.util.JournalContentUtil;
+import com.liferay.journal.util.impl.JournalContentUtil;
 import com.liferay.portlet.exportimport.lar.PortletDataContext;
 import com.liferay.portlet.exportimport.lifecycle.BaseExportImportLifecycleListener;
 import com.liferay.portlet.exportimport.lifecycle.ExportImportLifecycleListener;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Mate Thurzo
@@ -35,7 +36,7 @@ public class JournalCacheExportImportLifecycleListener
 	}
 
 	protected void clearCache() {
-		JournalContentUtil.clearCache();
+		_journalContentUtil.clearCache();
 	}
 
 	@Override
@@ -59,5 +60,14 @@ public class JournalCacheExportImportLifecycleListener
 
 		clearCache();
 	}
+
+	@Reference
+	protected void setJournalContentUtil(
+		JournalContentUtil journalContentUtil) {
+
+		_journalContentUtil = journalContentUtil;
+	}
+
+	private JournalContentUtil _journalContentUtil;
 
 }

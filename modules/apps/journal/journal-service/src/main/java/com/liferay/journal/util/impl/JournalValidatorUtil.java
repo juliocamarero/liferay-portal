@@ -12,18 +12,42 @@
  * details.
  */
 
-package com.liferay.journal.util;
+package com.liferay.journal.util.impl;
 
+import com.liferay.journal.configuration.JournalServiceConfigurationValues;
 import com.liferay.journal.exception.FolderNameException;
+import com.liferay.portal.kernel.util.Validator;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author David Zhang
  */
-public interface JournalValidator {
+@Component
+public final class JournalValidatorUtil {
 
-	public boolean isValidName(String name);
+	public boolean isValidName(String name) {
+		if (Validator.isNull(name)) {
+			return false;
+		}
+
+		for (String blacklistChar :
+				JournalServiceConfigurationValues.CHAR_BLACKLIST) {
+
+			if (name.contains(blacklistChar)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	public void validateFolderName(String folderName)
-		throws FolderNameException;
+		throws FolderNameException {
+
+		if (!isValidName(folderName)) {
+			throw new FolderNameException(folderName);
+		}
+	}
 
 }

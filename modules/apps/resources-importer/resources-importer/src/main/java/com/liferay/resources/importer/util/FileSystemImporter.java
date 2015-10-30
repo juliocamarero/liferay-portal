@@ -32,7 +32,7 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalArticleServiceUtil;
-import com.liferay.journal.util.JournalConverterUtil;
+import com.liferay.journal.util.impl.JournalConverterUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -117,10 +117,14 @@ import java.util.regex.Pattern;
 
 import javax.portlet.PortletPreferences;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Ryan Park
  * @author Raymond Augé
  */
+@Component
 public class FileSystemImporter extends BaseImporter {
 
 	@Override
@@ -443,7 +447,7 @@ public class FileSystemImporter extends BaseImporter {
 		String xsd = StringUtil.read(inputStream);
 
 		if (isJournalStructureXSD(xsd)) {
-			xsd = JournalConverterUtil.getDDMXSD(xsd);
+			xsd = _journalConverterUtil.getDDMXSD(xsd);
 		}
 
 		DDMXMLUtil.validateXML(xsd);
@@ -1587,6 +1591,13 @@ public class FileSystemImporter extends BaseImporter {
 		return content;
 	}
 
+	@Reference
+	protected void setJournalConverterUtil(
+		JournalConverterUtil journalConverterUtil) {
+
+		_journalConverterUtil = journalConverterUtil;
+	}
+
 	protected void setServiceContext(String name) {
 		JSONObject assetJSONObject = _assetJSONObjectMap.get(name);
 
@@ -1812,6 +1823,7 @@ public class FileSystemImporter extends BaseImporter {
 	private final Map<String, FileEntry> _fileEntries = new HashMap<>();
 	private final Pattern _fileEntryPattern = Pattern.compile(
 		"\\[\\$FILE=([^\\$]+)\\$\\]");
+	private JournalConverterUtil _journalConverterUtil;
 	private final Map<String, Set<Long>> _primaryKeys = new HashMap<>();
 	private File _resourcesDir;
 

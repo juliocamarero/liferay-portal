@@ -20,17 +20,18 @@ import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMBeanTranslatorUtil;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverterUtil;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.util.JournalConverter;
+import com.liferay.journal.util.impl.JournalConverterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.BaseDDMFormValuesReader;
 import com.liferay.portlet.dynamicdatamapping.DDMFormValues;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Adolfo Pérez
  */
+@Component
 final class JournalArticleDDMFormValuesReader extends BaseDDMFormValuesReader {
 
 	public JournalArticleDDMFormValuesReader(JournalArticle article) {
@@ -40,15 +41,13 @@ final class JournalArticleDDMFormValuesReader extends BaseDDMFormValuesReader {
 	@Override
 	public DDMFormValues getDDMFormValues() throws PortalException {
 		try {
-			JournalConverter journalConverter = getJournalConverter();
-
 			DDMStructure ddmStructure =
 				DDMStructureLocalServiceUtil.getStructure(
 					PortalUtil.getSiteGroupId(_article.getGroupId()),
 					PortalUtil.getClassNameId(JournalArticle.class),
 					_article.getDDMStructureKey(), true);
 
-			Fields fields = journalConverter.getDDMFields(
+			Fields fields = _journalConverterUtil.getDDMFields(
 				ddmStructure, _article.getContent());
 
 			return DDMBeanTranslatorUtil.translate(
@@ -61,12 +60,14 @@ final class JournalArticleDDMFormValuesReader extends BaseDDMFormValuesReader {
 		}
 	}
 
-	protected JournalConverter getJournalConverter() {
-		Registry registry = RegistryUtil.getRegistry();
+	private final JournalArticle _article;
 
-		return registry.getService(JournalConverter.class);
+	protected void setJournalContentUtil(
+		JournalConverterUtil journalConverterUtil) {
+
+		_journalConverterUtil = journalConverterUtil;
 	}
 
-	private final JournalArticle _article;
+	private JournalConverterUtil _journalConverterUtil;
 
 }

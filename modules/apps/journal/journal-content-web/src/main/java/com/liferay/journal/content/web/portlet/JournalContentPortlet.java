@@ -18,7 +18,7 @@ import com.liferay.journal.content.web.constants.JournalContentPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalService;
-import com.liferay.journal.util.JournalContentUtil;
+import com.liferay.journal.util.impl.JournalContentUtil;
 import com.liferay.journal.web.util.ExportArticleUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
@@ -116,7 +116,7 @@ public class JournalContentPortlet extends MVCPortlet {
 
 				double version = article.getVersion();
 
-				articleDisplay = JournalContentUtil.getDisplay(
+				articleDisplay = _journalContentUtil.getDisplay(
 					articleGroupId, articleId, version, ddmTemplateKey,
 					viewMode, languageId, page,
 					new PortletRequestModel(renderRequest, renderResponse),
@@ -125,7 +125,7 @@ public class JournalContentPortlet extends MVCPortlet {
 			catch (Exception e) {
 				renderRequest.removeAttribute(WebKeys.JOURNAL_ARTICLE);
 
-				articleDisplay = JournalContentUtil.getDisplay(
+				articleDisplay = _journalContentUtil.getDisplay(
 					articleGroupId, articleId, ddmTemplateKey, viewMode,
 					languageId, page,
 					new PortletRequestModel(renderRequest, renderResponse),
@@ -157,11 +157,16 @@ public class JournalContentPortlet extends MVCPortlet {
 			resourceRequest.getResourceID());
 
 		if (resourceID.equals("exportArticle")) {
-			ExportArticleUtil.sendFile(resourceRequest, resourceResponse);
+			_exportArticleUtil.sendFile(resourceRequest, resourceResponse);
 		}
 		else {
 			super.serveResource(resourceRequest, resourceResponse);
 		}
+	}
+
+	@Reference
+	protected void setExportArticleUtil(ExportArticleUtil exportArticleUtil) {
+		_exportArticleUtil = exportArticleUtil;
 	}
 
 	@Reference
@@ -171,12 +176,21 @@ public class JournalContentPortlet extends MVCPortlet {
 		_journalArticleLocalService = journalArticleLocalService;
 	}
 
+	@Reference
+	protected void setJournalContentUtil(
+		JournalContentUtil journalContentUtil) {
+
+		_journalContentUtil = journalContentUtil;
+	}
+
 	protected void unsetJournalContentSearchLocal(
 		JournalArticleLocalService journalArticleLocalService) {
 
 		_journalArticleLocalService = null;
 	}
 
+	private ExportArticleUtil _exportArticleUtil;
 	private JournalArticleLocalService _journalArticleLocalService;
+	private JournalContentUtil _journalContentUtil;
 
 }

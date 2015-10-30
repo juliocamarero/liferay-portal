@@ -15,7 +15,7 @@
 package com.liferay.journal.web.util;
 
 import com.liferay.journal.model.JournalArticleDisplay;
-import com.liferay.journal.util.JournalContentUtil;
+import com.liferay.journal.util.impl.JournalContentUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
@@ -46,12 +46,16 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Eudaldo Alonso
  */
+@Component
 public class ExportArticleUtil {
 
-	public static void sendFile(
+	public void sendFile(
 			PortletRequest portletRequest, PortletResponse portletResponse)
 		throws IOException {
 
@@ -76,7 +80,7 @@ public class ExportArticleUtil {
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(
 			portletResponse);
 
-		JournalArticleDisplay articleDisplay = JournalContentUtil.getDisplay(
+		JournalArticleDisplay articleDisplay = _journalContentUtil.getDisplay(
 			groupId, articleId, null, "export", languageId, 1,
 			portletRequestModel, themeDisplay);
 
@@ -100,7 +104,7 @@ public class ExportArticleUtil {
 		sb.append(articleDisplay.getContent());
 
 		for (int i = 2; i <= pages; i++) {
-			articleDisplay = JournalContentUtil.getDisplay(
+			articleDisplay = _journalContentUtil.getDisplay(
 				groupId, articleId, "export", languageId, i, themeDisplay);
 
 			sb.append(articleDisplay.getContent());
@@ -145,5 +149,12 @@ public class ExportArticleUtil {
 		ServletResponseUtil.sendFile(
 			request, response, fileName, is, contentType);
 	}
+
+	@Reference
+	private void setJournalContentUtil(JournalContentUtil journalContentUtil) {
+		_journalContentUtil = journalContentUtil;
+	}
+
+	private JournalContentUtil _journalContentUtil;
 
 }
