@@ -51,11 +51,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Raymond Augé
  * @author Michael Young
  */
-@Component(service = JournalContent.class)
+@Component
 @DoPrivileged
-public class JournalContentImpl implements JournalContent {
+public class JournalContentUtil {
 
-	@Override
 	public void clearCache() {
 		if (ExportImportThreadLocal.isImportInProcess()) {
 			return;
@@ -64,7 +63,6 @@ public class JournalContentImpl implements JournalContent {
 		_getPortalCache().removeAll();
 	}
 
-	@Override
 	public void clearCache(
 		long groupId, String articleId, String ddmTemplateKey) {
 
@@ -73,7 +71,6 @@ public class JournalContentImpl implements JournalContent {
 				groupId, articleId, ddmTemplateKey));
 	}
 
-	@Override
 	public String getContent(
 		long groupId, String articleId, String viewMode, String languageId,
 		PortletRequestModel portletRequestModel) {
@@ -83,7 +80,6 @@ public class JournalContentImpl implements JournalContent {
 			null);
 	}
 
-	@Override
 	public String getContent(
 		long groupId, String articleId, String ddmTemplateKey, String viewMode,
 		String languageId, PortletRequestModel portletRequestModel) {
@@ -93,7 +89,6 @@ public class JournalContentImpl implements JournalContent {
 			portletRequestModel, null);
 	}
 
-	@Override
 	public String getContent(
 		long groupId, String articleId, String ddmTemplateKey, String viewMode,
 		String languageId, PortletRequestModel portletRequestModel,
@@ -111,7 +106,6 @@ public class JournalContentImpl implements JournalContent {
 		}
 	}
 
-	@Override
 	public String getContent(
 		long groupId, String articleId, String ddmTemplateKey, String viewMode,
 		String languageId, ThemeDisplay themeDisplay) {
@@ -121,7 +115,6 @@ public class JournalContentImpl implements JournalContent {
 			(PortletRequestModel)null, themeDisplay);
 	}
 
-	@Override
 	public String getContent(
 		long groupId, String articleId, String viewMode, String languageId,
 		ThemeDisplay themeDisplay) {
@@ -130,7 +123,6 @@ public class JournalContentImpl implements JournalContent {
 			groupId, articleId, null, viewMode, languageId, themeDisplay);
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, double version, String ddmTemplateKey,
 		String viewMode, String languageId, int page,
@@ -202,7 +194,6 @@ public class JournalContentImpl implements JournalContent {
 		return articleDisplay;
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, String viewMode, String languageId,
 		int page, ThemeDisplay themeDisplay) {
@@ -212,7 +203,6 @@ public class JournalContentImpl implements JournalContent {
 			(PortletRequestModel)null, themeDisplay);
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, String viewMode, String languageId,
 		PortletRequestModel portletRequestModel) {
@@ -222,7 +212,6 @@ public class JournalContentImpl implements JournalContent {
 			portletRequestModel, null);
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, String ddmTemplateKey, String viewMode,
 		String languageId, int page, PortletRequestModel portletRequestModel,
@@ -233,7 +222,6 @@ public class JournalContentImpl implements JournalContent {
 			portletRequestModel, themeDisplay);
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, String ddmTemplateKey, String viewMode,
 		String languageId, PortletRequestModel portletRequestModel) {
@@ -243,7 +231,6 @@ public class JournalContentImpl implements JournalContent {
 			portletRequestModel, null);
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, String ddmTemplateKey, String viewMode,
 		String languageId, ThemeDisplay themeDisplay) {
@@ -253,7 +240,6 @@ public class JournalContentImpl implements JournalContent {
 			(PortletRequestModel)null, themeDisplay);
 	}
 
-	@Override
 	public JournalArticleDisplay getDisplay(
 		long groupId, String articleId, String viewMode, String languageId,
 		ThemeDisplay themeDisplay) {
@@ -320,7 +306,7 @@ public class JournalContentImpl implements JournalContent {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		JournalContentImpl.class);
+		JournalContentUtil.class);
 
 	private static PortalCache<JournalContentKey, JournalArticleDisplay>
 		_portalCache;
