@@ -60,6 +60,14 @@ body {
 			position: static;
 		}
 	}
+
+	&.user-view .sidebar-body {
+		top: 100px;
+
+		@include sm() {
+			top: 150px;
+		}
+	}
 }
 
 .product-menu {
