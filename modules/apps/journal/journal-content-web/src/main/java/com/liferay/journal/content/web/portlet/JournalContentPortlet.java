@@ -14,6 +14,7 @@
 
 package com.liferay.journal.content.web.portlet;
 
+import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.content.web.constants.JournalContentPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
@@ -144,6 +145,9 @@ public class JournalContentPortlet extends MVCPortlet {
 		else {
 			renderRequest.removeAttribute(WebKeys.JOURNAL_ARTICLE_DISPLAY);
 		}
+
+		renderRequest.setAttribute(
+			JournalWebKeys.JOURNAL_CONTENT, _journalContent);
 
 		super.doView(renderRequest, renderResponse);
 	}
