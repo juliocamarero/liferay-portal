@@ -14,6 +14,7 @@
 
 package com.liferay.journal.content.web.portlet;
 
+import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.content.web.constants.JournalContentPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
@@ -149,6 +150,17 @@ public class JournalContentPortlet extends MVCPortlet {
 	}
 
 	@Override
+	public void render(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		renderRequest.setAttribute(
+			JournalWebKeys.JOURNAL_CONTENT, _journalContent);
+
+		super.render(renderRequest, renderResponse);
+	}
+
+	@Override
 	public void serveResource(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws IOException, PortletException {
@@ -160,6 +172,9 @@ public class JournalContentPortlet extends MVCPortlet {
 			ExportArticleUtil.sendFile(resourceRequest, resourceResponse);
 		}
 		else {
+			resourceRequest.setAttribute(
+				JournalWebKeys.JOURNAL_CONTENT, _journalContent);
+
 			super.serveResource(resourceRequest, resourceResponse);
 		}
 	}
