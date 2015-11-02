@@ -14,10 +14,15 @@
 
 package com.liferay.portal.kernel.portlet.configuration.icon;
 
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.registry.ServiceReference;
 import com.liferay.registry.collections.ServiceReferenceMapper;
+import com.liferay.registry.util.StringPlus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Eudaldo Alonso
@@ -37,7 +42,22 @@ public class PortletConfigurationIconServiceReferenceMapper
 			portletId = StringPool.STAR;
 		}
 
-		emitter.emit(portletId);
+		List<String> paths = StringPlus.asList(
+			serviceReference.getProperty("path"));
+
+		if (ListUtil.isEmpty(paths)) {
+			paths = new ArrayList<>();
+
+			paths.add(StringPool.DASH);
+		}
+
+		for (String path : paths) {
+			emitter.emit(_getKey(portletId, path));
+		}
+	}
+
+	private static String _getKey(String portletId, String path) {
+		return portletId + StringPool.COLON + path;
 	}
 
 }
