@@ -17,7 +17,9 @@
 <%@ include file="/init.jsp" %>
 
 <%
-JournalFolder folder = journalDisplayContext.getFolder();
+AssetRenderer<JournalFolder> assetRenderer = (AssetRenderer<JournalFolder>)request.getAttribute(WebKeys.ASSET_RENDERER);
+
+JournalFolder folder = assetRenderer.getAssetObject();
 %>
 
 <c:if test="<%= folder != null %>">
