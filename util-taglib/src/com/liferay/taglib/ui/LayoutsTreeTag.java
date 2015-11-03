@@ -65,6 +65,10 @@ public class LayoutsTreeTag extends IncludeTag {
 		_incomplete = incomplete;
 	}
 
+	public void setPortletNamespace(String portletNamespace) {
+		_portletNamespace = portletNamespace;
+	}
+
 	public void setPortletURL(PortletURL portletURL) {
 		_portletURL = portletURL;
 	}
@@ -105,6 +109,7 @@ public class LayoutsTreeTag extends IncludeTag {
 		_expandFirstNode = true;
 		_groupId = 0;
 		_incomplete = true;
+		_portletNamespace = null;
 		_portletURL = null;
 		_privateLayout = false;
 		_rootNodeName = null;
@@ -191,6 +196,8 @@ public class LayoutsTreeTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:layouts-tree:incomplete", String.valueOf(_incomplete));
 		request.setAttribute("liferay-ui:layouts-tree:modules", getModules());
+		request.setAttribute(
+			"liferay-ui:layouts-tree:portletNamespace", _portletNamespace);
 		request.setAttribute("liferay-ui:layouts-tree:portletURL", _portletURL);
 		request.setAttribute(
 			"liferay-ui:layouts-tree:privateLayout",
@@ -219,6 +226,7 @@ public class LayoutsTreeTag extends IncludeTag {
 	private boolean _expandFirstNode = true;
 	private long _groupId;
 	private boolean _incomplete = true;
+	private String _portletNamespace;
 	private PortletURL _portletURL;
 	private boolean _privateLayout;
 	private String _rootNodeName;
