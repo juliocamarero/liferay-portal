@@ -356,17 +356,10 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 			</liferay-ui:panel>
 
 			<%
-			String[] sections = AssetPublisherWebConfigurationValues.QUERY_FORM_CONFIGURATION;
+			List<AssetEntryQueryProcessor> assetEntryQueryProcessors = AssetPublisherUtil.getAssetEntryQueryProcessors();
 
-			for (String section : sections) {
-				String sectionId = renderResponse.getNamespace() + _getSectionId(section);
-			%>
-
-				<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id='<%= "assetPublisherPanelContainerSection_" + sectionId %>' persistState="<%= true %>" title="<%= section %>">
-					<liferay-util:include page='<%= "/query/" + _getSectionJsp(section) + ".jsp" %>' servletContext="<%= application %>" />
-				</liferay-ui:panel>
-
-			<%
+			for (AssetEntryQueryProcessor assetEntryQueryProcessor : assetEntryQueryProcessors) {
+				assetEntryQueryProcessor.include(request, new PipingServletResponse(pageContext));
 			}
 			%>
 
