@@ -65,17 +65,17 @@ Group group = layoutsAdminDisplayContext.getGroup();
 								LayoutSetBranch curLayoutSetBranch = layoutSetBranches.get(i);
 
 								boolean selected = (curLayoutSetBranch.getLayoutSetBranchId() == layoutSetBranch.getLayoutSetBranchId());
+
+								PortletURL layoutSetBranchURL = PortalUtil.getControlPanelPortletURL(request, LayoutAdminPortletKeys.GROUP_PAGES, 0, PortletRequest.RENDER_PHASE);
+
+								layoutSetBranchURL.setParameter("mvcPath", "/view.jsp");
+								layoutSetBranchURL.setParameter("redirect", String.valueOf(layoutsAdminDisplayContext.getRedirectURL()));
+								layoutSetBranchURL.setParameter("groupId", String.valueOf(curLayoutSetBranch.getGroupId()));
+								layoutSetBranchURL.setParameter("privateLayout", String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()));
+								layoutSetBranchURL.setParameter("layoutSetBranchId", String.valueOf(curLayoutSetBranch.getLayoutSetBranchId()));
 							%>
 
-								<liferay-portlet:renderURL portletName="<%= LayoutAdminPortletKeys.GROUP_PAGES %>" var="layoutSetBranchURL">
-									<portlet:param name="mvcPath" value="/view.jsp" />
-									<portlet:param name="redirect" value="<%= String.valueOf(layoutsAdminDisplayContext.getRedirectURL()) %>" />
-									<portlet:param name="groupId" value="<%= String.valueOf(curLayoutSetBranch.getGroupId()) %>" />
-									<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
-									<portlet:param name="layoutSetBranchId" value="<%= String.valueOf(curLayoutSetBranch.getLayoutSetBranchId()) %>" />
-								</liferay-portlet:renderURL>
-
-								<aui:nav-item cssClass='<%= selected ? "disabled" : StringPool.BLANK %>' href="<%= selected ? null : layoutSetBranchURL %>" label="<%= HtmlUtil.escape(curLayoutSetBranch.getName()) %>" />
+								<aui:nav-item cssClass='<%= selected ? "disabled" : StringPool.BLANK %>' href="<%= selected ? null : layoutSetBranchURL.toString() %>" label="<%= HtmlUtil.escape(curLayoutSetBranch.getName()) %>" />
 
 							<%
 							}
@@ -103,12 +103,15 @@ Group group = layoutsAdminDisplayContext.getGroup();
 	%>
 
 	<c:if test="<%= !selGroup.isLayoutSetPrototype() %>">
-		<liferay-portlet:renderURL portletName="<%= LayoutAdminPortletKeys.GROUP_PAGES %>" varImpl="editPublicLayoutURL">
-			<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
-			<portlet:param name="redirect" value="<%= layoutsAdminDisplayContext.getRedirect() %>" />
-			<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()) %>" />
-			<portlet:param name="viewLayout" value="<%= Boolean.TRUE.toString() %>" />
-		</liferay-portlet:renderURL>
+
+		<%
+		PortletURL editPublicLayoutURL = PortalUtil.getControlPanelPortletURL(request, LayoutAdminPortletKeys.GROUP_PAGES, 0, PortletRequest.RENDER_PHASE);
+
+		editPublicLayoutURL.setParameter("privateLayout", Boolean.FALSE.toString());
+		editPublicLayoutURL.setParameter("redirect", layoutsAdminDisplayContext.getRedirect());
+		editPublicLayoutURL.setParameter("groupId", String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()));
+		editPublicLayoutURL.setParameter("viewLayout", Boolean.TRUE.toString());
+		%>
 
 		<liferay-ui:layouts-tree
 			groupId="<%= selGroup.getGroupId() %>"
@@ -122,12 +125,14 @@ Group group = layoutsAdminDisplayContext.getGroup();
 		/>
 	</c:if>
 
-	<liferay-portlet:renderURL portletName="<%= LayoutAdminPortletKeys.GROUP_PAGES %>" varImpl="editPrivateLayoutURL">
-		<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
-		<portlet:param name="redirect" value="<%= layoutsAdminDisplayContext.getRedirect() %>" />
-		<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()) %>" />
-		<portlet:param name="viewLayout" value="<%= Boolean.TRUE.toString() %>" />
-	</liferay-portlet:renderURL>
+	<%
+	PortletURL editPrivateLayoutURL = PortalUtil.getControlPanelPortletURL(request, LayoutAdminPortletKeys.GROUP_PAGES, 0, PortletRequest.RENDER_PHASE);
+
+	editPrivateLayoutURL.setParameter("privateLayout", Boolean.TRUE.toString());
+	editPrivateLayoutURL.setParameter("redirect", layoutsAdminDisplayContext.getRedirect());
+	editPrivateLayoutURL.setParameter("groupId", String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()));
+	editPrivateLayoutURL.setParameter("viewLayout", Boolean.TRUE.toString());
+	%>
 
 	<liferay-ui:layouts-tree
 		groupId="<%= selGroup.getGroupId() %>"
@@ -151,15 +156,18 @@ Group group = layoutsAdminDisplayContext.getGroup();
 	%>
 
 	<c:if test="<%= ((selLayout == null) && GroupPermissionUtil.contains(permissionChecker, selGroup, ActionKeys.ADD_LAYOUT)) || ((selLayout != null) && LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.ADD_LAYOUT)) %>">
-		<liferay-portlet:renderURL portletName="<%= LayoutAdminPortletKeys.GROUP_PAGES %>" var="addPagesURL">
-			<portlet:param name="mvcPath" value="/add_layout.jsp" />
-			<portlet:param name="groupId" value="<%= String.valueOf(selGroup.getGroupId()) %>" />
-			<portlet:param name="selPlid" value="<%= (selLayout != null) ? String.valueOf(selLayout.getPlid()) : StringPool.BLANK %>" />
-			<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-		</liferay-portlet:renderURL>
+
+		<%
+		PortletURL addPagesURL = PortalUtil.getControlPanelPortletURL(request, LayoutAdminPortletKeys.GROUP_PAGES, 0, PortletRequest.RENDER_PHASE);
+
+		addPagesURL.setParameter("mvcPath", "/add_layout.jsp");
+		addPagesURL.setParameter("groupId", String.valueOf(selGroup.getGroupId()));
+		addPagesURL.setParameter("selPlid", (selLayout != null) ? String.valueOf(selLayout.getPlid()) : StringPool.BLANK);
+		addPagesURL.setParameter("privateLayout", String.valueOf(privateLayout));
+		%>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-block btn-primary" href="<%= addPagesURL %>" value="add-page" />
+			<aui:button cssClass="btn-block btn-primary" href="<%= addPagesURL.toString() %>" value="add-page" />
 		</aui:button-row>
 	</c:if>
 </c:if>
