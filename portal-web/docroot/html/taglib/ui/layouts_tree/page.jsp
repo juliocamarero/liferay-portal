@@ -25,6 +25,7 @@ boolean expandFirstNode = GetterUtil.getBoolean((String)request.getAttribute("li
 long groupId = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:groupId"));
 boolean incomplete = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:incomplete"));
 String modules = (String)request.getAttribute("liferay-ui:layouts-tree:modules");
+String portletNamespace = (String)request.getAttribute("liferay-ui:layouts-tree:portletNamespace");
 PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:layouts-tree:portletURL");
 boolean privateLayout = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:privateLayout"));
 String rootNodeName = (String)request.getAttribute("liferay-ui:layouts-tree:rootNodeName");
@@ -32,6 +33,10 @@ boolean saveState = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 boolean selectableTree = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:layouts-tree:selectableTree"));
 long selPlid = GetterUtil.getLong((String)request.getAttribute("liferay-ui:layouts-tree:selPlid"));
 String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
+
+if (Validator.isNull(portletNamespace)) {
+	portletNamespace = portletDisplay.getNamespace();
+}
 %>
 
 <aui:script use="<%= modules %>">
@@ -85,10 +90,10 @@ String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
 					}
 				}
 			},
-			boundingBox: '#<portlet:namespace /><%= HtmlUtil.escape(treeId) %>Output',
+			boundingBox: '#<%= portletNamespace + HtmlUtil.escape(treeId) %>Output',
 			incomplete: <%= incomplete %>,
 			layouts: <%= layoutsJSON %>,
-			layoutURL: '<%= portletURL + StringPool.AMPERSAND + portletDisplay.getNamespace() + "selPlid={selPlid}" + StringPool.AMPERSAND + portletDisplay.getNamespace() %>',
+			layoutURL: '<%= portletURL + StringPool.AMPERSAND + portletNamespace + "selPlid={selPlid}" + StringPool.AMPERSAND + portletNamespace %>',
 
 			<c:if test="<%= draggableTree %>">
 				lazyLoad: false,
@@ -108,4 +113,4 @@ String treeId = (String)request.getAttribute("liferay-ui:layouts-tree:treeId");
 	).render();
 </aui:script>
 
-<div class="lfr-tree" data-treeid="<%= HtmlUtil.escapeAttribute(treeId) %>" id="<portlet:namespace /><%= HtmlUtil.escape(treeId) %>Output"></div>
+<div class="lfr-tree" data-treeid="<%= HtmlUtil.escapeAttribute(treeId) %>" id="<%= portletNamespace + HtmlUtil.escape(treeId) %>Output"></div>
