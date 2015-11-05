@@ -1725,6 +1725,10 @@ public class LayoutTypePortletImpl
 
 		for (String portletId : portletIds) {
 			try {
+				if (!hasRoleViewPermission(portletId, permissionChecker)) {
+					continue;
+				}
+
 				String rootPortletId = PortletConstants.getRootPortletId(
 					portletId);
 
@@ -1816,6 +1820,23 @@ public class LayoutTypePortletImpl
 		}
 
 		return false;
+	}
+
+	protected boolean hasRoleViewPermission(
+			String sourcePortletId, PermissionChecker permissionChecker)
+		throws PortalException {
+
+		Layout layout = getLayout();
+
+		String sourcePortletPrimaryKey = PortletPermissionUtil.getPrimaryKey(
+			layout.getPlid(), sourcePortletId);
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+			getCompanyId(), sourcePortletId);
+
+		return permissionChecker.hasPermission(
+			layout.getGroupId(), portlet.getPortletName(),
+			sourcePortletPrimaryKey, ActionKeys.VIEW);
 	}
 
 	protected boolean hasStaticPortletId(String columnId, String portletId) {
