@@ -47,8 +47,8 @@ TeamDisplayTerms searchTerms = (TeamDisplayTerms)teamSearchContainer.getSearchTe
 </aui:nav-bar>
 
 <liferay-frontend:management-bar
-	checkBoxContainerId="teamsSearchContainer"
 	includeCheckBox="<%= true %>"
+	searchContainerId="teams"
 >
 
 	<%

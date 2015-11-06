@@ -79,8 +79,8 @@ AssetCategoryUtil.addPortletBreadcrumbEntry(vocabulary, category, request, rende
 </aui:nav-bar>
 
 <liferay-frontend:management-bar
-	checkBoxContainerId="assetCategoriesSearchContainer"
 	includeCheckBox="<%= true %>"
+	searchContainerId="assetCategories"
 >
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-filters>

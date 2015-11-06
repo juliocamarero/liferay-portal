@@ -37,8 +37,8 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabul
 </aui:nav-bar>
 
 <liferay-frontend:management-bar
-	checkBoxContainerId="assetVocabulariesSearchContainer"
 	includeCheckBox="<%= true %>"
+	searchContainerId="assetVocabularies"
 >
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-filters>
