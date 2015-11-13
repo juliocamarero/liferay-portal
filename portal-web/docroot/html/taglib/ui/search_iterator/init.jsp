@@ -14,12 +14,4 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
-
-<%
-String actionButtons = (String)request.getAttribute("liferay-frontend:management-bar:actionButtons");
-String buttons = (String)request.getAttribute("liferay-frontend:management-bar:buttons");
-String filters = (String)request.getAttribute("liferay-frontend:management-bar:filters");
-boolean includeCheckBox = GetterUtil.getBoolean(request.getAttribute("liferay-frontend:management-bar:includeCheckBox"));
-String searchContainerId = (String)request.getAttribute("liferay-frontend:management-bar:searchContainerId");
-%>
+<%@ include file="/html/taglib/init.jsp" %>
