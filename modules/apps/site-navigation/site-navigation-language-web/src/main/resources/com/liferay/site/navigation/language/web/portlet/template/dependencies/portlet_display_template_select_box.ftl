@@ -18,14 +18,34 @@
 			onChange='${namespace + "changeLanguage();"}'
 			title="language"
 		>
+
+			<#assign localeOriginalIndex = -1>
+
+			<#list languageUtil.getAvailableLocales() as availableLocale>
+			    <#if availableLocale == locale>
+			        <#assign localeOriginalIndex = availableLocale_index>
+			    </#if>
+			</#list>
+
 			<#list entries as entry>
-				<@aui["option"]
-					cssClass="taglib-language-option"
-					label=entry.getLongDisplayName()
-					lang=entry.getW3cLanguageId()
-					selected=entry.isSelected()
-					value=entry.getLanguageId()
-				/>
+				<#if displayCurrentLocale?matches("false") && (localeOriginalIndex == entry_index)>
+					<@aui["option"]
+						cssClass="taglib-language-option"
+						label=locale.getDisplayLanguage(locale)
+						lang=localeUtil.toW3cLanguageId(locale)
+						selected=true
+						disabled=true
+						value=languageId
+					/>
+				<#else>
+					<@aui["option"]
+						cssClass="taglib-language-option"
+						label=entry.getLongDisplayName()
+						lang=entry.getW3cLanguageId()
+						selected=entry.isSelected()
+						value=entry.getLanguageId()
+					/>
+				</#if>
 			</#list>
 		</@>
 	</@>
