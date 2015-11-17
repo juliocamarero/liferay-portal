@@ -65,6 +65,10 @@ public class ProductMenuDisplayContext {
 		return _childPanelCategories;
 	}
 
+	public PanelCategoryHelper getPanelCategoryHelper() {
+		return _panelCategoryHelper;
+	}
+
 	public String getRootPanelCategoryKey() {
 		if (_rootPanelCategoryKey != null) {
 			return _rootPanelCategoryKey;
