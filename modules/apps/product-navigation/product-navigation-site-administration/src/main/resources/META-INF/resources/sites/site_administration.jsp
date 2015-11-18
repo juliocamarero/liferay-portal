@@ -111,6 +111,59 @@ Group group = themeDisplay.getSiteGroup();
 	</c:if>
 </div>
 
+<aui:a href="javascript:;" id="manageSitesLink" title="go-to-other-site">
+	<aui:icon image="sites" markupView="lexicon" />
+</aui:a>
+
+<div class="hide">
+	<div id="<portlet:namespace/>siteSelectorContent">
+		<liferay-util:include page="/sites/my_sites.jsp" servletContext="<%= application %>" />
+
+		<%
+		String portletId = PortletProviderUtil.getPortletId(Group.class.getName(), PortletProvider.Action.MANAGE);
+		%>
+
+		<c:if test="<%= Validator.isNotNull(portletId) && PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portletId) %>">
+
+			<%
+			PortletURL portletURL = PortletProviderUtil.getPortletURL(request, Group.class.getName(), PortletProvider.Action.MANAGE);
+
+			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, getClass());
+			%>
+
+			<div class="manage-sites-link">
+				<aui:icon image="sites" label='<%= LanguageUtil.get(resourceBundle, "manage-sites") %>' markupView="lexicon" url="<%= portletURL.toString() %>" />
+			</div>
+		</c:if>
+	</div>
+</div>
+
+<aui:script use="aui-popover">
+	var trigger = A.one('#<portlet:namespace/>manageSitesLink');
+
+	var popOver = new A.Popover(
+		{
+			align: {
+				node: trigger,
+				points:[A.WidgetPositionAlign.LC, A.WidgetPositionAlign.RC]
+			},
+			bodyContent: A.one('#<portlet:namespace/>siteSelectorContent'),
+			cssClass: 'product-menu',
+			position: 'left',
+			visible: false,
+			width: 300,
+			zIndex: Liferay.zIndex.TOOLTIP
+		}
+	).render();
+
+	trigger.on(
+		'click',
+		function() {
+			popOver.set('visible', !popOver.get('visible'));
+		}
+	);
+</aui:script>
+
 <%
 PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
 %>

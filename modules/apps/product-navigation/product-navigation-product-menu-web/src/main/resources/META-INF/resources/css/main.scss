@@ -133,3 +133,61 @@ body {
 		}
 	}
 }
+
+.product-menu.popover {
+	background-color: #FFF;
+}
+
+.product-menu {
+	.manage-sites-link {
+		padding: 1em;
+	}
+
+	.site-selector {
+		box-shadow: none;
+		padding: 1em;
+
+		.selectable-site {
+			color: #333;
+			height: auto;
+		}
+
+		.list-group-item-content, .list-group-item-field {
+			vertical-align: middle;
+		}
+
+		.site-link {
+			color: #333;
+
+			&.selected-site {
+				color: #999;
+			}
+		}
+	}
+
+	.site-logo-container {
+		padding: .7em 1em .7em 0;
+	}
+
+	.site-logo {
+		background-color: #D8DfE6;
+		margin: auto;
+		padding: 10px 15px;
+		color: #C3CDD7;
+	}
+
+	.selected-site {
+		.site-logo {
+			background-color: #FFF;
+			border: 2px solid #61ADDB;
+			border-radius: 4px;
+			color: #61ADDB;
+			padding: 10px 13px;
+		}
+	}
+
+	.site-image {
+		max-widt: 46px;
+		max-height: 40px;
+	}
+}

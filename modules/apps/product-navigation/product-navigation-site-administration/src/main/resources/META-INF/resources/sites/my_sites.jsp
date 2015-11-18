@@ -17,13 +17,11 @@
 <%@ include file="/sites/init.jsp" %>
 
 <%
-PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
-
 List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getName(), Group.class.getName(), Organization.class.getName()}, PropsValues.MY_SITES_MAX_ELEMENTS);
 %>
 
 <c:if test="<%= !mySiteGroups.isEmpty() %>">
-	<ul aria-labelledby="<%= AUIUtil.normalizeId(panelCategory.getKey()) %>" class="nav nav-equal-height" role="menu">
+	<ul class="no-borders site-selector tabular-list-group" role="menu">
 
 	<%
 	for (Group mySiteGroup : mySiteGroups) {

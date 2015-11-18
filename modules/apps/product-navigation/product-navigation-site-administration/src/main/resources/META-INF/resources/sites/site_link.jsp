@@ -24,8 +24,6 @@ String siteName = GetterUtil.getString(request.getAttribute("my_sites.jsp-siteGr
 boolean showPrivateLabel = (Boolean)request.getAttribute("my_sites.jsp-showPrivateLabel");
 boolean showStagingLabel = (Boolean)request.getAttribute("my_sites.jsp-showStagingLabel");
 
-String groupFriendlyURL = siteGroup.getFriendlyURL();
-
 String groupDisplayURL = siteGroup.getDisplayURL(themeDisplay, privateLayout);
 
 if (Validator.isNull(groupDisplayURL)) {
@@ -45,19 +43,36 @@ if (Validator.isNull(groupDisplayURL)) {
 }
 %>
 
-<liferay-util:buffer var="siteHtml">
-	<c:if test="<%= showStagingLabel %>">
-		<small class="pull-right"><liferay-ui:message key="staging" /></small>
-	</c:if>
+<li class="list-group-item selectable-site">
+	<aui:a cssClass='<%= "site-link" + (selectedSite ? " selected-site" : StringPool.BLANK) %>' href="<%= groupDisplayURL %>">
+		<div class="list-group-item-field site-logo-container">
+			<c:choose>
+				<c:when test="<%= selectedSite %>">
+					<div class="site-logo">
+						<aui:icon image="check" markupView="lexicon" />
+					</div>
+				</c:when>
+				<c:when test="<%= Validator.isNotNull(siteGroup.getLogoURL(themeDisplay, false)) %>">
+					<img alt="" class="site-image" src="<%= siteGroup.getLogoURL(themeDisplay, false) %>" />
+				</c:when>
+				<c:otherwise>
+					<div class="site-logo">
+						<aui:icon image="sites" markupView="lexicon" />
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
 
-	<c:if test="<%= showPrivateLabel %>">
-		<small class="pull-right"><liferay-ui:message key='<%= privateLayout ? "private" : "public" %>' /></small>
-	</c:if>
-</liferay-util:buffer>
+		<div class="list-group-item-content">
+			<h5><%= HtmlUtil.escape(siteName) %></h5>
 
-<liferay-application-list:panel-app
-	active="<%= selectedSite %>"
-	id='<%= groupFriendlyURL.substring(1) + (privateLayout ? "Private" : "Public") + "SiteLink" %>'
-	label="<%= HtmlUtil.escape(siteName) + siteHtml %>"
-	url='<%= selectedSite ? "javascript:;" : groupDisplayURL %>'
-/>
+			<c:if test="<%= showStagingLabel %>">
+				<small><liferay-ui:message key="staging" /></small>
+			</c:if>
+
+			<c:if test="<%= showPrivateLabel %>">
+				<small><liferay-ui:message key='<%= privateLayout ? "private" : "public" %>' /></small>
+			</c:if>
+		</div>
+	</aui:a>
+</li>
