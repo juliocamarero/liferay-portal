@@ -157,7 +157,8 @@ public class PanelAppTag extends BasePanelTag {
 		int notificationsCount = 0;
 
 		if (_panelApp != null) {
-			notificationsCount = _panelApp.getNotificationsCount();
+			notificationsCount = _panelApp.getNotificationsCount(
+				themeDisplay.getUser());
 		}
 
 		request.setAttribute(

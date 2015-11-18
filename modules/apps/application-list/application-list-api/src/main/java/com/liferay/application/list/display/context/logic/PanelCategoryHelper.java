@@ -20,6 +20,7 @@ import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.PanelCategoryRegistry;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
 
 import java.util.List;
@@ -86,7 +87,7 @@ public class PanelCategoryHelper {
 
 	public int getNotificationsCount(
 		String panelCategoryKey, PermissionChecker permissionChecker,
-		Group group) {
+		Group group, User user) {
 
 		int count = 0;
 
@@ -98,7 +99,7 @@ public class PanelCategoryHelper {
 
 		for (PanelCategory panelCategory : panelCategories) {
 			count += panelCategory.getNotificationsCount(
-				this, permissionChecker, group);
+				this, permissionChecker, group, user);
 		}
 
 		// Child Apps
@@ -107,7 +108,7 @@ public class PanelCategoryHelper {
 			panelCategoryKey, permissionChecker, group);
 
 		for (PanelApp panelApp : panelApps) {
-			count += panelApp.getNotificationsCount();
+			count += panelApp.getNotificationsCount(user);
 		}
 
 		return count;

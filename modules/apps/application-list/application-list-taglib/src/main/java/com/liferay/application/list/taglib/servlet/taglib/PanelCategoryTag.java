@@ -110,7 +110,7 @@ public class PanelCategoryTag extends BasePanelTag {
 
 		int notificationsCount = panelCategoryHelper.getNotificationsCount(
 			_panelCategory.getKey(), themeDisplay.getPermissionChecker(),
-			themeDisplay.getScopeGroup());
+			themeDisplay.getScopeGroup(), themeDisplay.getUser());
 
 		request.setAttribute(
 			"liferay-application-list:panel-category:notificationsCount",
