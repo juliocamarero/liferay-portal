@@ -107,7 +107,7 @@ public class ProductMenuDisplayContext {
 	public int getNotificationsCount(PanelCategory panelCategory) {
 		return _panelCategoryHelper.getNotificationsCount(
 			panelCategory.getKey(), _themeDisplay.getPermissionChecker(),
-			_themeDisplay.getScopeGroup());
+			_themeDisplay.getScopeGroup(), _themeDisplay.getUser());
 	}
 
 	public String getRootPanelCategoryKey() {
