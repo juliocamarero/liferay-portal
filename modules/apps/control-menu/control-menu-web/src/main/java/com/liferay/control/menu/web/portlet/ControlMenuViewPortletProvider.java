@@ -14,7 +14,7 @@
 
 package com.liferay.control.menu.web.portlet;
 
-import com.liferay.control.menu.web.constants.ControlMenuPortletKeys;
+import com.liferay.control.menu.constants.ControlMenuPortletKeys;
 import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.ViewPortletProvider;
 import com.liferay.portlet.admin.util.PortalControlMenuApplicationType;

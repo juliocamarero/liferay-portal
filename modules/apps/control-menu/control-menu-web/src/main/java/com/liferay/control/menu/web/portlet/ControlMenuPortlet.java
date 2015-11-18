@@ -16,10 +16,10 @@ package com.liferay.control.menu.web.portlet;
 
 import com.liferay.control.menu.ControlMenuCategory;
 import com.liferay.control.menu.constants.ControlMenuCategoryKeys;
+import com.liferay.control.menu.constants.ControlMenuPortletKeys;
 import com.liferay.control.menu.constants.ControlMenuWebKeys;
 import com.liferay.control.menu.util.ControlMenuCategoryRegistry;
 import com.liferay.control.menu.util.ControlMenuEntryRegistry;
-import com.liferay.control.menu.web.constants.ControlMenuPortletKeys;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.MultiSessionMessages;
