@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/my_sites/init.jsp" %>
+<%@ include file="/sites/init.jsp" %>
 
 <%
 PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
@@ -90,7 +90,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 					request.setAttribute("my_sites.jsp-showStagingLabel", showPublicSiteStaging);
 					%>
 
-					<liferay-util:include page="/my_sites/site_link.jsp" servletContext="<%= application %>" />
+					<liferay-util:include page="/sites/site_link.jsp" servletContext="<%= application %>" />
 				</c:if>
 
 				<c:if test="<%= showPrivateSite || showPrivateSiteStaging %>">
@@ -114,7 +114,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 					request.setAttribute("my_sites.jsp-showStagingLabel", showPrivateSiteStaging);
 					%>
 
-					<liferay-util:include page="/my_sites/site_link.jsp" servletContext="<%= application %>" />
+					<liferay-util:include page="/sites/site_link.jsp" servletContext="<%= application %>" />
 				</c:if>
 			</c:when>
 			<c:when test="<%= GroupPermissionUtil.contains(permissionChecker, mySiteGroup, ActionKeys.VIEW_SITE_ADMINISTRATION) %>">
@@ -134,7 +134,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 				request.setAttribute("my_sites.jsp-showStagingLabel", false);
 				%>
 
-				<liferay-util:include page="/my_sites/site_link.jsp" servletContext="<%= application %>" />
+				<liferay-util:include page="/sites/site_link.jsp" servletContext="<%= application %>" />
 			</c:when>
 		</c:choose>
 
