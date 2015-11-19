@@ -16,14 +16,10 @@
 
 <%@ include file="/init.jsp" %>
 
-<div class="product-menu-tab-icon user-tab">
-	<div class="icon-monospaced">
-		<liferay-ui:user-portrait
-			userId="<%= user.getUserId() %>"
-		/>
-	</div>
-</div>
+<liferay-ui:user-portrait
+	userId="<%= user.getUserId() %>"
+/>
 
-<div class="product-menu-tab-text">
+<span>
 	<%= HtmlUtil.escape(user.getFirstName()) %>
-</div>
+</span>
