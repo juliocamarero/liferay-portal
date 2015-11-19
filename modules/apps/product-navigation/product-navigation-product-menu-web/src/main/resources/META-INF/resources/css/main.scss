@@ -143,6 +143,18 @@ body {
 		padding: 1em;
 	}
 
+	.site-administration-toolbar, .toolbar-group-field {
+		padding: 0;
+	}
+
+	.panel-toggler {
+		padding: 1px 9px;
+
+		.site-logo {
+			margin-right: 10px;
+		}
+	}
+
 	.site-selector {
 		box-shadow: none;
 		padding: 1em;

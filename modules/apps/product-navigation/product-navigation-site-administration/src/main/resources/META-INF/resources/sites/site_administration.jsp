@@ -37,13 +37,13 @@ Group group = sapcDisplayContext.getGroup();
 	</div>
 
 	<div class="toolbar-group-content">
-		<h2 class="site-name">
+		<span class="site-name">
 			<%= HtmlUtil.escape(sapcDisplayContext.getGroupName()) %>
 
 			<c:if test="<%= sapcDisplayContext.isShowStagingInfo() %>">
 				<span class="site-sub-name">(<%= sapcDisplayContext.getStagingLabel() %>)</span>
 			</c:if>
-		</h2>
+		</span>
 
 		<c:if test="<%= sapcDisplayContext.isShowStagingInfo() %>">
 			<div class="site-subheader">
