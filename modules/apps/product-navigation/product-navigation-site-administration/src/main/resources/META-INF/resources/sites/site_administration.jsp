@@ -21,8 +21,19 @@ Group group = themeDisplay.getSiteGroup();
 %>
 
 <div class="site-administration-toolbar toolbar">
+	<div class="toolbar-group-field site-logo-container">
+		<c:when test="<%= Validator.isNotNull(group.getLogo(themeDisplay, false)) %>">
+			<img alt="" class="site-image" src="<%= group.getLogo(themeDisplay, false) %>" />
+		</c:when>
+		<c:otherwise>
+			<div class="site-logo">
+				<aui:icon image="sites" markupView="lexicon" />
+			</div>
+		</c:otherwise>
+	</div>
+
 	<div class="toolbar-group-content">
-		<aui:a cssClass="site-administration-title" href="<%= group.getDisplayURL(themeDisplay) %>">
+		<h2 class="site-name">
 			<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
 
 			<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
@@ -35,106 +46,108 @@ Group group = themeDisplay.getSiteGroup();
 					</c:when>
 				</c:choose>
 			</c:if>
-		</aui:a>
-	</div>
+		</h2>
 
-	<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
+		<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
 
-		<%
-		String stagingGroupURL = null;
+			<%
+			String stagingGroupURL = null;
 
-		if (!group.isStagedRemotely() && group.hasStagingGroup()) {
-			Group stagingGroup = StagingUtil.getStagingGroup(group.getGroupId());
+			if (!group.isStagedRemotely() && group.hasStagingGroup()) {
+				Group stagingGroup = StagingUtil.getStagingGroup(group.getGroupId());
 
-			if (stagingGroup != null) {
-				stagingGroupURL = stagingGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
+				if (stagingGroup != null) {
+					stagingGroupURL = stagingGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
 
-				if (Validator.isNull(stagingGroupURL)) {
-					PortletURL groupAdministrationURL = null;
-
-					PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
-
-					String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, stagingGroup);
-
-					if (Validator.isNotNull(portletId)) {
-						groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, stagingGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
-
-						if (groupAdministrationURL != null) {
-							stagingGroupURL = groupAdministrationURL.toString();
-						}
-					}
-				}
-			}
-		}
-		%>
-
-		<div class="<%= stagingGroupURL == null ? "active" : StringPool.BLANK %> toolbar-group-field">
-			<aui:a cssClass="icon-fb-radio icon-monospaced" href="<%= stagingGroupURL %>" title="staging" />
-		</div>
-
-		<%
-		String liveGroupURL = null;
-
-		if (group.isStagingGroup()) {
-			if (group.isStagedRemotely()) {
-				liveGroupURL = StagingUtil.buildRemoteURL(group.getTypeSettingsProperties());
-			}
-			else {
-				Group liveGroup = StagingUtil.getLiveGroup(group.getGroupId());
-
-				if (liveGroup != null) {
-					liveGroupURL = liveGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
-
-					if (Validator.isNull(liveGroupURL)) {
+					if (Validator.isNull(stagingGroupURL)) {
 						PortletURL groupAdministrationURL = null;
 
 						PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 
-						String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, liveGroup);
+						String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, stagingGroup);
 
 						if (Validator.isNotNull(portletId)) {
-							groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, liveGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
+							groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, stagingGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
 
 							if (groupAdministrationURL != null) {
-								liveGroupURL = groupAdministrationURL.toString();
+								stagingGroupURL = groupAdministrationURL.toString();
 							}
 						}
 					}
 				}
 			}
-		}
-		%>
 
-		<div class="<%= liveGroupURL == null ? "active" : StringPool.BLANK %> toolbar-group-field">
-			<aui:a cssClass="icon-circle-blank icon-monospaced" href="<%= liveGroupURL %>" title="live" />
-		</div>
-	</c:if>
-</div>
+			String liveGroupURL = null;
 
-<aui:a href="javascript:;" id="manageSitesLink" title="go-to-other-site">
-	<aui:icon image="sites" markupView="lexicon" />
-</aui:a>
+			if (group.isStagingGroup()) {
+				if (group.isStagedRemotely()) {
+					liveGroupURL = StagingUtil.buildRemoteURL(group.getTypeSettingsProperties());
+				}
+				else {
+					Group liveGroup = StagingUtil.getLiveGroup(group.getGroupId());
 
-<div class="hide">
-	<div id="<portlet:namespace/>siteSelectorContent">
-		<liferay-util:include page="/sites/my_sites.jsp" servletContext="<%= application %>" />
+					if (liveGroup != null) {
+						liveGroupURL = liveGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
 
-		<%
-		String portletId = PortletProviderUtil.getPortletId(Group.class.getName(), PortletProvider.Action.MANAGE);
-		%>
+						if (Validator.isNull(liveGroupURL)) {
+							PortletURL groupAdministrationURL = null;
 
-		<c:if test="<%= Validator.isNotNull(portletId) && PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portletId) %>">
+							PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 
-			<%
-			PortletURL portletURL = PortletProviderUtil.getPortletURL(request, Group.class.getName(), PortletProvider.Action.MANAGE);
+							String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, liveGroup);
 
-			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, getClass());
+							if (Validator.isNotNull(portletId)) {
+								groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, liveGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
+
+								if (groupAdministrationURL != null) {
+									liveGroupURL = groupAdministrationURL.toString();
+								}
+							}
+						}
+					}
+				}
+			}
 			%>
 
-			<div class="manage-sites-link">
-				<aui:icon image="sites" label='<%= LanguageUtil.get(resourceBundle, "manage-sites") %>' markupView="lexicon" url="<%= portletURL.toString() %>" />
+			<div class="site-subheader">
+				<div class="<%= stagingGroupURL == null ? "active" : StringPool.BLANK %>">
+					<aui:a cssClass="icon-fb-radio icon-monospaced" href="<%= stagingGroupURL %>" title="staging" />
+				</div>
+
+				<div class="<%= liveGroupURL == null ? "active" : StringPool.BLANK %>">
+					<aui:a cssClass="icon-circle-blank icon-monospaced" href="<%= liveGroupURL %>" title="live" />
+				</div>
 			</div>
 		</c:if>
+	</div>
+
+	<div class="toolbar-group-field">
+		<aui:a href="javascript:;" id="manageSitesLink" title="go-to-other-site">
+			<aui:icon image="sites" markupView="lexicon" />
+		</aui:a>
+
+		<div class="hide">
+			<div id="<portlet:namespace/>siteSelectorContent">
+				<liferay-util:include page="/sites/my_sites.jsp" servletContext="<%= application %>" />
+
+				<%
+				String portletId = PortletProviderUtil.getPortletId(Group.class.getName(), PortletProvider.Action.MANAGE);
+				%>
+
+				<c:if test="<%= Validator.isNotNull(portletId) && PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portletId) %>">
+
+					<%
+					PortletURL portletURL = PortletProviderUtil.getPortletURL(request, Group.class.getName(), PortletProvider.Action.MANAGE);
+
+					ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, getClass());
+					%>
+
+					<div class="manage-sites-link">
+						<aui:icon image="sites" label='<%= LanguageUtil.get(resourceBundle, "manage-sites") %>' markupView="lexicon" url="<%= portletURL.toString() %>" />
+					</div>
+				</c:if>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -163,9 +176,3 @@ Group group = themeDisplay.getSiteGroup();
 		}
 	);
 </aui:script>
-
-<%
-PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
-%>
-
-<liferay-application-list:panel panelCategory="<%= panelCategory %>" />

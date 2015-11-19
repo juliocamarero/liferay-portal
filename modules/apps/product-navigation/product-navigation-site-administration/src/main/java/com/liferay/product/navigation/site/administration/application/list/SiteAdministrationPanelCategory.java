@@ -45,13 +45,18 @@ import org.osgi.service.component.annotations.Reference;
 public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 
 	@Override
+	public String getHeaderJspPath() {
+		return "/sites/site_administration.jsp";
+	}
+
+	@Override
 	public String getIconCssClass() {
 		return "icon-compass";
 	}
 
 	@Override
 	public String getJspPath() {
-		return "/sites/site_administration.jsp";
+		return null;
 	}
 
 	@Override
