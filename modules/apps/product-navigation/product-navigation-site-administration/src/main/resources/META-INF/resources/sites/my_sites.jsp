@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/sites/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, null);

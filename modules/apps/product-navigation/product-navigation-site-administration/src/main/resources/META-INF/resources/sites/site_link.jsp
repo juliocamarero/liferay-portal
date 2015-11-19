@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/sites/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 boolean privateLayout = (Boolean)request.getAttribute("my_sites.jsp-privateLayout");
