@@ -17,7 +17,9 @@
 <%@ include file="/sites/init.jsp" %>
 
 <%
-List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getName(), Group.class.getName(), Organization.class.getName()}, PropsValues.MY_SITES_MAX_ELEMENTS);
+SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, null);
+
+List<Group> mySiteGroups = sapcDisplayContext.getMySites();
 %>
 
 <c:if test="<%= !mySiteGroups.isEmpty() %>">
@@ -25,25 +27,12 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 
 	<%
 	for (Group mySiteGroup : mySiteGroups) {
+		SiteAdministrationPanelCategoryDisplayContext groupDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, mySiteGroup);
+
 		boolean showPublicSite = mySiteGroup.isShowSite(permissionChecker, false) && (mySiteGroup.getPublicLayoutsPageCount() > 0);
 		boolean showPrivateSite = mySiteGroup.isShowSite(permissionChecker, true) && (mySiteGroup.getPrivateLayoutsPageCount() > 0);
 
 		Group siteGroup = mySiteGroup;
-
-		boolean selectedSite = false;
-
-		if (layout != null) {
-			if (layout.getGroupId() == mySiteGroup.getGroupId()) {
-				selectedSite = true;
-			}
-			else if (mySiteGroup.hasStagingGroup()) {
-				Group stagingGroup = mySiteGroup.getStagingGroup();
-
-				if (layout.getGroupId() == stagingGroup.getGroupId()) {
-					selectedSite = true;
-				}
-			}
-		}
 
 		long stagingGroupId = 0;
 
@@ -77,7 +66,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 					}
 
 					request.setAttribute("my_sites.jsp-privateLayout", false);
-					request.setAttribute("my_sites.jsp-selectedSite", selectedSite && !layout.isPrivateLayout());
+					request.setAttribute("my_sites.jsp-selectedSite", groupDisplayContext.isSelectedSite() && !layout.isPrivateLayout());
 					request.setAttribute("my_sites.jsp-siteGroup", showPublicSite ? mySiteGroup : siteGroup);
 
 					if (mySiteGroup.isUser()) {
@@ -101,7 +90,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 					}
 
 					request.setAttribute("my_sites.jsp-privateLayout", true);
-					request.setAttribute("my_sites.jsp-selectedSite", selectedSite && layout.isPrivateLayout());
+					request.setAttribute("my_sites.jsp-selectedSite", groupDisplayContext.isSelectedSite() && layout.isPrivateLayout());
 					request.setAttribute("my_sites.jsp-siteGroup", showPrivateSite ? mySiteGroup : siteGroup);
 
 					if (mySiteGroup.isUser()) {
@@ -121,7 +110,7 @@ List<Group> mySiteGroups = user.getMySiteGroups(new String[] {Company.class.getN
 				siteGroup = StagingUtil.getStagingGroup(mySiteGroup.getGroupId());
 
 				request.setAttribute("my_sites.jsp-privateLayout", false);
-				request.setAttribute("my_sites.jsp-selectedSite", selectedSite);
+				request.setAttribute("my_sites.jsp-selectedSite", groupDisplayContext.isSelectedSite());
 				request.setAttribute("my_sites.jsp-siteGroup", siteGroup);
 
 				if (siteGroup.isUser()) {

@@ -17,7 +17,7 @@
 <%@ include file="/sites/init.jsp" %>
 
 <%
-SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse);
+SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, null);
 
 Group group = sapcDisplayContext.getGroup();
 %>

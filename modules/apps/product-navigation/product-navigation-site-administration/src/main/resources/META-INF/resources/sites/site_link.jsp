@@ -24,27 +24,11 @@ String siteName = GetterUtil.getString(request.getAttribute("my_sites.jsp-siteGr
 boolean showPrivateLabel = (Boolean)request.getAttribute("my_sites.jsp-showPrivateLabel");
 boolean showStagingLabel = (Boolean)request.getAttribute("my_sites.jsp-showStagingLabel");
 
-String groupDisplayURL = siteGroup.getDisplayURL(themeDisplay, privateLayout);
-
-if (Validator.isNull(groupDisplayURL)) {
-	PortletURL groupAdministrationURL = null;
-
-	PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
-
-	String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, siteGroup);
-
-	if (Validator.isNotNull(portletId)) {
-		groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, siteGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
-
-		if (groupAdministrationURL != null) {
-			groupDisplayURL = groupAdministrationURL.toString();
-		}
-	}
-}
+SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, siteGroup);
 %>
 
 <li class="list-group-item selectable-site">
-	<aui:a cssClass='<%= "site-link" + (selectedSite ? " selected-site" : StringPool.BLANK) %>' href="<%= groupDisplayURL %>">
+	<aui:a cssClass='<%= "site-link" + (selectedSite ? " selected-site" : StringPool.BLANK) %>' href="<%= sapcDisplayContext.getGroupURL(privateLayout) %>">
 		<div class="list-group-item-field site-logo-container">
 			<c:choose>
 				<c:when test="<%= selectedSite %>">
@@ -52,8 +36,8 @@ if (Validator.isNull(groupDisplayURL)) {
 						<aui:icon image="check" markupView="lexicon" />
 					</div>
 				</c:when>
-				<c:when test="<%= Validator.isNotNull(siteGroup.getLogoURL(themeDisplay, false)) %>">
-					<img alt="" class="site-image" src="<%= siteGroup.getLogoURL(themeDisplay, false) %>" />
+				<c:when test="<%= Validator.isNotNull(sapcDisplayContext.getLogoURL()) %>">
+					<img alt="" class="site-image" src="<%= sapcDisplayContext.getLogoURL() %>" />
 				</c:when>
 				<c:otherwise>
 					<div class="site-logo">
