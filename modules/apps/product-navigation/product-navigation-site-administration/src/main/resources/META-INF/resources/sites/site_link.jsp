@@ -61,14 +61,3 @@ if (Validator.isNull(groupDisplayURL)) {
 	label="<%= HtmlUtil.escape(siteName) + siteHtml %>"
 	url='<%= selectedSite ? "javascript:;" : groupDisplayURL %>'
 />
-
-<c:if test="<%= selectedSite %>">
-	<aui:script sandbox="<%= true %>">
-		$('#<portlet:namespace /><%= groupFriendlyURL.substring(1) %><%= privateLayout ? "Private" : "Public" %>SiteLink').on(
-			'click',
-			function(event) {
-				$('#<portlet:namespace /><%= PanelCategoryKeys.SITE_ADMINISTRATION %>TabLink').tab('show');
-			}
-		);
-	</aui:script>
-</c:if>

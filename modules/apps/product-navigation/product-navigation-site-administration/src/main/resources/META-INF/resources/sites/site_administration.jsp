@@ -17,30 +17,10 @@
 <%@ include file="/sites/init.jsp" %>
 
 <%
-PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
-PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
-
-PanelCategory mySitesPanelCategory = panelCategoryRegistry.getPanelCategory(PanelCategoryKeys.SITES_ADMINISTRATION_MY_SITES);
-
 Group group = themeDisplay.getSiteGroup();
 %>
 
 <div class="site-administration-toolbar toolbar">
-	<c:if test="<%= (mySitesPanelCategory != null) && mySitesPanelCategory.hasAccessPermission(permissionChecker, group) %>">
-		<div class="toolbar-group-field">
-			<a class="icon-angle-left icon-monospaced" href="javascript:;" id="<portlet:namespace />mySitesLink"></a>
-		</div>
-
-		<aui:script sandbox="<%= true %>">
-			$('#<portlet:namespace />mySitesLink').on(
-				'click',
-				function(event) {
-					$('#<portlet:namespace /><%= AUIUtil.normalizeId(mySitesPanelCategory.getKey()) %>TabLink').tab('show');
-				}
-			);
-		</aui:script>
-	</c:if>
-
 	<div class="toolbar-group-content">
 		<aui:a cssClass="site-administration-title" href="<%= group.getDisplayURL(themeDisplay) %>">
 			<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
@@ -130,5 +110,9 @@ Group group = themeDisplay.getSiteGroup();
 		</div>
 	</c:if>
 </div>
+
+<%
+PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
+%>
 
 <liferay-application-list:panel panelCategory="<%= panelCategory %>" />
