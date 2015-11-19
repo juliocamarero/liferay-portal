@@ -17,105 +17,42 @@
 <%@ include file="/sites/init.jsp" %>
 
 <%
-Group group = themeDisplay.getSiteGroup();
+SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse);
+
+Group group = sapcDisplayContext.getGroup();
 %>
 
 <div class="site-administration-toolbar toolbar">
-	<div class="toolbar-group-field site-logo-container">
-		<c:when test="<%= Validator.isNotNull(group.getLogo(themeDisplay, false)) %>">
-			<img alt="" class="site-image" src="<%= group.getLogo(themeDisplay, false) %>" />
-		</c:when>
-		<c:otherwise>
-			<div class="site-logo">
-				<aui:icon image="sites" markupView="lexicon" />
-			</div>
-		</c:otherwise>
+	<div class="site-logo-container toolbar-group-field">
+		<c:choose>
+			<c:when test="<%= Validator.isNotNull(sapcDisplayContext.getLogoURL()) %>">
+				<img alt="" class="site-image" src="<%= sapcDisplayContext.getLogoURL() %>" />
+			</c:when>
+			<c:otherwise>
+				<div class="site-logo">
+					<aui:icon image="sites" markupView="lexicon" />
+				</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
 
 	<div class="toolbar-group-content">
 		<h2 class="site-name">
-			<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+			<%= HtmlUtil.escape(sapcDisplayContext.getGroupName()) %>
 
-			<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
-				<c:choose>
-					<c:when test="<%= group.isStagingGroup() %>">
-						(<liferay-ui:message key="staging" />)
-					</c:when>
-					<c:when test="<%= group.hasStagingGroup() %>">
-						(<liferay-ui:message key="live" />)
-					</c:when>
-				</c:choose>
+			<c:if test="<%= sapcDisplayContext.isShowStagingInfo() %>">
+				<span class="site-sub-name">(<%= sapcDisplayContext.getStagingLabel() %>)</span>
 			</c:if>
 		</h2>
 
-		<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
-
-			<%
-			String stagingGroupURL = null;
-
-			if (!group.isStagedRemotely() && group.hasStagingGroup()) {
-				Group stagingGroup = StagingUtil.getStagingGroup(group.getGroupId());
-
-				if (stagingGroup != null) {
-					stagingGroupURL = stagingGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
-
-					if (Validator.isNull(stagingGroupURL)) {
-						PortletURL groupAdministrationURL = null;
-
-						PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
-
-						String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, stagingGroup);
-
-						if (Validator.isNotNull(portletId)) {
-							groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, stagingGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
-
-							if (groupAdministrationURL != null) {
-								stagingGroupURL = groupAdministrationURL.toString();
-							}
-						}
-					}
-				}
-			}
-
-			String liveGroupURL = null;
-
-			if (group.isStagingGroup()) {
-				if (group.isStagedRemotely()) {
-					liveGroupURL = StagingUtil.buildRemoteURL(group.getTypeSettingsProperties());
-				}
-				else {
-					Group liveGroup = StagingUtil.getLiveGroup(group.getGroupId());
-
-					if (liveGroup != null) {
-						liveGroupURL = liveGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
-
-						if (Validator.isNull(liveGroupURL)) {
-							PortletURL groupAdministrationURL = null;
-
-							PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
-
-							String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, liveGroup);
-
-							if (Validator.isNotNull(portletId)) {
-								groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, liveGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
-
-								if (groupAdministrationURL != null) {
-									liveGroupURL = groupAdministrationURL.toString();
-								}
-							}
-						}
-					}
-				}
-			}
-			%>
-
+		<c:if test="<%= sapcDisplayContext.isShowStagingInfo() %>">
 			<div class="site-subheader">
-				<div class="<%= stagingGroupURL == null ? "active" : StringPool.BLANK %>">
-					<aui:a cssClass="icon-fb-radio icon-monospaced" href="<%= stagingGroupURL %>" title="staging" />
+				<div class="<%= Validator.isNull(sapcDisplayContext.getStagingGroupURL()) ? "active" : StringPool.BLANK %>">
+					<aui:a cssClass="icon-fb-radio icon-monospaced" href="<%= sapcDisplayContext.getStagingGroupURL() %>" title="staging" />
 				</div>
 
-				<div class="<%= liveGroupURL == null ? "active" : StringPool.BLANK %>">
-					<aui:a cssClass="icon-circle-blank icon-monospaced" href="<%= liveGroupURL %>" title="live" />
+				<div class="<%= Validator.isNull(sapcDisplayContext.getLiveGroupURL()) ? "active" : StringPool.BLANK %>">
+					<aui:a cssClass="icon-circle-blank icon-monospaced" href="<%= sapcDisplayContext.getLiveGroupURL() %>" title="live" />
 				</div>
 			</div>
 		</c:if>
@@ -130,20 +67,14 @@ Group group = themeDisplay.getSiteGroup();
 			<div id="<portlet:namespace/>siteSelectorContent">
 				<liferay-util:include page="/sites/my_sites.jsp" servletContext="<%= application %>" />
 
-				<%
-				String portletId = PortletProviderUtil.getPortletId(Group.class.getName(), PortletProvider.Action.MANAGE);
-				%>
-
-				<c:if test="<%= Validator.isNotNull(portletId) && PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portletId) %>">
+				<c:if test="<%= Validator.isNotNull(sapcDisplayContext.getManageSitesURL()) %>">
 
 					<%
-					PortletURL portletURL = PortletProviderUtil.getPortletURL(request, Group.class.getName(), PortletProvider.Action.MANAGE);
-
 					ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, getClass());
 					%>
 
 					<div class="manage-sites-link">
-						<aui:icon image="sites" label='<%= LanguageUtil.get(resourceBundle, "manage-sites") %>' markupView="lexicon" url="<%= portletURL.toString() %>" />
+						<aui:icon image="sites" label='<%= LanguageUtil.get(resourceBundle, "manage-sites") %>' markupView="lexicon" url="<%= sapcDisplayContext.getManageSitesURL() %>" />
 					</div>
 				</c:if>
 			</div>
