@@ -19,14 +19,17 @@ import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.servlet.PortalSessionThreadLocal;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
+import com.liferay.product.navigation.site.administration.util.LatentGroupManagerUtil;
 
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -75,7 +78,13 @@ public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 		throws PortalException {
 
 		if (group.isControlPanel()) {
-			return false;
+			HttpSession session = PortalSessionThreadLocal.getHttpSession();
+
+			group = LatentGroupManagerUtil.getLatentGroup(session);
+
+			if (group == null) {
+				return false;
+			}
 		}
 
 		if (GroupPermissionUtil.contains(

@@ -35,12 +35,16 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.exportimport.staging.StagingUtil;
+import com.liferay.product.navigation.site.administration.util.LatentGroupManagerUtil;
 
 import java.util.List;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Julio Camarero
@@ -72,6 +76,19 @@ public class SiteAdministrationPanelCategoryDisplayContext {
 		}
 
 		_group = _themeDisplay.getScopeGroup();
+
+		HttpSession session = getSession();
+
+		Group latentGroup = LatentGroupManagerUtil.getLatentGroup(session);
+
+		if (_group.isControlPanel()) {
+			_group = latentGroup;
+		}
+		else if ((latentGroup != null) &&
+				 (_group.getGroupId() != latentGroup.getGroupId())) {
+
+			LatentGroupManagerUtil.setLatentGroup(session, _group);
+		}
 
 		return _group;
 	}
@@ -312,6 +329,13 @@ public class SiteAdministrationPanelCategoryDisplayContext {
 		}
 
 		return getGroupAdministrationURL(group);
+	}
+
+	protected HttpSession getSession() {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			_portletRequest);
+
+		return request.getSession();
 	}
 
 	protected boolean hasStagingPermission() throws PortalException {
