@@ -16,14 +16,22 @@
 
 <%@ include file="/init.jsp" %>
 
-<div class="product-menu-tab-icon user-tab">
-	<div class="icon-monospaced">
-		<liferay-ui:user-portrait
-			userId="<%= user.getUserId() %>"
-		/>
-	</div>
-</div>
+<%
+PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 
-<div class="product-menu-tab-text">
+UserPanelCategory userPanelCategory = (UserPanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
+
+int notificationsCount = panelCategoryHelper.getNotificationsCount(userPanelCategory.getKey(), permissionChecker, themeDisplay.getScopeGroup(), user);
+%>
+
+<c:if test="<%= notificationsCount > 0 %>">
+	<span class="sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= notificationsCount %></span>
+</c:if>
+
+<liferay-ui:user-portrait
+	userId="<%= user.getUserId() %>"
+/>
+
+<span>
 	<%= HtmlUtil.escape(user.getFirstName()) %>
-</div>
+</span>

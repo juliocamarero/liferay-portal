@@ -14,121 +14,98 @@
  */
 --%>
 
-<%@ include file="/sites/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
-PanelCategory panelCategory = (PanelCategory)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY);
-PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
-
-PanelCategory mySitesPanelCategory = panelCategoryRegistry.getPanelCategory(PanelCategoryKeys.SITES_ADMINISTRATION_MY_SITES);
-
-Group group = themeDisplay.getSiteGroup();
+SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, null);
 %>
 
-<div class="site-administration-toolbar toolbar">
-	<c:if test="<%= (mySitesPanelCategory != null) && mySitesPanelCategory.hasAccessPermission(permissionChecker, group) %>">
-		<div class="toolbar-group-field">
-			<a class="icon-angle-left icon-monospaced" href="javascript:;" id="<portlet:namespace />mySitesLink"></a>
-		</div>
-
-		<aui:script sandbox="<%= true %>">
-			$('#<portlet:namespace />mySitesLink').on(
-				'click',
-				function(event) {
-					$('#<portlet:namespace /><%= AUIUtil.normalizeId(mySitesPanelCategory.getKey()) %>TabLink').tab('show');
-				}
-			);
-		</aui:script>
-	</c:if>
-
-	<div class="toolbar-group-content">
-		<aui:a cssClass="site-administration-title" href="<%= group.getDisplayURL(themeDisplay) %>">
-			<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
-
-			<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
-				<c:choose>
-					<c:when test="<%= group.isStagingGroup() %>">
-						(<liferay-ui:message key="staging" />)
-					</c:when>
-					<c:when test="<%= group.hasStagingGroup() %>">
-						(<liferay-ui:message key="live" />)
-					</c:when>
-				</c:choose>
-			</c:if>
-		</aui:a>
+<div>
+	<div class="toolbar-group-field">
+		<c:choose>
+			<c:when test="<%= Validator.isNotNull(sapcDisplayContext.getLogoURL()) %>">
+				<div class="aspect-ratio-bg-cover sticker" style="background-image: url(<%= sapcDisplayContext.getLogoURL() %>);"></div>
+			</c:when>
+			<c:otherwise>
+				<div class="sticker sticker-default">
+					<aui:icon image="sites" markupView="lexicon" />
+				</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
 
-	<c:if test="<%= themeDisplay.isShowStagingIcon() %>">
+	<div class="toolbar-group-content">
+		<c:if test="<%= sapcDisplayContext.getNotificationsCount() > 0 %>">
+			<span class="sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= sapcDisplayContext.getNotificationsCount() %></span>
+		</c:if>
 
-		<%
-		String stagingGroupURL = null;
+		<span class="site-name">
+			<%= HtmlUtil.escape(sapcDisplayContext.getGroupName()) %>
 
-		if (!group.isStagedRemotely() && group.hasStagingGroup()) {
-			Group stagingGroup = StagingUtil.getStagingGroup(group.getGroupId());
+			<c:if test="<%= sapcDisplayContext.isShowStagingInfo() %>">
+				<span class="site-sub-name">(<%= sapcDisplayContext.getStagingLabel() %>)</span>
+			</c:if>
+		</span>
 
-			if (stagingGroup != null) {
-				stagingGroupURL = stagingGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
+		<c:if test="<%= sapcDisplayContext.isShowStagingInfo() %>">
+			<div class="site-subheader">
+				<div class="<%= Validator.isNull(sapcDisplayContext.getStagingGroupURL()) ? "active" : StringPool.BLANK %>">
+					<aui:a cssClass="icon-fb-radio icon-monospaced" href="<%= sapcDisplayContext.getStagingGroupURL() %>" title="staging" />
+				</div>
 
-				if (Validator.isNull(stagingGroupURL)) {
-					PortletURL groupAdministrationURL = null;
+				<div class="<%= Validator.isNull(sapcDisplayContext.getLiveGroupURL()) ? "active" : StringPool.BLANK %>">
+					<aui:a cssClass="icon-circle-blank icon-monospaced" href="<%= sapcDisplayContext.getLiveGroupURL() %>" title="live" />
+				</div>
+			</div>
+		</c:if>
+	</div>
 
-					PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
+	<div class="toolbar-group-field">
+		<aui:a href="javascript:;" id="manageSitesLink" title="go-to-other-site">
+			<aui:icon image="sites" markupView="lexicon" />
+		</aui:a>
 
-					String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, stagingGroup);
+		<div class="hide">
+			<div id="<portlet:namespace/>siteSelectorContent">
+				<liferay-util:include page="/sites/my_sites.jsp" servletContext="<%= application %>" />
 
-					if (Validator.isNotNull(portletId)) {
-						groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, stagingGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
+				<c:if test="<%= Validator.isNotNull(sapcDisplayContext.getManageSitesURL()) %>">
 
-						if (groupAdministrationURL != null) {
-							stagingGroupURL = groupAdministrationURL.toString();
-						}
-					}
-				}
-			}
-		}
-		%>
+					<%
+					ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, getClass());
+					%>
 
-		<div class="<%= stagingGroupURL == null ? "active" : StringPool.BLANK %> toolbar-group-field">
-			<aui:a cssClass="icon-fb-radio icon-monospaced" href="<%= stagingGroupURL %>" title="staging" />
+					<div class="manage-sites-link">
+						<aui:icon image="sites" label='<%= LanguageUtil.get(resourceBundle, "manage-sites") %>' markupView="lexicon" url="<%= sapcDisplayContext.getManageSitesURL() %>" />
+					</div>
+				</c:if>
+			</div>
 		</div>
-
-		<%
-		String liveGroupURL = null;
-
-		if (group.isStagingGroup()) {
-			if (group.isStagedRemotely()) {
-				liveGroupURL = StagingUtil.buildRemoteURL(group.getTypeSettingsProperties());
-			}
-			else {
-				Group liveGroup = StagingUtil.getLiveGroup(group.getGroupId());
-
-				if (liveGroup != null) {
-					liveGroupURL = liveGroup.getDisplayURL(themeDisplay, layout.isPrivateLayout());
-
-					if (Validator.isNull(liveGroupURL)) {
-						PortletURL groupAdministrationURL = null;
-
-						PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
-
-						String portletId = panelCategoryHelper.getFirstPortletId(PanelCategoryKeys.SITE_ADMINISTRATION, permissionChecker, liveGroup);
-
-						if (Validator.isNotNull(portletId)) {
-							groupAdministrationURL = PortalUtil.getControlPanelPortletURL(request, liveGroup, portletId, 0, 0, PortletRequest.RENDER_PHASE);
-
-							if (groupAdministrationURL != null) {
-								liveGroupURL = groupAdministrationURL.toString();
-							}
-						}
-					}
-				}
-			}
-		}
-		%>
-
-		<div class="<%= liveGroupURL == null ? "active" : StringPool.BLANK %> toolbar-group-field">
-			<aui:a cssClass="icon-circle-blank icon-monospaced" href="<%= liveGroupURL %>" title="live" />
-		</div>
-	</c:if>
+	</div>
 </div>
 
-<liferay-application-list:panel panelCategory="<%= panelCategory %>" />
+<aui:script use="aui-popover">
+	var trigger = A.one('#<portlet:namespace/>manageSitesLink');
+
+	var popOver = new A.Popover(
+		{
+			align: {
+				node: trigger,
+				points:[A.WidgetPositionAlign.LC, A.WidgetPositionAlign.RC]
+			},
+			bodyContent: A.one('#<portlet:namespace/>siteSelectorContent'),
+			cssClass: 'product-menu',
+			position: 'left',
+			visible: false,
+			width: 300,
+			zIndex: Liferay.zIndex.TOOLTIP
+		}
+	).render();
+
+	trigger.on(
+		'click',
+		function() {
+			popOver.set('visible', !popOver.get('visible'));
+		}
+	);
+</aui:script>
