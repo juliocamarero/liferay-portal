@@ -103,6 +103,7 @@ public class DLFileEntryIndexer
 	public static final String CLASS_NAME = DLFileEntry.class.getName();
 
 	public DLFileEntryIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.ASSET_TAG_NAMES, Field.COMPANY_ID, Field.CONTENT,
 			Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.GROUP_ID,

@@ -76,6 +76,7 @@ public class MBMessageIndexer
 	public static final String CLASS_NAME = MBMessage.class.getName();
 
 	public MBMessageIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.ASSET_TAG_NAMES, Field.CLASS_NAME_ID, Field.CLASS_PK,
 			Field.COMPANY_ID, Field.CONTENT, Field.ENTRY_CLASS_NAME,

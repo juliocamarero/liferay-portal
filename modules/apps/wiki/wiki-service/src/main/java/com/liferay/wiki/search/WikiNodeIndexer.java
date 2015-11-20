@@ -54,6 +54,7 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 	public static final String CLASS_NAME = WikiNode.class.getName();
 
 	public WikiNodeIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
 			Field.UID);

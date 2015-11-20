@@ -54,6 +54,7 @@ public class BookmarksFolderIndexer extends BaseIndexer<BookmarksFolder> {
 	public static final String CLASS_NAME = BookmarksFolder.class.getName();
 
 	public BookmarksFolderIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
 			Field.TITLE, Field.UID);

@@ -58,6 +58,7 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 	public static final String CLASS_NAME = MBThread.class.getName();
 
 	public MBThreadIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.CLASS_NAME_ID, Field.CLASS_PK, Field.COMPANY_ID,
 			Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.UID);

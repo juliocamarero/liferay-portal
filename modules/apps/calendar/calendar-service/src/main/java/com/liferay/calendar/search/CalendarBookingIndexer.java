@@ -55,6 +55,7 @@ public class CalendarBookingIndexer extends BaseIndexer<CalendarBooking> {
 	public static final String CLASS_NAME = CalendarBooking.class.getName();
 
 	public CalendarBookingIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
 			Field.UID);

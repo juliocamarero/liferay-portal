@@ -103,6 +103,7 @@ public class JournalArticleIndexer
 	public static final String CLASS_NAME = JournalArticle.class.getName();
 
 	public JournalArticleIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.ASSET_TAG_NAMES, Field.ARTICLE_ID, Field.COMPANY_ID,
 			Field.DEFAULT_LANGUAGE_ID, Field.ENTRY_CLASS_NAME,
