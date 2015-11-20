@@ -60,6 +60,7 @@ public class BlogsEntryIndexer extends BaseIndexer<BlogsEntry> {
 	public static final String CLASS_NAME = BlogsEntry.class.getName();
 
 	public BlogsEntryIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.ASSET_TAG_NAMES, Field.COMPANY_ID, Field.CONTENT,
 			Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.GROUP_ID,

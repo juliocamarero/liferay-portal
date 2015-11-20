@@ -54,6 +54,7 @@ public class CalendarIndexer extends BaseIndexer<Calendar> {
 	public static final String CLASS_NAME = Calendar.class.getName();
 
 	public CalendarIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
 			Field.UID);

@@ -72,6 +72,7 @@ public class WikiPageIndexer
 	public static final String CLASS_NAME = WikiPage.class.getName();
 
 	public WikiPageIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.ASSET_TAG_NAMES, Field.COMPANY_ID, Field.CONTENT,
 			Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.GROUP_ID,

@@ -56,6 +56,7 @@ public class JournalFolderIndexer
 	public static final String CLASS_NAME = JournalFolder.class.getName();
 
 	public JournalFolderIndexer() {
+		setCommitImmediately(true);
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.DESCRIPTION, Field.ENTRY_CLASS_NAME,
 			Field.ENTRY_CLASS_PK, Field.TITLE, Field.UID);
