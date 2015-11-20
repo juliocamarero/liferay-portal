@@ -9,6 +9,10 @@
 			<available file="${test.base.dir.name}/test.properties" />
 		</and>
 		<then>
+			<property file="${test.base.dir.name}/test.${user.name}.properties" />
+			<property file="${test.base.dir.name}/test.${env.COMPUTERNAME}.properties" />
+			<property file="${test.base.dir.name}/test.${env.HOST}.properties" />
+			<property file="${test.base.dir.name}/test.${env.HOSTNAME}.properties" />
 			<property file="${test.base.dir.name}/test.properties" />
 		</then>
 	</if>
@@ -2011,6 +2015,7 @@ module.framework.base.dir=${liferay.home}/osgi]]></echo>
 				</then>
 				<elseif>
 					<or>
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.1" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.2" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.3" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.1" />
