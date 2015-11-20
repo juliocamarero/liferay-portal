@@ -40,15 +40,15 @@
 						<div class="panel-title">
 							<div aria-controls="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" aria-expanded="false" class="panel-toggler collapse-icon <%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? StringPool.BLANK : "collapsed" %>" class="collapsed" data-parent="#<portlet:namespace />Accordion" data-toggle="collapse" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="button">
 								<c:if test="<%= !childPanelCategory.includeHeader(request, new PipingServletResponse(pageContext)) %>">
-									
+
 									<%
 									int notificationsCount = productMenuDisplayContext.getNotificationsCount(childPanelCategory);
 									%>
-		
+
 									<c:if test="<%= notificationsCount > 0 %>">
 										<span class="sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= notificationsCount %></span>
 									</c:if>
-									
+
 									<span><%= childPanelCategory.getLabel(locale) %></span>
 								</c:if>
 							</div>
