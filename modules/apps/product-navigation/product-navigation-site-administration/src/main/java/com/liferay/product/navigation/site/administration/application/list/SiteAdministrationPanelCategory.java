@@ -16,6 +16,7 @@ package com.liferay.product.navigation.site.administration.application.list;
 
 import com.liferay.application.list.BaseJSPPanelCategory;
 import com.liferay.application.list.PanelCategory;
+import com.liferay.application.list.constants.ApplicationListWebKeys;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -26,9 +27,13 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.product.navigation.site.administration.util.LatentGroupManagerUtil;
 
+import java.io.IOException;
+
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.osgi.service.component.annotations.Component;
@@ -95,6 +100,16 @@ public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean includeHeader(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException {
+
+		request.setAttribute(ApplicationListWebKeys.PANEL_CATEGORY, this);
+
+		return super.includeHeader(request, response);
 	}
 
 	@Override

@@ -35,6 +35,10 @@ SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdmin
 	</div>
 
 	<div class="toolbar-group-content">
+		<c:if test="<%= sapcDisplayContext.getNotificationsCount() > 0 %>">
+			<span class="sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= sapcDisplayContext.getNotificationsCount() %></span>
+		</c:if>
+
 		<span class="site-name">
 			<%= HtmlUtil.escape(sapcDisplayContext.getGroupName()) %>
 

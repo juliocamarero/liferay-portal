@@ -35,6 +35,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.exportimport.staging.StagingUtil;
+import com.liferay.product.navigation.site.administration.application.list.SiteAdministrationPanelCategory;
 import com.liferay.product.navigation.site.administration.util.LatentGroupManagerUtil;
 
 import java.util.List;
@@ -200,6 +201,23 @@ public class SiteAdministrationPanelCategoryDisplayContext {
 			PropsValues.MY_SITES_MAX_ELEMENTS);
 
 		return _mySites;
+	}
+
+	public int getNotificationsCount() {
+		if (_notificationsCount != null) {
+			return _notificationsCount.intValue();
+		}
+
+		SiteAdministrationPanelCategory siteAdministrationPanelCategory =
+			(SiteAdministrationPanelCategory)_portletRequest.getAttribute(
+				ApplicationListWebKeys.PANEL_CATEGORY);
+
+		_notificationsCount = _panelCategoryHelper.getNotificationsCount(
+			siteAdministrationPanelCategory.getKey(),
+			_themeDisplay.getPermissionChecker(), getGroup(),
+			_themeDisplay.getUser());
+
+		return _notificationsCount;
 	}
 
 	public String getStagingGroupURL() {
@@ -370,6 +388,7 @@ public class SiteAdministrationPanelCategoryDisplayContext {
 	private String _logoURL;
 	private String _manageSitesURL;
 	private List<Group> _mySites;
+	private Integer _notificationsCount;
 	private final PanelCategoryHelper _panelCategoryHelper;
 	private final PortletRequest _portletRequest;
 	private final PortletResponse _portletResponse;
