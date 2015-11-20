@@ -143,21 +143,8 @@ body {
 		padding: 1em;
 	}
 
-	.site-administration-toolbar, .toolbar-group-field {
-		padding: 0;
-	}
-
-	.panel-toggler {
-		padding: 1px 9px;
-
-		.site-logo {
-			margin-right: 10px;
-		}
-	}
-
 	.site-selector {
 		box-shadow: none;
-		padding: 1em;
 
 		.selectable-site {
 			color: #333;
@@ -175,31 +162,11 @@ body {
 				color: #999;
 			}
 		}
-	}
 
-	.site-logo-container {
-		padding: .7em 1em .7em 0;
-	}
-
-	.site-logo {
-		background-color: #D8DfE6;
-		margin: auto;
-		padding: 10px 15px;
-		color: #C3CDD7;
-	}
-
-	.selected-site {
-		.site-logo {
-			background-color: #FFF;
-			border: 2px solid #61ADDB;
-			border-radius: 4px;
-			color: #61ADDB;
-			padding: 10px 13px;
+		.site-logo-container {
+			padding: 2em;
 		}
 	}
 
-	.site-image {
-		max-widt: 46px;
-		max-height: 40px;
-	}
+
 }

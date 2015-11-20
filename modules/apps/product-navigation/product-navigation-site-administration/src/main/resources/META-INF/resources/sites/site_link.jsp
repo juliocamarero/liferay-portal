@@ -32,15 +32,16 @@ SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdmin
 		<div class="list-group-item-field site-logo-container">
 			<c:choose>
 				<c:when test="<%= selectedSite %>">
-					<div class="site-logo">
+					<div class="sticker sticker-primary">
 						<aui:icon image="check" markupView="lexicon" />
 					</div>
 				</c:when>
 				<c:when test="<%= Validator.isNotNull(sapcDisplayContext.getLogoURL()) %>">
-					<img alt="" class="site-image" src="<%= sapcDisplayContext.getLogoURL() %>" />
+					<div class="aspect-ratio-bg-cover sticker" style="background-image: url(<%= sapcDisplayContext.getLogoURL() %>);">
+					</div>
 				</c:when>
 				<c:otherwise>
-					<div class="site-logo">
+					<div class="sticker sticker-default">
 						<aui:icon image="sites" markupView="lexicon" />
 					</div>
 				</c:otherwise>

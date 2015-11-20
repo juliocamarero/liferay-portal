@@ -18,18 +18,16 @@
 
 <%
 SiteAdministrationPanelCategoryDisplayContext sapcDisplayContext = new SiteAdministrationPanelCategoryDisplayContext(liferayPortletRequest, liferayPortletResponse, null);
-
-Group group = sapcDisplayContext.getGroup();
 %>
 
-<div class="site-administration-toolbar toolbar">
-	<div class="site-logo-container toolbar-group-field">
+<div>
+	<div class="toolbar-group-field">
 		<c:choose>
 			<c:when test="<%= Validator.isNotNull(sapcDisplayContext.getLogoURL()) %>">
-				<img alt="" class="site-image" src="<%= sapcDisplayContext.getLogoURL() %>" />
+				<div class="aspect-ratio-bg-cover sticker" style="background-image: url(<%= sapcDisplayContext.getLogoURL() %>);"></div>
 			</c:when>
 			<c:otherwise>
-				<div class="site-logo">
+				<div class="sticker sticker-default">
 					<aui:icon image="sites" markupView="lexicon" />
 				</div>
 			</c:otherwise>
