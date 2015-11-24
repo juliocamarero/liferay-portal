@@ -53,8 +53,7 @@ public class AssetCategoriesNavigationTag extends IncludeTag {
 			"liferay-ui:asset-tags-navigation:vocabularyIds", _vocabularyIds);
 	}
 
-	private static final String _PAGE =
-		"/html/taglib/ui/asset_categories_navigation/page.jsp";
+	private static final String _PAGE = "/asset_categories_navigation/page.jsp";
 
 	private boolean _hidePortletWhenEmpty;
 	private long[] _vocabularyIds;

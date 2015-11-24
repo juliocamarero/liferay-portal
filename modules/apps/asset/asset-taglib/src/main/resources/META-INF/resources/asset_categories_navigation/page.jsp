@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/taglib/ui/asset_categories_navigation/init.jsp" %>
+<%@ include file="/asset_categories_navigation/init.jsp" %>
 
 <%
 boolean hidePortletWhenEmpty = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:asset-tags-navigation:hidePortletWhenEmpty"));
