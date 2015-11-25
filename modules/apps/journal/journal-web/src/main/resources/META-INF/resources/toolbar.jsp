@@ -30,7 +30,11 @@ String keywords = ParamUtil.getString(request, "keywords");
 		<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" />
 
 		<c:if test="<%= Validator.isNull(keywords) %>">
-			<liferay-util:include page="/display_style_buttons.jsp" servletContext="<%= application %>" />
+			<liferay-frontend:management-bar-display-buttons
+				displayViews="<%= journalDisplayContext.getDisplayViews() %>"
+				portletURL="<%= journalDisplayContext.getPortletURL() %>"
+				selectedDisplayStyle="<%= journalDisplayContext.getDisplayStyle() %>"
+			/>
 		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
