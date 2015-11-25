@@ -651,6 +651,7 @@
 		<body-content>JSP</body-content>
 	</tag>
 	<tag>
+		<description>Deprecated as of 7.0.0, replaced by <![CDATA[<code>liferay-asset:asset-categories-navigation</code>]]>.</description>
 		<name>asset-categories-navigation</name>
 		<tag-class>com.liferay.taglib.ui.AssetCategoriesNavigationTag</tag-class>
 		<body-content>JSP</body-content>

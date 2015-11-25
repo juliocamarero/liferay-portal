@@ -22,7 +22,10 @@ import javax.servlet.http.HttpServletRequest;
  * @author Alvaro del Castillo
  * @author Eduardo Lundgren
  * @author Jorge Ferrer
+ * @deprecated As of 7.0.0, see {@link
+ *             com.liferay.asset.taglib.servlet.taglib.AssetCategoriesNavigationTag}
  */
+@Deprecated
 public class AssetCategoriesNavigationTag extends IncludeTag {
 
 	public void setHidePortletWhenEmpty(boolean hidePortletWhenEmpty) {
