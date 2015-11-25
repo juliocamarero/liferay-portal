@@ -1116,12 +1116,9 @@ public class AssetPublisherUtil {
 	public static long getSubscriptionClassPK(long plid, String portletId)
 		throws PortalException {
 
-		com.liferay.portal.model.PortletPreferences portletPreferencesModel =
-			_portletPreferencesLocalService.getPortletPreferences(
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+		return getSubscriptionClassPK(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid, portletId);
-
-		return portletPreferencesModel.getPortletPreferencesId();
 	}
 
 	public static boolean isScopeIdSelectable(
