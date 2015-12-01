@@ -2928,13 +2928,13 @@ the preference is no longer used.
 
 ---------------------------------------
 
-### The liferay-ui:navigation taglib has been deprecated and replaced with liferay-site-navigation:navigation taglib
+### The liferay-ui:navigation taglib has been removed and replaced with liferay-site-navigation:navigation taglib
 - **Date:** 2015-Nov-20
 - **JIRA Ticket:** LPS-60328
 
 #### What changed?
 
-The `liferay-ui:navigation` taglib has been deprecated and replaced with
+The `liferay-ui:navigation` taglib has been removed and replaced with
 `liferay-site-navigation:navigation` taglib.
 
 #### Who is affected?
