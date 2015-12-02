@@ -127,6 +127,7 @@
 			<arg value="${project.dir}/modules/frontend/frontend-taglib/src/main/resources/META-INF/resources/liferay-frontend.tld" />
 			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-portlet-ext.tld" />
 			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-security.tld" />
+			<arg value="${project.dir}/modules/apps/site-navigation/site-navigation-taglib/src/main/resources/META-INF/resources/liferay-site-navigation.tld" />
 			<arg value="${project.dir}/modules/apps/staging/staging-taglib/src/main/resources/META-INF/resources/liferay-staging.tld" />
 			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-theme.tld" />
 			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-ui.tld" />

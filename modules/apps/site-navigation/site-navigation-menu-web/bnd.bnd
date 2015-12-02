@@ -1,6 +1,9 @@
 Bundle-Name: Liferay Site Navigation Menu Web
 Bundle-SymbolicName: com.liferay.site.navigation.menu.web
 Bundle-Version: 1.0.0
+Import-Package:\
+	com.liferay.site.navigation.taglib.servlet.taglib,\
+	*
 Include-Resource:\
 	classes,\
 	META-INF/resources=src/main/resources/META-INF/resources
