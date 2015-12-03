@@ -15,25 +15,3 @@
 --%>
 
 <%@ include file="/init.jsp" %>
-
-<portlet:renderURL var="previewContentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-	<portlet:param name="mvcPath" value="/preview_panel.jsp" />
-</portlet:renderURL>
-
-<%
-Map<String, Object> data = new HashMap<String, Object>();
-
-data.put("panelURL", previewContentURL);
-%>
-
-<li>
-	<liferay-ui:icon
-		data="<%= data %>"
-		iconCssClass="icon-desktop icon-monospaced"
-		id="previewPanel"
-		label="<%= false %>"
-		linkCssClass="control-menu-icon"
-		message="preview"
-		url="javascript:;"
-	/>
-</li>

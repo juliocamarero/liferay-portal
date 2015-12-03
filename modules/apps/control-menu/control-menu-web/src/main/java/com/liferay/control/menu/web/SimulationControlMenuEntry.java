@@ -42,12 +42,12 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = ControlMenuEntry.class
 )
-public class PreviewControlMenuEntry
+public class SimulationControlMenuEntry
 	extends BaseJSPControlMenuEntry implements ControlMenuEntry {
 
 	@Override
 	public String getJspPath() {
-		return "/entries/preview.jsp";
+		return "/entries/simulation.jsp";
 	}
 
 	@Override
