@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.security.permission.ActionKeys;
-import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -42,12 +41,12 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = ControlMenuEntry.class
 )
-public class PreviewControlMenuEntry
+public class SimulationControlMenuEntry
 	extends BaseJSPControlMenuEntry implements ControlMenuEntry {
 
 	@Override
 	public String getJspPath() {
-		return "/entries/preview.jsp";
+		return "/entries/simulation.jsp";
 	}
 
 	@Override
@@ -63,9 +62,7 @@ public class PreviewControlMenuEntry
 			return false;
 		}
 
-		if (!(hasPreviewInDevicePermission(themeDisplay) ||
-			  hasUpdateLayoutPermission(themeDisplay))) {
-
+		if (!hasUpdateLayoutPermission(themeDisplay)) {
 			return false;
 		}
 
@@ -79,14 +76,6 @@ public class PreviewControlMenuEntry
 	)
 	public void setServletContext(ServletContext servletContext) {
 		super.setServletContext(servletContext);
-	}
-
-	protected boolean hasPreviewInDevicePermission(ThemeDisplay themeDisplay)
-		throws PortalException {
-
-		return GroupPermissionUtil.contains(
-			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroup(),
-			ActionKeys.PREVIEW_IN_DEVICE);
 	}
 
 	protected boolean hasUpdateLayoutPermission(ThemeDisplay themeDisplay)
