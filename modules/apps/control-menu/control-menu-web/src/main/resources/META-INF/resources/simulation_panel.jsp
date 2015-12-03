@@ -15,3 +15,10 @@
 --%>
 
 <%@ include file="/init.jsp" %>
+
+<%
+PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
+PanelCategory panelCategory = panelCategoryRegistry.getPanelCategory(SimulationPanelCategory.SIMULATION);
+%>
+
+<liferay-application-list:panel-category panelCategory="<%= panelCategory %>" showHeader="<%= false %>" />
