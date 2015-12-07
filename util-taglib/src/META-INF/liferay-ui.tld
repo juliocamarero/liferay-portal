@@ -1915,6 +1915,11 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<name>markupView</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Text to be displayed for the icon on mouse over</description>
 			<name>message</name>
 			<required>false</required>
