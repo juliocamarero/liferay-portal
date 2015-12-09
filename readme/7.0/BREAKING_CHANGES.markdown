@@ -3197,13 +3197,13 @@ Portal by means of an OSGi container.
 
 ---------------------------------------
 
-### The liferay-ui:asset-categories-navigation taglib has been deprecated and replaced with liferay-asset:asset-categories-navigation taglib
+### The liferay-ui:asset-categories-navigation taglib has been removed and replaced with liferay-asset:asset-categories-navigation taglib
 - **Date:** 2015-Nov-25
 - **JIRA Ticket:** LPS-60753
 
 #### What changed?
 
-The `liferay-ui:asset-categories-navigation` taglib has been deprecated and
+The `liferay-ui:asset-categories-navigation` taglib has been removed and
 replaced with `liferay-asset:asset-categories-navigation` taglib.
 
 #### Who is affected?
