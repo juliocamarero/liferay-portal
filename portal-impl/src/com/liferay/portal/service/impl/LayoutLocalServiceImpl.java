@@ -550,7 +550,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		List<PortletPreferences> portletPreferencesList =
 			portletPreferencesLocalService.getPortletPreferencesByPlid(
 				layout.getPlid());
-		
+
 		for (PortletPreferences portletPreferences : portletPreferencesList) {
 			Portlet portlet = portletLocalService.getPortletById(
 				layout.getCompanyId(), portletPreferences.getPortletId());
