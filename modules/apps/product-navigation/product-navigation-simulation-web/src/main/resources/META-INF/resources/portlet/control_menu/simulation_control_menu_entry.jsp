@@ -14,11 +14,11 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/portlet/init.jsp" %>
 
-<portlet:renderURL var="previewContentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-	<portlet:param name="mvcPath" value="/simulation_panel.jsp" />
-</portlet:renderURL>
+<liferay-portlet:renderURL portletName="<%= ProductNavigationSimulationPortletKeys.PRODUCT_NAVIGATION_SIMULATION %>" var="previewContentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<portlet:param name="mvcPath" value="/portlet/view.jsp" />
+</liferay-portlet:renderURL>
 
 <%
 Map<String, Object> data = new HashMap<String, Object>();
