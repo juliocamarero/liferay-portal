@@ -12,13 +12,12 @@
  * details.
  */
 
-package com.liferay.control.menu.web;
+package com.liferay.product.navigation.simulation.web.control;
 
 import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.PanelAppRegistry;
 import com.liferay.control.menu.BaseJSPControlMenuEntry;
 import com.liferay.control.menu.ControlMenuEntry;
-import com.liferay.control.menu.application.list.SimulationPanelCategory;
 import com.liferay.control.menu.constants.ControlMenuCategoryKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -26,6 +25,7 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.product.navigation.simulation.application.list.SimulationPanelCategory;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class SimulationControlMenuEntry
 
 	@Override
 	public String getJspPath() {
-		return "/entries/simulation.jsp";
+		return "/portlet/control_menu/simulation_control_menu_entry.jsp";
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class SimulationControlMenuEntry
 
 	@Override
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.control.menu.web)",
+		target = "(osgi.web.symbolicname=com.liferay.product.navigation.simulation.web)",
 		unbind = "-"
 	)
 	public void setServletContext(ServletContext servletContext) {
