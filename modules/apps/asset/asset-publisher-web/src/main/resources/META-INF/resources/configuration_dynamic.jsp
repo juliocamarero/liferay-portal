@@ -519,7 +519,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 		<liferay-ui:error-marker key="errorSection" value="subscriptions" />
 
 		<c:if test="<%= PortalUtil.isRSSFeedsEnabled() %>">
-			<liferay-ui:rss-settings
+			<liferay-rss:rss-settings
 				delta="<%= assetPublisherDisplayContext.getRSSDelta() %>"
 				displayStyle="<%= assetPublisherDisplayContext.getRSSDisplayStyle() %>"
 				displayStyles="<%= new String[] {RSSUtil.DISPLAY_STYLE_ABSTRACT, RSSUtil.DISPLAY_STYLE_TITLE} %>"
