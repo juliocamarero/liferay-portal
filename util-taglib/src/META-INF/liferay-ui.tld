@@ -4015,7 +4015,7 @@
 		</attribute>
 	</tag>
 	<tag>
-		<description>Creates a configuration component for users to define RSS settings, such as how many articles to display.</description>
+		<description>Deprecated as of 7.0.0, replaced by <![CDATA[<code>liferay-rss:rss-settings</code>]]>. Creates a configuration component for users to define RSS settings, such as how many articles to display.</description>
 		<name>rss-settings</name>
 		<tag-class>com.liferay.taglib.ui.RSSSettingsTag</tag-class>
 		<body-content>JSP</body-content>

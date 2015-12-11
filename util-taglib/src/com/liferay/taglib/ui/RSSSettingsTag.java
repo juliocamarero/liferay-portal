@@ -22,7 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eduardo Garcia
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.rss.taglib.servlet.taglib.RSSSettingsTag}
  */
+@Deprecated
 public class RSSSettingsTag extends IncludeTag {
 
 	public void setDelta(int delta) {
