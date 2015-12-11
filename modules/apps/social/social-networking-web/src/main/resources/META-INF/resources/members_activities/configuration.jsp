@@ -48,7 +48,7 @@
 	</aui:fieldset>
 
 	<c:if test="<%= PortalUtil.isRSSFeedsEnabled() %>">
-		<liferay-ui:rss-settings
+		<liferay-rss:rss-settings
 			delta="<%= rssDelta %>"
 			displayStyle="<%= rssDisplayStyle %>"
 			enabled="<%= enableRSS %>"
