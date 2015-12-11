@@ -16,9 +16,11 @@ package com.liferay.rss.taglib.servlet.taglib;
 
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.util.RSSUtil;
+import com.liferay.rss.taglib.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 
 /**
  * @author Eduardo Garcia
@@ -89,6 +91,13 @@ public class RSSSettingsTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:rss-settings:nameEnabled",
 			String.valueOf(_nameEnabled));
+	}
+
+	@Override
+	public void setPageContext(PageContext pageContext) {
+		super.setPageContext(pageContext);
+
+		servletContext = ServletContextUtil.getServletContext();
 	}
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
