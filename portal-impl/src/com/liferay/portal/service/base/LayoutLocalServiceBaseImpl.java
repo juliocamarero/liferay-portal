@@ -1500,6 +1500,8 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected PortletPreferencesPersistence portletPreferencesPersistence;
 	@BeanReference(type = PortletPreferencesFinder.class)
 	protected PortletPreferencesFinder portletPreferencesFinder;
+	@BeanReference(type = com.liferay.portal.service.PortletLocalService.class)
+	protected com.liferay.portal.service.PortletLocalService portletLocalService;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.ResourcePermissionLocalService.class)
