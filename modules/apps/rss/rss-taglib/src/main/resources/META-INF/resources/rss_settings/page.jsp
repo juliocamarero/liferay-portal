@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/taglib/ui/rss_settings/init.jsp" %>
+<%@ include file="/rss_settings/init.jsp" %>
 
 <%
 int delta = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:rss-settings:delta"));

@@ -93,7 +93,7 @@ public class RSSSettingsTag extends IncludeTag {
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
 
-	private static final String _PAGE = "/html/taglib/ui/rss_settings/page.jsp";
+	private static final String _PAGE = "/rss_settings/page.jsp";
 
 	private int _delta = SearchContainer.DEFAULT_DELTA;
 	private String _displayStyle = RSSUtil.DISPLAY_STYLE_DEFAULT;
