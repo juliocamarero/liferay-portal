@@ -107,7 +107,7 @@ MailTemplatesHelper mailTemplatesHelper = new MailTemplatesHelper(wikiRequestHel
 
 		<c:if test="<%= PortalUtil.isRSSFeedsEnabled() %>">
 			<liferay-ui:section>
-				<liferay-ui:rss-settings
+				<liferay-rss:rss-settings
 					delta="<%= GetterUtil.getInteger(wikiGroupServiceOverriddenConfiguration.rssDelta()) %>"
 					displayStyle="<%= wikiGroupServiceOverriddenConfiguration.rssDisplayStyle() %>"
 					enabled="<%= wikiGroupServiceOverriddenConfiguration.enableRss() %>"
