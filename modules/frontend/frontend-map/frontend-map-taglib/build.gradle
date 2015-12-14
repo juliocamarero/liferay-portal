@@ -1,0 +1,9 @@
+dependencies {
+	compile group: "com.liferay.portal", name: "util-taglib", version: liferay.portalVersion
+	compile group: "javax.servlet.jsp", name: "jsp-api", version: "2.1"
+	compile group: "org.eclipse.osgi", name: "org.eclipse.osgi.services", version: "3.5.0-SNAPSHOT"
+}
+
+liferay {
+	deployDir = file("${liferayHome}/osgi/modules")
+}
