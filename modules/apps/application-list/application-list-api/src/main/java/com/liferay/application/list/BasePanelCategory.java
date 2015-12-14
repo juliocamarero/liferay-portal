@@ -89,4 +89,11 @@ public abstract class BasePanelCategory implements PanelCategory {
 		return false;
 	}
 
+	@Override
+	public boolean isActive(
+		PanelCategoryHelper panelCategoryHelper, String ppid) {
+
+		return panelCategoryHelper.containsPortlet(ppid, this);
+	}
+
 }
