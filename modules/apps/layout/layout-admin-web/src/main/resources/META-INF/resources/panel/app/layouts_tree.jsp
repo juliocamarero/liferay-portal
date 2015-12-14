@@ -146,6 +146,17 @@ String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 	editPublicLayoutURL.setParameter("privateLayout", Boolean.FALSE.toString());
 	editPublicLayoutURL.setParameter("groupId", String.valueOf(liveGroup.getGroupId()));
 	editPublicLayoutURL.setParameter("viewLayout", Boolean.TRUE.toString());
+
+	Long curSelPlid = null;
+
+	if (!privateLayout) {
+		if (selPlid > 0) {
+			curSelPlid = selPlid;
+		}
+		else if (themeDisplay.getPlid() > 0) {
+			curSelPlid = themeDisplay.getPlid();
+		}
+	}
 	%>
 
 	<liferay-ui:layouts-tree
@@ -157,7 +168,7 @@ String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 		rootNodeName="<%= liveGroup.getLayoutRootNodeName(false, themeDisplay.getLocale()) %>"
 		rootPortletURL="<%= (selGroup.getPublicLayoutsPageCount() > 0) ? selGroup.getDisplayURL(themeDisplay, false) : StringPool.BLANK %>"
 		selectedLayoutIds="<%= selectedLayoutIds %>"
-		selPlid="<%= ((selPlid > 0) || !privateLayout) ? selPlid : null %>"
+		selPlid="<%= curSelPlid %>"
 		treeId="publicLayoutsTree"
 	/>
 </c:if>
@@ -168,6 +179,17 @@ PortletURL editPrivateLayoutURL = PortalUtil.getControlPanelPortletURL(request, 
 editPrivateLayoutURL.setParameter("privateLayout", Boolean.TRUE.toString());
 editPrivateLayoutURL.setParameter("groupId", String.valueOf(liveGroup.getGroupId()));
 editPrivateLayoutURL.setParameter("viewLayout", Boolean.TRUE.toString());
+
+Long curSelPlid = null;
+
+if (privateLayout) {
+	if (selPlid > 0) {
+		curSelPlid = selPlid;
+	}
+	else if (themeDisplay.getPlid() > 0) {
+		curSelPlid = themeDisplay.getPlid();
+	}
+}
 %>
 
 <liferay-ui:layouts-tree
@@ -179,7 +201,7 @@ editPrivateLayoutURL.setParameter("viewLayout", Boolean.TRUE.toString());
 	rootNodeName="<%= liveGroup.getLayoutRootNodeName(true, themeDisplay.getLocale()) %>"
 	rootPortletURL="<%= (selGroup.getPrivateLayoutsPageCount() > 0) ? selGroup.getDisplayURL(themeDisplay, true) : StringPool.BLANK %>"
 	selectedLayoutIds="<%= selectedLayoutIds %>"
-	selPlid="<%= ((selPlid > 0) || privateLayout) ? selPlid : null %>"
+	selPlid="<%= curSelPlid %>"
 	treeId="privateLayoutsTree"
 />
 
