@@ -12,18 +12,18 @@
  * details.
  */
 
-package com.liferay.control.menu.web.application.list;
+package com.liferay.product.navigation.simulation.device.application.list;
 
 import com.liferay.application.list.BaseJSPPanelApp;
 import com.liferay.application.list.PanelApp;
-import com.liferay.control.menu.application.list.SimulationPanelCategory;
-import com.liferay.control.menu.web.constants.ControlMenuPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
+import com.liferay.product.navigation.simulation.application.list.SimulationPanelCategory;
+import com.liferay.product.navigation.simulation.web.constants.ProductNavigationSimulationPortletKeys;
 
 import javax.servlet.ServletContext;
 
@@ -47,12 +47,13 @@ public class DevicePreviewPanelApp extends BaseJSPPanelApp {
 
 	@Override
 	public String getJspPath() {
-		return "/entries/simulation/device_preview.jsp";
+		return "/device_preview.jsp";
 	}
 
 	@Override
 	public String getPortletId() {
-		return ControlMenuPortletKeys.CONTROL_MENU;
+		return ProductNavigationSimulationPortletKeys.
+			PRODUCT_NAVIGATION_SIMULATION;
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class DevicePreviewPanelApp extends BaseJSPPanelApp {
 
 	@Override
 	@Reference(
-		target = "(javax.portlet.name=" + ControlMenuPortletKeys.CONTROL_MENU + ")",
+		target = "(javax.portlet.name=" + ProductNavigationSimulationPortletKeys.PRODUCT_NAVIGATION_SIMULATION + ")",
 		unbind = "-"
 	)
 	public void setPortlet(Portlet portlet) {
@@ -82,7 +83,7 @@ public class DevicePreviewPanelApp extends BaseJSPPanelApp {
 
 	@Override
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.control.menu.web)",
+		target = "(osgi.web.symbolicname=com.liferay.product.navigation.simulation.device)",
 		unbind = "-"
 	)
 	public void setServletContext(ServletContext servletContext) {
