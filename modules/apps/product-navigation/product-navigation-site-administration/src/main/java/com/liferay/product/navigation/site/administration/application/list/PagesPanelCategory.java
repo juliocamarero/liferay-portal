@@ -17,7 +17,9 @@ package com.liferay.product.navigation.site.administration.application.list;
 import com.liferay.application.list.BasePanelCategory;
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
+import com.liferay.application.list.display.context.logic.PanelCategoryHelper;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Locale;
 
@@ -49,6 +51,17 @@ public class PagesPanelCategory extends BasePanelCategory {
 	@Override
 	public String getLabel(Locale locale) {
 		return LanguageUtil.get(locale, "category.site_administration.pages");
+	}
+
+	@Override
+	public boolean isActive(
+		PanelCategoryHelper panelCategoryHelper, String ppid) {
+
+		if (Validator.isNull(ppid)) {
+			return true;
+		}
+
+		return super.isActive(panelCategoryHelper, ppid);
 	}
 
 }
