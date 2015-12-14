@@ -16,6 +16,10 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", themeDisplay.getLocale(), getClass());
+%>
+
 <div id="<portlet:namespace />devicePreviewContainer">
 	<aui:button cssClass="close" name="closePanelPreview" value="&times;" />
 
@@ -24,28 +28,28 @@
 	<aui:nav>
 		<aui:nav-item cssClass="autosize lfr-device-item" data-device="autosize">
 			<div class="device-info">
-				<span class="device-name"><liferay-ui:message key="autosize" /></span>
+				<span class="device-name"><%= LanguageUtil.get(resourceBundle, "autosize") %></span>
 				<span class="device-dimensions">100%</span>
 			</div>
 		</aui:nav-item>
 
 		<aui:nav-item cssClass="lfr-device-item selected smartphone" data-device="smartphone">
 			<div class="device-info">
-				<span class="device-name"><liferay-ui:message key="smartphone" /></span>
+				<span class="device-name"><%= LanguageUtil.get(resourceBundle, "smartphone") %></span>
 				<span class="device-dimensions">768px</span>
 			</div>
 		</aui:nav-item>
 
 		<aui:nav-item cssClass="lfr-device-item tablet" data-device="tablet">
 			<div class="device-info">
-				<span class="device-name"><liferay-ui:message key="tablet" /></span>
+				<span class="device-name"><%= LanguageUtil.get(resourceBundle, "tablet") %></span>
 				<span class="device-dimensions">1024px</span>
 			</div>
 		</aui:nav-item>
 
 		<aui:nav-item cssClass="desktop lfr-device-item" data-device="desktop">
 			<div class="device-info">
-				<span class="device-name"><liferay-ui:message key="desktop" /></span>
+				<span class="device-name"><%= LanguageUtil.get(resourceBundle, "desktop") %></span>
 				<span class="device-dimensions">1280px</span>
 			</div>
 		</aui:nav-item>
@@ -67,7 +71,7 @@
 	</aui:nav>
 
 	<div class="alert alert-warning">
-		<small><liferay-ui:message key="preview-may-not-be-accurate" /></small>
+		<small><%= LanguageUtil.get(resourceBundle, "preview-may-not-be-accurate") %></small>
 	</div>
 </div>
 
