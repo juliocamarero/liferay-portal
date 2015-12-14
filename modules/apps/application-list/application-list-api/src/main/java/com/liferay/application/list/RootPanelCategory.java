@@ -84,6 +84,13 @@ public class RootPanelCategory implements PanelCategory {
 		return false;
 	}
 
+	@Override
+	public boolean isActive(
+		PanelCategoryHelper panelCategoryHelper, String ppid) {
+
+		return false;
+	}
+
 	private RootPanelCategory() {
 	}
 
