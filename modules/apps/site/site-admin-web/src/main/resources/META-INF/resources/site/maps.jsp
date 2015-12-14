@@ -41,6 +41,14 @@ String groupGoogleMapsAPIKey = PropertiesParamUtil.getString(groupTypeSettings, 
 
 <h3><liferay-ui:message key="maps" /></h3>
 
+<liferay-frontend-map:bla />
+
+<liferay-frontend:add-menu>
+	<liferay-frontend:add-menu-item title="Bla bla bla" url="http://testURL" />
+</liferay-frontend:add-menu>
+
+<liferay-application-list:panel-app active="<%= false %>" id="testing" label="bla bla" url="/test" />
+
 <p><liferay-ui:message key="select-the-maps-api-provider-to-use-when-displaying-geolocalized-assets" /></p>
 
 <aui:input checked='<%= groupMapsAPIProvider.equals("Google") %>' helpMessage="use-google-maps-as-the-maps-api-provider" id="mapsGoogleMapsEnabled" label="google-maps" name="TypeSettingsProperties--mapsAPIProvider--" type="radio" value="Google" />
