@@ -20,8 +20,8 @@
 ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", themeDisplay.getLocale(), getClass());
 %>
 
-<div id="<portlet:namespace />devicePreviewContainer">
-	<aui:button cssClass="close" name="closePanelPreview" value="&times;" />
+<div id="<portlet:namespace />simulationDeviceContainer">
+	<aui:button cssClass="close" name="closeSimulationPanel" value="&times;" />
 
 	<h1><liferay-ui:message key="device" /></h1>
 
@@ -75,8 +75,8 @@ ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language",
 	</div>
 </div>
 
-<aui:script use="liferay-control-menu-device-preview">
-	var devicePreview = new Liferay.ControlMenu.DevicePreview(
+<aui:script use="liferay-product-navigation-simulation-device">
+	var simulationDevice = new Liferay.SimulationDevice(
 		{
 			devices: {
 				autosize: {
@@ -113,5 +113,5 @@ ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language",
 		}
 	);
 
-	Liferay.once('dockbarHidePanel', A.bind('destroy', devicePreview));
+	Liferay.once('dockbarHidePanel', A.bind('destroy', simulationDevice));
 </aui:script>

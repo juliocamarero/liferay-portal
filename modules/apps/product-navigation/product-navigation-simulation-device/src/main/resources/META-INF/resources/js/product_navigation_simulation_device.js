@@ -1,8 +1,7 @@
 AUI.add(
-	'liferay-control-menu-device-preview',
+	'liferay-product-navigation-simulation-device',
 	function(A) {
 		var AObject = A.Object;
-		var ControlMenu = Liferay.ControlMenu;
 		var Lang = A.Lang;
 		var Util = Liferay.Util;
 
@@ -49,7 +48,7 @@ AUI.add(
 
 		var STR_ROTATED = 'rotated';
 
-		var TPL_DEVICE_PREVIEW = '<div class="lfr-device-preview" />';
+		var TPL_SIMULATION_DEVICE = '<div class="lfr-simulation-device" />';
 
 		var TPL_DEVICE_SIZE_INFO = '{width} x {height}';
 
@@ -59,7 +58,7 @@ AUI.add(
 
 		var WIN = A.config.win;
 
-		var DevicePreview = A.Component.create(
+		var SimulationDevice = A.Component.create(
 			{
 				ATTRS: {
 					devices: {
@@ -79,7 +78,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'devicepreview',
+				NAME: 'simulationdevice',
 
 				prototype: {
 					initializer: function(config) {
@@ -89,11 +88,11 @@ AUI.add(
 
 						instance._dialogId = A.guid();
 
-						instance._closePanelButton = instance.byId('closePanelPreview');
+						instance._closePanelButton = instance.byId('closeSimulationPanel');
 
-						instance._devicePreviewNode = A.Node.create(Lang.sub(TPL_DEVICE_PREVIEW));
+						instance._simulationDeviceNode = A.Node.create(Lang.sub(TPL_SIMULATION_DEVICE));
 
-						BODY.append(instance._devicePreviewNode);
+						BODY.append(instance._simulationDeviceNode);
 
 						var devices = instance.get('devices');
 
@@ -110,11 +109,11 @@ AUI.add(
 							}
 						);
 
-						var devicePreviewContainer = instance.byId('devicePreviewContainer');
+						var simulationDeviceContainer = instance.byId('simulationDeviceContainer');
 
-						instance._deviceItems = devicePreviewContainer.all(SELECTOR_DEVICE_ITEM);
+						instance._deviceItems = simulationDeviceContainer.all(SELECTOR_DEVICE_ITEM);
 
-						instance._devicePreviewContainer = devicePreviewContainer;
+						instance._simulationDeviceContainer = simulationDeviceContainer;
 
 						instance._bindUI();
 					},
@@ -124,7 +123,7 @@ AUI.add(
 
 						(new A.EventHandle(instance._eventHandles)).detach();
 
-						instance._devicePreviewNode.remove();
+						instance._simulationDeviceNode.remove();
 					},
 
 					_bindUI: function() {
@@ -145,7 +144,7 @@ AUI.add(
 
 						eventHandles.push(
 							instance._closePanelButton.on(STR_CLICK, instance._closePanel, instance),
-							instance._devicePreviewContainer.delegate(STR_CLICK, instance._onDeviceClick, SELECTOR_DEVICE_ITEM, instance),
+							instance._simulationDeviceContainer.delegate(STR_CLICK, instance._onDeviceClick, SELECTOR_DEVICE_ITEM, instance),
 							resizeHandle
 						);
 
@@ -169,7 +168,7 @@ AUI.add(
 					_closePanel: function() {
 						var instance = this;
 
-						ControlMenu.togglePanel('previewPanel');
+						Liferay.ControlMenu.togglePanel('simulationPanel');
 					},
 
 					_normalizeDialogAttrs: function(device, rotation) {
@@ -193,7 +192,7 @@ AUI.add(
 								dialogWidth = widthNode.val();
 							}
 							else {
-								dialogWidth = instance._devicePreviewNode.width();
+								dialogWidth = instance._simulationDeviceNode.width();
 
 								dialogAutoWidth = true;
 							}
@@ -206,7 +205,7 @@ AUI.add(
 								dialogHeight = heightNode.val();
 							}
 							else {
-								dialogHeight = instance._devicePreviewNode.height();
+								dialogHeight = instance._simulationDeviceNode.height();
 
 								dialogAutoHeight = true;
 							}
@@ -359,7 +358,7 @@ AUI.add(
 
 						var dialogAttrs = instance._normalizeDialogAttrs(device, rotation);
 
-						var devicePreviewNode = instance._devicePreviewNode;
+						var simulationDeviceNode = instance._simulationDeviceNode;
 
 						var height = dialogAttrs.size.height;
 						var width = dialogAttrs.size.width;
@@ -367,13 +366,13 @@ AUI.add(
 						if (!dialog) {
 							var dialogConfig = {
 								align: {
-									node: devicePreviewNode,
+									node: simulationDeviceNode,
 									points: DIALOG_ALIGN_POINTS
 								},
-								autoSizeNode: devicePreviewNode,
-								constrain: devicePreviewNode,
+								autoSizeNode: simulationDeviceNode,
+								constrain: simulationDeviceNode,
 								height: height,
-								render: devicePreviewNode,
+								render: simulationDeviceNode,
 								width: width
 							};
 
@@ -383,13 +382,13 @@ AUI.add(
 									dialog: A.merge(DIALOG_DEFAULTS, dialogConfig),
 									dialogIframe: DIALOG_IFRAME_DEFAULTS,
 									id: instance._dialogId,
-									iframeId: 'devicePreviewIframe',
+									iframeId: 'simulationDeviceIframe',
 									uri: WIN.location.href
 								},
 								function(dialogWindow) {
 									var dialogBoundingBox = dialogWindow.get(STR_BOUNDING_BOX);
 
-									dialogWindow.align(devicePreviewNode, DIALOG_ALIGN_POINTS);
+									dialogWindow.align(simulationDeviceNode, DIALOG_ALIGN_POINTS);
 
 									dialogWindow.plug(
 										A.Plugin.SizeAnim,
@@ -463,10 +462,10 @@ AUI.add(
 			}
 		);
 
-		ControlMenu.DevicePreview = DevicePreview;
+		Liferay.SimulationDevice = SimulationDevice;
 	},
 	'',
 	{
-		requires: ['aui-dialog-iframe-deprecated', 'aui-event-input', 'aui-modal', 'liferay-portlet-base', 'liferay-util-window', 'liferay-widget-size-animation-plugin']
+		requires: ['aui-dialog-iframe-deprecated', 'aui-event-input', 'aui-modal', 'liferay-control-menu', 'liferay-portlet-base', 'liferay-util-window', 'liferay-widget-size-animation-plugin']
 	}
 );

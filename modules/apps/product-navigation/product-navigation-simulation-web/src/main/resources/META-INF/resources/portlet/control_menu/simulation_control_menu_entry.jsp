@@ -16,14 +16,14 @@
 
 <%@ include file="/portlet/init.jsp" %>
 
-<liferay-portlet:renderURL portletName="<%= ProductNavigationSimulationPortletKeys.PRODUCT_NAVIGATION_SIMULATION %>" var="previewContentURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+<liferay-portlet:renderURL portletName="<%= ProductNavigationSimulationPortletKeys.PRODUCT_NAVIGATION_SIMULATION %>" var="simulationPanelURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 	<portlet:param name="mvcPath" value="/portlet/view.jsp" />
 </liferay-portlet:renderURL>
 
 <%
 Map<String, Object> data = new HashMap<String, Object>();
 
-data.put("panelURL", previewContentURL);
+data.put("panelURL", simulationPanelURL);
 data.put("qa-id", "simulation");
 data.put("title", HtmlUtil.escape(LanguageUtil.get(request, "simulation")));
 %>
@@ -32,7 +32,7 @@ data.put("title", HtmlUtil.escape(LanguageUtil.get(request, "simulation")));
 	<aui:icon
 		cssClass="control-menu-icon"
 		data="<%= data %>"
-		id="previewPanel"
+		id="simulationPanel"
 		image="simulation-menu-closed"
 		label="simulation"
 		markupView="lexicon"
@@ -45,13 +45,13 @@ data.put("title", HtmlUtil.escape(LanguageUtil.get(request, "simulation")));
 
 	ControlMenu.registerPanel(
 		{
-			css: 'lfr-has-device-preview',
-			id: 'previewPanel',
+			css: 'lfr-has-simulation-panel',
+			id: 'simulationPanel',
 			layoutControl: '.page-preview-controls > a',
 			node: null,
 			showFn: A.bind('showPanel', ControlMenu),
-			tpl: '<div class="lfr-admin-panel lfr-device-preview-panel" id="{0}" />',
-			trigger: '<portlet:namespace />previewPanel'
+			tpl: '<div class="lfr-admin-panel lfr-simulation-panel" id="{0}" />',
+			trigger: A.one('#<portlet:namespace />simulationPanel')
 		}
 	);
 </aui:script>

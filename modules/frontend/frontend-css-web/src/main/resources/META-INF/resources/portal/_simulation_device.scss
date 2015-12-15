@@ -1,6 +1,6 @@
 @import "bourbon";
 
-.lfr-device-preview-panel {
+.lfr-simulation-panel {
 	width: 350px;
 
 	.nav {
@@ -165,7 +165,7 @@
 	}
 }
 
-.lfr-device-preview {
+.lfr-simulation-device {
 	bottom: 0;
 	display: none;
 	left: 0;
@@ -179,17 +179,17 @@
 	}
 }
 
-.lfr-has-device-preview {
+.lfr-has-simulation-panel {
 	overflow: hidden;
 
-	.lfr-device-preview {
+	.lfr-simulation-device {
 		display: block;
 	}
 }
 
 .ie9 {
-	.lfr-has-device-preview {
-		.lfr-device-preview-panel {
+	.lfr-has-simulation-panel {
+		.lfr-simulation-panel {
 			margin: 0;
 			position: fixed;
 			width: 350px;

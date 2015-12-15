@@ -47,7 +47,7 @@ public class DevicePreviewPanelApp extends BaseJSPPanelApp {
 
 	@Override
 	public String getJspPath() {
-		return "/device_preview.jsp";
+		return "/simulation_device.jsp";
 	}
 
 	@Override

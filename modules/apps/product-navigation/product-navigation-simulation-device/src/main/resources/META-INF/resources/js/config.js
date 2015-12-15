@@ -7,12 +7,13 @@
 				'navigation-simulation-device': {
 					base: PATH_NAVIGATION_SIMULATION_DEVICE + '/js/',
 					modules: {
-						'liferay-control-menu-device-preview': {
-							path: 'control_menu_device_preview.js',
+						'liferay-product-navigation-simulation-device': {
+							path: 'product_navigation_simulation_device.js',
 							requires: [
 								'aui-dialog-iframe-deprecated',
 								'aui-event-input',
 								'aui-modal',
+								'liferay-control-menu',
 								'liferay-portlet-base',
 								'liferay-util-window',
 								'liferay-widget-size-animation-plugin'
