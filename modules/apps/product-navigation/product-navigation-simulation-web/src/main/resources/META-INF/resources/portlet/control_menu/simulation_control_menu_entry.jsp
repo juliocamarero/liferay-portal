@@ -39,3 +39,19 @@ data.put("title", HtmlUtil.escape(LanguageUtil.get(request, "simulation")));
 		url="javascript:;"
 	/>
 </li>
+
+<aui:script use="liferay-control-menu">
+	var ControlMenu = Liferay.ControlMenu;
+
+	ControlMenu.registerPanel(
+		{
+			css: 'lfr-has-device-preview',
+			id: 'previewPanel',
+			layoutControl: '.page-preview-controls > a',
+			node: null,
+			showFn: A.bind('showPanel', ControlMenu),
+			tpl: '<div class="lfr-admin-panel lfr-device-preview-panel" id="{0}" />',
+			trigger: '<portlet:namespace />previewPanel'
+		}
+	);
+</aui:script>

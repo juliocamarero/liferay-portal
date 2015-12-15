@@ -169,7 +169,7 @@ AUI.add(
 					_closePanel: function() {
 						var instance = this;
 
-						ControlMenu.togglePreviewPanel();
+						ControlMenu.togglePanel('previewPanel');
 					},
 
 					_normalizeDialogAttrs: function(device, rotation) {

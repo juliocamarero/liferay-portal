@@ -3,23 +3,19 @@ AUI.add(
 	function(A) {
 		var AArray = A.Array;
 
+		var AObject = A.Object;
+
 		var Lang = A.Lang;
 
 		var BODY = A.getBody();
 
 		var CSS_ADD_CONTENT = 'lfr-has-add-content';
 
-		var CSS_PREVIEW_CONTENT = 'lfr-has-device-preview';
-
 		var STR_ADD_PANEL = 'addPanel';
-
-		var STR_PREVIEW_PANEL = 'previewPanel';
 
 		var TPL_ADD_CONTENT = '<div class="lfr-add-panel lfr-admin-panel" id="{0}" />';
 
 		var TPL_LOADING = '<div class="loading-animation" />';
-
-		var TPL_PREVIEW_PANEL = '<div class="lfr-admin-panel lfr-device-preview-panel" id="{0}" />';
 
 		var ControlMenu = {
 			init: function(containerId) {
@@ -116,7 +112,7 @@ AUI.add(
 			togglePanel: function(panelId) {
 				var instance = this;
 
-				AArray.each(
+				AObject.each(
 					instance._panels,
 					function(item) {
 						if (item.id !== panelId) {
@@ -202,12 +198,6 @@ AUI.add(
 				}
 			},
 
-			togglePreviewPanel: function() {
-				var instance = this;
-
-				ControlMenu.togglePanel(STR_PREVIEW_PANEL);
-			},
-
 			_registerPanels: function() {
 				var instance = this;
 
@@ -282,25 +272,15 @@ AUI.add(
 				id: STR_ADD_PANEL,
 				layoutControl: '.site-add-controls > a',
 				node: null,
-				showFn: ControlMenu.showPanel,
+				showFn: A.bind('showPanel', ControlMenu),
 				hideOnEscape: true,
 				tpl: TPL_ADD_CONTENT
-			},
-			{
-				css: CSS_PREVIEW_CONTENT,
-				id: STR_PREVIEW_PANEL,
-				layoutControl: '.page-preview-controls > a',
-				node: null,
-				showFn: ControlMenu.showPanel,
-				tpl: TPL_PREVIEW_PANEL
 			}
 		];
 
 		Liferay.ControlMenu = ControlMenu;
 
 		Liferay.ControlMenu.ADD_PANEL = STR_ADD_PANEL;
-
-		Liferay.ControlMenu.PREVIEW_PANEL = STR_PREVIEW_PANEL;
 	},
 	'',
 	{
