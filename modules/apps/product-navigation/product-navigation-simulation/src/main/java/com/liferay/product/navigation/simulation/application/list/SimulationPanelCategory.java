@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.control.menu.application.list;
+package com.liferay.product.navigation.simulation.application.list;
 
 import com.liferay.application.list.BasePanelCategory;
 import com.liferay.application.list.PanelCategory;
