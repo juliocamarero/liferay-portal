@@ -5,7 +5,7 @@
 	<tlib-version>1.0</tlib-version>
 	<short-name>liferay-rss</short-name>
 	<uri>http://liferay.com/tld/rss</uri>
-    <tag>
+	<tag>
 		<description>Creates a configuration component for users to define RSS settings, such as how many articles to display.</description>
 		<name>rss-settings</name>
 		<tag-class>com.liferay.rss.taglib.servlet.taglib.RSSSettingsTag</tag-class>
