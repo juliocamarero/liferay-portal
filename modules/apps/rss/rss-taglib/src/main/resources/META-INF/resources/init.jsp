@@ -18,4 +18,5 @@
 
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 
-<%@ page import="com.liferay.portal.kernel.util.RSSUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
+page import="com.liferay.portal.kernel.util.RSSUtil" %>
