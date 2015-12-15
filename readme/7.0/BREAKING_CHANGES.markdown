@@ -3092,24 +3092,21 @@ services from `DLAppService` was the only sensible solution to this circularity.
 
 ---------------------------------------
 
-### The liferay-ui:rss-settings has been deprecated and replaced with liferay-rss:rss-settings
+### The liferay-ui:rss-settings has been removed and replaced with liferay-rss:rss-settings
 - **Date:** 2015-Dec-11
 - **JIRA Ticket:** LPS-61211
 
 #### What changed?
 
-The `liferay-ui:rss-settings` taglib has been deprecated and
-replaced with `liferay-rss:rss-settings` taglib.
+The `liferay-ui:rss-settings` taglib has been removed and replaced with `liferay-rss:rss-settings` taglib.
 
 #### Who is affected?
 
-Plugins or templates that are using the `liferay-ui:rss-settings`
-tag need to update their usage of the tag.
+Plugins or templates that are using the `liferay-ui:rss-settings` tag need to update their usage of the tag.
 
 #### How should I update my code?
 
-You should import the `liferay-rss` tag library if it isn't already and
-update the tag namespace from `liferay-ui:rss-settings` to
+You should import the `liferay-rss` tag library if it isn't already and update the tag namespace from `liferay-ui:rss-settings` to
 `liferay-rss:rss-settings`.
 
 #### Why was this change made?
