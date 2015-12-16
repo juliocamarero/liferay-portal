@@ -2,6 +2,14 @@
 
 <root>
 	<template>
+		<template-key>nav-menu-ftl</template-key>
+		<name>portlet-display-template-name-nav-menu</name>
+		<description>portlet-display-template-description-nav-menu</description>
+		<language>ftl</language>
+		<script-file>com/liferay/site/navigation/menu/web/portlet/template/dependencies/portlet_display_template_nav_menu.ftl</script-file>
+		<cacheable>false</cacheable>
+	</template>
+	<template>
 		<template-key>nav-pills-ftl</template-key>
 		<name>portlet-display-template-name-nav-pills</name>
 		<description>portlet-display-template-description-nav-pills</description>
