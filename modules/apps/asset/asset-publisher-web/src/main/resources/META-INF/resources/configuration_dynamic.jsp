@@ -342,7 +342,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 				<aui:input label="include-tags-specified-in-the-url" name="preferences--mergeUrlTags--" type="checkbox" value="<%= assetPublisherDisplayContext.isMergeURLTags() %>" />
 
 				<aui:script use="liferay-auto-fields">
-					var autoFields = new Liferay.AutoFields(
+					new Liferay.AutoFields(
 						{
 							contentBox: '#<portlet:namespace />queryRules > fieldset',
 							fieldIndexes: '<portlet:namespace />queryLogicIndexes',
@@ -543,8 +543,8 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 
 	var MAP_DDM_STRUCTURES = {};
 
-	var assetSelector = $('#<portlet:namespace />anyAssetType');
 	var assetMultipleSelector = $('#<portlet:namespace />currentClassNameIds');
+	var assetSelector = $('#<portlet:namespace />anyAssetType');
 	var ddmStructureFieldName = $('#<portlet:namespace />ddmStructureFieldName');
 	var orderByColumn1 = $('#<portlet:namespace />orderByColumn1');
 	var orderByColumn2 = $('#<portlet:namespace />orderByColumn2');
@@ -740,7 +740,9 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 		'.asset-subtypefields-popup',
 		function(event) {
 			var currentTarget = $(event.currentTarget);
+
 			var btn = $('.btn', currentTarget);
+
 			var uri = btn.data('href');
 
 			uri = Util.addParams('_<%= assetPublisherDisplayContext.getPortletResource() %>_ddmStructureDisplayFieldValue=' + encodeURIComponent($('#<portlet:namespace />ddmStructureDisplayFieldValue').val()), uri);
