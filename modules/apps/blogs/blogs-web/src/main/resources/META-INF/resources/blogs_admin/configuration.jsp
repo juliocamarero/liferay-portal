@@ -109,7 +109,7 @@ BlogsGroupServiceOverriddenConfiguration blogsGroupServiceOverriddenConfiguratio
 
 		<c:if test="<%= PortalUtil.isRSSFeedsEnabled() %>">
 			<liferay-ui:section>
-				<liferay-ui:rss-settings
+				<liferay-rss:rss-settings
 					delta="<%= GetterUtil.getInteger(blogsGroupServiceOverriddenConfiguration.rssDelta()) %>"
 					displayStyle="<%= blogsGroupServiceOverriddenConfiguration.rssDisplayStyle() %>"
 					enabled="<%= blogsGroupServiceOverriddenConfiguration.enableRss() %>"
