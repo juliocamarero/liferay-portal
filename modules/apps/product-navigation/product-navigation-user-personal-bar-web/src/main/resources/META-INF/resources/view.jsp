@@ -16,33 +16,33 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-util:buffer var="userName">
-	<c:if test="<%= themeDisplay.isImpersonated() %>">
-		<aui:icon image="asterisk" markupView="lexicon" />
-	</c:if>
-
-	<span class="user-avatar-image">
-		<liferay-ui:user-portrait
-			imageCssClass="user-icon-lg"
-			userId="<%= user.getUserId() %>"
-		/>
-	</span>
-
-	<span class="user-full-name">
-		<%= HtmlUtil.escape(user.getFullName()) %>
-	</span>
-
-	<%
-	int notificationsCount = GetterUtil.getInteger(request.getAttribute(ProductNavigationUserPersonalBarWebKeys.NOTIFICATIONS_COUNT));
-	%>
-
-	<c:if test="<%= notificationsCount > 0 %>">
-		<span class="panel-notifications-count sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= notificationsCount %></span>
-	</c:if>
-</liferay-util:buffer>
-
 <c:choose>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
+		<liferay-util:buffer var="userName">
+			<c:if test="<%= themeDisplay.isImpersonated() %>">
+				<aui:icon image="asterisk" markupView="lexicon" />
+			</c:if>
+
+			<span class="user-avatar-image">
+				<liferay-ui:user-portrait
+					imageCssClass="user-icon-lg"
+					userId="<%= user.getUserId() %>"
+				/>
+			</span>
+
+			<span class="user-full-name">
+				<%= HtmlUtil.escape(user.getFullName()) %>
+			</span>
+
+			<%
+			int notificationsCount = GetterUtil.getInteger(request.getAttribute(ProductNavigationUserPersonalBarWebKeys.NOTIFICATIONS_COUNT));
+			%>
+
+			<c:if test="<%= notificationsCount > 0 %>">
+				<span class="panel-notifications-count sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= notificationsCount %></span>
+			</c:if>
+		</liferay-util:buffer>
+
 		<aui:nav-item anchorCssClass="user-avatar-link" cssClass='<%= "portlet-user-personal-bar " + (themeDisplay.isImpersonated() ? "user-avatar impersonating-user" : "user-avatar") %>' dropdown="<%= true %>" id="userAvatar" label="<%= userName %>" toggleTouch="<%= false %>">
 			<c:if test="<%= (user.isSetupComplete() || themeDisplay.isImpersonated()) && (themeDisplay.getURLMyAccount() != null) %>">
 
