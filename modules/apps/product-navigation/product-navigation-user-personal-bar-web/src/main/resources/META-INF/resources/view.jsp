@@ -43,50 +43,91 @@
 			</c:if>
 		</liferay-util:buffer>
 
-		<aui:nav-item anchorCssClass="user-avatar-link" cssClass='<%= "portlet-user-personal-bar " + (themeDisplay.isImpersonated() ? "user-avatar impersonating-user" : "user-avatar") %>' dropdown="<%= true %>" id="userAvatar" label="<%= userName %>" toggleTouch="<%= false %>">
-			<c:if test="<%= (user.isSetupComplete() || themeDisplay.isImpersonated()) && (themeDisplay.getURLMyAccount() != null) %>">
+		<%
+		String displayStyle = ParamUtil.getString(request, "displayStyle", "button");
+		%>
 
-				<%
-				List<Group> mySiteGroups = user.getMySiteGroups(new String[] {User.class.getName()}, QueryUtil.ALL_POS);
+		<c:choose>
+			<c:when test='<%= Validator.equals(displayStyle, "button") %>'>
+				<a class="user-avatar-link" href="javascript:;" id="<portlet:namespace />sidenavUserToggle">
+					<%= userName %>
+				</a>
 
-				for (Group mySiteGroup : mySiteGroups) {
-				%>
+				<aui:script sandbox="<%= true %>">
+					var sidenavUserToggle = $('#<portlet:namespace />sidenavUserToggle');
 
-					<c:if test="<%= mySiteGroup.getPublicLayoutsPageCount() > 0 %>">
-						<li class="my-sites-menu public-site">
-							<a href="<%= HtmlUtil.escapeHREF(mySiteGroup.getDisplayURL(themeDisplay, false)) %>" role="menuitem">
-								<span class="my-profile"><liferay-ui:message key="my-profile" /></span>
+					var userCollapseToggler = $('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_userCollapse');
+					var productMenuToggler = $('#sidenavToggleId');
 
-								<span class="badge site-type"><liferay-ui:message key="public" /></span>
-							</a>
-						</li>
+					sidenavUserToggle.on(
+						'click',
+						function(event) {
+							if ($('body').hasClass('open')) {
+								if (userCollapseToggler.hasClass('in')) {
+									userCollapseToggler.collapse('hide');
+
+									productMenuToggler.sideNavigation('hide');
+								}
+								else {
+									userCollapseToggler.collapse('show');
+								}
+							}
+							else {
+								productMenuToggler.sideNavigation('show');
+
+								userCollapseToggler.collapse('show');
+							}
+						}
+					);
+				</aui:script>
+			</c:when>
+			<c:otherwise>
+				<aui:nav-item anchorCssClass="user-avatar-link" cssClass='<%= "portlet-user-personal-bar " + (themeDisplay.isImpersonated() ? "user-avatar impersonating-user" : "user-avatar") %>' dropdown="<%= true %>" id="userAvatar" label="<%= userName %>" toggleTouch="<%= false %>">
+					<c:if test="<%= (user.isSetupComplete() || themeDisplay.isImpersonated()) && (themeDisplay.getURLMyAccount() != null) %>">
+
+						<%
+						List<Group> mySiteGroups = user.getMySiteGroups(new String[] {User.class.getName()}, QueryUtil.ALL_POS);
+
+						for (Group mySiteGroup : mySiteGroups) {
+						%>
+
+							<c:if test="<%= mySiteGroup.getPublicLayoutsPageCount() > 0 %>">
+								<li class="my-sites-menu public-site">
+									<a href="<%= HtmlUtil.escapeHREF(mySiteGroup.getDisplayURL(themeDisplay, false)) %>" role="menuitem">
+										<span class="my-profile"><liferay-ui:message key="my-profile" /></span>
+
+										<span class="badge site-type"><liferay-ui:message key="public" /></span>
+									</a>
+								</li>
+							</c:if>
+
+							<c:if test="<%= mySiteGroup.getPrivateLayoutsPageCount() > 0 %>">
+								<li class="my-sites-menu private-site">
+									<a href="<%= HtmlUtil.escapeHREF(mySiteGroup.getDisplayURL(themeDisplay, true)) %>" role="menuitem">
+										<span class="my-dashboard"><liferay-ui:message key="my-dashboard" /></span>
+
+										<span class="badge site-type"><liferay-ui:message key="private" /></span>
+									</a>
+								</li>
+							</c:if>
+
+						<%
+						}
+						%>
+
+						<%
+						String myAccountURL = themeDisplay.getURLMyAccount().toString();
+						%>
+
+						<aui:nav-item href="<%= myAccountURL %>" iconCssClass="icon-user" label="my-account" title="my-account" />
 					</c:if>
 
-					<c:if test="<%= mySiteGroup.getPrivateLayoutsPageCount() > 0 %>">
-						<li class="my-sites-menu private-site">
-							<a href="<%= HtmlUtil.escapeHREF(mySiteGroup.getDisplayURL(themeDisplay, true)) %>" role="menuitem">
-								<span class="my-dashboard"><liferay-ui:message key="my-dashboard" /></span>
-
-								<span class="badge site-type"><liferay-ui:message key="private" /></span>
-							</a>
-						</li>
+					<c:if test="<%= themeDisplay.isShowSignOutIcon() %>">
+						<aui:nav-item cssClass="sign-out" href="<%= themeDisplay.getURLSignOut() %>" iconCssClass="icon-off" label="sign-out" />
 					</c:if>
-
-				<%
-				}
-				%>
-
-				<%
-				String myAccountURL = themeDisplay.getURLMyAccount().toString();
-				%>
-
-				<aui:nav-item href="<%= myAccountURL %>" iconCssClass="icon-user" label="my-account" title="my-account" />
-			</c:if>
-
-			<c:if test="<%= themeDisplay.isShowSignOutIcon() %>">
-				<aui:nav-item cssClass="sign-out" href="<%= themeDisplay.getURLSignOut() %>" iconCssClass="icon-off" label="sign-out" />
-			</c:if>
-		</aui:nav-item>
+				</aui:nav-item>
+			</c:otherwise>
+		</c:choose>
 	</c:when>
 	<c:otherwise>
 
