@@ -31,6 +31,14 @@
 	<span class="user-full-name">
 		<%= HtmlUtil.escape(user.getFullName()) %>
 	</span>
+
+	<%
+	int notificationsCount = GetterUtil.getInteger(request.getAttribute(ProductNavigationUserPersonalBarWebKeys.NOTIFICATIONS_COUNT));
+	%>
+
+	<c:if test="<%= notificationsCount > 0 %>">
+		<span class="panel-notifications-count sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= notificationsCount %></span>
+	</c:if>
 </liferay-util:buffer>
 
 <c:choose>
