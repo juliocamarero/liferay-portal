@@ -49,7 +49,7 @@
 
 		<c:choose>
 			<c:when test='<%= Validator.equals(displayStyle, "button") %>'>
-				<a class="user-avatar-link" href="javascript:;" id="<portlet:namespace />sidenavUserToggle">
+				<a class="user-avatar-link" data-qa-id="openUserMenu" href="javascript:;" id="<portlet:namespace />sidenavUserToggle">
 					<%= userName %>
 				</a>
 
