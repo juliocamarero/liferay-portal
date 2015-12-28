@@ -65,17 +65,10 @@ $languageUtil.format($locale, $lang_key, $arguments.toArray())#end
 	$theme.runtime("com.liferay.portal.theme.NavItem", $portletProviderAction.VIEW, "", $!default_preferences)
 #end
 
-#macro (product_menu)
-	#if ($is_setup_complete && $is_signed_in)
-		$theme.runtime("com.liferay.portlet.admin.util.PortalProductMenuApplicationType$ProductMenu", $portletProviderAction.VIEW)
-	#end
-#end
-
 #macro (product_menu_sidebar $state)
 	#if ($is_setup_complete && $is_signed_in)
 		<div class="$state lfr-product-menu-panel sidenav-fixed sidenav-menu-slider" id="sidenavSliderId">
-			<div class="product-menu sidebar sidenav-menu">
-				#product_menu()
+			<div class="product-menu sidebar sidenav-menu" id="productMenuSidebar">
 			</div>
 		</div>
 	#end
