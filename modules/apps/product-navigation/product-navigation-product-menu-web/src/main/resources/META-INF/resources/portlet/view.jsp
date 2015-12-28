@@ -20,7 +20,7 @@
 String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.web_productMenuState", "closed");
 %>
 
-<div class="<%= Validator.equals(productMenuState, "open") ? "has-content" : StringPool.BLANK %>" id="productMenuSidebar">
+<div class="<%= Validator.equals(productMenuState, "open") ? "content-loaded" : StringPool.BLANK %>" id="productMenuSidebar">
 	<c:if test='<%= Validator.equals(productMenuState, "open") %>'>
 		<liferay-util:include page="/portlet/product_menu.jsp" servletContext="<%= application %>" />
 	</c:if>
@@ -46,7 +46,7 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 		function(event) {
 		   	var productMenuSidebar = A.one('#productMenuSidebar');
 
-	 		if (productMenuSidebar && !productMenuSidebar.hasClass('has-content')) {
+	 		if (productMenuSidebar && !productMenuSidebar.hasClass('content-loaded')) {
 	 			<portlet:namespace />getProductMenuSidebar();
 	 		}
 
@@ -79,7 +79,7 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 								productMenuSidebar.plug(A.Plugin.ParseContent);
 
 								productMenuSidebar.setContent(response);
-								productMenuSidebar.addClass('has-content');
+								productMenuSidebar.addClass('content-loaded');
 							}
 						}
 					}
