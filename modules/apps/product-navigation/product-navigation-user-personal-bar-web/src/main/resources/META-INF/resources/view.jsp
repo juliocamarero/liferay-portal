@@ -56,27 +56,10 @@
 				<aui:script sandbox="<%= true %>">
 					var sidenavUserToggle = $('#<portlet:namespace />sidenavUserToggle');
 
-					var userCollapseToggler = $('#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_userCollapse');
-					var productMenuToggler = $('#sidenavToggleId');
-
 					sidenavUserToggle.on(
 						'click',
 						function(event) {
-							if ($('body').hasClass('open')) {
-								if (userCollapseToggler.hasClass('in')) {
-									userCollapseToggler.collapse('hide');
-
-									productMenuToggler.sideNavigation('hide');
-								}
-								else {
-									userCollapseToggler.collapse('show');
-								}
-							}
-							else {
-								productMenuToggler.sideNavigation('show');
-
-								userCollapseToggler.collapse('show');
-							}
+							Liferay.fire('ProductMenu:openUserMenu');
 						}
 					);
 				</aui:script>
