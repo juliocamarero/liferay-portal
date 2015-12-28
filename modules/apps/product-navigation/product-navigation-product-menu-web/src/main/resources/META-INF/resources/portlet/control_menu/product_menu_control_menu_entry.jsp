@@ -21,7 +21,7 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 %>
 
 <li class="<%= Validator.equals(productMenuState, "open") ? "active" : StringPool.BLANK %>">
-	<liferay-portlet:renderURL portletName="<%= ProductNavigationProductMenuPortletKeys.PRODUCT_NAVIGATION_PRODUCT_MENU %>" var="portletURL" windowState="exclusive">
+	<liferay-portlet:renderURL portletName="<%= ProductNavigationProductMenuPortletKeys.PRODUCT_NAVIGATION_PRODUCT_MENU %>" var="portletURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 		<portlet:param name="mvcPath" value="/portlet/product_menu.jsp" />
 	</liferay-portlet:renderURL>
 
