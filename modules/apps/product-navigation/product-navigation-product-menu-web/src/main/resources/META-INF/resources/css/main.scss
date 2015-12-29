@@ -189,6 +189,34 @@ body {
 	}
 }
 
+/* Layouts Tree */
+
+.product-menu {
+	.tree-node-content {
+		.layout-tree-edit {
+			opacity: 0;
+
+			&:focus {
+				opacity: 1;
+			}
+		}
+
+		&.tree-node-selected, &:active, &.active, &:hover {
+			.tree-label {
+				> .layout-tree-edit {
+					opacity: 1;
+				}
+			}
+		}
+
+		.layout-tree:focus ~ .layout-tree-edit {
+			opacity: 1;
+		}
+
+	}
+}
+
+
 /* Icon Animation */
 
 .toast-animation {
