@@ -250,7 +250,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Delete Live Page" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -325,7 +325,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Page Name 2" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -513,7 +513,7 @@
 			<var name="sitePagesVariationName" value="Test Site Pages Variation" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -840,7 +840,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page 1" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -873,7 +873,7 @@
 			<var name="portletName" value="Recent Bloggers" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page 2" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -1663,7 +1663,7 @@
 			<var name="pageName" value="Wiki" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Community Site Name" />
@@ -1755,7 +1755,7 @@
 			<var name="sitePagesVariationName" value="Empty Variation" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Empty Page Name" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Community Site Name" />
@@ -1983,7 +1983,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="New Page Name" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Community Site Name" />
@@ -2028,7 +2028,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name 1" />
 			<var name="siteName" value="Community Site Name" />
 			<var name="siteURL" value="true" />
@@ -2044,7 +2044,7 @@
 			<var name="portletName" value="Message Boards" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name 2" />
 			<var name="siteName" value="Community Site Name" />
 			<var name="siteURL" value="true" />
@@ -2060,7 +2060,7 @@
 			<var name="portletName" value="Wiki" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name 3" />
 			<var name="siteName" value="Community Site Name" />
 			<var name="siteURL" value="true" />
@@ -2809,7 +2809,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Staging Test Page 2" />
 			<var name="siteName" value="Site Name" />
 			<var name="siteURL" value="true" />
@@ -3240,7 +3240,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Page 1" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -3254,7 +3254,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Page 2" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -3268,7 +3268,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Page 3" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -3884,7 +3884,7 @@
 			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
@@ -4401,7 +4401,7 @@
 			<var name="userLoginFullName" value="userfn userln" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Test Page Name" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="Site Name" />
