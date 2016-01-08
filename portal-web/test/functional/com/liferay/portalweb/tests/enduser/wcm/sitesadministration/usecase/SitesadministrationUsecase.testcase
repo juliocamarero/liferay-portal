@@ -230,7 +230,7 @@
 			<var name="page" value="Public Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="siteName" value="Site A" />
 			<var name="sitePageName" value="Test Page A" />
@@ -263,7 +263,7 @@
 			<var name="page" value="Public Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="siteName" value="Site B" />
 			<var name="sitePageName" value="Test Page B" />
@@ -548,7 +548,7 @@
 			<var name="page" value="Private Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Private Pages" />
 			<var name="sitePageName" value="Test Private Page" />
 			<var name="siteScopeSelected" value="true" />
@@ -657,7 +657,7 @@
 			<var name="page" value="Public Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="sitePageName" value="Site Page Name" />
 			<var name="siteScopeSelected" value="true" />
@@ -832,7 +832,7 @@
 			<var name="userEmailAddress" value="test@liferay.com" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Site Page Name" />
 		</execute>
 
@@ -1005,7 +1005,7 @@
 		</execute>
 
 		<for list="Home,Arenas" param="publicPageName" >
-			<execute macro="SitePage#addCP">
+			<execute macro="Page#add">
 				<var name="page" value="Public Pages" />
 				<var name="sitePageName" value="${publicPageName}" />
 				<var name="siteScopeSelected" value="true" />
@@ -1017,7 +1017,7 @@
 		</execute>
 
 		<for list="Arena Baltika,Zenit Arena,Kazan Arena" param="childPageName" >
-			<execute macro="SitePage#addChildCP">
+			<execute macro="Page#addChild">
 				<var name="childSitepageName" value="true" />
 				<var name="page" value="Public Pages" />
 				<var name="siteChildPageName" value="${childPageName}" />
@@ -1031,7 +1031,7 @@
 		</execute>
 
 		<for list="Accomodations,Maps" param="privatePageName" >
-			<execute macro="SitePage#addCP">
+			<execute macro="Page#add">
 				<var name="page" value="Private Pages" />
 				<var name="sitePageName" value="${privatePageName}" />
 				<var name="siteScopeSelected" value="true" />
@@ -1451,7 +1451,7 @@
 			<var name="teamName" value="Site Team Name" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blog Page Template" />
 			<var name="pageTemplateName" value="Blog" />
 		</execute>

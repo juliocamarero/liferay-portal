@@ -50,15 +50,15 @@
 	<command name="AddSitePageXSS" priority="3">
 		<var name="sitePage3Name"><![CDATA[<script>alert("Site Page 3")</script> />]]></var>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Site Page 1" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Site Page 2" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="${sitePage3Name}" />
 		</execute>
 
@@ -89,7 +89,7 @@
 			<var name="page" value="Private Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Private Pages" />
 			<var name="sitePageName" value="Site Page Name" />
 			<var name="siteScopeSelected" value="true" />
@@ -118,7 +118,7 @@
 			<var name="page" value="Public Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="sitePageName" value="Site Page Name" />
 			<var name="siteScopeSelected" value="true" />
@@ -146,14 +146,14 @@
 			<var name="page" value="Public Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Site Page1 Name" />
 			<var name="siteScopeSelected" value="true" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="sitePageName" value="Site Page2 Name" />
 			<var name="siteScopeSelected" value="true" />
@@ -163,7 +163,7 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addChildCP">
+		<execute macro="Page#addChild">
 			<var name="childSitepageName" value="true" />
 			<var name="page" value="Public Pages" />
 			<var name="siteChildPageName" value="Child Page Name" />
@@ -198,7 +198,7 @@
 	</command>
 
 	<command name="DefaultLanguageWithEmptyFriendlyURLThrowsErrorExceptions" priority="3">
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Page Name" />
 		</execute>
 
@@ -235,7 +235,7 @@
 		<var name="pageNameList" value="Page1 Name,Page2 Name,Page3 Name,Page4 Name" />
 
 		<for list="${pageNameList}" param="pageName">
-			<execute macro="Page#addPG">
+			<execute macro="Page#add">
 				<var name="pageName" value="${pageName}" />
 			</execute>
 		</for>
@@ -249,7 +249,7 @@
 		</execute>
 
 		<for list="${childPageNameList}" param="siteChildPageName">
-			<execute macro="SitePage#addChildCP">
+			<execute macro="Page#addChild">
 				<var name="page" value="Public Pages" />
 				<var name="siteChildPageName" value="${siteChildPageName}" />
 				<var name="sitePageName" value="Welcome" />
@@ -333,7 +333,7 @@
 			<var name="siteScopeName" value="Site Name" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Private Pages" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Site Page" />
@@ -516,13 +516,13 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Private Pages" />
 			<var name="siteName" value="Liferay" />
 			<var name="sitePageName" value="Private Page" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
@@ -744,13 +744,13 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Private Pages" />
 			<var name="siteName" value="Liferay" />
 			<var name="sitePageName" value="Private Page" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
@@ -985,13 +985,13 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Private Pages" />
 			<var name="siteName" value="Liferay" />
 			<var name="sitePageName" value="Private Page" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
@@ -1151,7 +1151,7 @@
 	</command>
 
 	<command name="WebContentAdministrationSitesPagesPanel" priority="3">
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="componentName" value="Collaboration" />
 			<var name="pageName" value="Panel Test Page" />
 			<var name="pageType" value="Panel" />
@@ -1232,14 +1232,14 @@
 			<var name="page" value="Public Pages" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="siteName" value="Page Type Test Site Name" />
 			<var name="sitePageName" value="Blank Page" />
 			<var name="siteScopeSelected" value="true" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="pageTypeURL" value="https://www.google.com/" />
 			<var name="siteName" value="Page Type Test Site Name" />
@@ -1252,7 +1252,7 @@
 			<var name="sitePageName" value="Blank Page" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
 			<var name="pageTypeURL" value="http://iscaliforniaonfire.com/" />
 			<var name="siteName" value="Page Type Test Site Name" />
@@ -1261,7 +1261,7 @@
 			<var name="siteScopeSelected" value="true" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="componentName" value="Community" />
 			<var name="page" value="Public Pages" />
 			<var name="siteName" value="Page Type Test Site Name" />
