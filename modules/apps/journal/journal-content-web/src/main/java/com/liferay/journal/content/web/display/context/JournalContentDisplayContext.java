@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -48,6 +49,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -439,6 +441,22 @@ public class JournalContentDisplayContext {
 			WebKeys.JOURNAL_ARTICLE_DISPLAY, getArticleDisplay());
 
 		return _contentMetadataAssetAddonEntries;
+	}
+
+	public long[] getSelectedGroupIds(long scopeGroupId) throws Exception {
+		List<Long> groupIds = new ArrayList<>();
+
+		groupIds.add(scopeGroupId);
+
+		Group scopeGroup = GroupLocalServiceUtil.getGroup(scopeGroupId);
+
+		if (scopeGroup != null) {
+			for (Group group : scopeGroup.getDescendants(true)) {
+				groupIds.add(group.getGroupId());
+			}
+		}
+
+		return ArrayUtil.toLongArray(groupIds);
 	}
 
 	public List<UserToolAssetAddonEntry>
