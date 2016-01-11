@@ -497,7 +497,8 @@ public class JournalDisplayContext {
 		}
 		else {
 			int total = JournalFolderServiceUtil.getFoldersAndArticlesCount(
-				themeDisplay.getScopeGroupId(), 0, getFolderId(), getStatus());
+				themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
+				getFolderId(), getStatus());
 
 			articleSearchContainer.setTotal(total);
 
@@ -519,8 +520,8 @@ public class JournalDisplayContext {
 			}
 
 			List results = JournalFolderServiceUtil.getFoldersAndArticles(
-				themeDisplay.getScopeGroupId(), 0, getFolderId(), getStatus(),
-				articleSearchContainer.getStart(),
+				themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
+				getFolderId(), getStatus(), articleSearchContainer.getStart(),
 				articleSearchContainer.getEnd(), folderOrderByComparator);
 
 			articleSearchContainer.setResults(results);
