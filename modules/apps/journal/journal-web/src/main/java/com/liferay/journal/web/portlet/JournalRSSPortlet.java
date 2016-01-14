@@ -51,7 +51,7 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.render-weight=50",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.name=" + JournalPortletKeys.JOURNAL_RSS,
-		"javax.portlet.security-role-ref=administrator"
+		"javax.portlet.security-role-ref=guest,power-user,user"
 	},
 	service = Portlet.class
 )
