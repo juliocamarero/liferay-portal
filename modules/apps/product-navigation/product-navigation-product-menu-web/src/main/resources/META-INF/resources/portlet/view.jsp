@@ -17,10 +17,10 @@
 <%@ include file="/portlet/init.jsp" %>
 
 <%
-ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayContext(liferayPortletRequest, liferayPortletResponse);
+String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.web_productMenuState", "closed");
 %>
 
-<c:if test="<%= productMenuDisplayContext.isShowProductMenu() %>">
+<div id="productMenuSidebar">
 	<h4 class="sidebar-header">
 		<a href="<%= themeDisplay.getURLPortal() %>">
 			<span class="company-details">
@@ -33,92 +33,72 @@ ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayCont
 	</h4>
 
 	<div class="sidebar-body">
-		<div aria-multiselectable="true" class="panel-group" id="<portlet:namespace />Accordion" role="tablist">
-
-			<%
-			List<PanelCategory> childPanelCategories = productMenuDisplayContext.getChildPanelCategories();
-
-			for (PanelCategory childPanelCategory : childPanelCategories) {
-			%>
-
-				<div class="panel">
-					<div class="panel-heading" id="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Heading" role="tab">
-						<div class="panel-title">
-							<c:if test="<%= !childPanelCategory.includeHeader(request, new PipingServletResponse(pageContext)) %>">
-								<div aria-controls="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" aria-expanded="<%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) %>" class="collapse-icon panel-toggler <%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? StringPool.BLANK : "collapsed" %>" class="collapsed" data-parent="#<portlet:namespace />Accordion" data-toggle="collapse" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="button">
-									<span><%= childPanelCategory.getLabel(locale) %></span>
-
-									<%
-									int notificationsCount = productMenuDisplayContext.getNotificationsCount(childPanelCategory);
-									%>
-
-									<c:if test="<%= notificationsCount > 0 %>">
-										<span class="panel-notifications-count sticker sticker-right sticker-rounded sticker-sm sticker-warning"><%= notificationsCount %></span>
-									</c:if>
-								</div>
-							</c:if>
-						</div>
-					</div>
-
-					<div aria-expanded="false" aria-labelledby="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Heading" class="collapse panel-collapse <%= Validator.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? "in" : StringPool.BLANK %>" id="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="tabpanel">
-						<div class="panel-body">
-							<liferay-application-list:panel-content panelCategory="<%= childPanelCategory %>" />
-						</div>
-					</div>
-				</div>
-
-			<%
-			}
-			%>
-
-		</div>
+		<c:if test='<%= Validator.equals(productMenuState, "open") %>'>
+			<liferay-util:include page="/portlet/product_menu.jsp" servletContext="<%= application %>" />
+		</c:if>
 	</div>
+</div>
 
-	<aui:script use="liferay-store">
-		var sidenavToggle = $('#sidenavToggleId');
+<aui:script use="liferay-store,io-request,parse-content">
+	var sidenavToggle = $('#sidenavToggleId');
 
-		sidenavToggle.sideNavigation();
+	sidenavToggle.sideNavigation();
 
-		var sidenavSlider = $('#sidenavSliderId');
+	var sidenavSlider = $('#sidenavSliderId');
 
-		sidenavSlider.off('closed.lexicon.sidenav');
-		sidenavSlider.off('open.lexicon.sidenav');
+	sidenavSlider.off('closed.lexicon.sidenav');
+	sidenavSlider.off('open.lexicon.sidenav');
 
-		sidenavSlider.on(
-			'closed.lexicon.sidenav',
-			function(event) {
-				Liferay.Store('com.liferay.control.menu.web_productMenuState', 'closed');
-			}
-		);
+	sidenavSlider.on(
+		'closed.lexicon.sidenav',
+		function(event) {
+			Liferay.Store('com.liferay.control.menu.web_productMenuState', 'closed');
+		}
+	);
 
-		sidenavSlider.on(
-			'open.lexicon.sidenav',
-			function(event) {
-				Liferay.Store('com.liferay.control.menu.web_productMenuState', 'open');
-			}
-		);
+	sidenavSlider.on(
+		'open.lexicon.sidenav',
+		function(event) {
+			Liferay.Store('com.liferay.control.menu.web_productMenuState', 'open');
+		}
+	);
 
-		Liferay.on(
-			'ProductMenu:openUserMenu',
-			function(event) {
-				var userCollapse = $('#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse');
+	<c:if test="<%= Validator.equals(productMenuState, "open") %>">
+		sidenavSlider.data('url-loaded', true);
+	</c:if>
 
-				if ($('body').hasClass('open')) {
-					if (userCollapse.hasClass('in')) {
-						userCollapse.collapse('hide');
+	Liferay.on(
+		'ProductMenu:openUserMenu',
+		function(event) {
+			var userCollapse = $('#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse');
 
-						sidenavToggle.sideNavigation('hide');
-					}
-					else {
-						userCollapse.collapse('show');
-					}
+			if ($('body').hasClass('open')) {
+				if (userCollapse.hasClass('in')) {
+					userCollapse.collapse('hide');
+
+					sidenavToggle.sideNavigation('hide');
 				}
 				else {
-					sidenavToggle.sideNavigation('show');
-
 					userCollapse.collapse('show');
 				}
 			}
-		);
-	</aui:script>
-</c:if>
+			else {
+				sidenavToggle.sideNavigation('show');
+
+				if (sidenavSlider.data('url-loaded')) {
+					userCollapse.collapse('show');
+				}
+				else {
+					sidenavSlider.on(
+						'urlLoaded.lexicon.sidenav',
+						function(event) {
+							userCollapse = $('#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse');
+
+							userCollapse.collapse('show');
+						}
+					);
+				}
+			}
+		}
+	);
+</aui:script>
