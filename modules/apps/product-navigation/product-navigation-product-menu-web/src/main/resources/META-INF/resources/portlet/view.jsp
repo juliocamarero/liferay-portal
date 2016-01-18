@@ -66,31 +66,32 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 	Liferay.on(
 		'ProductMenu:openUserMenu',
 		function(event) {
-			var userCollapse = $('#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse');
+			var controlPanelCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_control_panelCollapse';
+
+			var siteAdministrationCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_site_administrationCollapse';
+
+			var userCollapseSelector = '#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse';
+
+			var showUserCollapse = function() {
+				$(controlPanelCollapseSelector).collapse('hide');
+				$(siteAdministrationCollapseSelector).collapse('hide');
+				$(userCollapseSelector).collapse('show');
+			}
 
 			if ($('body').hasClass('open')) {
-				if (userCollapse.hasClass('in')) {
-					userCollapse.collapse('hide');
-
-					sidenavToggle.sideNavigation('hide');
-				}
-				else {
-					userCollapse.collapse('show');
-				}
+				sidenavToggle.sideNavigation('hide');
 			}
 			else {
 				sidenavToggle.sideNavigation('show');
 
 				if (sidenavSlider.data('url-loaded').state() === 'resolved') {
-					userCollapse.collapse('show');
+					showUserCollapse();
 				}
 				else {
 					sidenavSlider.on(
 						'urlLoaded.lexicon.sidenav',
 						function(event) {
-							userCollapse = $('#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse');
-
-							userCollapse.collapse('show');
+							showUserCollapse();
 						}
 					);
 				}
