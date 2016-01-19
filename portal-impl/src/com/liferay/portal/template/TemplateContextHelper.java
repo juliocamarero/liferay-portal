@@ -55,6 +55,7 @@ import com.liferay.portal.kernel.util.Validator_IW;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webserver.WebServerServletTokenUtil;
 import com.liferay.portal.kernel.xml.SAXReader;
+import com.liferay.portal.model.ColorScheme;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Theme;
 import com.liferay.portal.service.GroupLocalService;
@@ -294,9 +295,13 @@ public class TemplateContextHelper {
 				"permissionChecker", themeDisplay.getPermissionChecker());
 			contextObjects.put("locale", themeDisplay.getLocale());
 			contextObjects.put("timeZone", themeDisplay.getTimeZone());
-			contextObjects.put("colorScheme", themeDisplay.getColorScheme());
 			contextObjects.put(
 				"portletDisplay", themeDisplay.getPortletDisplay());
+
+			ColorScheme colorScheme = themeDisplay.getColorScheme();
+
+			contextObjects.put("colorScheme", colorScheme);
+			contextObjects.put("bodyCssClass", colorScheme.getCssClass());
 
 			// Navigation items
 
