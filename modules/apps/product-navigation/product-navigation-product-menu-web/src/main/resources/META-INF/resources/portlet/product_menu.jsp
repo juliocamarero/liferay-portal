@@ -16,10 +16,6 @@
 
 <%@ include file="/portlet/init.jsp" %>
 
-<%
-ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayContext(liferayPortletRequest, liferayPortletResponse);
-%>
-
 <c:if test="<%= productMenuDisplayContext.isShowProductMenu() %>">
 	<div aria-multiselectable="true" class="panel-group" id="<portlet:namespace />Accordion" role="tablist">
 
