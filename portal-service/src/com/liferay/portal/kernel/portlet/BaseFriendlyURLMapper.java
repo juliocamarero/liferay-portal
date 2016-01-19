@@ -58,6 +58,11 @@ public abstract class BaseFriendlyURLMapper implements FriendlyURLMapper {
 	}
 
 	@Override
+	public boolean isPortletCustomizable() {
+		return _portletCustomizable;
+	}
+
+	@Override
 	public boolean isPortletInstanceable() {
 		return _portletInstanceable;
 	}
@@ -65,6 +70,11 @@ public abstract class BaseFriendlyURLMapper implements FriendlyURLMapper {
 	@Override
 	public void setMapping(String mapping) {
 		_mapping = mapping;
+	}
+
+	@Override
+	public void setPortletCustomizable(boolean portletCustomizable) {
+		_portletCustomizable = portletCustomizable;
 	}
 
 	@Override
@@ -261,6 +271,7 @@ public abstract class BaseFriendlyURLMapper implements FriendlyURLMapper {
 		BaseFriendlyURLMapper.class);
 
 	private String _mapping;
+	private boolean _portletCustomizable;
 	private String _portletId;
 	private boolean _portletInstanceable;
 

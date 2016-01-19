@@ -76,6 +76,11 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 	}
 
 	@Override
+	public boolean isPortletCustomizable() {
+		return false;
+	}
+
+	@Override
 	public boolean isPortletInstanceable() {
 		return false;
 	}
@@ -122,6 +127,10 @@ public class WAIFriendlyURLMapper implements FriendlyURLMapper {
 
 	@Override
 	public void setMapping(String mapping) {
+	}
+
+	@Override
+	public void setPortletCustomizable(boolean portletCustomizable) {
 	}
 
 	@Override

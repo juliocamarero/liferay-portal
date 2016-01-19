@@ -106,6 +106,20 @@ public interface FriendlyURLMapper {
 	public boolean isCheckMappingWithPrefix();
 
 	/**
+	 * Returns <code>true</code> if this portlet is customizable.
+	 *
+	 * <p>
+	 * The value returned from this method has no effect on whether a portlet is
+	 * customizable, it is a helper method used to determine if the user ID
+	 * should be included in the URL.
+	 * </p>
+	 *
+	 * @return <code>true</code> if the portlet is customizable;
+	 *         <code>false</code> otherwise
+	 */
+	public boolean isPortletCustomizable();
+
+	/**
 	 * Returns <code>true</code> if this portlet is instanceable.
 	 *
 	 * <p>
@@ -153,6 +167,13 @@ public interface FriendlyURLMapper {
 	 * @param mapping the friendly URL mapping for this portlet
 	 */
 	public void setMapping(String mapping);
+
+	/**
+	 * Sets whether this portlet is customizable.
+	 *
+	 * @param portletCustomizable whether this portlet is customizable
+	 */
+	public void setPortletCustomizable(boolean portletCustomizable);
 
 	/**
 	 * Sets the ID of this portlet.
