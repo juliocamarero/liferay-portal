@@ -295,12 +295,12 @@ public class TemplateContextHelper {
 				"permissionChecker", themeDisplay.getPermissionChecker());
 			contextObjects.put("locale", themeDisplay.getLocale());
 			contextObjects.put("timeZone", themeDisplay.getTimeZone());
+			contextObjects.put(
+				"portletDisplay", themeDisplay.getPortletDisplay());
 
 			ColorScheme colorScheme = themeDisplay.getColorScheme();
 
 			contextObjects.put("colorScheme", colorScheme);
-			contextObjects.put(
-				"portletDisplay", themeDisplay.getPortletDisplay());
 			contextObjects.put("bodyCssClass", colorScheme.getCssClass());
 
 			// Navigation items
