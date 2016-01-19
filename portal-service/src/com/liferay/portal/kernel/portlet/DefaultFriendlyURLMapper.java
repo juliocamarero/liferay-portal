@@ -30,6 +30,8 @@ import java.util.Set;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * The default friendly URL mapper to use with friendly URL routes.
  *
@@ -158,7 +160,12 @@ public class DefaultFriendlyURLMapper extends BaseFriendlyURLMapper {
 
 		String namespace = null;
 
-		String portletId = getPortletId(routeParameters);
+		HttpServletRequest request = (HttpServletRequest)requestContext.get(
+			"request");
+
+		long userId = PortalUtil.getUserId(request);
+
+		String portletId = getPortletId(userId, routeParameters);
 
 		if (Validator.isNotNull(portletId)) {
 			namespace = PortalUtil.getPortletNamespace(portletId);
@@ -287,16 +294,19 @@ public class DefaultFriendlyURLMapper extends BaseFriendlyURLMapper {
 	}
 
 	/**
-	 * Returns the portlet ID, including the instance ID if applicable, from the
-	 * parameter map.
+	 * Returns the portlet ID, including the instance ID and the user ID if
+	 * applicable, from the parameter map.
 	 *
+	 * @param  userId the primary key of the user
 	 * @param  routeParameters the parameter map. For an instanceable portlet,
 	 *         this must contain either <code>p_p_id</code> or
 	 *         <code>instanceId</code>.
 	 * @return the portlet ID, including the instance ID if applicable, or
 	 *         <code>null</code> if it cannot be determined
 	 */
-	protected String getPortletId(Map<String, String> routeParameters) {
+	protected String getPortletId(
+		long userId, Map<String, String> routeParameters) {
+
 		if (!isPortletInstanceable()) {
 			return getPortletId();
 		}
