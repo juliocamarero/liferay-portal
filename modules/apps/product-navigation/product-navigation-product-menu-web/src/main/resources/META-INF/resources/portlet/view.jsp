@@ -63,39 +63,41 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 		}
 	);
 
-	Liferay.on(
-		'ProductMenu:openUserMenu',
-		function(event) {
-			var controlPanelCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_control_panelCollapse';
+	<c:if test="<%= productMenuDisplayContext.hasUserPanelCategory() %>">
+		Liferay.on(
+			'ProductMenu:openUserMenu',
+			function(event) {
+				var controlPanelCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_control_panelCollapse';
 
-			var siteAdministrationCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_site_administrationCollapse';
+				var siteAdministrationCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_site_administrationCollapse';
 
-			var userCollapseSelector = '#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse';
+				var userCollapseSelector = '#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse';
 
-			var showUserCollapse = function() {
-				$(controlPanelCollapseSelector).collapse('hide');
-				$(siteAdministrationCollapseSelector).collapse('hide');
-				$(userCollapseSelector).collapse('show');
-			}
+				var showUserCollapse = function() {
+					$(controlPanelCollapseSelector).collapse('hide');
+					$(siteAdministrationCollapseSelector).collapse('hide');
+					$(userCollapseSelector).collapse('show');
+				}
 
-			if ($('body').hasClass('open')) {
-				sidenavToggle.sideNavigation('hide');
-			}
-			else {
-				sidenavToggle.sideNavigation('show');
-
-				if (sidenavSlider.data('url-loaded').state() === 'resolved') {
-					showUserCollapse();
+				if ($('body').hasClass('open')) {
+					sidenavToggle.sideNavigation('hide');
 				}
 				else {
-					sidenavSlider.on(
-						'urlLoaded.lexicon.sidenav',
-						function(event) {
-							showUserCollapse();
-						}
-					);
+					sidenavToggle.sideNavigation('show');
+
+					if (sidenavSlider.data('url-loaded').state() === 'resolved') {
+						showUserCollapse();
+					}
+					else {
+						sidenavSlider.on(
+							'urlLoaded.lexicon.sidenav',
+							function(event) {
+								showUserCollapse();
+							}
+						);
+					}
 				}
 			}
-		}
-	);
+		);
+	</c:if>
 </aui:script>
