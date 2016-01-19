@@ -20,45 +20,29 @@
 String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.web_productMenuState", "closed");
 %>
 
-<div class="<%= Validator.equals(productMenuState, "open") ? "content-loaded" : StringPool.BLANK %>" id="productMenuSidebar">
-	<c:choose>
-		<c:when test='<%= Validator.equals(productMenuState, "open") %>'>
+<div id="productMenuSidebar">
+	<h4 class="sidebar-header">
+		<a href="<%= themeDisplay.getURLPortal() %>">
+			<span class="company-details">
+				<img alt="" class="company-logo" src="<%= themeDisplay.getCompanyLogo() %>" />
+				<span class="company-name"><%= company.getName() %></span>
+			</span>
+
+			<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" image="remove" url="javascript:;" />
+		</a>
+	</h4>
+
+	<div class="sidebar-body">
+		<c:if test='<%= Validator.equals(productMenuState, "open") %>'>
 			<liferay-util:include page="/portlet/product_menu.jsp" servletContext="<%= application %>" />
-		</c:when>
-		<c:otherwise>
-			<div class="loading-animation"></div>
-		</c:otherwise>
-	</c:choose>
+		</c:if>
+	</div>
 </div>
 
 <aui:script use="liferay-store,io-request,parse-content">
 	var sidenavToggle = $('#sidenavToggleId');
 
 	sidenavToggle.sideNavigation();
-
-	var loadPanelContent = function(container, uri) {
-		if (uri) {
-			A.io.request(
-				uri,
-				{
-					after: {
-						success: function(event, id, obj) {
-							var response = this.get('responseData');
-
-							var productMenuSidebar = A.one('#productMenuSidebar');
-
-							container.plug(A.Plugin.ParseContent);
-
-							container.setContent(response);
-							container.addClass('content-loaded');
-
-							Liferay.fire('ProductMenu:contentLoaded');
-						}
-					}
-				}
-			);
-		}
-	};
 
 	var sidenavSlider = $('#sidenavSliderId');
 
@@ -72,15 +56,9 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 		}
 	);
 
-	var productMenuSidebar = A.one('#productMenuSidebar');
-
 	sidenavSlider.on(
 		'open.lexicon.sidenav',
 		function(event) {
-	 		if (productMenuSidebar && !productMenuSidebar.hasClass('content-loaded')) {
-				loadPanelContent(productMenuSidebar, sidenavToggle.attr('data-panelurl'));
-	 		}
-
 			Liferay.Store('com.liferay.control.menu.web_productMenuState', 'open');
 		}
 	);
@@ -103,12 +81,12 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 			else {
 				sidenavToggle.sideNavigation('show');
 
-				if (productMenuSidebar.hasClass('content-loaded')) {
+				if (sidenavSlider.data('url-loaded').state() === 'resolved') {
 					userCollapse.collapse('show');
 				}
 				else {
-					Liferay.on(
-						'ProductMenu:contentLoaded',
+					sidenavSlider.on(
+						'urlLoaded.lexicon.sidenav',
 						function(event) {
 							userCollapse = $('#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse');
 
