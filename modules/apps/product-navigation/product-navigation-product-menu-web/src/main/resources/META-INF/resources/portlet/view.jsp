@@ -80,7 +80,12 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 				}
 
 				if ($('body').hasClass('open')) {
-					sidenavToggle.sideNavigation('hide');
+					if ($(userCollapseSelector).hasClass('in')) {
+						sidenavToggle.sideNavigation('hide');
+					}
+					else {
+						showUserCollapse();
+					}
 				}
 				else {
 					sidenavToggle.sideNavigation('show');
