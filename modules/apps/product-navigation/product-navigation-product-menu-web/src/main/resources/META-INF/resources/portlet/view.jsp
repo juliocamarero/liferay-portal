@@ -67,15 +67,35 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 		Liferay.on(
 			'ProductMenu:openUserMenu',
 			function(event) {
-				var controlPanelCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_control_panelCollapse';
+				var panels = [];
 
-				var siteAdministrationCollapseSelector = '#_com_liferay_product_navigation_product_menu_web_portlet_ProductMenuPortlet_site_administrationCollapse';
+				<%
+				List<PanelCategory> childPanelCategories = productMenuDisplayContext.getChildPanelCategories();
+
+				for (PanelCategory childPanelCategory : childPanelCategories) {
+					String childPanelCategoryKey = childPanelCategory.getKey();
+
+					if (childPanelCategoryKey.equals(PanelCategoryKeys.USER)) {
+						continue;
+					}
+				%>
+
+					panels.push('#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategoryKey) %>Collapse');
+
+				<%
+				}
+				%>
 
 				var userCollapseSelector = '#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse';
 
 				var showUserCollapse = function() {
-					$(controlPanelCollapseSelector).collapse('hide');
-					$(siteAdministrationCollapseSelector).collapse('hide');
+					$.each(
+						panels,
+						function(index, value) {
+							$(value).collapse('hide');
+						}
+					);
+
 					$(userCollapseSelector).collapse('show');
 				}
 
