@@ -39,19 +39,19 @@ PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttrib
 					<div class="nav-equal-height-heading">
 
 						<%
-						String scopeLabel = null;
-
 						Group curScopeGroup = themeDisplay.getScopeGroup();
-
-						if (curScopeGroup.isLayout()) {
-							scopeLabel = StringUtil.shorten(curScopeGroup.getDescriptiveName(locale), 20);
-						}
-						else {
-							scopeLabel = LanguageUtil.get(request, "default-scope");
-						}
 						%>
 
-						<span><%= scopeLabel %></span>
+						<span class="scope-name">
+							<c:choose>
+								<c:when test="<%= curScopeGroup.isLayout() %>">
+									<%= curScopeGroup.getDescriptiveName(locale) %> (<liferay-ui:message key="scope" />)
+								</c:when>
+								<c:otherwise>
+									<liferay-ui:message key="default-scope" />
+								</c:otherwise>
+							</c:choose>
+						</span>
 
 						<span class="nav-equal-height-heading-field">
 							<liferay-ui:icon-menu direction="right" icon="cog" markupView="lexicon" message="" showArrow="<%= false %>">
