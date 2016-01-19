@@ -67,37 +67,18 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 		Liferay.on(
 			'ProductMenu:openUserMenu',
 			function(event) {
-				var panels = [];
-
-				<%
-				List<PanelCategory> childPanelCategories = productMenuDisplayContext.getChildPanelCategories();
-
-				for (PanelCategory childPanelCategory : childPanelCategories) {
-					String childPanelCategoryKey = childPanelCategory.getKey();
-
-					if (childPanelCategoryKey.equals(PanelCategoryKeys.USER)) {
-						continue;
-					}
-				%>
-
-					panels.push('#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategoryKey) %>Collapse');
-
-				<%
-				}
-				%>
-
 				var userCollapseSelector = '#<portlet:namespace /><%= AUIUtil.normalizeId(PanelCategoryKeys.USER) %>Collapse';
 
 				var showUserCollapse = function() {
-					$.each(
-						panels,
-						function(index, value) {
-							$(value).collapse('hide');
-						}
-					);
+					var userCollapse = $(userCollapseSelector);
 
-					$(userCollapseSelector).collapse('show');
-				}
+					userCollapse.collapse({
+						show: true,
+						parent: '#<portlet:namespace />Accordion'
+					});
+
+					userCollapse.collapse('show');
+				};
 
 				if ($('body').hasClass('open')) {
 					if ($(userCollapseSelector).hasClass('in')) {
@@ -108,9 +89,11 @@ String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.w
 					}
 				}
 				else {
+					var urlLoadedState = sidenavToggle.data('url-loaded') ? sidenavToggle.data('url-loaded').state() : '';
+
 					sidenavToggle.sideNavigation('show');
 
-					if (sidenavSlider.data('url-loaded').state() === 'resolved') {
+					if (urlLoadedState === 'resolved') {
 						showUserCollapse();
 					}
 					else {
