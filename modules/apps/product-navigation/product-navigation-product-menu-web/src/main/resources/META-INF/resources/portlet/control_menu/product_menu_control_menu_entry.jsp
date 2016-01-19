@@ -14,7 +14,25 @@
  */
 --%>
 
-<%@ include file="/portlet/init.jsp" %>
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+
+<%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
+
+<%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %>
+<%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %>
+<%@ page import="com.liferay.portal.kernel.util.HtmlUtil" %>
+<%@ page import="com.liferay.portal.kernel.util.StringPool" %>
+<%@ page import="com.liferay.portal.kernel.util.Validator" %>
+<%@ page import="com.liferay.portal.util.SessionClicks" %>
+<%@ page import="com.liferay.portlet.PortletURLFactoryUtil" %>
+<%@ page import="com.liferay.product.navigation.product.menu.web.constants.ProductNavigationProductMenuPortletKeys" %>
+
+<%@ page import="javax.portlet.PortletURL" %>
+<%@ page import="javax.portlet.RenderRequest" %>
+
+<portlet:defineObjects />
+
+<liferay-theme:defineObjects />
 
 <%
 String productMenuState = SessionClicks.get(request, "com.liferay.control.menu.web_productMenuState", "closed");
