@@ -246,6 +246,10 @@ public interface PortletPreferencesLocalService extends BaseLocalService,
 		long plid);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portal.model.PortletPreferences> getPortletPreferencesByPortletId(
+		java.lang.String portletId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public long getPortletPreferencesCount(long ownerId, int ownerType,
 		long plid, com.liferay.portal.model.Portlet portlet,
 		boolean excludeDefaultPreferences);
