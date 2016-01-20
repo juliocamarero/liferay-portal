@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
@@ -38,8 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.WindowStateException;
 
 /**
  * @author Julio Camarero
@@ -69,6 +73,20 @@ public class LayoutsTreeDisplayContext extends BaseLayoutDisplayContext {
 		}
 
 		return curSelPlid;
+	}
+
+	public PortletURL getDeleteLayoutURL(long selPlid) {
+		PortletURL deleteLayoutURL = PortalUtil.getControlPanelPortletURL(
+			liferayPortletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
+			PortletRequest.ACTION_PHASE);
+
+		deleteLayoutURL.setParameter(ActionRequest.ACTION_NAME, "deleteLayout");
+
+		if (selPlid >= LayoutConstants.DEFAULT_PLID) {
+			deleteLayoutURL.setParameter("selPlid", String.valueOf(selPlid));
+		}
+
+		return deleteLayoutURL;
 	}
 
 	public PortletURL getEmptyLayoutSetURL(boolean privateLayout) {
@@ -160,6 +178,9 @@ public class LayoutsTreeDisplayContext extends BaseLayoutDisplayContext {
 		portletURLs.put(
 			"addLayoutURL",
 			getAddLayoutURL(LayoutConstants.DEFAULT_PLID, null));
+		portletURLs.put(
+			"deleteLayoutURL",
+			getDeleteLayoutURL(LayoutConstants.DEFAULT_PLID));
 		portletURLs.put(
 			"editLayoutURL",
 			getEditLayoutURL(LayoutConstants.DEFAULT_PLID, null));
