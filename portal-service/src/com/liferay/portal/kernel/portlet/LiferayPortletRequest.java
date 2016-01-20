@@ -37,6 +37,8 @@ public interface LiferayPortletRequest extends PortletRequest {
 
 	public long getPlid();
 
+	public String getPortletInstanceKey();
+
 	public String getPortletName();
 
 	public Map<String, String[]> getRenderParameters();
