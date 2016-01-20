@@ -36,7 +36,7 @@ PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttrib
 		<c:otherwise>
 			<ul class="nav nav-equal-height nav-nested">
 				<li>
-					<div class="nav-equal-height-heading">
+					<div class="scope">
 
 						<%
 						Group curScopeGroup = themeDisplay.getScopeGroup();
