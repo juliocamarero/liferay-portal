@@ -35,7 +35,7 @@ for (long groupId : groupIds) {
 	}
 %>
 
-	<c:if test="<%= (addPortletURLs != null) && !addPortletURLs.isEmpty() %>">
+	<c:if test="<%= hasAddPortletURLs %>">
 		<aui:nav>
 			<c:choose>
 				<c:when test="<%= addPortletURLs.size() == 1 %>">
