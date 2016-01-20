@@ -756,31 +756,7 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 		boolean windowStateRestoreCurrentView = ParamUtil.getBoolean(
 			request, "p_p_state_rcv");
 
-		PortletInstance currentPortletInstance =
-			PortletInstance.fromPortletInstanceKey(ppid);
-
-		String currentPortletInstancePortletName =
-			currentPortletInstance.getPortletName();
-
-		String currentPortletInstanceInstanceId =
-			currentPortletInstance.getInstanceId();
-
-		boolean samePortletInstance = false;
-
-		if (currentPortletInstanceInstanceId == null) {
-			samePortletInstance = _portletName.equals(ppid);
-		}
-		else {
-			if (currentPortletInstancePortletName.equals(
-				_portletInstance.getPortletName()) &&
-				currentPortletInstanceInstanceId.equals(
-					_portletInstance.getInstanceId())) {
-
-				samePortletInstance = true;
-			}
-		}
-
-		if (samePortletInstance &&
+		if (isSamePortletInstance(ppid) &&
 			!(windowStateRestoreCurrentView &&
 			  portlet.isRestoreCurrentView())) {
 
@@ -928,6 +904,32 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 
 		_locale = themeDisplay.getLocale();
 		_plid = plid;
+	}
+
+	protected boolean isSamePortletInstance(String ppid) {
+		PortletInstance currentPortletInstance =
+			PortletInstance.fromPortletInstanceKey(ppid);
+
+		String currentPortletInstancePortletName =
+			currentPortletInstance.getPortletName();
+
+		String currentPortletInstanceInstanceId =
+			currentPortletInstance.getInstanceId();
+
+		if (currentPortletInstanceInstanceId == null) {
+			return _portletName.equals(ppid);
+		}
+		else {
+			if (currentPortletInstancePortletName.equals(
+					_portletInstance.getPortletName()) &&
+				currentPortletInstanceInstanceId.equals(
+					_portletInstance.getInstanceId())) {
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected void mergePublicRenderParameters(
