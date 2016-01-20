@@ -1,6 +1,23 @@
+body.open {
+	.control-menu {
+		@include sm() {
+			left: 320px;
+		}
+	}
+}
+
+.control-menu {
+	left: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 500;
+}
+
 .control-menu-level-1 {
 	background-color: $control-menu-level-1-bg;
 	color: $control-menu-level-1-color;
+	position: relative;
 
 	li {
 		position: relative;
@@ -61,6 +78,8 @@
 
 .control-menu-icon {
 	color: $control-menu-level-1-nav-item-color;
+	display: inline-block;
+	margin: 0 10px;
 
 	&:focus,
 	&:hover {
