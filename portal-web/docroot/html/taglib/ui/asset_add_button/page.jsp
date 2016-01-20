@@ -49,7 +49,7 @@ for (long groupId : groupIds) {
 
 					AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(_getClassName(entry.getKey()));
 
-					String message = _getMessage(entry.getKey(), addPortletURLs, locale);
+					String message = _getMessage(entry.getKey(), locale);
 
 					long curGroupId = groupId;
 
@@ -75,7 +75,7 @@ for (long groupId : groupIds) {
 						for (Map.Entry<String, PortletURL> entry : addPortletURLs.entrySet()) {
 							AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(_getClassName(entry.getKey()));
 
-							String message = _getMessage(entry.getKey(), addPortletURLs, locale);
+							String message = _getMessage(entry.getKey(), locale);
 
 							long curGroupId = groupId;
 
@@ -118,7 +118,7 @@ private String _getClassName(String className) {
 	return className;
 }
 
-private String _getMessage(String className, Map<String, PortletURL> addPortletURLs, Locale locale) {
+private String _getMessage(String className, Locale locale) {
 	String message = null;
 
 	int pos = className.indexOf(AssetUtil.CLASSNAME_SEPARATOR);
