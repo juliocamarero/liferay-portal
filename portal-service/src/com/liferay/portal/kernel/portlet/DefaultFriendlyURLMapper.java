@@ -420,8 +420,8 @@ public class DefaultFriendlyURLMapper extends BaseFriendlyURLMapper {
 		String portletInstanceKey = portletInstance.getPortletInstanceKey();
 
 		List<PortletPreferences> preferences =
-			PortletPreferencesLocalServiceUtil.
-				getPortletPreferencesByPortletId(portletInstanceKey);
+			PortletPreferencesLocalServiceUtil.getPortletPreferencesByPortletId(
+				portletInstanceKey);
 
 		boolean portletCustomizable =
 			(!preferences.isEmpty() && (preferences.size() == 1));
