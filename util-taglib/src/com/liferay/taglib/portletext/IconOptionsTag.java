@@ -34,8 +34,29 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class IconOptionsTag extends IconTag {
 
+	public List<PortletConfigurationIconFactory>
+		getPortletConfigurationIconFactories() {
+
+		if (_portletConfigurationIconFactories != null) {
+			return _portletConfigurationIconFactories;
+		}
+
+		_portletConfigurationIconFactories = ListUtil.copy(
+			PortletConfigurationIconTracker.getPortletConfigurationIcons(
+				getPortletId(), getPortletRequest()));
+
+		return _portletConfigurationIconFactories;
+	}
+
 	public void setDirection(String direction) {
 		_direction = direction;
+	}
+
+	public void setPortletConfigurationIconFactories(
+		List<PortletConfigurationIconFactory>
+			portletConfigurationIconFactories) {
+
+		_portletConfigurationIconFactories = portletConfigurationIconFactories;
 	}
 
 	public void setShowArrow(boolean showArrow) {
@@ -47,20 +68,13 @@ public class IconOptionsTag extends IconTag {
 		super.cleanUp();
 
 		_direction = "down";
+		_portletConfigurationIconFactories = null;
 		_showArrow = true;
 	}
 
 	@Override
 	protected String getPage() {
 		return "/html/taglib/portlet/icon_options/page.jsp";
-	}
-
-	protected List<PortletConfigurationIconFactory>
-		getPortletConfigurationIconFactories() {
-
-		return ListUtil.copy(
-			PortletConfigurationIconTracker.getPortletConfigurationIcons(
-				getPortletId(), getPortletRequest()));
 	}
 
 	protected String getPortletId() {
@@ -91,6 +105,8 @@ public class IconOptionsTag extends IconTag {
 	}
 
 	private String _direction = "down";
+	private List<PortletConfigurationIconFactory>
+		_portletConfigurationIconFactories;
 	private boolean _showArrow = true;
 
 }
