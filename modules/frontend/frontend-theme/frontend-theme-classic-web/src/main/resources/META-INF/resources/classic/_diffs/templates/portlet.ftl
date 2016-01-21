@@ -16,7 +16,11 @@
 
 		<#assign portlet_title_menus = portlet_toolbar.getPortletTitleMenus(portlet_display_root_portlet_id, renderRequest)>
 
-		<#if portlet_display.isShowConfigurationIcon() || portlet_title_menus?has_content>
+		<#assign portlet_icon_options>
+			<@liferay_portlet["icon-options"] />
+		</#assign>
+
+		<#if portlet_icon_options?trim != "" || portlet_title_menus?has_content>
 			<header class="portlet-topper">
 				<div class="portlet-title-default">
 					<span class="portlet-name-text">${portlet_display_name}</span>
@@ -28,9 +32,11 @@
 					</menu>
 				</#foreach>
 
-				<menu class="portlet-topper-toolbar" id="portlet-topper-toolbar_${portlet_id}" type="toolbar">
-					<@liferay_portlet["icon-options"] />
-				</menu>
+				<#if portlet_icon_options?trim != "">
+					<menu class="portlet-topper-toolbar" id="portlet-topper-toolbar_${portlet_id}" type="toolbar">
+						${portlet_icon_options}
+					</menu>
+				</#if>
 			</header>
 
 			<#assign portlet_content_css_class = portlet_content_css_class + " portlet-content-editable">
