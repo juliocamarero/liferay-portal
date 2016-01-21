@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 import org.osgi.service.component.annotations.Component;
@@ -52,8 +53,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS,
 		"mvc.render.command.name=-",
-		"mvc.render.command.name=/message_boards/view",
-		"mvc.render.command.name=/message_boards/view_category"
+		"mvc.render.command.name=/message_boards/view"
 	},
 	service = {MBPortletToolbarContributor.class, PortletToolbarContributor.class}
 )
@@ -154,7 +154,7 @@ public class MBPortletToolbarContributor extends BasePortletToolbarContributor {
 
 	@Override
 	protected List<MenuItem> getPortletTitleMenuItems(
-		PortletRequest portletRequest) {
+		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
