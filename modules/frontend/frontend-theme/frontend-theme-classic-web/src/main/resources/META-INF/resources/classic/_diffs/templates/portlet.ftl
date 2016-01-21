@@ -11,7 +11,7 @@
 <#assign portlet_title = htmlUtil.escape(portlet_display.getTitle())>
 
 <section class="portlet" id="portlet_${portlet_id}">
-	<#if portlet_display.isPortletDecorate() && !portlet_display.isStateMax()>
+	<#if themeDisplay.isSignedIn() && portlet_display.isPortletDecorate() && !portlet_display.isStateMax()>
 		<#assign portlet_toolbar = portlet_display.getPortletToolbar()>
 
 		<#assign portlet_title_menus = portlet_toolbar.getPortletTitleMenus(portlet_display_root_portlet_id, renderRequest)>
