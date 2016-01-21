@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.product.navigation.product.menu.web.template;
+package com.liferay.product.navigation.product.menu.theme.contributor;
 
 import com.liferay.portal.kernel.template.TemplateContextContributor;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -61,6 +61,10 @@ public class ProductMenuTemplateContextContributor
 	protected boolean isShowProductMenu(HttpServletRequest request) {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		if (themeDisplay.isImpersonated()) {
+			return true;
+		}
 
 		if (!themeDisplay.isSignedIn()) {
 			return false;
