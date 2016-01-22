@@ -11,12 +11,15 @@
 <#assign portlet_title = htmlUtil.escape(portlet_display.getTitle())>
 
 <section class="portlet" id="portlet_${portlet_id}">
-	<#if portlet_display.isPortletDecorate() && !portlet_display.isStateMax() && portlet_display.getPortletToolbar()??>
+	<#if portlet_display.isPortletDecorate() && !portlet_display.isStateMax() && portlet_display.getPortletConfigurationIconMenu()?? && portlet_display.getPortletToolbar()??>
+		<#assign portlet_configuration_icon_menu = portlet_display.getPortletConfigurationIconMenu()>
 		<#assign portlet_toolbar = portlet_display.getPortletToolbar()>
+
+		<#assign portlet_configuration_icons = portlet_configuration_icon_menu.getPortletConfigurationIcons(portlet_display_root_portlet_id, renderRequest)>
 
 		<#assign portlet_title_menus = portlet_toolbar.getPortletTitleMenus(portlet_display_root_portlet_id, renderRequest, renderResponse)>
 
-		<#if (portlet_display.isShowConfigurationIcon() || portlet_title_menus?has_content)>
+		<#if (portlet_configuration_icons?has_content || portlet_title_menus?has_content)>
 			<header class="portlet-topper">
 				<div class="portlet-title-default">
 					<span class="portlet-name-text">${portlet_display_name}</span>
@@ -28,9 +31,13 @@
 					</menu>
 				</#foreach>
 
-				<menu class="portlet-topper-toolbar" id="portlet-topper-toolbar_${portlet_id}" type="toolbar">
-					<@liferay_portlet["icon-options"] />
-				</menu>
+				<#if portlet_configuration_icons?has_content>
+					<menu class="portlet-topper-toolbar" id="portlet-topper-toolbar_${portlet_id}" type="toolbar">
+						<@liferay_portlet["icon-options"]
+							portletConfigurationIconFactories=portlet_configuration_icons
+						/>
+					</menu>
+				</#if>
 			</header>
 
 			<#assign portlet_content_css_class = portlet_content_css_class + " portlet-content-editable">
