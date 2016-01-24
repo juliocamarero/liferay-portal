@@ -414,11 +414,11 @@ public class LayoutsTreeUtil {
 			jsonObject.put("hasChildren", layout.hasChildren());
 			jsonObject.put("layoutId", layout.getLayoutId());
 			jsonObject.put("name", layout.getName(themeDisplay.getLocale()));
-
-			LayoutType layoutType = layout.getLayoutType();
-
-			jsonObject.put("parentable", layoutType.isParentable());
-
+			jsonObject.put(
+				"parentable",
+				LayoutPermissionUtil.contains(
+					themeDisplay.getPermissionChecker(), layout,
+					ActionKeys.ADD_LAYOUT));
 			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
 			jsonObject.put("plid", layout.getPlid());
 			jsonObject.put("priority", layout.getPriority());
