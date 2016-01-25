@@ -204,6 +204,12 @@ public class AssetPublisherPortletToolbarContributor
 
 		Menu menu = new Menu();
 
+		Map<String, Object> data = new HashMap<>();
+
+		data.put("qa-id", "addButton");
+
+		menu.setData(data);
+
 		menu.setDirection("down");
 		menu.setExtended(false);
 		menu.setIcon("../aui/plus-sign-2");
