@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -208,7 +209,18 @@ public class AssetPublisherPortletToolbarContributor
 		menu.setIcon("../aui/plus-sign-2");
 		menu.setMenuItems(portletTitleMenuItems);
 		menu.setShowArrow(false);
-		menu.setShowWhenSingleIcon(true);
+
+		boolean showWhenSingleIcon = true;
+
+		if (portletTitleMenuItems.size() == 1) {
+			MenuItem menuItem = portletTitleMenuItems.get(0);
+
+			if (Validator.isNull(menuItem.getLabel())) {
+				showWhenSingleIcon = false;
+			}
+		}
+
+		menu.setShowWhenSingleIcon(showWhenSingleIcon);
 
 		return menu;
 	}
