@@ -208,6 +208,7 @@ public class AssetPublisherPortletToolbarContributor
 		menu.setIcon("../aui/plus-sign-2");
 		menu.setMenuItems(portletTitleMenuItems);
 		menu.setShowArrow(false);
+		menu.setShowWhenSingleIcon(true);
 
 		return menu;
 	}
