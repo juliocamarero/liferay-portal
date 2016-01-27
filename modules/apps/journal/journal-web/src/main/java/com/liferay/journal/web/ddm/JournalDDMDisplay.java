@@ -73,7 +73,6 @@ public class JournalDDMDisplay extends BaseDDMDisplay {
 		portletURL.setParameter(
 			"classPK", String.valueOf(structure.getStructureId()));
 		portletURL.setParameter("ddmStructureKey", structure.getStructureKey());
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
 
 		return portletURL.toString();
 	}
