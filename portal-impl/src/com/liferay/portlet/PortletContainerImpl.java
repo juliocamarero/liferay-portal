@@ -60,7 +60,6 @@ import com.liferay.util.SerializableUtil;
 import java.io.Serializable;
 import java.io.Writer;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
