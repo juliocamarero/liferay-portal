@@ -24,9 +24,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.site.item.selector.criterion.SiteItemSelectorCriterion;
 import com.liferay.site.item.selector.web.constants.SitesItemSelectorWebKeys;
-import com.liferay.site.item.selector.web.display.context.RecentSitesItemSelectorViewDisplayContext;
+import com.liferay.site.item.selector.web.display.context.AllSitesItemSelectorViewDisplayContext;
 import com.liferay.site.util.GroupURLProvider;
-import com.liferay.site.util.RecentGroupManager;
 
 import java.io.IOException;
 
@@ -50,8 +49,8 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Julio Camarero
  */
-@Component(property = {"service.ranking:Integer=300"}, service = ItemSelectorView.class)
-public class RecentSitesItemSelectorView
+@Component(property = {"service.ranking:Integer=100"}, service = ItemSelectorView.class)
+public class AllSitesItemSelectorView
 	implements ItemSelectorView<SiteItemSelectorCriterion> {
 
 	@Override
@@ -72,7 +71,7 @@ public class RecentSitesItemSelectorView
 	public String getTitle(Locale locale) {
 		ResourceBundle resourceBundle = PortalUtil.getResourceBundle(locale);
 
-		return ResourceBundleUtil.getString(resourceBundle, "recent");
+		return ResourceBundleUtil.getString(resourceBundle, "all");
 	}
 
 	@Override
@@ -96,15 +95,15 @@ public class RecentSitesItemSelectorView
 			SitesItemSelectorWebKeys.SITES_ITEM_SELECTOR_GROUP_URL_PROVIDER,
 			_groupURLProvider);
 
-		RecentSitesItemSelectorViewDisplayContext
-			siteItemSelectorViewDisplayContext =
-				new RecentSitesItemSelectorViewDisplayContext(
+		AllSitesItemSelectorViewDisplayContext
+			allSitesItemSelectorViewDisplayContext =
+				new AllSitesItemSelectorViewDisplayContext(
 					(HttpServletRequest)request, siteItemSelectorCriterion,
-					itemSelectedEventName, portletURL, _recentGroupManager);
+					itemSelectedEventName, portletURL);
 
 		request.setAttribute(
 			SitesItemSelectorWebKeys.SITES_ITEM_SELECTOR_DISPLAY_CONTEXT,
-			siteItemSelectorViewDisplayContext);
+			allSitesItemSelectorViewDisplayContext);
 
 		ServletContext servletContext = getServletContext();
 
@@ -117,11 +116,6 @@ public class RecentSitesItemSelectorView
 	@Reference(unbind = "-")
 	public void setGroupURLProvider(GroupURLProvider groupURLProvider) {
 		_groupURLProvider = groupURLProvider;
-	}
-
-	@Reference(unbind = "-")
-	public void setRecentGroupManager(RecentGroupManager recentGroupManager) {
-		_recentGroupManager = recentGroupManager;
 	}
 
 	@Reference(
@@ -141,7 +135,6 @@ public class RecentSitesItemSelectorView
 				}));
 
 	private GroupURLProvider _groupURLProvider;
-	private RecentGroupManager _recentGroupManager;
 	private ServletContext _servletContext;
 
 }

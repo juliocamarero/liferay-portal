@@ -23,7 +23,7 @@ GroupURLProvider groupURLProvider = (GroupURLProvider)request.getAttribute(Sites
 String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
 String target = ParamUtil.getString(request, "target");
 
-PortletURL portletURL = liferayPortletResponse.createRenderURL();
+PortletURL portletURL = siteItemSelectorViewDisplayContext.getPortletURL();
 %>
 
 <liferay-frontend:management-bar>
@@ -31,13 +31,13 @@ PortletURL portletURL = liferayPortletResponse.createRenderURL();
 		<liferay-frontend:management-bar-filters>
 			<liferay-frontend:management-bar-navigation
 				navigationKeys='<%= new String[] {"all"} %>'
-				portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
+				portletURL="<%= siteItemSelectorViewDisplayContext.getPortletURL() %>"
 			/>
 		</liferay-frontend:management-bar-filters>
 
 		<liferay-frontend:management-bar-display-buttons
 			displayViews='<%= new String[] {"list", "icon"} %>'
-			portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
+			portletURL="<%= siteItemSelectorViewDisplayContext.getPortletURL() %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
 	</liferay-frontend:management-bar-buttons>
@@ -67,6 +67,16 @@ PortletURL portletURL = liferayPortletResponse.createRenderURL();
 			data.put("grouptype", LanguageUtil.get(resourceBundle, group.getTypeLabel()));
 			data.put("url", groupURLProvider.getGroupURL(group, liferayPortletRequest));
 			data.put("uuid", group.getUuid());
+
+			String childrenSitesURL = null;
+
+			if (!childGroups.isEmpty()) {
+				PortletURL childrenPortletURL = siteItemSelectorViewDisplayContext.getPortletURL();
+
+				childrenPortletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+
+				childrenSitesURL = childrenPortletURL.toString();
+			}
 			%>
 
 			<c:choose>
@@ -90,9 +100,9 @@ PortletURL portletURL = liferayPortletResponse.createRenderURL();
 										title="<%= group.getName(locale) %>"
 									>
 										<liferay-frontend:vertical-card-footer>
-											<label class="<%= childGroups.size() != 0 ? "text-default" : "disabled" %>">
+											<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled" %>' href="<%= childrenSitesURL %>">
 												<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
-											</label>
+											</aui:a>
 										</liferay-frontend:vertical-card-footer>
 									</liferay-frontend:vertical-card>
 								</c:when>
@@ -107,9 +117,9 @@ PortletURL portletURL = liferayPortletResponse.createRenderURL();
 										title="<%= group.getName(locale) %>"
 									>
 										<liferay-frontend:vertical-card-footer>
-											<label class="<%= childGroups.size() != 0 ? "text-default" : "disabled" %>">
+											<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled" %>' href="<%= childrenSitesURL %>">
 												<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
-											</label>
+											</aui:a>
 										</liferay-frontend:vertical-card-footer>
 									</liferay-frontend:icon-vertical-card>
 								</c:otherwise>
