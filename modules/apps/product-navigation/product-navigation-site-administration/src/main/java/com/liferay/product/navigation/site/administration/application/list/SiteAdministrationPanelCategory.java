@@ -44,6 +44,8 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 
+	public static final String KEY = PanelCategoryKeys.SITE_ADMINISTRATION;
+
 	@Override
 	public String getHeaderJspPath() {
 		return "/sites/site_administration_header.jsp";
@@ -56,7 +58,7 @@ public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 
 	@Override
 	public String getKey() {
-		return PanelCategoryKeys.SITE_ADMINISTRATION;
+		return KEY;
 	}
 
 	@Override
