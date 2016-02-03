@@ -12,15 +12,15 @@
  * details.
  */
 
-package com.liferay.layout.admin.web.constants;
+package com.liferay.site.item.selector.web.constants;
 
 /**
+ *
  * @author Julio Camarero
  */
-public class LayoutAdminWebKeys {
+public class SitesItemSelectorWebKeys {
 
-	public static final String CONTROL_MENU_ENTRY = "CONTROL_MENU_ENTRY";
-
-	public static final String GROUP_PROVIDER = "GROUP_PROVIDER";
+	public static final String SITES_ITEM_SELECTOR_DISPLAY_CONTEXT =
+		"SITES_ITEM_SELECTOR_DISPLAY_CONTEXT";
 
 }
