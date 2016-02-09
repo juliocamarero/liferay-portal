@@ -79,46 +79,8 @@ public class PanelAppContentHelper {
 		if (Validator.isNotNull(velocityTemplateId) &&
 			Validator.isNotNull(content)) {
 
-			HttpServletRequest request = _request;
-
-			PortletRequestImpl portletRequestImpl =
-				(PortletRequestImpl)_request.getAttribute(
-					JavaConstants.JAVAX_PORTLET_REQUEST);
-
-			if (portletRequestImpl != null) {
-				request = portletRequestImpl.getOriginalHttpServletRequest();
-			}
-			else {
-				HttpServletRequest originalServletRequest =
-					PortalUtil.getOriginalServletRequest(request);
-
-				Portlet portlet = getPortlet();
-
-				DynamicServletRequest dynamicServletRequest = null;
-
-				if (portlet.isPrivateRequestAttributes()) {
-					String namespace = PortalUtil.getPortletNamespace(
-						getPortletId());
-
-					dynamicServletRequest = new NamespaceServletRequest(
-						originalServletRequest, namespace, namespace);
-				}
-				else {
-					dynamicServletRequest = new DynamicServletRequest(
-						originalServletRequest);
-				}
-
-				Map<String, String[]> parameterMap = request.getParameterMap();
-
-				for (Map.Entry<String, String[]> entry :
-						parameterMap.entrySet()) {
-
-					dynamicServletRequest.setParameterValues(
-						entry.getKey(), entry.getValue());
-				}
-
-				request = dynamicServletRequest;
-			}
+			HttpServletRequest request = getOriginalHttpServletRequest(
+				_request);
 
 			StringBundler sb = RuntimePageUtil.getProcessedTemplate(
 				request, _response, getPortletId(),
@@ -138,6 +100,49 @@ public class PanelAppContentHelper {
 		}
 
 		return _companyId;
+	}
+
+	protected HttpServletRequest getOriginalHttpServletRequest(
+		HttpServletRequest request) {
+
+		PortletRequestImpl portletRequestImpl =
+			(PortletRequestImpl)_request.getAttribute(
+				JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		if (portletRequestImpl != null) {
+			request = portletRequestImpl.getOriginalHttpServletRequest();
+		}
+		else {
+			HttpServletRequest originalServletRequest =
+				PortalUtil.getOriginalServletRequest(request);
+
+			Portlet portlet = getPortlet();
+
+			DynamicServletRequest dynamicServletRequest = null;
+
+			if (portlet.isPrivateRequestAttributes()) {
+				String namespace = PortalUtil.getPortletNamespace(
+					getPortletId());
+
+				dynamicServletRequest = new NamespaceServletRequest(
+					originalServletRequest, namespace, namespace);
+			}
+			else {
+				dynamicServletRequest = new DynamicServletRequest(
+					originalServletRequest);
+			}
+
+			Map<String, String[]> parameterMap = request.getParameterMap();
+
+			for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+				dynamicServletRequest.setParameterValues(
+					entry.getKey(), entry.getValue());
+			}
+
+			request = dynamicServletRequest;
+		}
+
+		return request;
 	}
 
 	protected Portlet getPortlet() {
