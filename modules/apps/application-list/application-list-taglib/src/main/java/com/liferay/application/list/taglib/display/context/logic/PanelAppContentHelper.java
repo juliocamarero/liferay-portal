@@ -110,39 +110,35 @@ public class PanelAppContentHelper {
 				JavaConstants.JAVAX_PORTLET_REQUEST);
 
 		if (portletRequestImpl != null) {
-			request = portletRequestImpl.getOriginalHttpServletRequest();
+			return portletRequestImpl.getOriginalHttpServletRequest();
+		}
+
+		HttpServletRequest originalServletRequest =
+			PortalUtil.getOriginalServletRequest(request);
+
+		Portlet portlet = getPortlet();
+
+		DynamicServletRequest dynamicServletRequest = null;
+
+		if (portlet.isPrivateRequestAttributes()) {
+			String namespace = PortalUtil.getPortletNamespace(getPortletId());
+
+			dynamicServletRequest = new NamespaceServletRequest(
+				originalServletRequest, namespace, namespace);
 		}
 		else {
-			HttpServletRequest originalServletRequest =
-				PortalUtil.getOriginalServletRequest(request);
-
-			Portlet portlet = getPortlet();
-
-			DynamicServletRequest dynamicServletRequest = null;
-
-			if (portlet.isPrivateRequestAttributes()) {
-				String namespace = PortalUtil.getPortletNamespace(
-					getPortletId());
-
-				dynamicServletRequest = new NamespaceServletRequest(
-					originalServletRequest, namespace, namespace);
-			}
-			else {
-				dynamicServletRequest = new DynamicServletRequest(
-					originalServletRequest);
-			}
-
-			Map<String, String[]> parameterMap = request.getParameterMap();
-
-			for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-				dynamicServletRequest.setParameterValues(
-					entry.getKey(), entry.getValue());
-			}
-
-			request = dynamicServletRequest;
+			dynamicServletRequest = new DynamicServletRequest(
+				originalServletRequest);
 		}
 
-		return request;
+		Map<String, String[]> parameterMap = request.getParameterMap();
+
+		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+			dynamicServletRequest.setParameterValues(
+				entry.getKey(), entry.getValue());
+		}
+
+		return dynamicServletRequest;
 	}
 
 	protected Portlet getPortlet() {
