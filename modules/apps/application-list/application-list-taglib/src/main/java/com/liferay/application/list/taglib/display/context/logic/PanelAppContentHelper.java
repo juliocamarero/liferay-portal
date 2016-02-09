@@ -85,21 +85,18 @@ public class PanelAppContentHelper {
 				(PortletRequestImpl)_request.getAttribute(
 					JavaConstants.JAVAX_PORTLET_REQUEST);
 
-			HttpServletRequest newRequest = request;
-
 			if (portletRequestImpl != null) {
-				newRequest = portletRequestImpl.getOriginalHttpServletRequest();
+				request = portletRequestImpl.getOriginalHttpServletRequest();
 			}
 			else {
 				HttpServletRequest originalServletRequest =
 					PortalUtil.getOriginalServletRequest(request);
 
-				boolean privateRequestAttributes =
-					getPortlet().isPrivateRequestAttributes();
+				Portlet portlet = getPortlet();
 
 				DynamicServletRequest dynamicServletRequest = null;
 
-				if (privateRequestAttributes) {
+				if (portlet.isPrivateRequestAttributes()) {
 					String namespace = PortalUtil.getPortletNamespace(
 						getPortletId());
 
@@ -116,18 +113,15 @@ public class PanelAppContentHelper {
 				for (Map.Entry<String, String[]> entry :
 						parameterMap.entrySet()) {
 
-					String name = entry.getKey();
-
-					String[] values = entry.getValue();
-
-					dynamicServletRequest.setParameterValues(name, values);
+					dynamicServletRequest.setParameterValues(
+						entry.getKey(), entry.getValue());
 				}
 
-				newRequest = dynamicServletRequest;
+				request = dynamicServletRequest;
 			}
 
 			StringBundler sb = RuntimePageUtil.getProcessedTemplate(
-				newRequest, _response, getPortletId(),
+				request, _response, getPortletId(),
 				new StringTemplateResource(velocityTemplateId, content));
 
 			if (sb != null) {
