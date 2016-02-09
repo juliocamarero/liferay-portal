@@ -100,6 +100,12 @@ public class InformationMessagesControlMenuEntry
 			return false;
 		}
 
+		if (layout.isCustomizable() &&
+			hasUpdateLayoutPermission(themeDisplay)) {
+
+			return true;
+		}
+
 		if (!layoutTypePortlet.isCustomizable()) {
 			return false;
 		}
