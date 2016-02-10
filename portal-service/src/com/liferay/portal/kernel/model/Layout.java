@@ -407,6 +407,8 @@ public interface Layout extends LayoutModel, PersistedModel {
 	*/
 	public boolean isRootLayout();
 
+	public boolean isCustomizable();
+
 	public boolean isSelected(boolean selectable,
 		com.liferay.portal.kernel.model.Layout layout, long ancestorPlid);
 
