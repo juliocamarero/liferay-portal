@@ -44,7 +44,7 @@ public class IconOptionsTag extends IconTag {
 
 		_portletConfigurationIcons =
 			PortletConfigurationIconTracker.getPortletConfigurationIcons(
-				getPortletId(), getPortletRequest(), getPortletResponse(),
+				getPortletId(), getPortletRequest(),
 				PortletConfigurationIconFactoryComparator.INSTANCE);
 
 		return _portletConfigurationIcons;
