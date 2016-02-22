@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.PortletInstance;
 import com.liferay.portal.kernel.settings.SettingsLocator;
 
+import java.util.Map;
+
 /**
  * @author Jorge Ferrer
  */
@@ -31,6 +33,10 @@ public interface ConfigurationProvider {
 		throws ConfigurationException;
 
 	public <T> T getGroupConfiguration(Class<T> clazz, long groupId)
+		throws ConfigurationException;
+
+	public <T> T getParameterOverridenConfiguration(
+			T configurationBean, Map<String, String[]> parameterMap)
 		throws ConfigurationException;
 
 	public <T> T getPortletInstanceConfiguration(

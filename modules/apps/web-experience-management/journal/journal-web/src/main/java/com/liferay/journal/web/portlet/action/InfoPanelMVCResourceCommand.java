@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 
 import java.util.List;
 
-import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
@@ -55,10 +54,7 @@ public class InfoPanelMVCResourceCommand extends BaseMVCResourceCommand {
 
 		resourceRequest.setAttribute(JournalWebKeys.JOURNAL_FOLDERS, folders);
 
-		PortletRequestDispatcher portletRequestDispatcher =
-			getPortletRequestDispatcher(resourceRequest, "/info_panel.jsp");
-
-		portletRequestDispatcher.include(resourceRequest, resourceResponse);
+		include(resourceRequest, resourceResponse, "/info_panel.jsp");
 	}
 
 }
