@@ -19,18 +19,25 @@
 <c:if test="<%= PortalPermissionUtil.contains(permissionChecker, ActionKeys.ADD_COMMUNITY) %>">
 
 	<%
-	List<LayoutSetPrototype> layoutSetPrototypes = LayoutSetPrototypeServiceUtil.search(company.getCompanyId(), Boolean.TRUE, null);
-
-	boolean hasAddLayoutSetPrototypePermission = PortalPermissionUtil.contains(permissionChecker, ActionKeys.ADD_LAYOUT_SET_PROTOTYPE);
+	Group group = siteAdminDisplayContext.getGroup();
 	%>
 
 	<liferay-portlet:renderURL varImpl="addSiteURL">
 		<portlet:param name="mvcPath" value="/edit_site.jsp" />
+
+		<c:if test="<%= (group != null) && siteAdminDisplayContext.hasAddChildSitePermission(group) %>">
+			<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(group.getGroupId()) %>" />
+		</c:if>
 	</liferay-portlet:renderURL>
+
+	<%
+	boolean hasAddLayoutSetPrototypePermission = PortalPermissionUtil.contains(permissionChecker, ActionKeys.ADD_LAYOUT_SET_PROTOTYPE);
+	List<LayoutSetPrototype> layoutSetPrototypes = LayoutSetPrototypeServiceUtil.search(company.getCompanyId(), Boolean.TRUE, null);
+	%>
 
 	<liferay-frontend:add-menu>
 		<c:choose>
-			<c:when test="<%= layoutSetPrototypes.isEmpty() && !hasAddLayoutSetPrototypePermission %>">
+			<c:when test="<%= !hasAddLayoutSetPrototypePermission && layoutSetPrototypes.isEmpty() %>">
 				<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add") %>' url="<%= addSiteURL.toString() %>" />
 			</c:when>
 			<c:otherwise>
