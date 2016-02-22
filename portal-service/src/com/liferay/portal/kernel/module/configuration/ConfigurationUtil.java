@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -14,33 +14,24 @@
 
 package com.liferay.portal.kernel.module.configuration;
 
-import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.PortletInstance;
-import com.liferay.portal.kernel.settings.SettingsLocator;
-
 import java.util.Map;
 
 /**
  * @author Jorge Ferrer
  */
-public interface ConfigurationProvider {
-
-	public <T> T getCompanyConfiguration(Class<T> clazz, long companyId)
-		throws ConfigurationException;
-
-	public <T> T getConfiguration(
-			Class<T> clazz, SettingsLocator settingsLocator)
-		throws ConfigurationException;
-
-	public <T> T getGroupConfiguration(Class<T> clazz, long groupId)
-		throws ConfigurationException;
+public class ConfigurationUtil {
 
 	public <T> T getParameterOverridenConfiguration(
 			T configurationBean, Map<String, String[]> parameterMap)
-		throws ConfigurationException;
+		throws ConfigurationException {
 
-	public <T> T getPortletInstanceConfiguration(
-			Class<T> clazz, Layout layout, PortletInstance portletInstance)
-		throws ConfigurationException;
+		ParameterOverrideInvocationHandler<T>
+			parameterOverrideInvocationHandler =
+				new ParameterOverrideInvocationHandler<>(
+					configurationBean, parameterMap);
+
+		return parameterOverrideInvocationHandler.createProxy();
+
+	}
 
 }

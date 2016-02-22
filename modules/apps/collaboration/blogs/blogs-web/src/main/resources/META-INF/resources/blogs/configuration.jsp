@@ -17,7 +17,9 @@
 <%@ include file="/blogs/init.jsp" %>
 
 <%
-blogsPortletInstanceConfiguration = ConfigurationProviderUtil.getConfiguration(BlogsPortletInstanceConfiguration.class, new ParameterMapSettingsLocator(request.getParameterMap(), new PortletInstanceSettingsLocator(themeDisplay.getLayout(), portletDisplay.getPortletResource())));
+blogsPortletInstanceConfiguration = portletDisplay.getConfiguration(BlogsPortletInstanceConfiguration.class);
+blogsPortletInstanceConfiguration = ConfigurationProviderUtil.getParameterOverridenConfiguration(blogsPortletInstanceConfiguration, request.getParameterMap());
+//blogsPortletInstanceConfiguration = ConfigurationProviderUtil.getConfiguration(BlogsPortletInstanceConfiguration.class, new ParameterMapSettingsLocator(request.getParameterMap(), new PortletInstanceSettingsLocator(themeDisplay.getLayout(), portletDisplay.getPortletResource())));
 %>
 
 <liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL" />
