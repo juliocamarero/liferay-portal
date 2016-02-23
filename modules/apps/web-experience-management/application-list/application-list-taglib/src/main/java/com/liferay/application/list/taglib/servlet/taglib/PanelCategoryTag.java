@@ -132,6 +132,10 @@ public class PanelCategoryTag extends BasePanelTag {
 
 		Group group = getGroup();
 
+		if (group == null) {
+			group = themeDisplay.getScopeGroup();
+		}
+
 		List<PanelApp> panelApps = panelAppRegistry.getPanelApps(
 			_panelCategory, themeDisplay.getPermissionChecker(), group);
 
