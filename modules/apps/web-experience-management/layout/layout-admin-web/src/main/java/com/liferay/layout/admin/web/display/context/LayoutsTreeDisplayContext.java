@@ -238,6 +238,20 @@ public class LayoutsTreeDisplayContext extends BaseLayoutDisplayContext {
 			ActionKeys.MANAGE_LAYOUTS);
 	}
 
+	public boolean isShowExpandLayoutSetButton(boolean privateLayout) {
+		Group selGroup = getSelGroup();
+
+		if (privateLayout && selGroup.hasPrivateLayouts()) {
+			return true;
+		}
+
+		if (!privateLayout && selGroup.hasPublicLayouts()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isShowLayoutSetBranchesSelector() {
 		Group stagingGroup = getStagingGroup();
 
