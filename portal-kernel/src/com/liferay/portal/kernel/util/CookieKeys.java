@@ -93,6 +93,16 @@ public class CookieKeys {
 		cookie.setValue(encodedValue);
 		cookie.setVersion(0);
 
+		Map<String, Cookie> cookieMap = _getCookieMap(request);
+
+		if (cookieMap.isEmpty()) {
+			cookieMap = new HashMap<>();
+		}
+
+		cookieMap.put(StringUtil.toUpperCase(name), cookie);
+
+		request.setAttribute(CookieKeys.class.getName(), cookieMap);
+
 		response.addCookie(cookie);
 	}
 
