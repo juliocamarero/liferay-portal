@@ -2441,7 +2441,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 	}
 
 	protected void updatePriorities(long threadId, double priority) {

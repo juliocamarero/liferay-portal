@@ -189,7 +189,7 @@ public class DLAppHelperLocalServiceImpl
 
 			assetLinkLocalService.updateLinks(
 				userId, fileVersionAssetEntry.getEntryId(), assetLinkIds,
-				AssetLinkConstants.TYPE_RELATED);
+				AssetLinkConstants.TYPE_RELATED, true);
 		}
 	}
 
@@ -909,7 +909,7 @@ public class DLAppHelperLocalServiceImpl
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 
 		return assetEntry;
 	}
@@ -946,7 +946,7 @@ public class DLAppHelperLocalServiceImpl
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 
 		return assetEntry;
 	}
@@ -1061,7 +1061,7 @@ public class DLAppHelperLocalServiceImpl
 
 						assetLinkLocalService.updateLinks(
 							userId, assetEntry.getEntryId(), assetLinkEntryIds,
-							AssetLinkConstants.TYPE_RELATED);
+							AssetLinkConstants.TYPE_RELATED, true);
 
 						assetEntryLocalService.deleteEntry(draftAssetEntry);
 					}

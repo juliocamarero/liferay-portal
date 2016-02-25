@@ -800,7 +800,7 @@ public class JournalFolderLocalServiceImpl
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 	}
 
 	@Indexable(type = IndexableType.REINDEX)

@@ -1887,7 +1887,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 	}
 
 	@Override
@@ -2031,7 +2031,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 					assetLinkLocalService.updateLinks(
 						userId, assetEntry.getEntryId(), assetLinkEntryIds,
-						AssetLinkConstants.TYPE_RELATED);
+						AssetLinkConstants.TYPE_RELATED, true);
 
 					SystemEventHierarchyEntryThreadLocal.push(WikiPage.class);
 

@@ -781,7 +781,7 @@ public class CalendarBookingLocalServiceImpl
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 	}
 
 	@Override

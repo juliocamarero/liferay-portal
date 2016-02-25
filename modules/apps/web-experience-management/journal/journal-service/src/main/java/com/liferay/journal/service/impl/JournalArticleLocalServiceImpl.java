@@ -5573,7 +5573,7 @@ public class JournalArticleLocalServiceImpl
 
 		assetLinkLocalService.updateLinks(
 			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
+			AssetLinkConstants.TYPE_RELATED, true);
 	}
 
 	/**
@@ -5761,7 +5761,7 @@ public class JournalArticleLocalServiceImpl
 
 						assetLinkLocalService.updateLinks(
 							userId, assetEntry.getEntryId(), assetLinkEntryIds,
-							AssetLinkConstants.TYPE_RELATED);
+							AssetLinkConstants.TYPE_RELATED, true);
 
 						assetEntryLocalService.deleteEntry(draftAssetEntry);
 					}
