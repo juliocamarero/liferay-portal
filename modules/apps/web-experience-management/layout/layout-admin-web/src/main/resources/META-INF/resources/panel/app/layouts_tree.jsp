@@ -255,19 +255,21 @@ LayoutsTreeDisplayContext layoutsTreeDisplayContext = new LayoutsTreeDisplayCont
 
 	var expandButton = A.one('#<portlet:namespace />expandPagesLink');
 
-	expandButton.on(
-		'click',
-		function() {
-			if (!expandedTreeDialog) {
-				expandedTreeDialog = new Liferay.UrlPreview(
-					{
-						title: '<%= LanguageUtil.get(request, "pages") %>',
-						url: '<%= treeURL.toString() %>'
-					}
-				);
-			}
+	if (expandButton) {
+		expandButton.on(
+			'click',
+			function() {
+				if (!expandedTreeDialog) {
+					expandedTreeDialog = new Liferay.UrlPreview(
+						{
+							title: '<%= LanguageUtil.get(request, "pages") %>',
+							url: '<%= treeURL.toString() %>'
+						}
+					);
+				}
 
-			expandedTreeDialog.open();
-		}
-	);
+				expandedTreeDialog.open();
+			}
+		);
+	}
 </aui:script>
