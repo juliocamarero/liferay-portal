@@ -430,6 +430,14 @@ public class AssetLinkLocalServiceUtil {
 		getService().updateLinks(userId, entryId, linkEntryIds, typeId);
 	}
 
+	public static void updateLinks(long userId, long entryId,
+		long[] linkEntryIds, int typeId, boolean includeNonVisibleAssets)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.updateLinks(userId, entryId, linkEntryIds, typeId,
+			includeNonVisibleAssets);
+	}
+
 	public static AssetLinkLocalService getService() {
 		if (_service == null) {
 			_service = (AssetLinkLocalService)PortalBeanLocatorUtil.locate(AssetLinkLocalService.class.getName());

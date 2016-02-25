@@ -455,6 +455,14 @@ public class AssetLinkLocalServiceWrapper implements AssetLinkLocalService,
 	}
 
 	@Override
+	public void updateLinks(long userId, long entryId, long[] linkEntryIds,
+		int typeId, boolean includeNonVisibleAssets)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_assetLinkLocalService.updateLinks(userId, entryId, linkEntryIds,
+			typeId, includeNonVisibleAssets);
+	}
+
+	@Override
 	public AssetLinkLocalService getWrappedService() {
 		return _assetLinkLocalService;
 	}

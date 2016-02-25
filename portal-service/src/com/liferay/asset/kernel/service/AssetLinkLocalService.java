@@ -376,4 +376,7 @@ public interface AssetLinkLocalService extends BaseLocalService,
 	*/
 	public void updateLinks(long userId, long entryId, long[] linkEntryIds,
 		int typeId) throws PortalException;
+
+	public void updateLinks(long userId, long entryId, long[] linkEntryIds,
+		int typeId, boolean includeNonVisibleAssets) throws PortalException;
 }
