@@ -223,10 +223,7 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 				assetLinks.size());
 
 			for (AssetLink assetLink : assetLinks) {
-				AssetEntry assetEntry = assetEntryPersistence.fetchByPrimaryKey(
-					assetLink.getEntryId2());
-
-				if ((assetEntry != null) && assetEntry.isVisible()) {
+				if (_isVisible(assetLink.getEntryId2())) {
 					filteredAssetLinks.add(assetLink);
 				}
 			}
@@ -470,6 +467,15 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 			long userId, long entryId, long[] linkEntryIds, int typeId)
 		throws PortalException {
 
+		updateLinks(userId, entryId, linkEntryIds, typeId, false);
+	}
+
+	@Override
+	public void updateLinks(
+			long userId, long entryId, long[] linkEntryIds, int typeId,
+			boolean includeNonVisibleAssets)
+		throws PortalException {
+
 		if (linkEntryIds == null) {
 			return;
 		}
@@ -478,9 +484,13 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 
 		for (AssetLink link : links) {
 			if (((link.getEntryId1() == entryId) &&
-				 !ArrayUtil.contains(linkEntryIds, link.getEntryId2())) ||
+				 (!ArrayUtil.contains(linkEntryIds, link.getEntryId2()) &&
+				  (!includeNonVisibleAssets ||
+				   _isVisible(link.getEntryId2())))) ||
 				((link.getEntryId2() == entryId) &&
-				 !ArrayUtil.contains(linkEntryIds, link.getEntryId1()))) {
+				 (!ArrayUtil.contains(linkEntryIds, link.getEntryId1()) &&
+				  (!includeNonVisibleAssets ||
+				   _isVisible(link.getEntryId1()))))) {
 
 				deleteLink(link);
 			}
@@ -496,6 +506,17 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 				}
 			}
 		}
+	}
+
+	private boolean _isVisible(long entryId) {
+		AssetEntry assetEntry = assetEntryPersistence.fetchByPrimaryKey(
+			entryId);
+
+		if ((assetEntry != null) && assetEntry.isVisible()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private static final String _DELETE_BY_ASSET_ENTRY_GROUP_ID =
