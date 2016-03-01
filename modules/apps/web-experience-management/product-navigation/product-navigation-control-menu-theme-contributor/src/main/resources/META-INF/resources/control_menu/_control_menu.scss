@@ -6,6 +6,16 @@ body.open {
 	}
 }
 
+.has-control-menu {
+	#wrapper {
+		margin-top: $has-control-menu-margin-top-mobile;
+
+		@include sm() {
+			margin-top: $has-control-menu-margin-top-desktop;
+		}
+	}
+}
+
 .control-menu {
 	left: 0;
 	position: fixed;
