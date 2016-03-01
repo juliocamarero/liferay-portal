@@ -14,10 +14,13 @@
 
 package com.liferay.product.navigation.control.menu.theme.contributor;
 
+import com.liferay.layout.admin.web.control.menu.CustomizationSettingsProductNavigationControlMenuEntry;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.template.TemplateContextContributor;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Map;
@@ -25,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Julio Camarero
@@ -45,10 +49,25 @@ public class ProductNavigationControlMenuTemplateContextContributor
 			return;
 		}
 
-		String cssClass = GetterUtil.getString(
-			contextObjects.get("bodyCssClass"));
+		StringBuilder sb = new StringBuilder();
 
-		contextObjects.put("bodyCssClass", cssClass + " has-control-menu");
+		sb.append(GetterUtil.getString(contextObjects.get("bodyCssClass")));
+		sb.append(StringPool.SPACE);
+		sb.append("has-control-menu");
+
+		try {
+			if (_customizationSettingsProductNavigationControlMenuEntry.isShow(
+					request)) {
+
+				sb.append(StringPool.SPACE);
+				sb.append("has-customization-menu");
+			}
+		}
+		catch (PortalException pe) {
+			pe.printStackTrace();
+		}
+
+		contextObjects.put("bodyCssClass", sb.toString());
 	}
 
 	protected boolean isShowControlMenu(HttpServletRequest request) {
@@ -71,5 +90,17 @@ public class ProductNavigationControlMenuTemplateContextContributor
 
 		return true;
 	}
+
+	@Reference(unbind = "-")
+	protected void setCustomizationSettingsProductNavigationControlMenuEntry(
+		CustomizationSettingsProductNavigationControlMenuEntry
+			customizationSettingsProductNavigationControlMenuEntry) {
+
+		this._customizationSettingsProductNavigationControlMenuEntry =
+			customizationSettingsProductNavigationControlMenuEntry;
+	}
+
+	private CustomizationSettingsProductNavigationControlMenuEntry
+		_customizationSettingsProductNavigationControlMenuEntry;
 
 }
