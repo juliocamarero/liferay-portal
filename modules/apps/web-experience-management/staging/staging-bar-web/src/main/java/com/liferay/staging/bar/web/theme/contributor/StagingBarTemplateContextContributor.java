@@ -15,9 +15,13 @@
 package com.liferay.staging.bar.web.theme.contributor;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.template.TemplateContextContributor;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.staging.bar.web.product.navigation.control.menu.StagingProductNavigationControlMenuEntry;
 
 import java.util.Map;
@@ -50,6 +54,30 @@ public class StagingBarTemplateContextContributor
 					GetterUtil.getString(contextObjects.get("bodyCssClass")));
 				sb.append(StringPool.SPACE);
 				sb.append("has-staging-bar");
+
+				ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+				Layout layout = themeDisplay.getLayout();
+
+				Group group = layout.getGroup();
+
+				if (group.isStagingGroup()) {
+					sb.append(StringPool.SPACE);
+					sb.append("staging local-staging");
+				}
+				else if(themeDisplay.isShowStagingIcon() &&
+				 group.hasStagingGroup()) {
+
+					sb.append(StringPool.SPACE);
+					sb.append("live-view");
+				}
+				else if(themeDisplay.isShowStagingIcon() &&
+				 group.isStagedRemotely()) {
+
+					sb.append(StringPool.SPACE);
+					sb.append("staging remote-staging");
+				}
 
 				contextObjects.put("bodyCssClass", sb.toString());
 			}
