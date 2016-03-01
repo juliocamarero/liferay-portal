@@ -16,14 +16,6 @@
 <#if layout??>
 	<#assign page_group = layout.getGroup() />
 
-	<#if page_group.isStagingGroup()>
-		<#assign css_class = css_class + " staging local-staging" />
-	<#elseif theme_display.isShowStagingIcon() && page_group.hasStagingGroup()>
-		<#assign css_class = css_class + " live-view" />
-	<#elseif theme_display.isShowStagingIcon() && page_group.isStagedRemotely()>
-		<#assign css_class = css_class + " staging remote-staging" />
-	</#if>
-
 	<#if page_group.isControlPanel()>
 		<#assign liferay_toggle_controls = "visible" />
 	</#if>
