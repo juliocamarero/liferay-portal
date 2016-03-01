@@ -14,6 +14,14 @@ body.open {
 			margin-top: $has-control-menu-margin-top-desktop;
 		}
 	}
+
+	&.has-customization-menu #wrapper {
+		margin-top: ($has-control-menu-margin-top-mobile + $has-customization-menu-margin-top-mobile);
+
+		@include sm() {
+			margin-top: ($has-control-menu-margin-top-desktop + $has-customization-menu-margin-top-desktop);
+		}
+	}
 }
 
 .control-menu {
