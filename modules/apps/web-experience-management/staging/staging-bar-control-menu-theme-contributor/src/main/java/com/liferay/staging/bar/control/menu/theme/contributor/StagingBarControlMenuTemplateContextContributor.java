@@ -12,16 +12,18 @@
  * details.
  */
 
-package com.liferay.product.navigation.control.menu.theme.contributor;
+package com.liferay.staging.bar.control.menu.theme.contributor;
 
-import com.liferay.layout.admin.web.control.menu.CustomizationSettingsProductNavigationControlMenuEntry;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.template.TemplateContextContributor;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.staging.bar.web.product.navigation.control.menu.StagingProductNavigationControlMenuEntry;
 
 import java.util.Map;
 
@@ -31,14 +33,14 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Julio Camarero
+ * @author Jürgen Kappler
  */
 @Component(
 	immediate = true,
 	property = {"type=" + TemplateContextContributor.TYPE_THEME},
 	service = TemplateContextContributor.class
 )
-public class ProductNavigationControlMenuTemplateContextContributor
+public class StagingBarControlMenuTemplateContextContributor
 	implements TemplateContextContributor {
 
 	@Override
@@ -49,25 +51,45 @@ public class ProductNavigationControlMenuTemplateContextContributor
 			return;
 		}
 
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(GetterUtil.getString(contextObjects.get("bodyCssClass")));
-		sb.append(StringPool.SPACE);
-		sb.append("has-control-menu");
-
 		try {
-			if (_customizationSettingsProductNavigationControlMenuEntry.isShow(
-					request)) {
+			if (_stagingProductNavigationControlMenuEntry.isShow(request)) {
+				StringBuilder sb = new StringBuilder();
 
+				sb.append(
+					GetterUtil.getString(contextObjects.get("bodyCssClass")));
 				sb.append(StringPool.SPACE);
-				sb.append("has-customization-menu");
+				sb.append("has-staging-bar");
+
+				ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+				Layout layout = themeDisplay.getLayout();
+
+				Group group = layout.getGroup();
+
+				if (group.isStagingGroup()) {
+					sb.append(StringPool.SPACE);
+					sb.append("staging local-staging");
+				}
+				else if(themeDisplay.isShowStagingIcon() &&
+				 group.hasStagingGroup()) {
+
+					sb.append(StringPool.SPACE);
+					sb.append("live-view");
+				}
+				else if(themeDisplay.isShowStagingIcon() &&
+				 group.isStagedRemotely()) {
+
+					sb.append(StringPool.SPACE);
+					sb.append("staging remote-staging");
+				}
+
+				contextObjects.put("bodyCssClass", sb.toString());
 			}
 		}
 		catch (PortalException pe) {
 			pe.printStackTrace();
 		}
-
-		contextObjects.put("bodyCssClass", sb.toString());
 	}
 
 	protected boolean isShowControlMenu(HttpServletRequest request) {
@@ -93,14 +115,14 @@ public class ProductNavigationControlMenuTemplateContextContributor
 
 	@Reference(unbind = "-")
 	protected void setCustomizationSettingsProductNavigationControlMenuEntry(
-		CustomizationSettingsProductNavigationControlMenuEntry
-			customizationSettingsProductNavigationControlMenuEntry) {
+		StagingProductNavigationControlMenuEntry
+			stagingProductNavigationControlMenuEntry) {
 
-		this._customizationSettingsProductNavigationControlMenuEntry =
-			customizationSettingsProductNavigationControlMenuEntry;
+		this._stagingProductNavigationControlMenuEntry =
+			stagingProductNavigationControlMenuEntry;
 	}
 
-	private CustomizationSettingsProductNavigationControlMenuEntry
-		_customizationSettingsProductNavigationControlMenuEntry;
+	private StagingProductNavigationControlMenuEntry
+		_stagingProductNavigationControlMenuEntry;
 
 }

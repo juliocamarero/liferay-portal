@@ -1,0 +1,8 @@
+Bundle-Name: Liferay Staging Bar Control Menu Theme Contributor
+Bundle-SymbolicName: com.liferay.staging.bar.control.menu.theme.contributor
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Product Navigation
+Liferay-Theme-Contributor-Type: Data Management
+Web-ContextPath: /stagin-bar-control-menu-theme-contributor
+-include: ../../../../../marketplace/web-content-management/bnd.bnd
