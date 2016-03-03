@@ -407,19 +407,14 @@ public class AssetUtil {
 					themeDisplay.getScopeGroupId()),
 				themeDisplay.getLocale());
 
-			if ((classTypeIds.length == 0) || classTypes.isEmpty()) {
-				PortletURL addPortletURL = getAddPortletURL(
-					liferayPortletRequest, liferayPortletResponse, groupId,
-					className, 0, allAssetCategoryIds, allAssetTagNames,
-					redirect);
-
-				if (addPortletURL != null) {
-					addPortletURLs.put(className, addPortletURL);
-				}
-			}
+			boolean addDefaultPortletURL = true;
 
 			for (ClassType classType : classTypes) {
 				long classTypeId = classType.getClassTypeId();
+
+				if (classTypeId == 0) {
+					addDefaultPortletURL = false;
+				}
 
 				if (ArrayUtil.contains(classTypeIds, classTypeId) ||
 					(classTypeIds.length == 0)) {
@@ -436,6 +431,19 @@ public class AssetUtil {
 
 						addPortletURLs.put(mesage, addPortletURL);
 					}
+				}
+			}
+
+			if (((classTypeIds.length == 0) || classTypes.isEmpty()) &&
+				addDefaultPortletURL) {
+
+				PortletURL addPortletURL = getAddPortletURL(
+					liferayPortletRequest, liferayPortletResponse, groupId,
+					className, 0, allAssetCategoryIds, allAssetTagNames,
+					redirect);
+
+				if (addPortletURL != null) {
+					addPortletURLs.put(className, addPortletURL);
 				}
 			}
 		}
