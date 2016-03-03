@@ -16,6 +16,8 @@ package com.liferay.staging.bar.web.theme.contributor;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.template.TemplateContextContributor;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -81,7 +83,7 @@ public class StagingBarTemplateContextContributor
 			}
 		}
 		catch (PortalException pe) {
-			pe.printStackTrace();
+			_log.error(pe, pe);
 		}
 
 		contextObjects.put("show_staging", themeDisplay.isShowStagingIcon());
@@ -97,9 +99,12 @@ public class StagingBarTemplateContextContributor
 		StagingProductNavigationControlMenuEntry
 			stagingProductNavigationControlMenuEntry) {
 
-		this._stagingProductNavigationControlMenuEntry =
+		_stagingProductNavigationControlMenuEntry =
 			stagingProductNavigationControlMenuEntry;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		StagingBarTemplateContextContributor.class);
 
 	private StagingProductNavigationControlMenuEntry
 		_stagingProductNavigationControlMenuEntry;

@@ -16,6 +16,8 @@ package com.liferay.layout.admin.web.theme.contributor;
 
 import com.liferay.layout.admin.web.control.menu.CustomizationSettingsProductNavigationControlMenuEntry;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.template.TemplateContextContributor;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -57,7 +59,7 @@ public class LayoutCustomizationTemplateContextContributor
 			}
 		}
 		catch (PortalException pe) {
-			pe.printStackTrace();
+			_log.error(pe, pe);
 		}
 	}
 
@@ -66,9 +68,12 @@ public class LayoutCustomizationTemplateContextContributor
 		CustomizationSettingsProductNavigationControlMenuEntry
 			customizationSettingsProductNavigationControlMenuEntry) {
 
-		this._customizationSettingsProductNavigationControlMenuEntry =
+		_customizationSettingsProductNavigationControlMenuEntry =
 			customizationSettingsProductNavigationControlMenuEntry;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		LayoutCustomizationTemplateContextContributor.class);
 
 	private CustomizationSettingsProductNavigationControlMenuEntry
 		_customizationSettingsProductNavigationControlMenuEntry;
