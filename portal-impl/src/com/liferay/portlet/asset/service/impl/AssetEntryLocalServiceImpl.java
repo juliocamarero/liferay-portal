@@ -21,6 +21,7 @@ import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLink;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
@@ -48,6 +49,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.service.base.AssetEntryLocalServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
@@ -86,7 +88,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		// Tags
 
 		for (AssetTag tag : tags) {
-			if (entry.isVisible()) {
+			if (isModifyAssetCount(entry)) {
 				assetTagLocalService.decrementAssetCount(
 					tag.getTagId(), entry.getClassNameId());
 			}
@@ -668,7 +670,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 			assetEntryPersistence.setAssetTags(entry.getEntryId(), tags);
 
-			if (entry.isVisible()) {
+			if (isModifyAssetCount(entry)) {
 				boolean isNew = entry.isNew();
 
 				assetEntryPersistence.updateImpl(entry);
@@ -984,6 +986,31 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		}
 
 		return classNameIds;
+	}
+
+	protected boolean isModifyAssetCount(AssetEntry entry)
+		throws PortalException {
+
+		if (entry.isVisible()) {
+			return true;
+		}
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.
+				getAssetRendererFactoryByClassNameId(entry.getClassNameId());
+
+		if (assetRendererFactory == null) {
+			return true;
+		}
+
+		AssetRenderer<?> assetRenderer = assetRendererFactory.getAssetRenderer(
+			entry.getClassPK());
+
+		if (assetRenderer.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected void reindex(AssetEntry entry) throws PortalException {
