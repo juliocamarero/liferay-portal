@@ -60,6 +60,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.comparator.LayoutComparator;
 import com.liferay.portal.kernel.util.comparator.LayoutPriorityComparator;
 import com.liferay.portal.service.base.LayoutLocalServiceBaseImpl;
+import com.liferay.portal.util.LayoutThreadLocal;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.sites.kernel.util.Sites;
 import com.liferay.sites.kernel.util.SitesUtil;
@@ -2611,7 +2612,11 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			long plid, long parentPlid, int priority)
 		throws PortalException {
 
+		LayoutThreadLocal.setLocalUpdate(true);
+
 		Layout layout = updateParentLayoutId(plid, parentPlid);
+
+		LayoutThreadLocal.setLocalUpdate(false);
 
 		return updatePriority(layout, priority);
 	}
