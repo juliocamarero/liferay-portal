@@ -372,6 +372,10 @@ public class AssetBrowserDisplayContext {
 	}
 
 	public int getTotal() {
+		return getTotal(getFilterGroupIds());
+	}
+
+	public int getTotal(long[] groupIds) {
 		ThemeDisplay themeDisplay = (ThemeDisplay) _request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -381,17 +385,16 @@ public class AssetBrowserDisplayContext {
 
 		if (AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE) {
 			total = AssetEntryLocalServiceUtil.getEntriesCount(
-				getFilterGroupIds(),
-				new long[] {assetRendererFactory.getClassNameId()},
+				groupIds, new long[] {assetRendererFactory.getClassNameId()},
 				getKeywords(), getKeywords(), getKeywords(), getKeywords(),
 				getListable(), false, false);
 		}
 		else {
 			Hits hits = AssetEntryLocalServiceUtil.search(
-				themeDisplay.getCompanyId(), getFilterGroupIds(),
-				themeDisplay.getUserId(), assetRendererFactory.getClassName(),
-				getSubtypeSelectionId(), getKeywords(), isShowNonindexable(),
-				getStatuses(), QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+				themeDisplay.getCompanyId(), groupIds, themeDisplay.getUserId(),
+				assetRendererFactory.getClassName(), getSubtypeSelectionId(),
+				getKeywords(), isShowNonindexable(), getStatuses(),
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 			total = hits.getLength();
 		}
@@ -410,7 +413,7 @@ public class AssetBrowserDisplayContext {
 	}
 
 	public boolean isDisabledManagementBar() {
-		if (getTotal() > 0) {
+		if (getTotal(getSelectedGroupIds()) > 0) {
 			return false;
 		}
 
