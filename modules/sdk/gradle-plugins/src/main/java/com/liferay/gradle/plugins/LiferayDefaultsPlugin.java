@@ -869,7 +869,9 @@ public class LiferayDefaultsPlugin extends BaseDefaultsPlugin<LiferayPlugin> {
 		Map<String, Object> bundleDefaultInstructions = new HashMap<>();
 
 		bundleDefaultInstructions.put(Constants.BUNDLE_VENDOR, "Liferay, Inc.");
-		bundleDefaultInstructions.put(Constants.DONOTCOPY, "(.touch)");
+		bundleDefaultInstructions.put(
+			Constants.DONOTCOPY,
+			"(" + LiferayOSGiExtension.DONOTCOPY_DEFAULT + "|.touch" + ")");
 		bundleDefaultInstructions.put(Constants.SOURCES, "false");
 
 		if (publishing) {

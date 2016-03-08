@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.liferay</groupId>
   <artifactId>com.liferay.source.formatter</artifactId>
-  <version>1.0.156</version>
+  <version>1.0.157</version>
   <licenses>
     <license>
       <name>LGPL 2.1</name>
@@ -31,6 +31,12 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.liferay.portal</groupId>
+      <artifactId>com.liferay.portal.kernel</artifactId>
+      <version>1.0.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
       <version>1.9.4</version>
@@ -46,12 +52,6 @@
       <groupId>com.liferay.portal</groupId>
       <artifactId>com.liferay.util.java</artifactId>
       <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>com.liferay.portal.kernel</artifactId>
-      <version>1.0.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

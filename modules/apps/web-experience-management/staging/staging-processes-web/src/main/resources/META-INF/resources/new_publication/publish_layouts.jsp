@@ -168,6 +168,7 @@ renderResponse.setTitle(!configuredPublish ? LanguageUtil.get(request, "new-publ
 	<aui:input name="currentURL" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="redirect" type="hidden" value="<%= basePortletURL %>" />
 	<aui:input name="groupId" type="hidden" value="<%= stagingGroupId %>" />
+	<aui:input name="privateLayout" type="hidden" value="<%= privateLayout %>" />
 	<aui:input name="layoutSetBranchName" type="hidden" value="<%= layoutSetBranchName %>" />
 	<aui:input name="lastImportUserName" type="hidden" value="<%= user.getFullName() %>" />
 	<aui:input name="lastImportUserUuid" type="hidden" value="<%= String.valueOf(user.getUserUuid()) %>" />
@@ -274,12 +275,17 @@ renderResponse.setTitle(!configuredPublish ? LanguageUtil.get(request, "new-publ
 				</aui:fieldset>
 
 				<c:if test="<%= !group.isCompany() %>">
+
+					<%
+					request.setAttribute("select_pages.jsp-parameterMap", parameterMap);
+					%>
+
 					<aui:fieldset collapsible="<%= true %>" cssClass="options-group" label="pages">
 						<liferay-util:include page="/new_publication/select_pages.jsp" servletContext="<%= application %>">
 							<liferay-util:param name="<%= Constants.CMD %>" value="<%= cmd %>" />
 							<liferay-util:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 							<liferay-util:param name="layoutSetBranchId" value="<%= String.valueOf(layoutSetBranchId) %>" />
-							<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+							<liferay-util:param name="privateLayout" value='<%= MapUtil.getString(exportImportConfigurationSettingsMap, "privateLayout", String.valueOf(privateLayout)) %>' />
 							<liferay-util:param name="treeId" value="<%= treeId %>" />
 							<liferay-util:param name="selectedLayoutIds" value="<%= StringUtil.merge(selectedLayoutIds) %>" />
 							<liferay-util:param name="disableInputs" value="<%= String.valueOf(configuredPublish) %>" />

@@ -53,13 +53,49 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		return _INCLUDES;
 	}
 
-	protected static String checkAnnotationParameterProperties(
+	protected String applyDiamondOperator(String content) {
+		Matcher matcher = _diamondOperatorPattern.matcher(content);
+
+		while (matcher.find()) {
+			String match = matcher.group();
+			String whitespace = matcher.group(4);
+			String parameterType = matcher.group(5);
+
+			String replacement = StringUtil.replaceFirst(
+				match, whitespace + "<" + parameterType + ">", "<>");
+
+			content = StringUtil.replace(content, match, replacement);
+		}
+
+		return content;
+	}
+
+	protected String checkAnnotationMetaTypeProperties(
+		String content, String annotation) {
+
+		if (!annotation.contains("@Meta.")) {
+			return content;
+		}
+
+		Matcher matcher = _annotationMetaTypePattern.matcher(annotation);
+
+		if (!matcher.find()) {
+			return content;
+		}
+
+		String newAnnotation = StringUtil.replaceFirst(
+			annotation, StringPool.PERCENT, StringPool.BLANK, matcher.start());
+
+		return StringUtil.replace(content, annotation, newAnnotation);
+	}
+
+	protected String checkAnnotationParameterProperties(
 		String content, String annotation) {
 
 		int x = annotation.indexOf("property = {");
 
 		if (x == -1) {
-			return null;
+			return content;
 		}
 
 		int y = x;
@@ -100,7 +136,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			}
 
 			if ((x == -1) || (y == -1) || (z == -1)) {
-				return null;
+				return content;
 			}
 
 			String propertyName = parameterProperty.substring(x + 1, y);
@@ -121,23 +157,6 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 			previousPropertyName = propertyName;
 			previousPropertyNameAndValue = propertyNameAndValue;
-		}
-
-		return null;
-	}
-
-	protected String applyDiamondOperator(String content) {
-		Matcher matcher = _diamondOperatorPattern.matcher(content);
-
-		while (matcher.find()) {
-			String match = matcher.group();
-			String whitespace = matcher.group(4);
-			String parameterType = matcher.group(5);
-
-			String replacement = StringUtil.replaceFirst(
-				match, whitespace + "<" + parameterType + ">", "<>");
-
-			content = StringUtil.replace(content, match, replacement);
 		}
 
 		return content;
@@ -436,6 +455,21 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		}
 	}
 
+	protected void checkUpgradeClass(String fileName, String content) {
+		Matcher matcher = _upgradeExtendsPattern.matcher(content);
+
+		if (!matcher.find()) {
+			return;
+		}
+
+		if (content.contains("\tupgradeTable(") &&
+			!content.contains("void upgradeTable(")) {
+
+			processErrorMessage(
+				fileName, "Use UpgradeProcess.alter: " + fileName);
+		}
+	}
+
 	protected void checkXMLSecurity(
 		String fileName, String content, boolean isRunOutsidePortalExclusion) {
 
@@ -600,6 +634,31 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 						"\n" + matcher.group(1) + "}\n", matcher.start(3) - 1);
 
 					continue;
+				}
+			}
+
+			matcher = _incorrectLineBreakPattern5.matcher(newContent);
+
+			if (matcher.find()) {
+				String tabs = matcher.group(2);
+
+				Pattern pattern = Pattern.compile(
+					"\n" + tabs + "([^\t]{2})(?!.*\n" + tabs + "[^\t])",
+					Pattern.DOTALL);
+
+				Matcher matcher2 = pattern.matcher(
+					newContent.substring(0, matcher.start(2)));
+
+				if (matcher2.find()) {
+					String match = matcher2.group(1);
+
+					if (!match.equals(").")) {
+						newContent = StringUtil.replaceFirst(
+							newContent, "\n" + matcher.group(2), StringPool.BLANK,
+							matcher.end(1));
+
+						continue;
+					}
 				}
 			}
 
@@ -906,6 +965,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 		checkPropertyUtils(fileName, newContent);
 
+		// LPS-63652
+
+		checkUpgradeClass(fileName, newContent);
+
 		newContent = getCombinedLinesContent(
 			newContent, _combinedLinesPattern1);
 		newContent = getCombinedLinesContent(
@@ -1084,7 +1147,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				String codeBlock = content.substring(pos + 1, matcher1.end());
 
 				String firstLine = codeBlock.substring(
-					0, codeBlock.indexOf(CharPool.NEW_LINE));
+					0, codeBlock.indexOf(CharPool.NEW_LINE) + 1);
 
 				Matcher matcher2 = _incorrectCloseCurlyBracePattern2.matcher(
 					firstLine);
@@ -1257,7 +1320,10 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					String newContent = checkAnnotationParameterProperties(
 						content, annotation);
 
-					if (newContent != null) {
+					newContent = checkAnnotationMetaTypeProperties(
+						newContent, annotation);
+
+					if (!newContent.equals(content)) {
 						return formatAnnotations(
 							fileName, javaTermName, newContent, indent);
 					}
@@ -4028,6 +4094,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 
 	private boolean _addMissingDeprecationReleaseVersion;
 	private boolean _allowUseServiceUtilInServiceImpl;
+	private Pattern _annotationMetaTypePattern = Pattern.compile(
+		"\\s(name|description) = \"%");
 	private Map<String, Tuple> _bndInheritRequiredTupleMap = new HashMap<>();
 	private Pattern _catchExceptionPattern = Pattern.compile(
 		"\n(\t+)catch \\((.+Exception) (.+)\\) \\{\n");
@@ -4053,7 +4121,7 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 	private Pattern _incorrectCloseCurlyBracePattern1 = Pattern.compile(
 		"\n(.+)\n\n(\t+)}\n");
 	private Pattern _incorrectCloseCurlyBracePattern2 = Pattern.compile(
-		"(\t| )@?(class |enum |interface |new )");
+		"(\t| )@?(class|enum|interface|new)\\s");
 	private Pattern _incorrectLineBreakPattern1 = Pattern.compile(
 		"\t(catch |else |finally |for |if |try |while ).*\\{\n\n\t+\\w");
 	private Pattern _incorrectLineBreakPattern2 = Pattern.compile(
@@ -4062,6 +4130,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 		", new .*\\(.*\\) \\{\n");
 	private Pattern _incorrectLineBreakPattern4 = Pattern.compile(
 		"\n(\t*)(.*\\) \\{)([\t ]*\\}\n)");
+	private Pattern _incorrectLineBreakPattern5 = Pattern.compile(
+		"\n(\t*).*\\}\n(\t*)\\);");
 	private Pattern[] _javaSerializationVulnerabilityPatterns = new Pattern[] {
 		Pattern.compile(
 			".*(new [a-z\\.\\s]*ObjectInputStream).*", Pattern.DOTALL),
@@ -4108,6 +4178,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 	private List<String> _testAnnotationsExcludes;
 	private Pattern _throwsSystemExceptionPattern = Pattern.compile(
 		"(\n\t+.*)throws(.*) SystemException(.*)( \\{|;\n)");
+	private Pattern _upgradeExtendsPattern = Pattern.compile(
+		"extends (BaseUpgrade|UpgradeProcess )");
 	private List<String> _upgradeServiceUtilExcludes;
 
 }

@@ -25,8 +25,6 @@ if (groupId > 0) {
 	group = GroupLocalServiceUtil.getGroup(groupId);
 }
 
-long layoutSetBranchId = ParamUtil.getLong(request, "layoutSetBranchId");
-
 privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
 
@@ -41,58 +39,43 @@ Map<String, String[]> parameterMap = (Map<String, String[]>)GetterUtil.getObject
 			<c:choose>
 				<c:when test="<%= privateLayout %>">
 					<li>
-						<liferay-portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="changeToPublicLayoutsURL">
-							<portlet:param name="mvcRenderCommandName" value="editPublishConfiguration" />
-							<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
-						</liferay-portlet:renderURL>
-
-						<aui:button href="<%= changeToPublicLayoutsURL %>" value="change-to-public-pages" />
+						<aui:button id="changeToPrivateLayoutsButton" value="change-to-public-pages" />
 					</li>
 				</c:when>
 				<c:otherwise>
 					<li>
-						<liferay-portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="changeToPrivateLayoutsURL">
-							<portlet:param name="mvcRenderCommandName" value="editPublishConfiguration" />
-							<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
-						</liferay-portlet:renderURL>
-
-						<aui:button href="<%= changeToPrivateLayoutsURL %>" value="change-to-private-pages" />
+						<aui:button id="changeToPublicLayoutsButton" value="change-to-private-pages" />
 					</li>
 				</c:otherwise>
 			</c:choose>
 
-			<c:choose>
-				<c:when test="<%= layoutSetBranchId > 0 %>">
-					<aui:input name="layoutSetBranchId" type="hidden" value="<%= layoutSetBranchId %>" />
-				</c:when>
-				<c:otherwise>
-					<c:if test="<%= LayoutStagingUtil.isBranchingLayoutSet(group, privateLayout) %>">
+			<c:if test="<%= LayoutStagingUtil.isBranchingLayoutSet(group, privateLayout) %>">
 
-						<%
-						List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(group.getGroupId(), privateLayout);
-						%>
+				<%
+				List<LayoutSetBranch> layoutSetBranches = LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(group.getGroupId(), privateLayout);
 
-						<aui:select label="site-pages-variation" name="layoutSetBranchId">
+				long layoutSetBranchId = MapUtil.getLong(parameterMap, "layoutSetBranchId");
+				%>
 
-							<%
-							for (LayoutSetBranch layoutSetBranch : layoutSetBranches) {
-								boolean selected = false;
+				<aui:select label="site-pages-variation" name="layoutSetBranchId">
 
-								if (layoutSetBranch.isMaster()) {
-									selected = true;
-								}
-							%>
+					<%
+					for (LayoutSetBranch layoutSetBranch : layoutSetBranches) {
+						boolean selected = false;
 
-							<aui:option label="<%= HtmlUtil.escape(layoutSetBranch.getName()) %>" selected="<%= selected %>" value="<%= layoutSetBranch.getLayoutSetBranchId() %>" />
+						if ((layoutSetBranchId == layoutSetBranch.getLayoutSetBranchId()) || ((layoutSetBranchId == 0) && layoutSetBranch.isMaster())) {
+							selected = true;
+						}
+					%>
 
-							<%
-							}
-							%>
+					<aui:option label="<%= HtmlUtil.escape(layoutSetBranch.getName()) %>" selected="<%= selected %>" value="<%= layoutSetBranch.getLayoutSetBranchId() %>" />
 
-						</aui:select>
-					</c:if>
-				</c:otherwise>
-			</c:choose>
+					<%
+					}
+					%>
+
+				</aui:select>
+			</c:if>
 		</aui:fieldset>
 	</li>
 
