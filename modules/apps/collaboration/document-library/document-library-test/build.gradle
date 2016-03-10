@@ -1,7 +1,7 @@
 dependencies {
+	testCompile group: "com.liferay", name: "com.liferay.dynamic.data.mapping.api", version: "1.0.0"
 	testCompile project(":apps:collaboration:document-library:document-library-service")
 	testCompile project(":apps:collaboration:document-library:document-library-web")
-	testCompile project(":apps:forms-and-workflow:dynamic-data-mapping:dynamic-data-mapping-api")
 	testCompile project(":apps:forms-and-workflow:dynamic-data-mapping:dynamic-data-mapping-io")
 	testCompile project(":apps:foundation:portal-search:portal-search")
 
