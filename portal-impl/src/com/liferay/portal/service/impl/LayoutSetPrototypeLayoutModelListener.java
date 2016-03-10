@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.LayoutSetPrototypeUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.util.LayoutThreadLocal;
 import com.liferay.sites.kernel.util.Sites;
 
 import java.util.Date;
@@ -52,6 +53,10 @@ public class LayoutSetPrototypeLayoutModelListener
 	}
 
 	protected void updateLayoutSetPrototype(Layout layout, Date modifiedDate) {
+		if (LayoutThreadLocal.isLocalUpdate()) {
+			return;
+		}
+
 		if (layout == null) {
 			return;
 		}
