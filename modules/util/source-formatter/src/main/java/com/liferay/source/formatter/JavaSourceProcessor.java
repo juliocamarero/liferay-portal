@@ -3186,10 +3186,11 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 				classLine, StringPool.TAB + StringPool.SPACE, StringPool.TAB);
 		}
 
-		String classSingleLine = StringUtil.replace(
-			classLine.substring(1),
-			new String[] {StringPool.TAB, StringPool.NEW_LINE},
-			new String[] {StringPool.BLANK, StringPool.SPACE});
+		String classSingleLine = StringUtil.removeChar(
+			classLine.substring(1), CharPool.TAB);
+
+		classSingleLine = StringUtil.replace(
+			classSingleLine, CharPool.NEW_LINE, CharPool.SPACE);
 
 		classSingleLine = indent + classSingleLine;
 

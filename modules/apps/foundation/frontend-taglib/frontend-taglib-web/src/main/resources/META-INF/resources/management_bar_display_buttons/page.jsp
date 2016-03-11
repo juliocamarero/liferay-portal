@@ -26,6 +26,12 @@ String selectedDisplayStyle = (String)request.getAttribute("liferay-frontend:man
 PortletURL displayStyleURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
 
 for (String displayStyle : defaultViews) {
+	String cssClass = StringPool.BLANK;
+
+	if (displayStyle.equals("list")) {
+		cssClass = "hidden-xs";
+	}
+
 	displayStyleURL.setParameter("displayStyle", displayStyle);
 
 	String icon = "table2";
@@ -40,6 +46,7 @@ for (String displayStyle : defaultViews) {
 
 	<liferay-frontend:management-bar-button
 		active="<%= displayStyle.equals(selectedDisplayStyle) %>"
+		cssClass="<%= cssClass %>"
 		disabled="<%= disabled || !ArrayUtil.contains(displayViews, displayStyle) %>"
 		href="<%= displayStyleURL.toString() %>"
 		icon="<%= icon %>"
