@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.service.base.AssetEntryLocalServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
@@ -694,7 +695,20 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 			assetEntryPersistence.setAssetTags(entry.getEntryId(), tags);
 
-			if (entry.isVisible()) {
+			boolean updateTagsUsage = true;
+
+			int status = entry.getAssetRenderer().getStatus();
+
+			updateTagsUsage = !ArrayUtil.contains(
+				new int[]{
+					WorkflowConstants.STATUS_DENIED,
+					WorkflowConstants.STATUS_DRAFT,
+					WorkflowConstants.STATUS_EXPIRED,
+					WorkflowConstants.STATUS_IN_TRASH,
+					WorkflowConstants.STATUS_INCOMPLETE
+				}, status);
+
+			if (updateTagsUsage) {
 				boolean isNew = entry.isNew();
 
 				assetEntryPersistence.updateImpl(entry);
