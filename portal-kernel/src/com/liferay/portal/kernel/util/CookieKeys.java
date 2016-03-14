@@ -98,6 +98,8 @@ public class CookieKeys {
 		Map<String, Cookie> cookieMap = _getCookieMap(request);
 
 		cookieMap.put(StringUtil.toUpperCase(name), cookie);
+
+		request.setAttribute(CookieKeys.class.getName(), cookieMap);
 	}
 
 	public static void addSupportCookie(
