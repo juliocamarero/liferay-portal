@@ -413,6 +413,9 @@
 		padding-top: 11px;
 		position: relative;
 
+		&.tree-node-over, &.tree-node-selected {
+			background: $product-menu-tree-active-bg;
+		}
 		.tree-hitarea {
 			color: $product-menu-tree-hitarea-color;
 			padding-right: 0;
