@@ -1,12 +1,10 @@
 .lfr-alert-container {
-	position: absolute;
-	right: auto;
-	top: auto;
-	width: 100%;
-	z-index: 1;
-
 	.lfr-alert-wrapper {
-		margin-bottom: 5px;
+		margin: 0 -15px 5px -15px;
 		overflow: hidden;
+
+		.alert {
+			margin-bottom: 0;
+		}
 	}
 }
