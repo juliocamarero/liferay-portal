@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -263,7 +264,7 @@ public class SiteBrowserDisplayContext {
 
 		results.addAll(groups);
 
-		groupSearch.setResults(results);
+		groupSearch.setResults(ListUtil.unique(results));
 
 		return groupSearch;
 	}
