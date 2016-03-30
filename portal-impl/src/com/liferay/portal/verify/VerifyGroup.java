@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.GroupFriendlyURLException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -62,6 +63,44 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  */
 public class VerifyGroup extends VerifyProcess {
+
+	protected void checkGlobalFriendlyURL(long companyId)
+		throws PortalException {
+
+		Group globalFriendlyURLGroup =
+			GroupLocalServiceUtil.fetchFriendlyURLGroup(
+				companyId, GroupConstants.GLOBAL_FRIENDLY_URL);
+
+		if (globalFriendlyURLGroup == null) {
+			return;
+		}
+
+		int increment = 1;
+
+		String friendlyURL = GroupConstants.GLOBAL_FRIENDLY_URL + increment;
+
+		Group group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
+			companyId, friendlyURL);
+
+		while (group != null) {
+			friendlyURL = friendlyURL + increment;
+
+			group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
+				companyId, friendlyURL);
+
+			increment++;
+		}
+
+		if (_log.isInfoEnabled()) {
+			_log.info(
+				"Modifying already present friendlyURL " +
+					globalFriendlyURLGroup.getFriendlyURL() + " to " +
+						friendlyURL);
+		}
+
+		GroupLocalServiceUtil.updateFriendlyURL(
+			globalFriendlyURLGroup.getGroupId(), friendlyURL);
+	}
 
 	@Override
 	protected void doVerify() throws Exception {
@@ -117,6 +156,8 @@ public class VerifyGroup extends VerifyProcess {
 
 				if (group.isCompany() && !group.isCompanyStagingGroup()) {
 					friendlyURL = GroupConstants.GLOBAL_FRIENDLY_URL;
+
+					checkGlobalFriendlyURL(group.getCompanyId());
 				}
 				else if (group.isUser()) {
 					user = UserLocalServiceUtil.getUserById(group.getClassPK());
