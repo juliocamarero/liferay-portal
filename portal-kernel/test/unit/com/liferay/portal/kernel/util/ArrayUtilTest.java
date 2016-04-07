@@ -856,6 +856,38 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void testSubset() {
+		Assert.assertArrayEquals(
+			new boolean[] {true, false},
+			ArrayUtil.subset(new boolean[] {true, false, true}, 0, 2));
+		Assert.assertArrayEquals(
+			new byte[] {1, 2, 3},
+			ArrayUtil.subset(new byte[] {1, 2, 3, 4}, 0, 3));
+		Assert.assertArrayEquals(
+			new char[] {'a','b','c'},
+			ArrayUtil.subset(new char[] {'a','b','c','d'}, 0, 3));
+		Assert.assertArrayEquals(
+			new double[] {1.0, 2.0, 3.0},
+			ArrayUtil.subset(new double[] {1.0, 2.0, 3.0, 4.0}, 0, 3), 0.0001);
+		Assert.assertArrayEquals(
+			new float[] {1.0f, 2.0f, 3.0f},
+			ArrayUtil.subset(new float[] {1.0f, 2.0f, 3.0f, 4.0f}, 0, 3),
+			0.0001f);
+		Assert.assertArrayEquals(
+			new int[] {1, 2, 3},
+			ArrayUtil.subset(new int[] {1, 2, 3, 4}, 0, 3));
+		Assert.assertArrayEquals(
+			new long[] {1, 2, 3},
+			ArrayUtil.subset(new long[] {1, 2, 3, 4}, 0, 3));
+		Assert.assertArrayEquals(
+			new short[] {1, 2, 3},
+			ArrayUtil.subset(new short[] {1, 2, 3, 4}, 0, 3));
+		Assert.assertArrayEquals(
+			new Integer[] {1, 2, 3},
+			ArrayUtil.subset(new Integer[] {1, 2, 3, 4}, 0, 3));
+	}
+
+	@Test
 	public void testToDoubleArray() throws Exception {
 		List<Double> list = new ArrayList<>();
 
