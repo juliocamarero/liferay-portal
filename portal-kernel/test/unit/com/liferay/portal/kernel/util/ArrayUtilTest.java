@@ -959,6 +959,32 @@ public class ArrayUtilTest {
 		}
 	}
 
+	@Test
+	public void testUnique() {
+		Assert.assertArrayEquals(
+			new byte[] {1, 2, 3}, ArrayUtil.unique(new byte[] {1, 2, 3, 3, 2}));
+		Assert.assertArrayEquals(
+			new double[] {1.0, 2.0, 3.0},
+			ArrayUtil.unique(new double[] {1.0, 2.0, 3.0, 1.0, 2.0, 3.0}),
+			0.0001);
+		Assert.assertArrayEquals(
+			new float[] {1.0f, 2.0f, 3.0f},
+			ArrayUtil.unique(new float[] {1.0f, 2.0f, 3.0f, 3.0f, 2.0f}),
+			0.0001f);
+		Assert.assertArrayEquals(
+			new int[] {1, 2, 3}, ArrayUtil.unique(new int[] {1, 2, 3, 3, 2}));
+		Assert.assertArrayEquals(
+			new long[] {1L, 2L, 3L},
+			ArrayUtil.unique(new long[] {1L, 2L, 3L, 3L, 2L}));
+		Assert.assertArrayEquals(
+			new short[] {1, 2, 3},
+			ArrayUtil.unique(new short[] {1, 2, 3, 3, 2}));
+		Assert.assertArrayEquals(
+			new String[] {"hello", "world"},
+			ArrayUtil.unique(
+				new String[] {"hello", "hello", "world", "world"}));
+	}
+
 	private final PredicateFilter<Double> _doublePredicateFilter =
 		new PredicateFilter<Double>() {
 
