@@ -62,8 +62,9 @@ public class ArrayUtilTest {
 			ArrayUtil.append(new float[] {1.0f, 2.0f, 3.0f}, 4.0f), 0.0001f);
 		Assert.assertArrayEquals(
 			new float[] {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f},
-			ArrayUtil.append(new float[] {1.0f, 2.0f, 3.0f},
-				new float[] {4.0f, 5.0f, 6.0f}), 0.0001f);
+			ArrayUtil.append(
+				new float[] {1.0f, 2.0f, 3.0f}, new float[] {4.0f, 5.0f, 6.0f}),
+			0.0001f);
 		Assert.assertArrayEquals(
 			new int[] {1, 2, 3, 4},
 			ArrayUtil.append(new int[] {1, 2, 3}, 4));
@@ -82,17 +83,21 @@ public class ArrayUtilTest {
 		Assert.assertArrayEquals(
 			new short[] {1, 2, 3, 4, 5, 6},
 			ArrayUtil.append(new short[] {1, 2, 3}, new short[] {4, 5, 6}));
-		Assert.assertArrayEquals(new Integer[] {1, 2, 3, 4, 5, 6},
-			ArrayUtil.append(new Integer[] {1, 2}, new Integer[] {3, 4},
-			new Integer[] {5, 6}));
+		Assert.assertArrayEquals(
+			new Integer[] {1, 2, 3, 4, 5, 6},
+			ArrayUtil.append(
+				new Integer[] {1, 2}, new Integer[] {3, 4},
+				new Integer[] {5, 6}));
 		Assert.assertArrayEquals(
 			new Integer[] {1, 2, 3, 4},
 			ArrayUtil.append(new Integer[] {1, 2, 3}, 4));
-		Assert.assertArrayEquals(new Integer[] {1, 2, 3, 4, 5, 6},
+		Assert.assertArrayEquals(
+			new Integer[] {1, 2, 3, 4, 5, 6},
 			ArrayUtil.append(new Integer[] {1, 2, 3}, new Integer[] {4, 5, 6}));
 		Assert.assertArrayEquals(
 			new Integer[][] {new Integer[] {1, 2, 3}, new Integer[] {4, 5, 6}},
-			ArrayUtil.append(new Integer[][] {new Integer[] {1, 2, 3}},
+			ArrayUtil.append(
+				new Integer[][] {new Integer[] {1, 2, 3}},
 				new Integer[] {4, 5, 6}));
 		Assert.assertArrayEquals(
 			new Integer[][] {new Integer[] {1, 2, 3}, new Integer[] {4, 5, 6}},
