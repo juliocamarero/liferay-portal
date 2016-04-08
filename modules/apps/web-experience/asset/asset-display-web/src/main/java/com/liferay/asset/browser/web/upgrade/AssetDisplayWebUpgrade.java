@@ -12,32 +12,24 @@
  * details.
  */
 
-package com.liferay.portal.kernel.portlet;
+package com.liferay.asset.browser.web.upgrade;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.upgrade.DummyUpgradeStep;
+import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 
-import javax.portlet.PortletURL;
-
-import javax.servlet.http.HttpServletRequest;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
  */
-public interface PortletProvider {
+@Component(immediate = true, service = UpgradeStepRegistrator.class)
+public class AssetDisplayWebUpgrade implements UpgradeStepRegistrator {
 
-	public String getPortletName();
-
-	public PortletURL getPortletURL(HttpServletRequest request)
-		throws PortalException;
-
-	public PortletURL getPortletURL(HttpServletRequest request, Group group)
-		throws PortalException;
-
-	public enum Action {
-
-		ADD, BROWSE, EDIT, MANAGE, PREVIEW, VIEW
-
+	@Override
+	public void register(Registry registry) {
+		registry.register(
+			"com.liferay.asset.display.web", "0.0.0", "1.0.0",
+			new DummyUpgradeStep());
 	}
 
 }
