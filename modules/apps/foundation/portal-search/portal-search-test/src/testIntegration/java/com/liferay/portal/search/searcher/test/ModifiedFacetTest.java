@@ -162,11 +162,11 @@ public class ModifiedFacetTest {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (String range : ranges) {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+			JSONObject rangeJSONObject = JSONFactoryUtil.createJSONObject();
 
-			jsonObject.put("range", range);
+			rangeJSONObject.put("range", range);
 
-			jsonArray.put(jsonObject);
+			jsonArray.put(rangeJSONObject);
 		}
 
 		jsonObject.put("ranges", jsonArray);
