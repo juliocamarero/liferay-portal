@@ -118,6 +118,21 @@ public class SubscriptionSender implements Serializable {
 				currentThread.setContextClassLoader(_classLoader);
 			}
 
+			if (ListUtil.isNotEmpty(_subscriptions)) {
+				for (Subscription subscription : _subscriptions) {
+					try {
+						notifyPersistedSubscriber(subscription);
+					}
+					catch (Exception e) {
+						_log.error(
+							"Unable to process subscription: " + subscription,
+							e);
+					}
+				}
+
+				return;
+			}
+
 			for (ObjectValuePair<String, Long> ovp :
 					_persistestedSubscribersOVPs) {
 
@@ -427,6 +442,10 @@ public class SubscriptionSender implements Serializable {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	public void setSubscriptions(List<Subscription> subscriptions) {
+		_subscriptions = subscriptions;
 	}
 
 	public void setUniqueMailId(boolean uniqueMailId) {
@@ -969,5 +988,6 @@ public class SubscriptionSender implements Serializable {
 	private final List<ObjectValuePair<String, String>>
 		_runtimeSubscribersOVPs = new ArrayList<>();
 	private final Set<String> _sentEmailAddresses = new HashSet<>();
+	private List<Subscription> _subscriptions;
 
 }
