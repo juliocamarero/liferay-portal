@@ -192,6 +192,10 @@
 .lfr-has-simulation-panel {
 	overflow: hidden;
 
+	.lfr-configurator-visibility {
+		display: none;
+	}
+
 	.lfr-simulation-device {
 		display: block;
 	}
