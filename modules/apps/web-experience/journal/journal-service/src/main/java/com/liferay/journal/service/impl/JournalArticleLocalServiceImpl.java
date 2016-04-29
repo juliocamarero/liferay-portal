@@ -5773,6 +5773,17 @@ public class JournalArticleLocalServiceImpl
 			if ((expirationDate != null) && expirationDate.before(now)) {
 				article.setExpirationDate(null);
 			}
+
+			JournalArticle liveArticle = fetchLatestArticleFromLive(article);
+
+			if ((liveArticle != null) &&
+				(liveArticle.getVersion() > article.getVersion())) {
+
+				double liveVersion = MathUtil.format(
+					liveArticle.getVersion() + 0.1, 1, 1);
+
+				article.setVersion(liveVersion);
+			}
 		}
 
 		if (status == WorkflowConstants.STATUS_EXPIRED) {
