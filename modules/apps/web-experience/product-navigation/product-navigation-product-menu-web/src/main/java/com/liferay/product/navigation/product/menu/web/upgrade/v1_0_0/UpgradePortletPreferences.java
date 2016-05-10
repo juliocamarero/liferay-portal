@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 
+import java.sql.PreparedStatement;
+
 /**
  * @author Jürgen Kappler
  */
@@ -28,7 +30,13 @@ public class UpgradePortletPreferences extends UpgradeProcess {
 			_log.debug("Delete control panel menu portlet preferences");
 		}
 
-		runSQL("delete from PortletPreferences where portletId = 160");
+		try (PreparedStatement ps2 = connection.prepareStatement(
+				"delete from PortletPreferences where portletId = ?")) {
+
+			ps2.setString(1, _CONTROL_PANEL_MENU_PORTLET);
+
+			ps2.execute();
+		}
 	}
 
 	protected void deleteDockbarPortletPreferences() throws Exception {
@@ -36,7 +44,13 @@ public class UpgradePortletPreferences extends UpgradeProcess {
 			_log.debug("Delete dockbar portlet preferences");
 		}
 
-		runSQL("delete from PortletPreferences where portletId = 145");
+		try (PreparedStatement ps2 = connection.prepareStatement(
+				"delete from PortletPreferences where portletId = ?")) {
+
+			ps2.setString(1, _DOCKBAR_PORTLET);
+
+			ps2.execute();
+		}
 	}
 
 	@Override
@@ -44,6 +58,10 @@ public class UpgradePortletPreferences extends UpgradeProcess {
 		deleteControlPanelMenuPortletPreferences();
 		deleteDockbarPortletPreferences();
 	}
+
+	private static final String _CONTROL_PANEL_MENU_PORTLET = "160";
+
+	private static final String _DOCKBAR_PORTLET = "145";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradePortletPreferences.class);
