@@ -95,6 +95,7 @@ public class ManageLayoutProductNavigationControlMenuEntry
 		editPageURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
 		editPageURL.setParameter(
 			"privateLayout", String.valueOf(layout.isPrivateLayout()));
+		editPageURL.setParameter("backURL", PortalUtil.getCurrentURL(request));
 
 		return editPageURL.toString();
 	}
