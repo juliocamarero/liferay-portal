@@ -72,7 +72,9 @@ public class JournalServiceUpgrade implements UpgradeStepRegistrator {
 			"com.liferay.journal.service", "0.0.3", "1.0.0",
 			new UpgradeSchema(), new UpgradeCompanyId(),
 			new UpgradeJournal(
-				_companyLocalService, _ddmTemplateLinkLocalService),
+				_companyLocalService, _ddmTemplateLinkLocalService,
+				_defaultDDMStructureHelper, _groupLocalService,
+				_userLocalService),
 			new UpgradeJournalArticles(
 				_assetCategoryLocalService, _ddmStructureLocalService,
 				_groupLocalService, _layoutLocalService),
@@ -156,6 +158,13 @@ public class JournalServiceUpgrade implements UpgradeStepRegistrator {
 	}
 
 	@Reference(unbind = "-")
+	protected void setDefaultDDMStructureHelper(
+		DefaultDDMStructureHelper defaultDDMStructureHelper) {
+
+		_defaultDDMStructureHelper = defaultDDMStructureHelper;
+	}
+
+	@Reference(unbind = "-")
 	protected void setGroupLocalService(GroupLocalService groupLocalService) {
 		_groupLocalService = groupLocalService;
 	}
@@ -186,6 +195,7 @@ public class JournalServiceUpgrade implements UpgradeStepRegistrator {
 	private CompanyLocalService _companyLocalService;
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private DDMTemplateLinkLocalService _ddmTemplateLinkLocalService;
+	private DefaultDDMStructureHelper _defaultDDMStructureHelper;
 	private GroupLocalService _groupLocalService;
 	private LayoutLocalService _layoutLocalService;
 	private SettingsFactory _settingsFactory;
