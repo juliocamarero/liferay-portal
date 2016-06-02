@@ -32,9 +32,6 @@
 
 #set ($company_id = $company.getCompanyId())
 #set ($company_name = $company.getName())
-#set ($company_logo = $htmlUtil.escape($theme_display.getCompanyLogo()))
-#set ($company_logo_height = $theme_display.getCompanyLogoHeight())
-#set ($company_logo_width = $theme_display.getCompanyLogoWidth())
 #set ($company_url = $theme_display.getURLHome())
 
 #if (!$request.isRequestedSessionIdFromCookie())
@@ -211,33 +208,6 @@
 
 #if ($layouts)
 	#set ($pages = $layouts)
-#end
-
-## ---------- Logo ---------- ##
-
-#set($logo_css_class = "logo")
-#set ($use_company_logo = !$layout.layoutSet.isLogo())
-#set ($site_logo_height = $company_logo_height)
-#set ($site_logo_width = $company_logo_width)
-
-#if (($company.getLogoId() == 0) && $use_company_logo)
-	#set($logo_css_class = "$logo_css_class default-logo")
-#else
-	#set($logo_css_class = "$logo_css_class custom-logo")
-#end
-
-#set ($show_site_name_supported = $getterUtil.getBoolean($theme_settings.getProperty("show-site-name-supported"), true))
-
-#set ($show_site_name_default = $getterUtil.getBoolean($theme_settings.getProperty("show-site-name-default"), $show_site_name_supported))
-
-#set ($show_site_name = $getterUtil.getBoolean($layout.layoutSet.getSettingsProperty("showSiteName"), $show_site_name_default))
-
-#set($site_logo = $company_logo)
-
-#set ($logo_description = "")
-
-#if (!$show_site_name)
-	#set ($logo_description = $htmlUtil.escape($site_name))
 #end
 
 ## ---------- Navigation ---------- ##
