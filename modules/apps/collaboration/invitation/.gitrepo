@@ -4,7 +4,7 @@
 ;
 [subrepo]
 	cmdver = liferay
-	commit = ae5bc2632d901fac067c6136c46123b51c605101
+	commit = bdf6122ec8a53271da7dcf0f49885c6250c21a4f
 	mode = push
-	parent = ddb0bc9c3f13a2a2c016936c7d40333499b3a722
+	parent = db06fc08db1c8e952f45a6115ec7af9912d09c58
 	remote = git@github.com:liferay/com-liferay-invitation.git

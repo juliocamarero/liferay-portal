@@ -16,6 +16,7 @@ package com.liferay.knowledge.base.web.upgrade;
 
 import com.liferay.knowledge.base.web.upgrade.v1_0_0.UpgradePortletId;
 import com.liferay.knowledge.base.web.upgrade.v1_0_0.UpgradePortletSettings;
+import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.upgrade.DummyUpgradeStep;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -37,10 +38,12 @@ public class KnowledgeBaseWebUpgrade implements UpgradeStepRegistrator {
 		BaseUpgradeWebModuleRelease upgradeWebModuleRelease =
 			new BaseUpgradeWebModuleRelease() {
 
+				@Override
 				protected String getBundleSymbolicName() {
 					return "com.liferay.knowledge.base.web";
 				}
 
+				@Override
 				protected String[] getPortletIds() {
 					return new String[] {
 						"1_WAR_knowledgebaseportlet",
@@ -68,6 +71,11 @@ public class KnowledgeBaseWebUpgrade implements UpgradeStepRegistrator {
 			"com.liferay.knowledge.base.web", "0.0.1", "1.0.0",
 			new UpgradePortletId(),
 			new UpgradePortletSettings(_settingsFactory));
+	}
+
+	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
+	protected void setModuleServiceLifecycle(
+		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
 	@Reference(unbind = "-")
