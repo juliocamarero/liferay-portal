@@ -108,7 +108,7 @@ public class LayoutSitemapURLProvider implements SitemapURLProvider {
 				Locale availableLocale = entry.getKey();
 				String alternateURL = entry.getValue();
 
-				if (availableLocale.equals(defaultLocale)) {
+				if (!availableLocale.equals(defaultLocale)) {
 					SitemapUtil.addURLElement(
 						element, alternateURL, typeSettingsProperties,
 						layout.getModifiedDate(), layoutFullURL, alternateURLs);
