@@ -32,9 +32,6 @@
 
 <#assign company_id = company.getCompanyId() />
 <#assign company_name = company.getName() />
-<#assign company_logo = htmlUtil.escape(theme_display.getCompanyLogo()) />
-<#assign company_logo_height = theme_display.getCompanyLogoHeight() />
-<#assign company_logo_width = theme_display.getCompanyLogoWidth() />
 <#assign company_url = theme_display.getURLHome() />
 
 <#if !request.isRequestedSessionIdFromCookie()>
@@ -236,33 +233,6 @@
 
 <#if layouts??>
 	<#assign pages = layouts />
-</#if>
-
-<#-- ---------- Logo ---------- -->
-
-<#assign logo_css_class = "logo" />
-<#assign use_company_logo = !layout.layoutSet.isLogo() />
-<#assign site_logo_height = company_logo_height />
-<#assign site_logo_width = company_logo_width />
-
-<#if (company.getLogoId() == 0) && use_company_logo>
-	<#assign logo_css_class = logo_css_class + " default-logo" />
-<#else>
-	<#assign logo_css_class = logo_css_class + " custom-logo" />
-</#if>
-
-<#assign show_site_name_supported = getterUtil.getBoolean(theme_settings["show-site-name-supported"]!"", true) />
-
-<#assign show_site_name_default = getterUtil.getBoolean(theme_settings["show-site-name-default"]!"", show_site_name_supported) />
-
-<#assign show_site_name = getterUtil.getBoolean(layout.layoutSet.getSettingsProperty("showSiteName"), show_site_name_default) />
-
-<#assign site_logo = company_logo />
-
-<#assign logo_description = "" />
-
-<#if !show_site_name>
-	<#assign logo_description = htmlUtil.escape(site_name) />
 </#if>
 
 <#-- ---------- Navigation ---------- -->
