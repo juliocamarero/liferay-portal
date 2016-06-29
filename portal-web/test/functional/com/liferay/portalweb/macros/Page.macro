@@ -65,15 +65,9 @@
 		<if>
 			<isset var="siteName" />
 			<then>
-				<var name="key_rowEntry" value="${siteName}" />
-
-				<execute function="ClickNoError#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-				<execute function="AssertClick" locator1="MenuItem#SITE_ADMINISTRATION" value1="Site Administration" />
-
-				<var name="key_portletTitle" value="Public Pages" />
-
-				<execute function="AssertTextEquals" locator1="Home#SITE_ADMINISTRATION_PORTLET_TITLE" value1="Public Pages" />
+				<execute macro="ProductMenu#gotoSite">
+					<var name="site" value="${siteName}" />
+				</execute>
 			</then>
 		</if>
 
@@ -188,6 +182,27 @@
 		<execute function="AssertTextEquals" locator1="SitePages#JAVASCRIPT_LABEL" value1="Paste JavaScript code that is executed at the bottom of the page." />
 		<execute function="Type" locator1="SitePages#JAVASCRIPT_TEXTAREA" value1="${javaScript}" />
 		<execute macro="PortletEntry#save" />
+	</command>
+
+	<command name="addPageCategory">
+		<execute macro="Navigator#gotoTab">
+			<var name="tab" value="SEO" />
+		</execute>
+
+		<execute macro="Panel#expandPanel">
+			<var name="panelHeading" value="SEO" />
+		</execute>
+
+		<var name="key_vocabularyName" value="${vocabularyName}" />
+
+		<execute function="Click" locator1="SitePagesEditPage#SELECT_CATEGORY_BUTTON" />
+
+		<execute function="SelectFrame" value1="relative=top" />
+
+		<execute function="Click" locator1="SitePagesEditPage#CATEGORY_TREE_NODE" />
+		<execute function="Click" locator1="Icon#CLOSE" />
+
+		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 	</command>
 
 	<command name="addPageTitle">

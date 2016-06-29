@@ -22,8 +22,8 @@ import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.knowledge.base.configuration.KBGroupServiceConfiguration;
 import com.liferay.knowledge.base.constants.AdminActivityKeys;
 import com.liferay.knowledge.base.constants.KBArticleConstants;
+import com.liferay.knowledge.base.constants.KBConstants;
 import com.liferay.knowledge.base.constants.KBFolderConstants;
-import com.liferay.knowledge.base.constants.KBPortletKeys;
 import com.liferay.knowledge.base.exception.KBArticleContentException;
 import com.liferay.knowledge.base.exception.KBArticleParentException;
 import com.liferay.knowledge.base.exception.KBArticlePriorityException;
@@ -31,7 +31,7 @@ import com.liferay.knowledge.base.exception.KBArticleSourceURLException;
 import com.liferay.knowledge.base.exception.KBArticleTitleException;
 import com.liferay.knowledge.base.exception.KBArticleUrlTitleException;
 import com.liferay.knowledge.base.exception.NoSuchArticleException;
-import com.liferay.knowledge.base.importer.KBArticleImporter;
+import com.liferay.knowledge.base.internal.importer.KBArticleImporter;
 import com.liferay.knowledge.base.model.KBArticle;
 import com.liferay.knowledge.base.model.KBFolder;
 import com.liferay.knowledge.base.service.base.KBArticleLocalServiceBaseImpl;
@@ -1345,7 +1345,7 @@ public class KBArticleLocalServiceImpl extends KBArticleLocalServiceBaseImpl {
 
 		portletFileRepository.addPortletFileEntry(
 			kbArticle.getGroupId(), userId, KBArticle.class.getName(),
-			kbArticle.getClassPK(), KBPortletKeys.KNOWLEDGE_BASE_ARTICLE,
+			kbArticle.getClassPK(), KBConstants.SERVICE_NAME,
 			kbArticle.getAttachmentsFolderId(), inputStream, fileName, mimeType,
 			false);
 	}

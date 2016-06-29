@@ -2080,7 +2080,7 @@ tell application "Safari" to quit
 		<sequential>
 			<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
 				<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=384m]]></replacetoken>
-				<replacevalue><![CDATA[-verbose:gc -Xloggc:/tmp/tomcat-gc.log -Xms512m -Xmx1024m -XX:MaxNewSize=32m -XX:MaxPermSize=200m -XX:MaxTenuringThreshold=0 -XX:NewSize=32m -XX:ParallelGCThreads=2 -XX:PermSize=200m -XX:+PrintGCCause -XX:+PrintGCDetails -XX:SurvivorRatio=65536 -XX:TargetSurvivorRatio=0 -XX:+UseParNewGC]]></replacevalue>
+				<replacevalue><![CDATA[-verbose:gc -Xloggc:/tmp/tomcat-gc.log -Xms512m -Xmx1024m -XX:MaxNewSize=32m -XX:MaxPermSize=256m -XX:MaxTenuringThreshold=0 -XX:NewSize=32m -XX:ParallelGCThreads=2 -XX:PermSize=256m -XX:+PrintGCCause -XX:+PrintGCDetails -XX:SurvivorRatio=65536 -XX:TargetSurvivorRatio=0 -XX:+UseParNewGC]]></replacevalue>
 			</replace>
 		</sequential>
 	</macrodef>
@@ -5467,17 +5467,28 @@ auto.deploy.dest.dir=C:/WINDOWS/system32/config/systemprofile/liferay/websphere-
 	<target name="prepare-poshi-runner-properties">
 		<echo append="true" file="${test.ext.properties.file}">
 			component.names=${component.names}
-			ignore.errors.file.name=${project.dir.unix}/portal-web/test-ignorable-error-lines.xml
+			ignore.errors.file.name=${project.dir}/portal-web/test-ignorable-error-lines.xml
 			output.dir.name=${selenium.output.dir.name}
 			product.names=${product.names}
-			project.dir=${project.dir.unix}
+			project.dir=${project.dir}
 			test.case.available.property.names=${test.case.available.property.names}
 			test.console.log.file.name=${liferay.home}/logs/liferay.*.xml
-			test.console.shut.down.file.name=${project.dir.unix}/console-shut-down
+			test.console.shut.down.file.name=${project.dir}/console-shut-down
 			test.dependencies.dir.name=dependencies
-			test.poshi.warnings.file.name=${project.dir.unix}/poshi-warnings.xml
+			test.poshi.warnings.file.name=${project.dir}/poshi-warnings.xml
 			test.retry.command.wait.time=${test.retry.command.wait.time}
 		</echo>
+
+		<propertycopy from="browser.firefox.bin.file[${browser.firefox.version}]" name="browser.firefox.bin.file" silent="true" />
+
+		<if>
+			<isset property="browser.firefox.bin.file" />
+			<then>
+				<echo append="true" file="${test.ext.properties.file}">
+					browser.firefox.bin.file=${browser.firefox.bin.file}
+				</echo>
+			</then>
+		</if>
 
 		<if>
 			<isset property="print.java.process.on.fail" />
