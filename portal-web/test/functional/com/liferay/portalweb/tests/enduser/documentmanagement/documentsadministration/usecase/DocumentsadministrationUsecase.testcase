@@ -238,6 +238,8 @@
 
 		<execute macro="DMDocument#enableActionsMenuOnPortlet" />
 
+		<execute macro="IFrame#closeFrame" />
+
 		<execute macro="DMDocument#checkoutPG">
 			<var name="dmDocumentTitle" value="Document_1.doc" />
 		</execute>
@@ -425,7 +427,7 @@
 		</execute>
 
 		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentSize" value="0" />
+			<var name="dmDocumentSize" value="0KB" />
 			<var name="dmDocumentTitle" value="Zero Document File" />
 		</execute>
 
@@ -682,6 +684,8 @@
 		<execute macro="LAR#importPortlet">
 			<var name="larFileName" value="DM_Test_DB_Store.lar" />
 		</execute>
+
+		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSite">
 			<var name="site" value="Site Name" />
@@ -1344,13 +1348,13 @@
 			<var name="dmDocumentTitle" value="DM Document1 Title" />
 		</execute>
 
-		<execute function="AssertNotChecked" locator1="DocumentsAndMedia#TOOLBAR_SELECT_ALL_CHECKBOX" />
+		<execute function="AssertElementPresent" locator1="Checkbox#SELECT_ALL_CHECKBOX_TICK" />
 
 		<execute macro="DMDocument#uncheckDocumentCheckboxCP">
 			<var name="dmDocumentTitle" value="DM Document1 Title" />
 		</execute>
 
-		<execute function="AssertNotChecked" locator1="DocumentsAndMedia#TOOLBAR_SELECT_ALL_CHECKBOX" />
+		<execute function="AssertElementNotPresent" locator1="Checkbox#SELECT_ALL_CHECKBOX_TICK" />
 
 		<execute macro="DMDocument#checkDocumentCheckboxCP">
 			<var name="dmDocumentTitle" value="DM Document1 Title" />
@@ -1360,6 +1364,6 @@
 			<var name="dmDocumentTitle" value="DM Document2 Title" />
 		</execute>
 
-		<execute function="AssertChecked" locator1="Checkbox#LEXICON_SELECT_ALL" />
+		<execute function="AssertChecked" locator1="DocumentsAndMedia#TOOLBAR_SELECT_ALL_CHECKBOX" />
 	</command>
 </definition>

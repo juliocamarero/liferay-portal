@@ -201,6 +201,10 @@
 			<contains>The web application [/reports-portlet] appears to have started a thread named [C3P0PooledConnectionPool</contains>
 			<matches></matches>
 		</ignore-error>
+		<ignore-error description="LPS-63595">
+			<contains>Application exception overridden by commit exception</contains>
+			<matches></matches>
+		</ignore-error>
 		<ignore-error description="LPS-55160">
 			<contains></contains>
 			<matches>.*osgi.compendium:service=.*version=1.[0-9]+.*</matches>
@@ -209,13 +213,9 @@
 			<contains>The addSearchEngineConfigurator method has thrown an exception</contains>
 			<matches></matches>
 		</ignore-error>
-		<ignore-error description="LPS-65961">
-			<contains>Unable to add taglib</contains>
-			<matches></matches>
-		</ignore-error>
-		<ignore-error description="LPS-66314, temporary workaround until Jürgen Kappler fixes it">
-			<contains>Unable to add folder menu item</contains>
-			<matches></matches>
+		<ignore-error description="LPS-66736, temporary workaround until Marcos Castro fixes it">
+			<contains></contains>
+			<matches>.*Unable to process message.*product-app-theme.*</matches>
 		</ignore-error>
 		<ignore-error description="LRQA-14442, temporary workaround until Kiyoshi Lee fixes it">
 			<contains>[org_eclipse_equinox_http_servlet.*Framework Event Dispatcher: Equinox Container:</contains>
@@ -231,6 +231,10 @@
 		</ignore-error>
 		<ignore-error description="LRQA-24859">
 			<contains>No binary licenses found</contains>
+			<matches></matches>
+		</ignore-error>
+		<ignore-error description="LRQA-26173, temporary workaround until Peter Yoo fixes it">
+			<contains>Unable to add folder menu item</contains>
 			<matches></matches>
 		</ignore-error>
 		<ignore-error description="WCM-202">

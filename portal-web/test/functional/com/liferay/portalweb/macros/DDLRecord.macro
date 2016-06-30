@@ -132,6 +132,15 @@
 		<execute function="AssertClick" locator1="Button#EDIT" value1="Edit" />
 	</command>
 
+	<command name="expandInfo">
+		<execute function="AssertElementNotPresent" locator1="DDLRecord#INFO_SIDEBAR_EXPANDED" />
+
+		<execute function="Click" locator1="Icon#INFO" />
+
+		<execute function="AssertVisible" locator1="Icon#INFO_ACTIVE" />
+		<execute function="AssertElementPresent" locator1="DDLRecord#INFO_SIDEBAR_EXPANDED" />
+	</command>
+
 	<command name="gotoRecordPreview">
 		<execute function="AssertClick" locator1="DDL#RECORD_TABLE_COLUMN_ONE_PREVIEW_1" value1="(Preview)" />
 	</command>
@@ -181,7 +190,7 @@
 	<command name="populateFieldDate">
 		<var name="key_fieldName" value="${fieldName}" />
 
-		<execute function="Type#clickAtSendKeys" locator1="DDLEditRecord#DATE_FIELD" value1="${ddlRecordFieldData}" />
+		<execute function="Type" locator1="DDLEditRecord#DATE_FIELD" value1="${ddlRecordFieldData}" />
 	</command>
 
 	<command name="populateFieldDecimal">
@@ -339,6 +348,19 @@
 		<execute function="Type" locator1="DDLSpreadsheet#CELL_EDITOR_FIELD" value1="${ddlRecordFieldData}" />
 		<execute function="Click" locator1="Button#SAVE" value1="Save" />
 		<execute function="AssertTextEquals" locator1="DDLSpreadsheet#RECORD_TABLE_FIELD_ENTRY" value1="${ddlRecordFieldData}" />
+	</command>
+
+	<command name="populateFieldWebContentChooseFromWebContentLibrary">
+		<var name="key_fieldName" value="${fieldName}" />
+		<var name="key_webContentTitle" value="${webContentTitle}" />
+
+		<execute function="AssertClick" locator1="DDLEditRecord#WEB_CONTENT_CHOOSE_FROM_WEB_CONTENT_LIBRARY_BUTTON" value1="Select" />
+
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+
+		<execute function="AssertClick" locator1="Link#WEB_CONTENT_ARTICLE" value1="${webContentTitle}" />
+
+		<execute function="SelectFrame" value1="relative=top" />
 	</command>
 
 	<command name="populateTranslationFieldText">
@@ -823,7 +845,6 @@
 		<execute function="AssertTextEquals" locator1="DDL#RECORD_TABLE_COLUMN_NAME" value1="${fieldFieldLabel}" />
 
 		<var name="key_ddlRecordFieldData" value="${key_ddlRecordFieldData}" />
-		<var name="key_fieldFieldLabel" value="${fieldFieldLabel}" />
 
 		<if>
 			<isset var="ddlRecordFieldDataTableDisplay" />
