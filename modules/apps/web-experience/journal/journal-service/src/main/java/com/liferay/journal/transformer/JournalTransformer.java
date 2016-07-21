@@ -20,16 +20,16 @@ import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
-import com.liferay.portal.kernel.configuration.Configuration;
-import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
-import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mobile.device.Device;
 import com.liferay.portal.kernel.mobile.device.UnknownDevice;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.template.StringTemplateResource;
@@ -45,11 +45,9 @@ import com.liferay.portal.kernel.templateparser.TransformerListener;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
-import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -93,17 +91,37 @@ public class JournalTransformer {
 	public JournalTransformer(
 		String errorTemplatePropertyKey, boolean restricted) {
 
-		ClassLoader classLoader = getClassLoader();
+		long companyId = CompanyThreadLocal.getCompanyId();
 
-		Configuration configuration = ConfigurationFactoryUtil.getConfiguration(
-			classLoader, "portlet");
+		Map<String, String> errorTemplates = new HashMap<>();
+
+		try {
+			JournalServiceConfiguration journalServiceConfiguration =
+				ConfigurationProviderUtil.getCompanyConfiguration(
+					JournalServiceConfiguration.class, companyId);
+
+			String[] errorTemplatesArray =
+				journalServiceConfiguration.errorTemplates();
+
+			for (String errorTemplatePair : errorTemplatesArray) {
+				String[] keyValue = errorTemplatePair.split("\\=");
+
+				if (keyValue.length != 2) {
+					continue;
+				}
+
+				errorTemplates.put(keyValue[0], keyValue[1]);
+			}
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
 
 		Set<String> langTypes = TemplateManagerUtil.getSupportedLanguageTypes(
 			errorTemplatePropertyKey);
 
 		for (String langType : langTypes) {
-			String errorTemplateId = configuration.get(
-				errorTemplatePropertyKey, new Filter(langType));
+			String errorTemplateId = errorTemplates.get(langType);
 
 			if (Validator.isNotNull(errorTemplateId)) {
 				_errorTemplateIds.put(langType, errorTemplateId);
@@ -119,33 +137,11 @@ public class JournalTransformer {
 
 		this(errorTemplatePropertyKey, restricted);
 
-		ClassLoader classLoader = getClassLoader();
+		for (TransformerListener transformerListener :
+				JournalTransformerListenerRegistryUtil.
+					getTransformerListeners()) {
 
-		Configuration configuration = ConfigurationFactoryUtil.getConfiguration(
-			classLoader, "portlet");
-
-		Set<String> transformerListenerClassNames = SetUtil.fromArray(
-			configuration.getArray(transformerListenerPropertyKey));
-
-		for (String transformerListenerClassName :
-				transformerListenerClassNames) {
-
-			try {
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						"Instantiating transformer listener " +
-							transformerListenerClassName);
-				}
-
-				TransformerListener transformerListener =
-					(TransformerListener)InstanceFactory.newInstance(
-						classLoader, transformerListenerClassName);
-
-				_transformerListeners.add(transformerListener);
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
+			_transformerListeners.add(transformerListener);
 		}
 	}
 
