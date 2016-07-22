@@ -34,6 +34,12 @@ import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 public interface JournalGroupServiceConfiguration {
 
 	@Meta.AD(
+		deflt = "com.liferay.journal.lar.JournalCreationStrategyImpl",
+		required = false
+	)
+	public String larCreationStrategy();
+
+	@Meta.AD(
 		deflt = "${resource:com/liferay/journal/dependencies/email_article_added_body.tmpl}",
 		required = false
 	)

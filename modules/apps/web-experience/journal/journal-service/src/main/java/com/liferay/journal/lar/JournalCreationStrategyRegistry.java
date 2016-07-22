@@ -12,15 +12,13 @@
  * details.
  */
 
-package com.liferay.journal.configuration;
+package com.liferay.journal.lar;
 
 /**
- * @author Eduardo Garcia
+ * @author Pavel Savinov
  */
-public class JournalServiceConfigurationKeys {
+public interface JournalCreationStrategyRegistry {
 
-	public static final String ERROR_TEMPLATE = "error.template";
-
-	public static final String TRANSFORMER_LISTENER = "transformer.listener";
+	public JournalCreationStrategy getJournalCreationStrategy(long groupId);
 
 }

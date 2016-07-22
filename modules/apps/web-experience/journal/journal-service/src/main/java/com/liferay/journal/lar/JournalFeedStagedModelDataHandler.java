@@ -174,7 +174,8 @@ public class JournalFeedStagedModelDataHandler
 		long userId = portletDataContext.getUserId(feed.getUserUuid());
 
 		JournalCreationStrategy creationStrategy =
-			JournalCreationStrategyFactory.getInstance();
+			_journalCreationStrategyRegistry.getJournalCreationStrategy(
+				portletDataContext.getScopeGroupId());
 
 		long authorId = creationStrategy.getAuthorUserId(
 			portletDataContext, feed);
@@ -324,6 +325,13 @@ public class JournalFeedStagedModelDataHandler
 	}
 
 	@Reference(unbind = "-")
+	protected void setJournalCreationStrategyRegistry(
+		JournalCreationStrategyRegistry journalCreationStrategyRegistry) {
+
+		_journalCreationStrategyRegistry = journalCreationStrategyRegistry;
+	}
+
+	@Reference(unbind = "-")
 	protected void setJournalFeedExportImportContentProcessor(
 		JournalFeedExportImportContentProcessor
 			journalFeedExportImportContentProcessor) {
@@ -344,6 +352,7 @@ public class JournalFeedStagedModelDataHandler
 
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private DDMTemplateLocalService _ddmTemplateLocalService;
+	private JournalCreationStrategyRegistry _journalCreationStrategyRegistry;
 	private JournalFeedExportImportContentProcessor
 		_journalFeedExportImportContentProcessor;
 	private JournalFeedLocalService _journalFeedLocalService;
