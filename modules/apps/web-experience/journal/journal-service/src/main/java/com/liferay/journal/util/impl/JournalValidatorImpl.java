@@ -14,9 +14,13 @@
 
 package com.liferay.journal.util.impl;
 
-import com.liferay.journal.configuration.JournalServiceConfigurationValues;
+import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.exception.FolderNameException;
 import com.liferay.journal.util.JournalValidator;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.Validator;
 
 import org.osgi.service.component.annotations.Component;
@@ -33,9 +37,23 @@ public final class JournalValidatorImpl implements JournalValidator {
 			return false;
 		}
 
-		for (String blacklistChar :
-				JournalServiceConfigurationValues.CHAR_BLACKLIST) {
+		String[] charactersBlacklist = {};
 
+		try {
+			long companyId = CompanyThreadLocal.getCompanyId();
+
+			JournalServiceConfiguration journalServiceConfiguration =
+				ConfigurationProviderUtil.getCompanyConfiguration(
+					JournalServiceConfiguration.class, companyId);
+
+			charactersBlacklist =
+				journalServiceConfiguration.charactersblacklist();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		for (String blacklistChar : charactersBlacklist) {
 			if (name.contains(blacklistChar)) {
 				return false;
 			}
@@ -52,5 +70,8 @@ public final class JournalValidatorImpl implements JournalValidator {
 			throw new FolderNameException(folderName);
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		JournalValidatorImpl.class);
 
 }

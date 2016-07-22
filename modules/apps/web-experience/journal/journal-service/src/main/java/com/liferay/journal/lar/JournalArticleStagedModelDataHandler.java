@@ -440,7 +440,8 @@ public class JournalArticleStagedModelDataHandler
 		long userId = portletDataContext.getUserId(article.getUserUuid());
 
 		JournalCreationStrategy creationStrategy =
-			JournalCreationStrategyFactory.getInstance();
+			_journalCreationStrategyRegistry.getJournalCreationStrategy(
+				portletDataContext.getScopeGroupId());
 
 		long authorId = creationStrategy.getAuthorUserId(
 			portletDataContext, article);
@@ -981,6 +982,13 @@ public class JournalArticleStagedModelDataHandler
 	}
 
 	@Reference(unbind = "-")
+	protected void setJournalCreationStrategyRegistry(
+		JournalCreationStrategyRegistry journalCreationStrategyRegistry) {
+
+		_journalCreationStrategyRegistry = journalCreationStrategyRegistry;
+	}
+
+	@Reference(unbind = "-")
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
@@ -996,6 +1004,7 @@ public class JournalArticleStagedModelDataHandler
 	private JournalArticleLocalService _journalArticleLocalService;
 	private JournalArticleResourceLocalService
 		_journalArticleResourceLocalService;
+	private JournalCreationStrategyRegistry _journalCreationStrategyRegistry;
 	private UserLocalService _userLocalService;
 
 }
