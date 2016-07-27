@@ -39,6 +39,8 @@ AUI.add(
 
 		var STR_VALUE = 'value';
 
+		var STRINGS = 'strings';
+
 		var LiferayFullScreenSourceEditor = A.Component.create(
 			{
 				ATTRS: {
@@ -74,6 +76,13 @@ AUI.add(
 						getter: '_getValue',
 						validator: Lang.isString,
 						value: ''
+					},
+
+					strings: {
+						value: {
+							darkMode: Liferay.Language.get('dark-mode'),
+							classicMode: Liferay.Language.get('classic-mode')
+						}
 					}
 				},
 
@@ -102,6 +111,8 @@ AUI.add(
 
 						instance._editorSwitchTheme = boundingBox.one('#switchTheme');
 
+						instance._nextThemeIndex = 1;
+
 						instance._editor = new A.LiferaySourceEditor(
 							{
 								aceOptions: instance.get('aceOptions'),
@@ -111,6 +122,7 @@ AUI.add(
 								on: {
 									themeSwitched: function(event) {
 										instance._editorSwitchTheme.one('.lexicon-icon').replace(event.themes[event.nextThemeIndex].icon);
+										instance._nextThemeIndex = event.nextThemeIndex;
 									}
 								},
 								value: instance.get(STR_VALUE)
@@ -135,6 +147,7 @@ AUI.add(
 							instance.on('layoutChange', instance._onLayoutChange),
 							instance.on('valueChange', instance._onValueChange),
 							instance._editorSwitchTheme.on('click', instance._switchTheme, instance),
+							instance._editorSwitchTheme.on('mouseenter', instance._switchThemeMouseEnter, instance),
 							boundingBox.one(STR_DOT + instance.getClassName('header')).delegate(STR_CLICK, instance._onLayoutClick, '[data-layout]', instance),
 							boundingBox.one(CSS_PREVIEW_PANEL).delegate(STR_CLICK, instance._onPreviewLink, 'a', instance)
 						];
@@ -210,6 +223,19 @@ AUI.add(
 						var instance = this;
 
 						instance._editor.switchTheme();
+					},
+
+					_switchThemeMouseEnter: function(event) {
+						var instance = this;
+
+						var strings = instance.get(STRINGS);
+
+						if (instance._nextThemeIndex == 0) {
+							Liferay.Portal.ToolTip.show(event.currentTarget, strings.classicMode);
+						} else if (instance._nextThemeIndex == 1) {
+							Liferay.Portal.ToolTip.show(event.currentTarget, strings.darkMode);
+						}
+
 					}
 				}
 			}

@@ -24,8 +24,13 @@ AUI.add(
 					strings: {
 						value: {
 							cancel: Liferay.Language.get('cancel'),
+							classicMode: Liferay.Language.get('classic-mode'),
+							darkMode: Liferay.Language.get('dark-mode'),
 							done: Liferay.Language.get('done'),
-							editContent: Liferay.Language.get('edit-content')
+							editContent: Liferay.Language.get('edit-content'),
+							expand: Liferay.Language.get('expand'),
+							regularMode: Liferay.Language.get('regular-mode'),
+							sourceMode: Liferay.Language.get('source-mode')
 						}
 					}
 				},
@@ -47,6 +52,7 @@ AUI.add(
 						instance._editorSwitch = host.one('#Switch');
 						instance._editorSwitchTheme = host.one('#SwitchTheme');
 						instance._editorWrapper = host.one('#Wrapper');
+						instance._nextThemeIndex = 1;
 
 						instance._toggleSourceSwitchFn = A.debounce(instance._toggleSourceSwitch, 100, instance);
 
@@ -54,10 +60,13 @@ AUI.add(
 
 						instance._eventHandles = [
 							instance._editorFullscreen.on('click', instance._onFullScreenBtnClick, instance),
+							instance._editorFullscreen.on('mouseenter', instance._onFullScreenBtnMouseEnter, instance),
 							instance._editorSwitch.on('blur', instance._onSwitchBlur, instance),
 							instance._editorSwitch.on('click', instance._switchMode, instance),
 							instance._editorSwitch.on('focus', instance._onSwitchFocus, instance),
+							instance._editorSwitch.on('mouseenter', instance._onSwitchMouseEnter, instance),
 							instance._editorSwitchTheme.on('click', instance._switchTheme, instance),
+							instance._editorSwitchTheme.on('mouseenter', instance._onSwitchThemeMouseEnter, instance),
 							instance.doAfter('getHTML', instance._getHTML, instance)
 						];
 					},
@@ -98,6 +107,7 @@ AUI.add(
 								on: {
 									themeSwitched: function(event) {
 										instance._editorSwitchTheme.one('.lexicon-icon').replace(event.themes[event.nextThemeIndex].icon);
+										instance._nextThemeIndex = event.nextThemeIndex;
 									}
 								},
 								value: host.getHTML()
@@ -219,6 +229,14 @@ AUI.add(
 						}
 					},
 
+					_onFullScreenBtnMouseEnter: function(event) {
+						var instance = this;
+
+						var strings = instance.get(STRINGS);
+
+						Liferay.Portal.ToolTip.show(event.currentTarget, strings.expand);
+					},
+
 					_onSwitchBlur: function(event) {
 						var instance = this;
 
@@ -241,6 +259,33 @@ AUI.add(
 								hidden: false
 							}
 						);
+					},
+
+					_onSwitchMouseEnter: function(event) {
+						var instance = this;
+
+						var strings = instance.get(STRINGS);
+
+						if (instance._isVisible) {
+							Liferay.Portal.ToolTip.show(event.currentTarget, strings.regularMode);
+						}
+						else {
+							Liferay.Portal.ToolTip.show(event.currentTarget, strings.sourceMode);
+						}
+					},
+
+					_onSwitchThemeMouseEnter: function(event) {
+						var instance = this;
+
+						var strings = instance.get(STRINGS);
+
+						console.log(instance._nextThemeIndex);
+
+						if (instance._nextThemeIndex == 0) {
+							Liferay.Portal.ToolTip.show(event.currentTarget, strings.classicMode);
+						} else if (instance._nextThemeIndex == 1) {
+							Liferay.Portal.ToolTip.show(event.currentTarget, strings.darkMode);
+						}
 					},
 
 					_switchMode: function(event) {
