@@ -173,10 +173,7 @@ public class JournalFeedStagedModelDataHandler
 
 		long userId = portletDataContext.getUserId(feed.getUserUuid());
 
-		JournalCreationStrategy creationStrategy =
-			JournalCreationStrategyFactory.getInstance();
-
-		long authorId = creationStrategy.getAuthorUserId(
+		long authorId = _journalCreationStrategy.getAuthorUserId(
 			portletDataContext, feed);
 
 		if (authorId != JournalCreationStrategy.USE_DEFAULT_USER_ID_STRATEGY) {
@@ -219,13 +216,15 @@ public class JournalFeedStagedModelDataHandler
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			feed);
 
-		boolean addGroupPermissions = creationStrategy.addGroupPermissions(
-			portletDataContext, feed);
+		boolean addGroupPermissions =
+			_journalCreationStrategy.addGroupPermissions(
+				portletDataContext, feed);
 
 		serviceContext.setAddGroupPermissions(addGroupPermissions);
 
-		boolean addGuestPermissions = creationStrategy.addGuestPermissions(
-			portletDataContext, feed);
+		boolean addGuestPermissions =
+			_journalCreationStrategy.addGuestPermissions(
+				portletDataContext, feed);
 
 		serviceContext.setAddGuestPermissions(addGuestPermissions);
 
@@ -324,6 +323,13 @@ public class JournalFeedStagedModelDataHandler
 	}
 
 	@Reference(unbind = "-")
+	protected void setJournalCreationStrategy(
+		JournalCreationStrategy journalCreationStrategy) {
+
+		_journalCreationStrategy = journalCreationStrategy;
+	}
+
+	@Reference(unbind = "-")
 	protected void setJournalFeedExportImportContentProcessor(
 		JournalFeedExportImportContentProcessor
 			journalFeedExportImportContentProcessor) {
@@ -344,6 +350,7 @@ public class JournalFeedStagedModelDataHandler
 
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private DDMTemplateLocalService _ddmTemplateLocalService;
+	private JournalCreationStrategy _journalCreationStrategy;
 	private JournalFeedExportImportContentProcessor
 		_journalFeedExportImportContentProcessor;
 	private JournalFeedLocalService _journalFeedLocalService;
