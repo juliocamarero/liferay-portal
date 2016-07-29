@@ -15,7 +15,7 @@
 package com.liferay.journal.service.permission;
 
 import com.liferay.exportimport.kernel.staging.permission.StagingPermissionUtil;
-import com.liferay.journal.configuration.JournalServiceConfigurationValues;
+import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.exception.NoSuchFolderException;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFolder;
@@ -23,6 +23,7 @@ import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
@@ -144,9 +145,13 @@ public class JournalArticlePermission implements BaseModelPermissionChecker {
 			}
 		}
 
+		JournalServiceConfiguration journalServiceConfiguration =
+			ConfigurationProviderUtil.getCompanyConfiguration(
+				JournalServiceConfiguration.class,
+				permissionChecker.getCompanyId());
+
 		if (actionId.equals(ActionKeys.VIEW) &&
-			!JournalServiceConfigurationValues.
-				JOURNAL_ARTICLE_VIEW_PERMISSION_CHECK_ENABLED) {
+			!journalServiceConfiguration.articleViewPermissionsCheckEnabled()) {
 
 			return true;
 		}
