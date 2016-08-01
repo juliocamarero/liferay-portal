@@ -7,7 +7,7 @@
  */
 {template .render}
 	<div class="treeview{$elementClasses ? ' ' + $elementClasses : ''}" role="tree">
-		{call .nodes}
+		{call .nodes data="all"}
 			{param nodes: $nodes /}
 		{/call}
 	</div>
@@ -22,7 +22,7 @@
 		<ul class="treeview-nodes">
 			{foreach $node in $nodes}
 				{let $index: index($node) /}
-				{call .node}
+				{call .node data="all"}
 					{param node: $node /}
 					{param path: isNonnull($parentPath) ? ($parentPath + '-' + $index) : $index /}
 				{/call}
@@ -53,11 +53,12 @@
 							data-onclick="handleNodeTogglerClicked_">
 						</div>
 					{/if}
-					{call .card}
+					{call .card data="all"}
+						{param icon: $node.icon /}
 						{param title: $node.name /}
 					{/call}
 				</div>
-				{call .nodes}
+				{call .nodes data="all"}
 					{param nodes: $node.children /}
 					{param parentPath: $path /}
 				{/call}
@@ -67,17 +68,22 @@
 {/template}
 
 /**
+ * @param icon
+ * @param pathThemeImages
  * @param title
  */
 {template .card}
 	<div class="card card-horizontal">
 		<div class="card-row card-row-padded selectable" tabindex="0">
-			<div class="card-col-field">
-				<div class="sticker sticker-default sticker-lg sticker-static">
-					<span class="text-default">
-					</span>
+			{if $icon}
+				<div class="card-col-field">
+					<div class="sticker sticker-default sticker-lg sticker-static">
+						<svg class="lexicon-icon lexicon-icon-<%= icon %>" role="img" title="{$title}">
+							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#{$icon}"></use>
+						</svg>
+					</div>
 				</div>
-			</div>
+			{/if}
 			<div class="card-col-content card-col-gutters">
 				<span class="lfr-card-title-text text-default truncate-text treeview-node-name">
 					{$title}
