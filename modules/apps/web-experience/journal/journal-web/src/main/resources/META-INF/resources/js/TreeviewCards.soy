@@ -1,0 +1,88 @@
+{namespace TreeviewCards}
+
+/**
+ * This renders the main element.
+ * @param? elementClasses
+ * @param nodes
+ */
+{template .render}
+	<div class="treeview{$elementClasses ? ' ' + $elementClasses : ''}" role="tree">
+		{call .nodes}
+			{param nodes: $nodes /}
+		{/call}
+	</div>
+{/template}
+
+/**
+ * @param nodes
+ * @param? parentPath
+ */
+{template .nodes}
+	{if $nodes}
+		<ul class="treeview-nodes">
+			{foreach $node in $nodes}
+				{let $index: index($node) /}
+				{call .node}
+					{param node: $node /}
+					{param path: isNonnull($parentPath) ? ($parentPath + '-' + $index) : $index /}
+				{/call}
+			{/foreach}
+		</ul>
+	{/if}
+{/template}
+
+/**
+ * @param node
+ * @param path
+ */
+{template .node}
+	<li class="treeview-node" data-treeview-path="{$path}">
+		{if $node}
+			<div class="treeview-node-wrapper{$node.expanded ? ' expanded' : ''}">
+				<div
+					class="treeview-node-main clearfix col-md-4{$node.children ? ' hasChildren' : ''}"
+					data-onclick="handleNodeClicked_" 
+					data-onkeyup="handleNodeKeyUp_"
+					data-treeitemid="{$node.id}"
+					data-treeitemname="{$node.name}"
+					aria-expanded="{$node.expanded ? 'true' : 'false'}"
+					role="treeitem">
+					{if $node.children}
+						<div
+							class="treeview-node-toggler"
+							data-onclick="handleNodeTogglerClicked_">
+						</div>
+					{/if}
+					{call .card}
+						{param title: $node.name /}
+					{/call}
+				</div>
+				{call .nodes}
+					{param nodes: $node.children /}
+					{param parentPath: $path /}
+				{/call}
+			</div>
+		{/if}
+	</li>
+{/template}
+
+/**
+ * @param title
+ */
+{template .card}
+	<div class="card card-horizontal">
+		<div class="card-row card-row-padded selectable" tabindex="0">
+			<div class="card-col-field">
+				<div class="sticker sticker-default sticker-lg sticker-static">
+					<span class="text-default">
+					</span>
+				</div>
+			</div>
+			<div class="card-col-content card-col-gutters">
+				<span class="lfr-card-title-text text-default truncate-text treeview-node-name">
+					{$title}
+				</span>
+			</div>
+		</div>
+	</div>
+{/template}
