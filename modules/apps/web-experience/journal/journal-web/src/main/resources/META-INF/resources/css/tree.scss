@@ -1,0 +1,81 @@
+.portlet-journal-tree {
+	.treeview {
+		ul {
+			list-style: none;
+		}
+
+		.card .selected {
+			box-shadow: inset 0 0 0 2px #65B6F0;
+			outline: none;
+		}
+
+		.card-row-padded {
+			padding: 5px;
+		}
+
+		.sticker {
+			vertical-align: middle;
+		}
+
+		.treeview-nodes {
+			border-left: 2px solid #869CAD;
+			margin-left: 30px;
+
+			.treeview-nodes {
+				border-left: 1px dashed #869CAD;
+			}
+		}
+
+		.treeview-node {
+			margin-bottom: 0.5rem;
+			position: relative;
+		}
+
+		.treeview-node-main {
+			float: none;
+			position: relative;
+		}
+
+		.treeview-node-main.hasChildren {
+			cursor: pointer;
+		}
+
+		.treeview-node-toggler {
+			background-color: #869CAD;
+			border-radius: 3px;
+			display: inline-block;
+			height: 14px;
+			left: -35px;
+			line-height: 12px;
+			margin-left: -12px;
+			margin-top: -8px;
+			position: absolute;
+			text-align: center;
+			top: 50%;
+			width: 14px;
+
+			&:before {
+				color: #FFF;
+				content: '+';
+			}
+		}
+
+		.treeview-node-wrapper.expanded > .treeview-node-main > .treeview-node-toggler:before {
+			content: '-';
+		}
+
+		.treeview-node-name {
+			float: left;
+			font-size: 1.4rem;
+			margin-left: 0.8rem;
+		}
+
+		.treeview-node-wrapper > .treeview-nodes {
+			display: none;
+		}
+
+		.treeview-node-wrapper.expanded > .treeview-nodes {
+			display: block;
+		}
+	}
+}
