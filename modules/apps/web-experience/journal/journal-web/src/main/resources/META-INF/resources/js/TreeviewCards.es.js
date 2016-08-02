@@ -14,7 +14,7 @@ class TreeviewCards extends Treeview {
 	 */
 	expandState_(node) {
 		let path = node.getAttribute('data-treeview-path').split('-');
-		
+
 		let nodeObj = this.getNodeObj(path);
 
 		nodeObj.expanded = true;
@@ -51,7 +51,7 @@ class TreeviewCards extends Treeview {
 			nextNodeObj = this.getNodeObj(path);
 		}
 		else {
-			while(!nextNodeObj && path.length > 0) {
+			while (!nextNodeObj && path.length > 0) {
 				path[path.length - 1]++;
 
 				nextNodeObj = this.getNodeObj(path);
@@ -73,7 +73,7 @@ class TreeviewCards extends Treeview {
 
 		let prevNodeObj;
 
-		if(path[path.length -1] === '0') {
+		if (path[path.length -1] === '0') {
 			path.pop();
 
 			prevNodeObj = this.getNodeObj(path);
@@ -83,7 +83,7 @@ class TreeviewCards extends Treeview {
 
 			prevNodeObj = this.getNodeObj(path);
 
-			while(prevNodeObj.children && prevNodeObj.expanded) {
+			while (prevNodeObj.children && prevNodeObj.expanded) {
 				prevNodeObj = prevNodeObj.children[prevNodeObj.children.length - 1];
 			}
 		}
