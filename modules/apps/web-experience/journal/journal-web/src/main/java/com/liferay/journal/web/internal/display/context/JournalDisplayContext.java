@@ -374,8 +374,7 @@ public class JournalDisplayContext {
 
 		rootNode.put("icon", "folder");
 		rootNode.put("children", jsonArray);
-		rootNode.put(
-			"folderId", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+		rootNode.put("id", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 		rootNode.put(
 			"name", LanguageUtil.get(themeDisplay.getLocale(), "home"));
 
@@ -1170,7 +1169,7 @@ public class JournalDisplayContext {
 			}
 
 			jsonFolder.put("icon", "folder");
-			jsonFolder.put("folderId", folder.getFolderId());
+			jsonFolder.put("id", folder.getFolderId());
 			jsonFolder.put("name", folder.getName());
 
 			jsonFolders.put(jsonFolder);
