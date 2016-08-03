@@ -29,7 +29,7 @@ class TreeviewCards extends Treeview {
 	 */
 	focus_(nodeObj) {
 		if (nodeObj) {
-			this.element.querySelector('[data-treeitemid="' + nodeObj.id + '"] .selectable').focus();
+			this.element.querySelector('[data-treeitemid="' + nodeObj.id + '"] .card-row').focus();
 		}
 	}
 
@@ -97,6 +97,22 @@ class TreeviewCards extends Treeview {
 	 * @protected
 	 */
 	handleNodeClicked_(event) {
+		let currentTarget = event.delegateTarget.parentNode.parentNode;
+
+		let currentTargetId = currentTarget.getAttribute('data-treeitemid');
+
+		if (this.multiSelection) {
+			if (this.selectedNodes.indexOf(currentTargetId + ',') !== -1) {
+				this.selectedNodes = this.selectedNodes.replace(currentTargetId + ',', '');
+			}
+			else {
+				this.selectedNodes += currentTargetId + ',';
+			}
+		}
+		else {
+			this.selectedNodes = currentTargetId + ',';
+		}
+
 		this.onNodeClick(event);
 	}
 
@@ -117,19 +133,21 @@ class TreeviewCards extends Treeview {
 	 */
 	handleNodeKeyUp_(event) {
 		if (event.keyCode === 37) {
-			this.unexpandState_(event.delegateTarget.parentNode.parentNode);
+			this.unexpandState_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
 		}
 		else if (event.keyCode === 38) {
-			this.focusPrevNode_(event.delegateTarget.parentNode.parentNode);
+			this.focusPrevNode_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
 		}
 		else if (event.keyCode === 39) {
-			this.expandState_(event.delegateTarget.parentNode.parentNode);
+			this.expandState_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
 		}
 		else if (event.keyCode === 40) {
-			this.focusNextNode_(event.delegateTarget.parentNode.parentNode);
+			this.focusNextNode_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
 		}
 		else if (event.keyCode === 13 || event.keyCode === 32) {
-			this.handleNodeClicked_(event);
+			if (!DOM.hasClass(event.delegateTarget.parentNode.parentNode, 'disabled')) {
+				this.handleNodeClicked_(event);
+			}
 		}
 	}
 
@@ -157,6 +175,15 @@ Soy.register(TreeviewCards, templates);
  * @static
  */
 TreeviewCards.STATE = {
+	disabledNodes: {
+		validator: core.isString,
+		value: ''
+	},
+
+	multiSelection: {
+		validator: core.isBoolean,
+		value: false
+	},
 	/**
 	 * This is the function called on tree view's nodes click
 	 * @type {Function}
@@ -165,6 +192,11 @@ TreeviewCards.STATE = {
 	onNodeClick: {
 		validator: core.isFunction,
 		value: function() {}
+	},
+
+	selectedNodes: {
+		validator: core.isString,
+		value: ''
 	}
 };
 

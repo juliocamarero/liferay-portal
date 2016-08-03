@@ -38,15 +38,7 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 		{
 			nodes: [<%= journalDisplayContext.getFoldersJSON() %>],
 			onNodeClick: function(event) {
-				var currentTarget = event.delegateTarget;
-
-				this.element.querySelectorAll('.selectable').forEach(
-					function(element) {
-						DOM.removeClasses(element, 'selected');
-					}
-				);
-
-				DOM.addClasses(currentTarget.querySelector('.selectable'), 'selected');
+				var currentTarget = event.delegateTarget.parentNode.parentNode;
 
 				var data = {
 					folderId: currentTarget.getAttribute('data-treeitemid'),

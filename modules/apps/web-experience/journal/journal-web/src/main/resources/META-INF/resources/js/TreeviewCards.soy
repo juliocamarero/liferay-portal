@@ -2,13 +2,16 @@
 
 /**
  * This renders the main element.
+ * @param disabledNodes
  * @param? elementClasses
  * @param nodes
+ * @param selectedNodes
  */
 {template .render}
 	<div class="treeview{$elementClasses ? ' ' + $elementClasses : ''}" role="tree">
 		{call .nodes data="all"}
 			{param nodes: $nodes /}
+			{param selectedNodes: $selectedNodes /}
 		{/call}
 	</div>
 {/template}
@@ -32,17 +35,17 @@
 {/template}
 
 /**
+ * @param disabledNodes
  * @param node
  * @param path
+ * @param selectedNodes
  */
 {template .node}
 	<li class="treeview-node" data-treeview-path="{$path}">
 		{if $node}
 			<div class="treeview-node-wrapper{$node.expanded ? ' expanded' : ''}">
 				<div
-					class="treeview-node-main clearfix col-md-4{$node.children ? ' hasChildren' : ''}"
-					data-onclick="handleNodeClicked_" 
-					data-onkeyup="handleNodeKeyUp_"
+					class="treeview-node-main clearfix col-md-4{$node.children ? ' hasChildren' : ''}{strContains($disabledNodes, $node.id + ',') ? ' disabled' : ''}{strContains($selectedNodes, $node.id + ',') ? ' selected' : ''}"
 					data-treeitemid="{$node.id}"
 					data-treeitemname="{$node.name}"
 					aria-expanded="{$node.expanded ? 'true' : 'false'}"
@@ -54,7 +57,9 @@
 						</div>
 					{/if}
 					{call .card data="all"}
+						{param disabledNodes: $disabledNodes /}
 						{param icon: $node.icon /}
+						{param id: $node.id /}
 						{param title: $node.name /}
 					{/call}
 				</div>
@@ -68,17 +73,27 @@
 {/template}
 
 /**
+ * @param disabledNodes
  * @param icon
+ * @param id
  * @param pathThemeImages
  * @param title
  */
 {template .card}
 	<div class="card card-horizontal">
-		<div class="card-row card-row-padded selectable" tabindex="0">
+		{let $nodeAttributes kind="attributes"}
+			class="card-row card-row-padded"
+			{if not strContains($disabledNodes, $id)}
+				data-onclick="handleNodeClicked_"
+			{/if}
+			data-onkeyup="handleNodeKeyUp_"
+			tabindex="0"
+		{/let}
+		<div {$nodeAttributes}>
 			{if $icon}
 				<div class="card-col-field">
 					<div class="sticker sticker-default sticker-lg sticker-static">
-						<svg class="lexicon-icon lexicon-icon-<%= icon %>" role="img" title="{$title}">
+						<svg class="lexicon-icon lexicon-icon-{$icon}" role="img" title="{$title}">
 							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#{$icon}"></use>
 						</svg>
 					</div>
