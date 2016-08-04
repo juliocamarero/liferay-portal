@@ -18,17 +18,13 @@
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
-
-if (Validator.isNull(redirect)) {
-	PortletURL portletURL = renderResponse.createRenderURL();
-
-	redirect = portletURL.toString();
-}
-
 String backURL = ParamUtil.getString(request, "backURL");
 
 if (Validator.isNotNull(redirect)) {
 	portletDisplay.setURLBack(redirect);
+}
+else if (Validator.isNotNull(backURL)) {
+	portletDisplay.setURLBack(backURL);
 }
 
 PortletURL portletURL = PortletURLUtil.getCurrent(renderRequest, renderResponse);
