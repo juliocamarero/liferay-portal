@@ -16,6 +16,7 @@ package com.liferay.layout.admin.web.internal.portlet;
 
 import com.liferay.application.list.GroupProvider;
 import com.liferay.application.list.constants.ApplicationListWebKeys;
+import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
@@ -982,7 +983,8 @@ public class LayoutAdminPortlet extends MVCPortlet {
 
 	@Override
 	protected boolean isSessionErrorException(Throwable cause) {
-		if (cause instanceof ImageTypeException ||
+		if (cause instanceof AssetCategoryException ||
+			cause instanceof ImageTypeException ||
 			cause instanceof LayoutFriendlyURLException ||
 			cause instanceof LayoutFriendlyURLsException ||
 			cause instanceof LayoutNameException ||
