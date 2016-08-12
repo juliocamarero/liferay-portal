@@ -2142,6 +2142,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>The label for the button to clear the date in the component.</description>
+			<name>dateClearButtonLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Deprecated as of 7.0.0, with no direct replacement.</description>
 			<name>dateTogglerCheckboxLabel</name>
 			<required>false</required>
