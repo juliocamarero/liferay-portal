@@ -94,37 +94,6 @@ Format format = FastDateFormatFactoryUtil.getSimpleDateFormat(simpleDateFormatPa
 	<input <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= yearParamId %>" name="<%= namespace + HtmlUtil.escapeAttribute(yearParam) %>" type="hidden" value="<%= yearValue %>" />
 </span>
 
-<c:if test="<%= nullable && !required %>">
-
-	<%
-	String dateTogglerCheckboxName = TextFormatter.format(dateTogglerCheckboxLabel, TextFormatter.M);
-	%>
-
-	<aui:input label="<%= dateTogglerCheckboxLabel %>" name="<%= randomNamespace + dateTogglerCheckboxName %>" type="checkbox" value="<%= disabled %>" />
-
-	<aui:script sandbox="<%= true %>">
-		var checkbox = $('#<%= namespace + randomNamespace + dateTogglerCheckboxName %>');
-
-		checkbox.on(
-			'click mouseover',
-			function(event) {
-				var checked = checkbox.prop('checked');
-
-				var form = $(document.forms.<%= namespace + formName %>);
-
-				if (!form.length) {
-					form = $(checkbox.prop('form'));
-				}
-
-				form.fm('<%= HtmlUtil.getAUICompatibleId(name) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(dayParam) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(monthParam) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(yearParam) %>').prop('disabled', checked);
-			}
-		);
-	</aui:script>
-</c:if>
-
 <aui:script use='<%= "aui-datepicker" + (BrowserSnifferUtil.isMobile(request) ? "-native" : StringPool.BLANK) %>'>
 	Liferay.component(
 		'<%= nameId %>DatePicker',

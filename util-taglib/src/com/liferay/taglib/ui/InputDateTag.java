@@ -40,6 +40,10 @@ public class InputDateTag extends BaseValidatorTagSupport {
 		_cssClass = cssClass;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0
+	 */
+	@Deprecated
 	public void setDateTogglerCheckboxLabel(String dateTogglerCheckboxLabel) {
 		_dateTogglerCheckboxLabel = dateTogglerCheckboxLabel;
 	}
