@@ -63,10 +63,13 @@
 						{param title: $node.name /}
 					{/call}
 				</div>
-				{call .nodes data="all"}
-					{param nodes: $node.children /}
-					{param parentPath: $path /}
-				{/call}
+
+				{if $node.expanded}
+					{call .nodes data="all"}
+						{param nodes: $node.children /}
+						{param parentPath: $path /}
+					{/call}
+				{/if}
 			</div>
 		{/if}
 	</li>
