@@ -24,6 +24,7 @@ if (GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-date:di
 }
 
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-date:cssClass"));
+String dateClearButtonLabel = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-date:dateClearButtonLabel"), "clear");
 String dateTogglerCheckboxLabel = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-date:dateTogglerCheckboxLabel"), "disable");
 boolean disabled = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-date:disabled"));
 String dayParam = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-date:dayParam"));
@@ -77,6 +78,34 @@ Format format = FastDateFormatFactoryUtil.getSimpleDateFormat(simpleDateFormatPa
 	<c:choose>
 		<c:when test="<%= BrowserSnifferUtil.isMobile(request) %>">
 			<input class="form-control" <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= nameId %>" name="<%= namespace + HtmlUtil.escapeAttribute(name) %>" type="date" value="<%= format.format(calendar.getTime()) %>" />
+
+			<c:if test="<%= nullable && !required %>">
+
+				<%
+				String dateClearButtonLabelName = TextFormatter.format(dateClearButtonLabel, TextFormatter.M);
+				%>
+
+				<aui:button name="<%= randomNamespace + dateClearButtonLabelName %>" onClick='<%= randomNamespace + "clearValues()" %>' value="<%= dateClearButtonLabel %>" />
+
+				<aui:script sandbox="<%= true %>">
+					Liferay.provide(
+						window,
+						'<%= randomNamespace %>clearValues',
+						function() {
+							var dateInput = $('#<%= nameId %>');
+							var dayValue = $('#<%= dayParamId %>');
+							var monthValue = $('#<%= monthParamId %>');
+							var yearValue = $('#<%= yearParamId %>');
+
+							dateInput.val('');
+							dayValue.val('');
+							monthValue.val('');
+							yearValue.val('');
+						},
+						['aui-base']
+					);
+				</aui:script>
+			</c:if>
 		</c:when>
 		<c:otherwise>
 			<aui:input disabled="<%= disabled %>" id="<%= HtmlUtil.getAUICompatibleId(name) %>" label="" name="<%= name %>" placeholder="<%= StringUtil.toLowerCase(simpleDateFormatPattern) %>" required="<%= required %>" title="" type="text" value="<%= format.format(calendar.getTime()) %>" wrappedField="<%= true %>">
@@ -93,37 +122,6 @@ Format format = FastDateFormatFactoryUtil.getSimpleDateFormat(simpleDateFormatPa
 	<input <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= monthParamId %>" name="<%= namespace + HtmlUtil.escapeAttribute(monthParam) %>" type="hidden" value="<%= monthValue %>" />
 	<input <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= yearParamId %>" name="<%= namespace + HtmlUtil.escapeAttribute(yearParam) %>" type="hidden" value="<%= yearValue %>" />
 </span>
-
-<c:if test="<%= nullable && !required %>">
-
-	<%
-	String dateTogglerCheckboxName = TextFormatter.format(dateTogglerCheckboxLabel, TextFormatter.M);
-	%>
-
-	<aui:input label="<%= dateTogglerCheckboxLabel %>" name="<%= randomNamespace + dateTogglerCheckboxName %>" type="checkbox" value="<%= disabled %>" />
-
-	<aui:script sandbox="<%= true %>">
-		var checkbox = $('#<%= namespace + randomNamespace + dateTogglerCheckboxName %>');
-
-		checkbox.on(
-			'click mouseover',
-			function(event) {
-				var checked = checkbox.prop('checked');
-
-				var form = $(document.forms.<%= namespace + formName %>);
-
-				if (!form.length) {
-					form = $(checkbox.prop('form'));
-				}
-
-				form.fm('<%= HtmlUtil.getAUICompatibleId(name) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(dayParam) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(monthParam) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(yearParam) %>').prop('disabled', checked);
-			}
-		);
-	</aui:script>
-</c:if>
 
 <aui:script use='<%= "aui-datepicker" + (BrowserSnifferUtil.isMobile(request) ? "-native" : StringPool.BLANK) %>'>
 	Liferay.component(
@@ -255,12 +253,14 @@ Format format = FastDateFormatFactoryUtil.getSimpleDateFormat(simpleDateFormatPa
 					if (input) {
 						var form = input.get('form');
 
-						var formId = form.get('id');
+						if (form) {
+							var formId = form.get('id');
 
-						var formInstance = Liferay.Form.get(formId);
+							var formInstance = Liferay.Form.get(formId);
 
-						if (formInstance && formInstance.formValidator) {
-							formInstance.formValidator.validateField('<%= namespace + HtmlUtil.escapeAttribute(name) %>');
+							if (formInstance && formInstance.formValidator) {
+								formInstance.formValidator.validateField('<%= namespace + HtmlUtil.escapeAttribute(name) %>');
+							}
 						}
 					}
 				}
