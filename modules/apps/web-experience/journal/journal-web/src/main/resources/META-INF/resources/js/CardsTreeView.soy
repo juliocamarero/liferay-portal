@@ -50,12 +50,14 @@
 					data-treeitemname="{$node.name}"
 					aria-expanded="{$node.expanded ? 'true' : 'false'}"
 					role="treeitem">
+
 					{if $node.children}
 						<div
 							class="treeview-node-toggler"
 							data-onclick="handleNodeTogglerClicked_">
 						</div>
 					{/if}
+
 					{call .card data="all"}
 						{param disabledNodes: $disabledNodes /}
 						{param icon: $node.icon /}
@@ -92,6 +94,7 @@
 			data-onkeyup="handleNodeKeyUp_"
 			tabindex="0"
 		{/let}
+
 		<div {$nodeAttributes}>
 			{if $icon}
 				<div class="card-col-field">
@@ -102,8 +105,9 @@
 					</div>
 				</div>
 			{/if}
+
 			<div class="card-col-content card-col-gutters">
-				<span class="lfr-card-title-text text-default truncate-text treeview-node-name">
+				<span class="lfr-card-title-text text-default treeview-node-name truncate-text">
 					{$title}
 				</span>
 			</div>

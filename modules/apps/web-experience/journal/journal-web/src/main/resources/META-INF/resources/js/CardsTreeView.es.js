@@ -1,27 +1,12 @@
 import Soy from 'metal-soy/src/Soy';
 
 import core from 'metal/src/core';
-import DOM from 'metal-dom/src/dom';
+import dom from 'metal-dom/src/dom';
 import Treeview from 'metal-treeview';
 
 import templates from './CardsTreeView.soy';
 
 class CardsTreeview extends Treeview {
-	/**
-	 * Expanded the given tree node.
-	 * @param {!Element} node
-	 * @protected
-	 */
-	expandState_(node) {
-		let path = node.getAttribute('data-treeview-path').split('-');
-
-		let nodeObj = this.getNodeObj(path);
-
-		nodeObj.expanded = true;
-
-		this.nodes = this.nodes;
-	}
-
 	/**
 	 * Focus the given tree node.
 	 * @param {!Object} nodeObj
@@ -73,7 +58,7 @@ class CardsTreeview extends Treeview {
 
 		let prevNodeObj;
 
-		if (path[path.length -1] === '0') {
+		if (path[path.length - 1] === '0') {
 			path.pop();
 
 			prevNodeObj = this.getNodeObj(path);
@@ -130,42 +115,43 @@ class CardsTreeview extends Treeview {
 	 * @protected
 	 */
 	handleNodeKeyUp_(event) {
+		let node = event.delegateTarget.parentNode.parentNode.parentNode.parentNode;
+
 		if (event.keyCode === 37) {
-			this.unexpandState_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
+			this.setNodeExpandedState_(node, {expanded: false});
 		}
 		else if (event.keyCode === 38) {
-			this.focusPrevNode_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
+			this.focusPrevNode_(node);
 		}
 		else if (event.keyCode === 39) {
-			this.expandState_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
+			this.setNodeExpandedState_(node, {expanded: true});
 		}
 		else if (event.keyCode === 40) {
-			this.focusNextNode_(event.delegateTarget.parentNode.parentNode.parentNode.parentNode);
+			this.focusNextNode_(node);
 		}
 		else if (event.keyCode === 13 || event.keyCode === 32) {
-			if (!DOM.hasClass(event.delegateTarget.parentNode.parentNode, 'disabled')) {
+			if (!dom.hasClass(event.delegateTarget.parentNode.parentNode, 'disabled')) {
 				this.handleNodeClicked_(event);
 			}
 		}
 	}
 
 	/**
-	 * Unexpanded the given tree node.
-	 * @param {!Element} node
+	 * Sets the expanded state of a node
+	 * @param {!Element} node The tree node we want to change the expanded state to
+	 * @param {!Object} state A state object with the new value of the expanded state
 	 * @protected
 	 */
-	unexpandState_(node) {
+	setNodeExpandedState_(node, state) {
 		let path = node.getAttribute('data-treeview-path').split('-');
 
 		let nodeObj = this.getNodeObj(path);
 
-		nodeObj.expanded = false;
+		nodeObj.expanded = state.expanded;
 
 		this.nodes = this.nodes;
 	}
 }
-
-Soy.register(CardsTreeview, templates);
 
 /**
  * CardsTreeview state definition.
@@ -188,5 +174,7 @@ CardsTreeview.STATE = {
 		value: ''
 	}
 };
+
+Soy.register(CardsTreeview, templates);
 
 export default CardsTreeview;
