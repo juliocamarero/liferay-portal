@@ -2,6 +2,7 @@
 
 /**
  * This renders the main element.
+ *
  * @param disabledNodes
  * @param? elementClasses
  * @param nodes
@@ -17,6 +18,8 @@
 {/template}
 
 /**
+ * Renders the list of tree nodes. Uses the same markup as the parent Treeview component
+ *
  * @param nodes
  * @param? parentPath
  */
@@ -35,6 +38,8 @@
 {/template}
 
 /**
+ * Overrides the parent Treeview node template to show a Lexicon card instead of the simple label
+ *
  * @param disabledNodes
  * @param node
  * @param path
@@ -78,6 +83,8 @@
 {/template}
 
 /**
+ * Renders a Lexicon Horizontal Card
+ *
  * @param disabledNodes
  * @param icon
  * @param id

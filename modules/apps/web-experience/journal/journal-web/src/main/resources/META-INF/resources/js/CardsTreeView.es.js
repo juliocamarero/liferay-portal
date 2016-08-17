@@ -6,6 +6,16 @@ import Treeview from 'metal-treeview';
 
 import templates from './CardsTreeView.soy';
 
+/**
+ * CardsTreeView
+ *
+ * This is an extension of the default TreeView component that adds
+ * the following features:
+ *
+ * - Node selection management, both single and multiple
+ * - Custom tree node template using Lexicon Horizontal Cards
+ * - Improved accessibility for keyboard navigation following common tree widget patterns
+ */
 class CardsTreeview extends Treeview {
 	/**
 	 * Focus the given tree node.
@@ -110,7 +120,12 @@ class CardsTreeview extends Treeview {
 
 	/**
 	 * This is called when one of this tree view's nodes receives a keypress.
-	 * If the pressed key is ENTER or SPACE, the node's expanded state will be toggled.
+	 * Depending on the pressed key, the tree will:
+	 * - ENTER or SPACE: Select the current node
+	 * - DOWN ARROW: Focus the next node
+	 * - UP ARROW: Focus the previous node
+	 * - LEFT ARROW: Collapse the current node
+	 * - RIGHT ARROW: Expand the current node
 	 * @param {!Event} event
 	 * @protected
 	 */
@@ -159,6 +174,10 @@ class CardsTreeview extends Treeview {
  * @static
  */
 CardsTreeview.STATE = {
+	/**
+	 * Enables multiple selection of tree elements
+	 * @type {boolean}
+	 */
 	multiSelection: {
 		validator: core.isBoolean,
 		value: false
