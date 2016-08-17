@@ -110,7 +110,7 @@ class CardsTreeview extends Treeview {
 			}
 		}
 		else {
-			this.selectedNodes = currentTargetId + ',';
+			this.selectedNodes = currentTargetId;
 		}
 
 		this.onNodeClick(event);
