@@ -159,19 +159,9 @@ class CardsTreeview extends Treeview {
  * @static
  */
 CardsTreeview.STATE = {
-	disabledNodes: {
-		validator: core.isString,
-		value: ''
-	},
-
 	multiSelection: {
 		validator: core.isBoolean,
 		value: false
-	},
-
-	selectedNodes: {
-		validator: core.isString,
-		value: ''
 	}
 };
 
