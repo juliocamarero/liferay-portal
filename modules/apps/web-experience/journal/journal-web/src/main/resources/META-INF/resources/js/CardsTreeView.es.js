@@ -4,9 +4,9 @@ import core from 'metal/src/core';
 import DOM from 'metal-dom/src/dom';
 import Treeview from 'metal-treeview';
 
-import templates from './TreeviewCards.soy';
+import templates from './CardsTreeView.soy';
 
-class TreeviewCards extends Treeview {
+class CardsTreeview extends Treeview {
 	/**
 	 * Expanded the given tree node.
 	 * @param {!Element} node
@@ -167,14 +167,14 @@ class TreeviewCards extends Treeview {
 	}
 }
 
-Soy.register(TreeviewCards, templates);
+Soy.register(CardsTreeview, templates);
 
 /**
- * TreeviewCards state definition.
+ * CardsTreeview state definition.
  * @type {!Object}
  * @static
  */
-TreeviewCards.STATE = {
+CardsTreeview.STATE = {
 	disabledNodes: {
 		validator: core.isString,
 		value: ''
@@ -200,4 +200,4 @@ TreeviewCards.STATE = {
 	}
 };
 
-export default TreeviewCards;
+export default CardsTreeview;

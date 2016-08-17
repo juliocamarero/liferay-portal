@@ -29,12 +29,12 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 	</aui:fieldset-group>
 </aui:form>
 
-<aui:script require="journal-web/js/TreeviewCards.es, metal-dom/src/dom">
-	var TreeviewCards = journalWebJsTreeviewCardsEs.default;
+<aui:script require="journal-web/js/CardsTreeView.es, metal-dom/src/dom">
+	var CardsTreeView = journalWebJsCardsTreeViewEs.default;
 
 	var DOM = metalDomSrcDom.default;
 
-	new TreeviewCards(
+	new CardsTreeView(
 		{
 			nodes: [<%= journalDisplayContext.getFoldersJSON() %>],
 			onNodeClick: function(event) {
