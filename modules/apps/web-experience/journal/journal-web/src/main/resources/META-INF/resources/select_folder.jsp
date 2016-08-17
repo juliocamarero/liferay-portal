@@ -29,29 +29,30 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 	</aui:fieldset-group>
 </aui:form>
 
-<aui:script require="journal-web/js/CardsTreeView.es, metal-dom/src/dom">
+<aui:script require="journal-web/js/CardsTreeView.es,metal-dom/src/dom">
 	var CardsTreeView = journalWebJsCardsTreeViewEs.default;
-
-	var DOM = metalDomSrcDom.default;
+	var dom = metalDomSrcDom.default;
 
 	new CardsTreeView(
 		{
-			nodes: [<%= journalDisplayContext.getFoldersJSON() %>],
-			onNodeClick: function(event) {
-				var currentTarget = event.delegateTarget.parentNode.parentNode;
+			events: {
+				selectedNodesChanged: function(event) {
+					var selectedFolderNode = dom.toElement('[data-treeitemid="' + event.newVal + '"]');
 
-				var data = {
-					folderId: currentTarget.getAttribute('data-treeitemid'),
-					folderName: currentTarget.getAttribute('data-treeitemname')
-				};
+					var data = {
+						folderId: event.newVal,
+						folderName: selectedFolderNode.getAttribute('data-treeitemname')
+					};
 
-				Liferay.Util.getOpener().Liferay.fire(
-					'<%= HtmlUtil.escapeJS(eventName) %>',
-					{
-						data: data
-					}
-				);
+					Liferay.Util.getOpener().Liferay.fire(
+						'<%= HtmlUtil.escapeJS(eventName) %>',
+						{
+							data: data
+						}
+					);
+				}
 			},
+			nodes: [<%= journalDisplayContext.getFoldersJSON() %>],
 			pathThemeImages: '<%= themeDisplay.getPathThemeImages() %>'
 		},
 		'#<portlet:namespace />folderContainer'

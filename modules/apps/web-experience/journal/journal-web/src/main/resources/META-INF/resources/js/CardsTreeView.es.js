@@ -112,8 +112,6 @@ class CardsTreeview extends Treeview {
 		else {
 			this.selectedNodes = currentTargetId;
 		}
-
-		this.onNodeClick(event);
 	}
 
 	/**
@@ -183,15 +181,6 @@ CardsTreeview.STATE = {
 	multiSelection: {
 		validator: core.isBoolean,
 		value: false
-	},
-	/**
-	 * This is the function called on tree view's nodes click
-	 * @type {Function}
-	 * @default Fn
-	 */
-	onNodeClick: {
-		validator: core.isFunction,
-		value: function() {}
 	},
 
 	selectedNodes: {
