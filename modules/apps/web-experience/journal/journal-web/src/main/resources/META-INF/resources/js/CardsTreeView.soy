@@ -93,6 +93,7 @@
  * @param disabledNodes
  * @param icon
  * @param id
+ * @param path
  * @param pathThemeImages
  * @param title
  */
@@ -104,7 +105,7 @@
 				data-onclick="handleNodeClicked_"
 			{/if}
 			data-onkeyup="handleNodeKeyUp_"
-			tabindex="0"
+			tabindex="{$path == 0 ? '0' : '-1'}"
 		{/let}
 
 		<div {$nodeAttributes}>
