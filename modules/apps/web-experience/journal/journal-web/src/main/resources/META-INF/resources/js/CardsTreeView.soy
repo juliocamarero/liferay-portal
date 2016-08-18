@@ -49,13 +49,18 @@
 	<li class="treeview-node" data-treeview-path="{$path}">
 		{if $node}
 			<div class="treeview-node-wrapper{$node.expanded ? ' expanded' : ''}">
-				<div
-					class="treeview-node-main clearfix col-md-4{$node.children ? ' hasChildren' : ''}{strContains($disabledNodes, $node.id + ',') ? ' disabled' : ''}{strContains($selectedNodes, $node.id + ',') ? ' selected' : ''}"
+				{let $nodeAttributes kind="attributes"}
+					class="treeview-node-main clearfix col-md-4
+					{$node.children ? ' hasChildren' : ''}					
+					{strContains($disabledNodes, ',' + $node.id + ',') ? ' disabled' : ''}
+					{strContains($selectedNodes, ',' + $node.id + ',') ? ' selected' : ''}
+					"
 					data-treeitemid="{$node.id}"
 					data-treeitemname="{$node.name}"
 					aria-expanded="{$node.expanded ? 'true' : 'false'}"
-					role="treeitem">
-
+					role="treeitem"
+				{/let}
+				<div {$nodeAttributes}>
 					{if $node.children}
 						<div
 							class="treeview-node-toggler"
