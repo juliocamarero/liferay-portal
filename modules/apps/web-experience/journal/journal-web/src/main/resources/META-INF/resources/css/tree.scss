@@ -1,85 +1,102 @@
 .portlet-journal-tree {
-	.treeview {
-		ul {
-			list-style: none;
-		}
+	.card {
+		margin-bottom: 0;
+	}
 
-		.disabled {
-			filter: alpha(opacity=70);
-			opacity: 0.7;
-		}
+	.card-row {
+		width: 100.3%; // Chrome and Webkit rounding
 
-		.selected .card-row {
+		&:focus {
 			box-shadow: inset 0 0 0 2px #65B6F0;
 			outline: none;
 		}
+	}
 
-		.card-row-padded {
-			padding: 5px;
-		}
+	.card-row-padded {
+		padding: 5px;
+	}
 
-		.sticker {
-			vertical-align: middle;
-		}
+	.selected .card-row {
+		box-shadow: inset 0 0 0 2px #65B6F0;
+	}
 
-		.treeview-nodes {
-			border-left: 2px solid #869CAD;
-			margin-left: 30px;
+	.disabled {
+		opacity: 0.7;
+	}
 
-			.treeview-nodes {
-				border-left: 1px dashed #869CAD;
-			}
-		}
+	.treeview-node {
+		margin-bottom: 0.5rem;
+		position: relative;
+	}
 
-		.treeview-node {
-			margin-bottom: 0.5rem;
-			position: relative;
-		}
+	.treeview-node-main {
+		float: none;
+		margin-bottom: 20px;
+		padding-left: 40px;
+		position: relative;
 
-		.treeview-node-main {
-			float: none;
-			position: relative;
-		}
-
-		.treeview-node-main:not(.disabled) {
+		&:not(.disabled) {
 			cursor: pointer;
 		}
+	}
 
-		.treeview-node-toggler {
-			background-color: #869CAD;
-			border-radius: 3px;
-			display: inline-block;
-			height: 14px;
-			left: -35px;
-			line-height: 12px;
-			margin-left: -12px;
-			margin-top: -8px;
-			position: absolute;
-			text-align: center;
-			top: 50%;
-			width: 14px;
+	.treeview-nodes {
+		border-left: 2px solid #869CAD;
+		list-style: none;
+		margin-left: 40px;
+		padding-left: 0;
 
-			&:before {
-				color: #FFF;
-				content: '+';
+		.treeview-nodes {
+			border-left-width: 1px;
+			border-left-style: dashed;
+		}
+	}
+
+	.treeview-node-name {
+		font-size: 1.4rem;
+		margin-left: 0.8rem;
+	}
+
+	.treeview-node-toggler {
+		background-color: #869CAD;
+		border-radius: 3px;
+		display: inline-block;
+		height: 14px;
+		left: 0;
+		margin-left: -7px;
+		margin-top: -8px;
+		position: absolute;
+		text-align: center;
+		top: 50%;
+		width: 14px;
+
+		&:before {
+			color: #FFF;
+			content: '+';
+			display: block;
+			line-height: 11px;
+
+			.win & {
+				line-height: 14px;
+			}
+		}
+	}
+
+	.treeview-node-wrapper > .treeview-nodes {
+		display: none;
+	}
+
+	.expanded {
+		> .treeview-node-main > .treeview-node-toggler:before {
+			content: '-';
+			font-size: 21px;
+
+			.win & {
+				line-height: 11px;
 			}
 		}
 
-		.treeview-node-wrapper.expanded > .treeview-node-main > .treeview-node-toggler:before {
-			content: '-';
-		}
-
-		.treeview-node-name {
-			float: left;
-			font-size: 1.4rem;
-			margin-left: 0.8rem;
-		}
-
-		.treeview-node-wrapper > .treeview-nodes {
-			display: none;
-		}
-
-		.treeview-node-wrapper.expanded > .treeview-nodes {
+		> .treeview-nodes {
 			display: block;
 		}
 	}
