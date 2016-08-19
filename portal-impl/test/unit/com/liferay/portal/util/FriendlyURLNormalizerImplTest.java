@@ -37,6 +37,13 @@ public class FriendlyURLNormalizerImplTest {
 	}
 
 	@Test
+	public void testNormalizeInternationalizedResourceIdentifiers() {
+		Assert.assertEquals(
+			"%E5%BC%95",
+			_friendlyURLNormalizerImpl.normalizeWithEncoding("\u5F15"));
+	}	
+	
+	@Test
 	public void testNormalizeSentenceWithBlanks() {
 		Assert.assertEquals(
 			"sentence-with-blanks",
