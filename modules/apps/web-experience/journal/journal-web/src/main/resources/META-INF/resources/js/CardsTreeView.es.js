@@ -24,7 +24,7 @@ class CardsTreeview extends Treeview {
 	 */
 	focus_(nodeObj) {
 		if (nodeObj) {
-			this.element.querySelector('[data-treeitemid="' + nodeObj.id + '"] .card-row').focus();
+			this.element.querySelector('[data-treeitemid="' + nodeObj.id + '"] .card').focus();
 		}
 	}
 
@@ -92,7 +92,7 @@ class CardsTreeview extends Treeview {
 	 * @protected
 	 */
 	handleNodeClicked_(event) {
-		let currentTarget = event.delegateTarget.parentNode.parentNode;
+		let currentTarget = event.delegateTarget.parentNode;
 
 		let currentTargetId = currentTarget.getAttribute('data-treeitemid');
 
@@ -130,7 +130,7 @@ class CardsTreeview extends Treeview {
 	 * @protected
 	 */
 	handleNodeKeyUp_(event) {
-		let node = event.delegateTarget.parentNode.parentNode.parentNode.parentNode;
+		let node = event.delegateTarget.parentNode.parentNode.parentNode;
 
 		if (event.keyCode === 37) {
 			this.setNodeExpandedState_(node, {expanded: false});

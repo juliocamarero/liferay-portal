@@ -1,22 +1,18 @@
 .portlet-journal-tree {
 	.card {
-		margin-bottom: 0;
-	}
-
-	.card-row {
-		width: 100.3%; // Chrome and Webkit rounding
-
 		&:focus {
 			box-shadow: inset 0 0 0 2px #65B6F0;
 			outline: none;
 		}
+
+		margin-bottom: 0;
 	}
 
 	.card-row-padded {
 		padding: 5px;
 	}
 
-	.selected .card-row {
+	.selected .card {
 		box-shadow: inset 0 0 0 2px #65B6F0;
 	}
 
