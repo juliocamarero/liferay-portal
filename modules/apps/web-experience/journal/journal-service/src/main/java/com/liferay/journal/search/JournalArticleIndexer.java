@@ -23,7 +23,9 @@ import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
 import com.liferay.journal.configuration.JournalServiceConfigurationValues;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
+import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.journal.service.permission.JournalArticlePermission;
 import com.liferay.journal.util.JournalContent;
 import com.liferay.journal.util.JournalConverter;
@@ -769,45 +771,80 @@ public class JournalArticleIndexer
 	}
 
 	protected void reindexArticles(long companyId) throws PortalException {
-		final IndexableActionableDynamicQuery indexableActionableDynamicQuery =
-			_journalArticleLocalService.getIndexableActionableDynamicQuery();
+		final IndexableActionableDynamicQuery indexableActionableDynamicQuery;
 
-		indexableActionableDynamicQuery.setCompanyId(companyId);
-		indexableActionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod<JournalArticle>() {
+		if (JournalServiceConfigurationValues.
+				JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
 
-				@Override
-				public void performAction(JournalArticle article) {
-					if (!JournalServiceConfigurationValues.
-							JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
+			indexableActionableDynamicQuery =
+				_journalArticleLocalService.
+					getIndexableActionableDynamicQuery();
+
+			indexableActionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.
+					PerformActionMethod<JournalArticle>() {
+
+					@Override
+					public void performAction(JournalArticle article) {
+						try {
+							Document document = getDocument(article);
+
+							indexableActionableDynamicQuery.addDocuments(
+								document);
+						}
+						catch (PortalException pe) {
+							if (_log.isWarnEnabled()) {
+								_log.warn(
+									"Unable to index journal article " +
+										article.getId(),
+									pe);
+							}
+						}
+					}
+
+				});
+		}
+		else {
+			indexableActionableDynamicQuery =
+				_journalArticleResourceLocalService.
+					getIndexableActionableDynamicQuery();
+			indexableActionableDynamicQuery.setPerformActionMethod(
+				new ActionableDynamicQuery.
+					PerformActionMethod<JournalArticleResource>() {
+
+					@Override
+					public void performAction(
+						JournalArticleResource articleResource) {
 
 						JournalArticle latestIndexableArticle =
 							fetchLatestIndexableArticleVersion(
-								article.getResourcePrimKey());
+								articleResource.getResourcePrimKey());
 
 						if (latestIndexableArticle == null) {
 							return;
 						}
 
-						article = latestIndexableArticle;
-					}
+						try {
+							Document document = getDocument(
+								latestIndexableArticle);
 
-					try {
-						Document document = getDocument(article);
-
-						indexableActionableDynamicQuery.addDocuments(document);
-					}
-					catch (PortalException pe) {
-						if (_log.isWarnEnabled()) {
-							_log.warn(
-								"Unable to index journal article " +
-									article.getId(),
-								pe);
+							indexableActionableDynamicQuery.addDocuments(
+								document);
+						}
+						catch (PortalException pe) {
+							if (_log.isWarnEnabled()) {
+								_log.warn(
+									"Unable to index journal article " +
+										latestIndexableArticle.getId(),
+									pe);
+							}
 						}
 					}
-				}
 
-			});
+				});
+		}
+
+		indexableActionableDynamicQuery.setCompanyId(companyId);
 		indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
 		indexableActionableDynamicQuery.performActions();
@@ -848,6 +885,14 @@ public class JournalArticleIndexer
 	}
 
 	@Reference(unbind = "-")
+	protected void setJournalArticleResourceLocalService(
+		JournalArticleResourceLocalService journalArticleResourceLocalService) {
+
+		_journalArticleResourceLocalService =
+			journalArticleResourceLocalService;
+	}
+
+	@Reference(unbind = "-")
 	protected void setJournalContent(JournalContent journalContent) {
 		_journalContent = journalContent;
 	}
@@ -864,6 +909,8 @@ public class JournalArticleIndexer
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private FieldsToDDMFormValuesConverter _fieldsToDDMFormValuesConverter;
 	private JournalArticleLocalService _journalArticleLocalService;
+	private JournalArticleResourceLocalService
+		_journalArticleResourceLocalService;
 	private JournalContent _journalContent;
 	private JournalConverter _journalConverter;
 
