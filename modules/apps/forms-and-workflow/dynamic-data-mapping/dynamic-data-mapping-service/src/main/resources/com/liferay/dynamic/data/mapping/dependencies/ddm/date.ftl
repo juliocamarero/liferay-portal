@@ -34,12 +34,6 @@
 	/>
 <#else>
 	<#assign
-		calendar = calendarFactory.getCalendar(timeZone)
-
-		fieldValue = calendarFactory.getCalendar(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE))
-	/>
-
-	<#assign
 		day = 0
 		month = -1
 		year = 0
