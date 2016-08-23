@@ -131,10 +131,22 @@ else {
 					form = $(checkbox.prop('form'));
 				}
 
-				form.fm('<%= HtmlUtil.getAUICompatibleId(name) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(dayParam) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(monthParam) %>').prop('disabled', checked);
-				form.fm('<%= HtmlUtil.escapeJS(yearParam) %>').prop('disabled', checked);
+				var dayField = form.fm('<%= HtmlUtil.escapeJS(dayParam) %>');
+				var inputDateField = form.fm('<%= HtmlUtil.getAUICompatibleId(name) %>');
+				var monthField = form.fm('<%= HtmlUtil.escapeJS(monthParam) %>');
+				var yearField = form.fm('<%= HtmlUtil.escapeJS(yearParam) %>');
+
+				inputDateField.prop('disabled', checked);
+				dayField.prop('disabled', checked);
+				monthField.prop('disabled', checked);
+				yearField.prop('disabled', checked);
+
+				if (checked) {
+					inputDateField.val('');
+					dayField.val('');
+					monthField.val('');
+					yearField.val('');
+				}
 			}
 		);
 	</aui:script>
