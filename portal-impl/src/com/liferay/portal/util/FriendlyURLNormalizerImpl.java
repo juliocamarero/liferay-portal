@@ -123,7 +123,7 @@ public class FriendlyURLNormalizerImpl implements FriendlyURLNormalizer {
 				 (c <= CharPool.LOWER_CASE_Z)) ||
 				((CharPool.NUMBER_0 <= c) && (c <= CharPool.NUMBER_9)) ||
 				(c == CharPool.UNDERLINE) ||
-				(!normalizeToAscii && CharPool.PERCENT == c)) {
+				(!normalizeToAscii && (CharPool.PERCENT == c))) {
 
 				sb.append(c);
 			}

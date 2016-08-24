@@ -32,17 +32,17 @@ public class FriendlyURLNormalizerImplTest {
 	}
 
 	@Test
-	public void testNormalizeNull() {
-		Assert.assertEquals(null, _friendlyURLNormalizerImpl.normalize(null));
-	}
-
-	@Test
 	public void testNormalizeInternationalizedResourceIdentifiers() {
 		Assert.assertEquals(
 			"%E5%BC%95",
 			_friendlyURLNormalizerImpl.normalizeWithEncoding("\u5F15"));
-	}	
-	
+	}
+
+	@Test
+	public void testNormalizeNull() {
+		Assert.assertEquals(null, _friendlyURLNormalizerImpl.normalize(null));
+	}
+
 	@Test
 	public void testNormalizeSentenceWithBlanks() {
 		Assert.assertEquals(
