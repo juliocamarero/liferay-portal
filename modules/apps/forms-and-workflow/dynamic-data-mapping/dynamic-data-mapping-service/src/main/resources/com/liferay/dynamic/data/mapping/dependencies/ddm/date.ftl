@@ -6,26 +6,28 @@
 	YEAR = staticUtil["java.util.Calendar"].YEAR
 />
 
-<#if (hasFieldValue)>
-	<#assign
-		dateValue = fieldRawValue?date["yyyy-MM-dd"]
+<#if fieldValue != "">
+	<#if (hasFieldValue)>
+		<#assign
+			dateValue = fieldRawValue?date["yyyy-MM-dd"]
 
-		fieldValue = calendarFactory.getCalendar(requestedLocale)
+			fieldValue = calendarFactory.getCalendar(requestedLocale)
 
-		void = fieldValue.setTimeInMillis(dateValue?long)
-	/>
+			void = fieldValue.setTimeInMillis(dateValue?long)
+		/>
+	<#elseif validator.isNotNull(predefinedValue)>
+		<#assign
+			predefinedDate = dateUtil.parseDate(predefinedValue, requestedLocale)
 
-	<#assign
-		day = fieldValue.get(DATE)
-		month = fieldValue.get(MONTH)
-		year = fieldValue.get(YEAR)
-	/>
-<#elseif validator.isNotNull(predefinedValue)>
-	<#assign
-		predefinedDate = dateUtil.parseDate(predefinedValue, requestedLocale)
+			fieldValue = calendarFactory.getCalendar(predefinedDate?long)
+		/>
+	<#else>
+		<#assign
+			calendar = calendarFactory.getCalendar(timeZone)
 
-		fieldValue = calendarFactory.getCalendar(predefinedDate?long)
-	/>
+			fieldValue = calendarFactory.getCalendar(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE))
+		/>
+	</#if>
 
 	<#assign
 		day = fieldValue.get(DATE)
