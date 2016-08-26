@@ -190,8 +190,8 @@ public class JournalPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String ddmStructureKey = ParamUtil.getString(
-			actionRequest, "ddmStructureKey");
+		String ddmStructureId = ParamUtil.getString(
+			actionRequest, "ddmStructureId");
 
 		PortalPreferences portalPreferences =
 			PortletPreferencesFactoryUtil.getPortalPreferences(actionRequest);
@@ -212,7 +212,7 @@ public class JournalPortlet extends MVCPortlet {
 
 		portalPreferences.setValues(
 			JournalPortletKeys.JOURNAL, key,
-			ArrayUtil.append(addMenuFavItems, ddmStructureKey));
+			ArrayUtil.append(addMenuFavItems, ddmStructureId));
 
 		SessionMessages.add(
 			actionRequest,
@@ -432,8 +432,8 @@ public class JournalPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String ddmStructureKey = ParamUtil.getString(
-			actionRequest, "ddmStructureKey");
+		String ddmStructureId = ParamUtil.getString(
+			actionRequest, "ddmStructureId");
 
 		PortalPreferences portalPreferences =
 			PortletPreferencesFactoryUtil.getPortalPreferences(actionRequest);
@@ -446,7 +446,7 @@ public class JournalPortlet extends MVCPortlet {
 
 		portalPreferences.setValues(
 			JournalPortletKeys.JOURNAL, key,
-			ArrayUtil.remove(addMenuFavItems, ddmStructureKey));
+			ArrayUtil.remove(addMenuFavItems, ddmStructureId));
 
 		SessionMessages.add(
 			actionRequest,

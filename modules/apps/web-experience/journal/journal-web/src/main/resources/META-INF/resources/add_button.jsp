@@ -43,7 +43,7 @@
 			for (DDMStructure ddmStructure : ddmStructures) {
 				AddMenuKeys.AddMenuType type = AddMenuKeys.AddMenuType.DEFAULT;
 
-				if (ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), ddmStructure.getStructureKey())) {
+				if (ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), String.valueOf(ddmStructure.getStructureId()))) {
 					type = AddMenuKeys.AddMenuType.FAVORITE;
 				}
 			%>
@@ -78,7 +78,7 @@
 			function(event) {
 				var uri = '<%= addArticleURL %>';
 
-				uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureKey=' + event.ddmStructureKey, uri);
+				uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureId=' + event.ddmStructureId, uri);
 
 				location.href = uri;
 			}
