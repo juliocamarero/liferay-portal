@@ -318,6 +318,11 @@ public interface JournalFolderLocalService extends BaseLocalService,
 		int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DDMStructure> getDDMStructures(long groupId, long folderId,
+		int restrictionType, boolean excludeDuplicatedStructureKeys)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DDMStructure> getDDMStructures(long[] groupIds, long folderId,
 		int restrictionType) throws PortalException;
 
