@@ -304,6 +304,24 @@ public class JournalFolderLocalServiceImpl
 
 	@Override
 	public List<DDMStructure> getDDMStructures(
+			long groupId, long folderId, int restrictionType,
+			boolean excludeDuplicatedStructureKeys)
+		throws PortalException {
+
+		if (excludeDuplicatedStructureKeys) {
+			return filterDDMStructuresWithDuplicatedKey(
+				groupId, getDDMStructures(
+					PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId, true),
+					folderId, restrictionType));
+		}
+
+		return getDDMStructures(
+			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId, true),
+			folderId, restrictionType);
+	}
+
+	@Override
+	public List<DDMStructure> getDDMStructures(
 			long[] groupIds, long folderId, int restrictionType)
 		throws PortalException {
 
@@ -328,24 +346,6 @@ public class JournalFolderLocalServiceImpl
 			JournalArticle.class);
 
 		return ddmStructureLocalService.getStructures(groupIds, classNameId);
-	}
-
-	@Override
-	public List<DDMStructure> getDDMStructures(
-			long groupId, long folderId, int restrictionType,
-			boolean excludeDuplicatedStructureKeys)
-		throws PortalException {
-
-		if (excludeDuplicatedStructureKeys) {
-			return filterDDMStructuresWithDuplicatedKey(
-				groupId, getDDMStructures(
-					PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId, true),
-					folderId, restrictionType));
-		}
-
-		return getDDMStructures(
-			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId, true),
-			folderId, restrictionType);
 	}
 
 	@Override

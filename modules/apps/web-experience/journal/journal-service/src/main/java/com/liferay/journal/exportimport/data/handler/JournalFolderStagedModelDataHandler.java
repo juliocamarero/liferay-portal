@@ -205,10 +205,10 @@ public class JournalFolderStagedModelDataHandler
 		throws Exception {
 
 		List<DDMStructure> ddmStructures =
-				_journalFolderLocalService.getDDMStructures(
-					portletDataContext.getScopeGroupId(), folder.getFolderId(),
-					JournalFolderConstants.
-						RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW, true);
+			_journalFolderLocalService.getDDMStructures(
+				portletDataContext.getScopeGroupId(), folder.getFolderId(),
+				JournalFolderConstants.
+					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW, true);
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			StagedModelDataHandlerUtil.exportReferenceStagedModel(

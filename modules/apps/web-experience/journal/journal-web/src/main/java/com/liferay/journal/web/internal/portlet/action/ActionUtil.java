@@ -292,7 +292,8 @@ public class ActionUtil {
 				try {
 					ddmStructure = DDMStructureServiceUtil.getStructure(
 						ddmStructureId);
-				} catch (NoSuchStructureException nsse) {
+				}
+				catch (NoSuchStructureException nsse) {
 					ddmStructure = null;
 				}
 			}
