@@ -339,13 +339,13 @@ public class JournalFolderLocalServiceImpl
 		if (excludeDuplicatedStructureKeys) {
 			return filterDDMStructuresWithDuplicatedKey(
 				groupId, getDDMStructures(
-					PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
+					PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId, true),
 					folderId, restrictionType));
 		}
 
 		return getDDMStructures(
-			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId), folderId,
-			restrictionType);
+			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId, true),
+			folderId, restrictionType);
 	}
 
 	@Override
