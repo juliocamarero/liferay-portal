@@ -100,6 +100,18 @@ public class JournalFolderServiceImpl extends JournalFolderServiceBaseImpl {
 	}
 
 	@Override
+	public List<DDMStructure> getDDMStructures(
+			long groupId, long folderId, int restrictionType,
+			boolean excludeDuplicatedStructureKeys)
+		throws PortalException {
+
+		return filterStructures(
+			journalFolderLocalService.getDDMStructures(
+				groupId, folderId, restrictionType,
+				excludeDuplicatedStructureKeys));
+	}
+
+	@Override
 	public JournalFolder getFolder(long folderId) throws PortalException {
 		JournalFolder folder = journalFolderLocalService.getFolder(folderId);
 
