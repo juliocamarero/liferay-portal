@@ -331,6 +331,24 @@ public class JournalFolderLocalServiceImpl
 	}
 
 	@Override
+	public List<DDMStructure> getDDMStructures(
+			long groupId, long folderId, int restrictionType,
+			boolean excludeDuplicatedStructureKeys)
+		throws PortalException {
+
+		if (excludeDuplicatedStructureKeys) {
+			return filterDDMStructuresWithDuplicatedKey(
+				groupId, getDDMStructures(
+					PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
+					folderId, restrictionType));
+		}
+
+		return getDDMStructures(
+			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId), folderId,
+			restrictionType);
+	}
+
+	@Override
 	public JournalFolder getFolder(long folderId) throws PortalException {
 		return journalFolderPersistence.findByPrimaryKey(folderId);
 	}
