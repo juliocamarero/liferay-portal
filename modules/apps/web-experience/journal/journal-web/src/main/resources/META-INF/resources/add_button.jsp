@@ -38,7 +38,7 @@
 		<c:if test="<%= JournalFolderPermission.contains(permissionChecker, scopeGroupId, journalDisplayContext.getFolderId(), ActionKeys.ADD_ARTICLE) %>">
 
 			<%
-			List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
+			List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(scopeGroupId, journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType(), true);
 
 			for (DDMStructure ddmStructure : ddmStructures) {
 				AddMenuKeys.AddMenuType type = AddMenuKeys.AddMenuType.DEFAULT;
