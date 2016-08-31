@@ -70,8 +70,10 @@ import com.liferay.trash.kernel.util.TrashUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -1071,6 +1073,29 @@ public class JournalFolderLocalServiceImpl
 		}
 
 		return folder;
+	}
+
+	protected List<DDMStructure> filterDDMStructuresWithDuplicatedKey(
+			long groupId, List<DDMStructure> ddmStructures)
+		throws PortalException {
+
+		Map<String, DDMStructure> filteredDDMStructures = new HashMap<>();
+
+		for (DDMStructure ddmStructure : ddmStructures) {
+			if (!filteredDDMStructures.containsKey(
+					ddmStructure.getStructureKey())) {
+
+				filteredDDMStructures.put(
+					ddmStructure.getStructureKey(),
+					ddmStructureLocalService.fetchStructure(
+						groupId,
+						classNameLocalService.getClassNameId(
+							JournalArticle.class),
+						ddmStructure.getStructureKey(), true));
+			}
+		}
+
+		return new ArrayList<>(filteredDDMStructures.values());
 	}
 
 	protected Set<Long> getDDMStructureIds(
