@@ -62,7 +62,7 @@ portletURL.setParameter("eventName", eventName);
 <aui:form cssClass="container-fluid-1280" name="addMenuItemFm">
 
 	<%
-	List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
+	List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(scopeGroupId, journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType(), true);
 	%>
 
 	<liferay-ui:search-container
