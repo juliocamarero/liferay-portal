@@ -218,17 +218,19 @@ public class FriendlyURLServlet extends HttpServlet {
 			return new Object[] {mainPath, false};
 		}
 
+		String decodedPath = HttpUtil.decodePath(path);
+
 		// Group friendly URL
 
 		String friendlyURL = null;
 
-		int pos = path.indexOf(CharPool.SLASH, 1);
+		int pos = decodedPath.indexOf(CharPool.SLASH, 1);
 
 		if (pos != -1) {
-			friendlyURL = path.substring(0, pos);
+			friendlyURL = decodedPath.substring(0, pos);
 		}
-		else if (path.length() > 1) {
-			friendlyURL = path;
+		else if (decodedPath.length() > 1) {
+			friendlyURL = decodedPath;
 		}
 
 		if (Validator.isNull(friendlyURL)) {
@@ -297,8 +299,8 @@ public class FriendlyURLServlet extends HttpServlet {
 
 		friendlyURL = null;
 
-		if ((pos != -1) && ((pos + 1) != path.length())) {
-			friendlyURL = path.substring(pos);
+		if ((pos != -1) && ((pos + 1) != decodedPath.length())) {
+			friendlyURL = decodedPath.substring(pos);
 		}
 
 		if (Validator.isNull(friendlyURL)) {
