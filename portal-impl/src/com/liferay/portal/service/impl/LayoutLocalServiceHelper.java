@@ -46,6 +46,7 @@ import com.liferay.portal.kernel.service.persistence.LayoutPersistence;
 import com.liferay.portal.kernel.service.persistence.LayoutSetPersistence;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -124,7 +125,7 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 				friendlyURL = getFriendlyURL(
 					groupId, privateLayout, layoutId, name, friendlyURL);
 
-				newFriendlyURLMap.put(locale, friendlyURL);
+				newFriendlyURLMap.put(locale, HttpUtil.decodeURL(friendlyURL));
 			}
 		}
 
@@ -136,7 +137,8 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 			String friendlyURL = getFriendlyURL(
 				groupId, privateLayout, layoutId, name, StringPool.BLANK);
 
-			newFriendlyURLMap.put(siteDefaultLocale, friendlyURL);
+			newFriendlyURLMap.put(
+				siteDefaultLocale, HttpUtil.decodeURL(friendlyURL));
 		}
 
 		return newFriendlyURLMap;
