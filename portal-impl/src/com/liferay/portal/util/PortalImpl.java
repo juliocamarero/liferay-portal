@@ -1697,7 +1697,7 @@ public class PortalImpl implements Portal {
 				WebKeys.THEME_DISPLAY);
 
 			group = getControlPanelDisplayGroup(
-				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
+				themeDisplay.getCompanyId(), themeDisplay.getSiteGroupId(),
 				themeDisplay.getDoAsGroupId(), portletId);
 		}
 
@@ -1727,7 +1727,7 @@ public class PortalImpl implements Portal {
 					WebKeys.THEME_DISPLAY);
 
 			group = getControlPanelDisplayGroup(
-				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
+				themeDisplay.getCompanyId(), themeDisplay.getSiteGroupId(),
 				themeDisplay.getDoAsGroupId(), portletId);
 		}
 
