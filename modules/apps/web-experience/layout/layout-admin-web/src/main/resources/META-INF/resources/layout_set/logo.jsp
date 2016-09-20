@@ -60,7 +60,11 @@ String companyLogoURL = themeDisplay.getPathImage() + "/company_logo?img_id=" + 
 	tempImageFileName="<%= String.valueOf(selLayoutSet.getLayoutSetId()) %>"
 />
 
-<c:if test="<%= !layoutsAdminDisplayContext.getGroup().isUser() %>">
+<%
+Group group = layoutsAdminDisplayContext.getGroup();
+%>
+
+<c:if test="<%= !group.isUser() %>">
 
 	<%
 	boolean showSiteNameSupported = GetterUtil.getBoolean(selLayoutSet.getTheme().getSetting("show-site-name-supported"), true);
