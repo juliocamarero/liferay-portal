@@ -21,9 +21,6 @@ import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.asset.kernel.validator.AssetEntryValidator;
-import com.liferay.document.library.kernel.model.DLFileEntry;
-import com.liferay.document.library.kernel.model.DLFileEntryConstants;
-import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -77,17 +74,6 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 			long groupId, String className, long classTypePK,
 			long[] categoryIds, String[] entryNames)
 		throws PortalException {
-
-		if (className.equals(DLFileEntryConstants.getClassName())) {
-			DLFileEntry dlFileEntry = _dlFileEntryLocalService.fetchDLFileEntry(
-				classTypePK);
-
-			if ((dlFileEntry == null) ||
-				(dlFileEntry.getRepositoryId() != groupId)) {
-
-				return;
-			}
-		}
 
 		List<AssetVocabulary> assetVocabularies =
 			_assetVocabularyLocalService.getGroupVocabularies(groupId, false);
@@ -145,13 +131,6 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 		ClassNameLocalService classNameLocalService) {
 
 		_classNameLocalService = classNameLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setDLFileEntryLocalService(
-		DLFileEntryLocalService dlFileEntryLocalService) {
-
-		_dlFileEntryLocalService = dlFileEntryLocalService;
 	}
 
 	@Reference(unbind = "-")
@@ -215,7 +194,6 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 
 	private AssetVocabularyLocalService _assetVocabularyLocalService;
 	private ClassNameLocalService _classNameLocalService;
-	private DLFileEntryLocalService _dlFileEntryLocalService;
 	private GroupLocalService _groupLocalService;
 
 	private ServiceTrackerMap<String, CardinalityAssetEntryValidatorHelper>
