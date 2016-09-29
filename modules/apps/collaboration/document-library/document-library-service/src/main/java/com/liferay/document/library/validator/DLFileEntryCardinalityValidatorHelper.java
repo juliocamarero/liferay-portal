@@ -34,12 +34,12 @@ public class DLFileEntryCardinalityValidatorHelper
 	implements CardinalityAssetEntryValidatorHelper{
 
 	@Override
-	public boolean isValidable(long groupId, String className, long classPK, long classTypePK, long[] categoryIds,
-			String[] entryNames) {
+	public boolean isValidable(long groupId, String className, long classPK,
+			long classTypePK, long[] categoryIds, String[] entryNames) {
 
 		if (className.equals(DLFileEntryConstants.getClassName())) {
 			DLFileEntry dlFileEntry = _dlFileEntryLocalService.fetchDLFileEntry(
-				classTypePK);
+				classPK);
 
 			if ((dlFileEntry == null) ||
 				(dlFileEntry.getRepositoryId() != groupId)) {
