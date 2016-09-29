@@ -300,6 +300,22 @@ include the projects containing a `.lfrbuild-portal-pre` marker file.
 ### Changed
 - [LPS-66853]: Update the [Liferay Gradle Plugins] dependency to version 2.0.44.
 
+## 1.2.34 - 2016-09-27
+
+### Changed
+- [LPS-67863]: Change dependency version override declarations in
+`.version-override-${project.name}.properties` to follow a new format:
+
+		[artifact group]/[artifact name]=[new version]
+
+### Fixed
+- [LPS-67863]: Fix commit deletion process of version override files.
+
+## 1.2.35 - 2016-09-28
+
+### Changed
+- [LPS-67352]: Update the [Liferay Gradle Plugins] dependency to version 2.0.45.
+
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins Node]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-node
 [LPS-61099]: https://issues.liferay.com/browse/LPS-61099
