@@ -2,7 +2,7 @@ Bundle-Name: Liferay Asset Categories Service
 Bundle-SymbolicName: com.liferay.asset.categories.service
 Bundle-Version: 1.1.0
 Export-Package:\
-	com.liferay.asset.exportimport.staged.model.repository,\
-	com.liferay.asset.categories.validator
+	com.liferay.asset.categories.validator,\
+	com.liferay.asset.exportimport.staged.model.repository
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Asset

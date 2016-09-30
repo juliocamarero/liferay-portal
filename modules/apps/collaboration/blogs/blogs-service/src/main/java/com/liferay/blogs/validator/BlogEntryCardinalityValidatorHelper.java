@@ -32,8 +32,8 @@ public class BlogEntryCardinalityValidatorHelper
 
 	@Override
 	public boolean isValidable(
-		long groupId, String className, long classPK, long classTypePK, long[] categoryIds,
-		String[] entryNames) {
+		long groupId, String className, long classPK, long classTypePK,
+		long[] categoryIds, String[] entryNames) {
 
 		if (className.equals(BlogsEntry.class.getName()) &&
 			(groupId == classPK)) {

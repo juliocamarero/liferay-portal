@@ -14,13 +14,13 @@
 
 package com.liferay.document.library.validator;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 import com.liferay.asset.categories.validator.CardinalityAssetEntryValidatorHelper;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eduardo Perez Garcia
@@ -30,12 +30,13 @@ import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 	property = {"model.class.name=com.liferay.blogs.kernel.model.BlogsEntry"},
 	service = CardinalityAssetEntryValidatorHelper.class
 )
-public class DLFileEntryCardinalityValidatorHelper 
-	implements CardinalityAssetEntryValidatorHelper{
+public class DLFileEntryCardinalityValidatorHelper
+	implements CardinalityAssetEntryValidatorHelper {
 
 	@Override
-	public boolean isValidable(long groupId, String className, long classPK,
-			long classTypePK, long[] categoryIds, String[] entryNames) {
+	public boolean isValidable(
+		long groupId, String className, long classPK, long classTypePK,
+		long[] categoryIds, String[] entryNames) {
 
 		if (className.equals(DLFileEntryConstants.getClassName())) {
 			DLFileEntry dlFileEntry = _dlFileEntryLocalService.fetchDLFileEntry(
