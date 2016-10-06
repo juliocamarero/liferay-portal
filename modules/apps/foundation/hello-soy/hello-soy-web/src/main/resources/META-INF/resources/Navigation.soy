@@ -4,7 +4,7 @@
  * Prints the Hello Soy portlet navigation example page.
  *
  * @param id
- * @param navigationURL
+ * @param viewURL
  */
 {template .render}
 	<div id="{$id}">
@@ -12,7 +12,7 @@
 
 		<p>{msg desc=""}this-is-another-view{/msg}</p>
 
-		<a href="{$navigationURL}">{msg desc=""}click-here-to-navigate-back{/msg}</a>
+		<a href="{$viewURL}">{msg desc=""}click-here-to-navigate-back{/msg}</a>
 
 		{call Footer.render data="all"}{/call}
 	</div>

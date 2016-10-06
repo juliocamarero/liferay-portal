@@ -1,12 +1,12 @@
 'use strict';
 
-import core from 'metal/src/core';
-import dom from 'metal-dom/src/dom';
+import dom from 'metal-dom/src/all/dom';
 import Surface from 'senna/src/surface/Surface';
+import {isString} from 'metal/src/metal';
 
 class LiferaySurface extends Surface {
 	addContent(screenId, content) {
-		if (core.isString(content)) {
+		if (isString(content)) {
 			content = dom.buildFragment(content);
 		}
 

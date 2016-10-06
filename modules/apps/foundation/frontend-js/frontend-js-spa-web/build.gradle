@@ -6,7 +6,7 @@ configurations {
 
 task buildSenna(type: Copy)
 
-String sennaVersion = "1.2.0"
+String sennaVersion = "2.0.2-SNAPSHOT"
 
 buildSenna {
 	eachFile new StripPathSegmentsAction(7)
@@ -20,8 +20,25 @@ buildSenna {
 	into "classes/META-INF/resources"
 }
 
+task buildMetalRouter(type: Copy)
+
+buildMetalRouter {
+	dependsOn npmInstall
+
+	eachFile new StripPathSegmentsAction(3)
+
+	from {
+		fileTree(dir: "node_modules")
+	}
+
+	include "metal-router/build/amd/metal-router/"
+
+	includeEmptyDirs = false
+	into "classes/META-INF/resources"
+}
+
 configJSModules {
-	dependsOn buildSenna
+	dependsOn buildSenna, buildMetalRouter, npmInstall
 	include "**/*.js*"
 }
 

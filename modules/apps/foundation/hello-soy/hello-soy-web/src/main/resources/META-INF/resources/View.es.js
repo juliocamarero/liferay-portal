@@ -5,8 +5,8 @@ import Soy from 'metal-soy/src/Soy';
 import templates from './View.soy';
 
 class View extends Component {
-	constructor(opt_config) {
-		super(opt_config);
+	created() {
+		console.log('View component');
 	}
 }
 

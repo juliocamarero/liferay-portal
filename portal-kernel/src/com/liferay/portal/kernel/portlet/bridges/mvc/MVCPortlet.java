@@ -593,6 +593,18 @@ public class MVCPortlet extends LiferayPortlet {
 			hideDefaultSuccessMessage(portletRequest);
 		}
 	}
+	
+	protected MVCCommandCache getMVCResourceCommandCache() {
+		return _mvcResourceCommandCache;
+	}
+	
+	protected MVCCommandCache getMVCActionCommandCache() {
+		return _mvcActionCommandCache;
+	}
+	
+	protected MVCCommandCache getMVCRenderCommandCache() {
+		return _mvcRenderCommandCache;
+	}
 
 	protected String aboutTemplate;
 	protected boolean clearRequestParameters;

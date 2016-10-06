@@ -1,10 +1,10 @@
 'use strict';
 
 import App from 'senna/src/app/App';
-import core from 'metal/src/core';
-import dom from 'metal-dom/src/dom';
-import Utils from '../util/Utils.es';
+import dom from 'metal-dom/src/all/dom';
 import LiferaySurface from '../surface/Surface.es';
+import Utils from '../util/Utils.es';
+import {getUid} from 'metal/src/metal';
 
 class LiferayApp extends App {
 	constructor() {
@@ -33,7 +33,7 @@ class LiferayApp extends App {
 		var body = document.body;
 
 		if (!body.id) {
-			body.id = 'senna_surface' + core.getUid();
+			body.id = 'senna_surface' + getUid();
 		}
 
 		this.addSurfaces(new LiferaySurface(body.id));

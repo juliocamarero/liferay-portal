@@ -16,15 +16,16 @@ package com.liferay.portal.portlet.bridge.soy.internal;
 
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONSerializer;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.template.soy.utils.SoyJavaScriptRenderer;
+
+import java.io.InputStream;
 
 import java.net.URL;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -37,49 +38,90 @@ import org.osgi.framework.Bundle;
  */
 public class SoyPortletHelper {
 
-	public SoyPortletHelper(Bundle bundle) throws Exception {
+	public SoyPortletHelper(Bundle bundle, String defaultMVCRenderCommandName)
+		throws Exception {
+
 		_bundle = bundle;
+		_defaultMVCRenderCommandName = defaultMVCRenderCommandName;
 		_moduleName = getModuleName();
-		_soyJavaScriptRenderer = new SoyJavaScriptRenderer();
+		_jsonSerializer = JSONFactoryUtil.createJSONSerializer();
+		_routerJavaScriptTPL = _getRouterJavaScriptTPL();
 	}
 
-	public String getPortletJavaScript(
-		Template template, String path, String portletNamespace,
-		Set<String> additionalRequiredModules) {
+	public String getRouterJavaScript(
+		String currentMVCRenderCommandName, String elementId,
+		Set<String> mvcRenderCommandNames, String portletId,
+		String portletNamespace, String portletWrapperId, Template template) {
 
-		if (_moduleName == null) {
-			return StringPool.BLANK;
+		Set<String> filteredMVCRenderCommandNames = new LinkedHashSet<>();
+
+		Set<String> modules = new LinkedHashSet<>();
+
+		for (String mvcRenderCommandName : mvcRenderCommandNames) {
+			if (mvcRenderCommandName.equals(StringPool.SLASH)) {
+				mvcRenderCommandName = _defaultMVCRenderCommandName;
+			}
+
+			if (filteredMVCRenderCommandNames.contains(mvcRenderCommandName)) {
+				continue;
+			}
+
+			filteredMVCRenderCommandNames.add(mvcRenderCommandName);
+
+			modules.add(_getModulePath(mvcRenderCommandName));
 		}
 
-		Set<String> requiredModules = getRequiredModules(
-			path, additionalRequiredModules);
+		String modulesString = _jsonSerializer.serialize(modules);
 
-		return _soyJavaScriptRenderer.getJavaScript(
-			template, portletNamespace, requiredModules);
+		String mvcRenderCommandNamesString = _jsonSerializer.serialize(
+			filteredMVCRenderCommandNames);
+
+		template.remove("element");
+
+		String contextString = _jsonSerializer.serializeDeep(template);
+
+		return StringUtil.replace(
+			_routerJavaScriptTPL,
+			new String[] {
+				"$CURRENT_MVC_RENDER_COMMAND_NAME", "$DEFAULT_MVC_COMMAND_NAME",
+				"$ELEMENT_ID", "$MVC_RENDER_COMMAND_NAMES", "$MODULES",
+				"$PORTLET_ID", "$PORTLET_NAMESPACE", "$PORTLET_WRAPPER_ID",
+				"$CONTEXT"
+			},
+			new String[] {
+				currentMVCRenderCommandName, _defaultMVCRenderCommandName,
+				elementId, mvcRenderCommandNamesString, modulesString,
+				portletId, portletNamespace, portletWrapperId, contextString
+			});
 	}
 
 	public String getTemplateNamespace(String path) {
 		return path.concat(".render");
 	}
 
-	protected String getControllerName(String path) {
-		String controllerName = _controllersMap.get(path);
+	public String serializeTemplate(Template template) {
+		return _jsonSerializer.serializeDeep(template);
+	}
+
+	protected String getControllerName(String mvcRenderCommandName) {
+		String controllerName = _controllersMap.get(mvcRenderCommandName);
 
 		if (controllerName != null) {
 			return controllerName;
 		}
 
 		URL url = _bundle.getEntry(
-			"/META-INF/resources/".concat(path).concat(".es.js"));
+			"/META-INF/resources/".concat(mvcRenderCommandName).concat(
+				".es.js"));
 
 		if (url != null) {
-			controllerName = path.concat(".es");
+			controllerName = mvcRenderCommandName.concat(".es");
 		}
 		else {
-			controllerName = path.concat(".soy");
+			controllerName = mvcRenderCommandName.concat(".soy");
 		}
 
-		_controllersMap.put(path, controllerName);
+		_controllersMap.put(mvcRenderCommandName, controllerName);
 
 		return controllerName;
 	}
@@ -104,28 +146,26 @@ public class SoyPortletHelper {
 		return moduleName;
 	}
 
-	protected Set<String> getRequiredModules(
-		String path, Set<String> additionalRequiredModules) {
+	private String _getModulePath(String mvcRenderCommandName) {
+		String controllerName = getControllerName(mvcRenderCommandName);
 
-		if (_moduleName == null) {
-			return Collections.emptySet();
-		}
+		return _moduleName.concat(StringPool.SLASH).concat(controllerName);
+	}
 
-		Set<String> requiredModules = new LinkedHashSet<>();
+	private String _getRouterJavaScriptTPL() throws Exception {
+		Class<?> clazz = getClass();
 
-		String controllerName = getControllerName(path);
+		InputStream inputStream = clazz.getResourceAsStream(
+			"dependencies/router.js.tpl");
 
-		requiredModules.add(
-			_moduleName.concat(StringPool.SLASH).concat(controllerName));
-
-		requiredModules.addAll(additionalRequiredModules);
-
-		return requiredModules;
+		return StringUtil.read(inputStream);
 	}
 
 	private final Bundle _bundle;
 	private final Map<String, String> _controllersMap = new HashMap<>();
+	private final String _defaultMVCRenderCommandName;
+	private final JSONSerializer _jsonSerializer;
 	private final String _moduleName;
-	private final SoyJavaScriptRenderer _soyJavaScriptRenderer;
+	private final String _routerJavaScriptTPL;
 
 }

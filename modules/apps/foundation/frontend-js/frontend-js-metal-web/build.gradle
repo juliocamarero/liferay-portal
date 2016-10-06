@@ -6,7 +6,7 @@ configurations {
 
 task buildMetalComponents(type: Copy)
 
-String metalComponentsVersion = "2.3.1"
+String metalComponentsVersion = "2.3.2-SNAPSHOT"
 
 buildMetalComponents {
 	eachFile new StripPathSegmentsAction(7)

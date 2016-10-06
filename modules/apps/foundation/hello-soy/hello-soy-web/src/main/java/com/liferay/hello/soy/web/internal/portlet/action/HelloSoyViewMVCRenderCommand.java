@@ -30,12 +30,12 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=hello_soy_portlet", "mvc.command.name=Navigation"
+		"javax.portlet.name=hello_soy_portlet", "mvc.command.name=/",
+		"mvc.command.name=View"
 	},
 	service = MVCRenderCommand.class
 )
-public class HelloSoyNavigationExampleMVCRenderCommand
-	implements MVCRenderCommand {
+public class HelloSoyViewMVCRenderCommand implements MVCRenderCommand {
 
 	@Override
 	public String render(
@@ -46,11 +46,11 @@ public class HelloSoyNavigationExampleMVCRenderCommand
 
 		PortletURL navigationURL = renderResponse.createRenderURL();
 
-		navigationURL.setParameter("mvcRenderCommandName", "View");
+		navigationURL.setParameter("mvcRenderCommandName", "Navigation");
 
 		template.put("navigationURL", navigationURL.toString());
 
-		return "Navigation";
+		return "View";
 	}
 
 }
