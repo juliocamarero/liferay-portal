@@ -12,26 +12,15 @@
  * details.
  */
 
-package com.liferay.asset.kernel.validator;
-
-import com.liferay.portal.kernel.exception.PortalException;
+package com.liferay.asset.categories.validator;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Eduardo Perez Garcia
  */
-public interface AssetEntryValidator {
+public interface CardinalityAssetEntryValidatorHelper {
 
-	public default void validate(
-			long groupId, String className, long classPK, long classTypePK,
-			long[] categoryIds, String[] entryNames)
-		throws PortalException {
-
-		validate(groupId, className, classTypePK, categoryIds, entryNames);
-	};
-
-	public void validate(
-			long groupId, String className, long classTypePK,
-			long[] categoryIds, String[] entryNames)
-		throws PortalException;
+	public boolean isValidable(
+		long groupId, String className, long classPK, long classTypePK,
+		long[] categoryIds, String[] entryNames);
 
 }
