@@ -20,5 +20,5 @@
 	"main": "package.json",
 	"name": "dxp-cloud-theme",
 	"repository": "liferay/liferay-portal",
-	"version": "1.0.17"
+	"version": "1.0.0"
 }
