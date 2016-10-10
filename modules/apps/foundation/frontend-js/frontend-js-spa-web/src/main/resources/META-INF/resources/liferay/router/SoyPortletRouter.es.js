@@ -2,8 +2,7 @@
 
 import Router from 'metal-router/src/Router';
 import Uri from 'metal-uri/src/Uri';
-import Component from 'metal-component/src/Component';
-
+import utils from 'senna/src/utils/utils';
 
 class SoyPortletRouter {
 	constructor(config) {
@@ -16,58 +15,51 @@ class SoyPortletRouter {
 		this.portletWrapper = config.portletWrapper;
 		this.routes = config.routes;
 
-		this.addedCommands = {};
-
 		this.createRoutes();
 	}
 
 	createRoute(route, extendConfig) {
-		var config = {
-			component: route.controller,
-			fetch: true,
-			fetchUrl: this.getFetchUrl.bind(this),
-			path: this.matchPath.bind(this, route.mvcRenderCommandName)
-		};
+		var config = Object.assign(
+			{
+				component: route.controller,
+				fetch: true,
+				fetchUrl: this.getFetchUrl.bind(this),
+				path: this.matchPath.bind(this, route.mvcRenderCommandName)
+			},
+			extendConfig
+		);
 
-		if (route.mvcRenderCommandName === this.currentMVCRenderCommandName) {
-			if (!this.addedCommands[route.mvcRenderCommandName]) {
-				config.element = this.element;
-				config.data = this.context;
-				config.fetch = false;
-
-				this.addedCommands[route.mvcRenderCommandName] = true;
-			}
+		if (config.path(utils.getCurrentBrowserPath())) {
+			config.data = this.context;
+			config.element = this.element;
+			config.fetch = false;
 		}
 
-		new Router(Object.assign(config, extendConfig), this.portletWrapper);
+		new Router(config, this.portletWrapper);
+	}
+
+	_isDefaultPath(url) {
+		var uri = new Uri(url);
+
+		var hasMVCCommandNameParam = uri.hasParameter(this.portletNamespace + 'mvcRenderCommandName');
+
+		return !hasMVCCommandNameParam && this.currentMVCRenderCommandName === this.defaultRoute.mvcRenderCommandName;
 	}
 
 	createRoutes() {
-		var wrapperNode = document.querySelector(this.portletWrapper);
+		var defaultRoute = this.defaultRoute;
 
 		this.createRoute(
 			{
-				controller: this.defaultRoute.controller,
-				mvcRenderCommandName: this.defaultRoute.mvcRenderCommandName
+				controller: defaultRoute.controller,
+				mvcRenderCommandName: defaultRoute.mvcRenderCommandName
 			},
 			{
-				fetch: false,
-				data: this.context,
-				path: (url) => {
-					var uri = new Uri(url);
-
-					if (!uri.hasParameter(this.portletNamespace + 'mvcRenderCommandName')) {
-						if (this.currentMVCRenderCommandName === this.defaultRoute.mvcRenderCommandName) {
-							return true;
-						}
-					}
-
-					return false;
-				}
+				path: this._isDefaultPath.bind(this)
 			}
 		);
 
-		this.routes.forEach((route) => this.createRoute(route));
+		this.routes.forEach((route => this.createRoute(route)));
 
 		Router.router().dispatch();
 	}
