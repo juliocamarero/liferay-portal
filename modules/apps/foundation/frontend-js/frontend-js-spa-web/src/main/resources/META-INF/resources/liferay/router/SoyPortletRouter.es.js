@@ -119,7 +119,7 @@ class SoyPortletRouter {
 
 		if (config.path(utils.getCurrentBrowserPath())) {
 			config.data = this.context;
-			// config.fetch = false;
+			config.fetch = false;
 		}
 
 		var router = new Router(config, this.portletWrapper);
