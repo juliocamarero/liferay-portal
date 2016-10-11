@@ -16,7 +16,7 @@
 	<@liferay_util["include"] page=body_top_include />
 
 	<@liferay_portlet["runtime"]
-		portletName="hello_soy_portlet"
+		portletName="dxp_cloud_portlet"
 	/>
 
 	<@liferay_util["include"] page=body_bottom_include />

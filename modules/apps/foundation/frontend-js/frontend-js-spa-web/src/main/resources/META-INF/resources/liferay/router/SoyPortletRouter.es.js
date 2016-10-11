@@ -34,6 +34,14 @@ class SoyPortletRouter {
 		);
 	}
 
+	getActiveComponent() {
+		return Router.getActiveComponent();
+	}
+
+	getActiveState() {
+		return Router.activeState;
+	}
+
 	createDefaultRoute() {
 		var defaultRoute = this.defaultRoute;
 

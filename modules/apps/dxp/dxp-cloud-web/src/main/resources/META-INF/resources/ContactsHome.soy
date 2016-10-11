@@ -1,0 +1,23 @@
+{namespace Contacts}
+
+/**
+ * Prints the DXP Cloud Portlet Contacts Main View
+ *
+ * @param id
+ */
+{template .render}
+	<div id="{$id}">
+		{call Sidebar.render data="all"}{/call}
+
+		<div class="sidebar-offset">
+			{call Topbar.render data="all"}{/call}
+
+			<div class="container-hybrid topbar-offset">
+				<div class="content-header"></div>
+				<div class="row">
+					<h1>Contacts</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+{/template}

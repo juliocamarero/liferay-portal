@@ -20,7 +20,7 @@
 						}
 					);
 
-					new SoyPortletRouter(
+					window.portletRouter = new SoyPortletRouter(
 						{
 							context: $CONTEXT,
 							currentMVCRenderCommandName: '$CURRENT_MVC_RENDER_COMMAND_NAME',

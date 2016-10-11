@@ -1,0 +1,26 @@
+{namespace CampaignsHome}
+
+/**
+ * Prints the DXP Cloud Portlet Campaigns Main View
+ *
+ * @param id
+ * @param mvcRenderCommandName
+ */
+{template .render}
+	<div id="{$id}">
+		{call Sidebar.render}
+			{param mvcRenderCommandName: $mvcRenderCommandName /}
+		{/call}
+
+		<div class="sidebar-offset">
+			{call Topbar.render}{/call}
+
+			<div class="container-hybrid topbar-offset">
+				<div class="content-header"></div>
+				<div class="row">
+					<h1>Campaigns</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+{/template}

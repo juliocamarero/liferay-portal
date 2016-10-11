@@ -1,0 +1,23 @@
+{namespace Home}
+
+/**
+ * Prints the DXP Cloud Portlet Main View
+ *
+ * @param id
+ */
+{template .render}
+	<div id="{$id}">
+		{call Sidebar.render data="all"}{/call}
+
+		<div class="sidebar-offset">
+			{call Topbar.render data="all"}{/call}
+
+			<div class="container-hybrid topbar-offset">
+				<div class="content-header"></div>
+				<div class="row">
+					{call Content.render data="all"}{/call}
+				</div>
+			</div>
+		</div>
+	</div>
+{/template}

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 7.0.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_7_0_0.dtd">
+
+<routes>
+	<route>
+		<pattern>/assets</pattern>
+		<implicit-parameter name="mvcRenderCommandName">AssetsHome</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/contacts</pattern>
+		<implicit-parameter name="mvcRenderCommandName">ContactsHome</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/campaigns</pattern>
+		<implicit-parameter name="mvcRenderCommandName">CampaignsHome</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/home</pattern>
+		<implicit-parameter name="mvcRenderCommandName">Home</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/lcs</pattern>
+		<implicit-parameter name="mvcRenderCommandName">LCSHome</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/overview</pattern>
+		<implicit-parameter name="mvcRenderCommandName">OverviewHome</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/settings</pattern>
+		<implicit-parameter name="mvcRenderCommandName">SettingsHome</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/touchpoints</pattern>
+		<implicit-parameter name="mvcRenderCommandName">TouchPointsHome</implicit-parameter>
+	</route>
+</routes>
