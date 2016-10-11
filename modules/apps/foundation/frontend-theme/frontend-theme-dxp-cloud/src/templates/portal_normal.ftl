@@ -9,7 +9,7 @@
 
 	<link rel="stylesheet" href="//dashboard.wedeploy.com/build/vendor/westyle/build/fonts/icon-12/icon-12.css">
 	<link rel="stylesheet" href="//dashboard.wedeploy.com/build/vendor/westyle/build/fonts/icon-16/icon-16.css">
-	<link rel="stylesheet" href="//dashboard.wedeploy.com/build/dashboard.css">
+	<link rel="stylesheet" href="//westyle.wedeploy.io/build/westyle.css">
 </head>
 
 <body>
