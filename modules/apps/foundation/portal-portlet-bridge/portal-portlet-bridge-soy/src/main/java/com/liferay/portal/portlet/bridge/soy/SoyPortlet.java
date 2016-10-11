@@ -34,11 +34,12 @@ import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.portlet.bridge.soy.internal.SoyPortletHelper;
 import com.liferay.portal.template.soy.utils.SoyTemplateResourcesCollector;
@@ -50,7 +51,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -105,10 +105,6 @@ public class SoyPortlet extends MVCPortlet {
 
 		renderRequest.setAttribute(WebKeys.TEMPLATE, template);
 
-		String portletNamespace = renderResponse.getNamespace();
-
-		_prepareTemplate(renderRequest, renderResponse, portletNamespace);
-
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			renderRequest);
 
@@ -144,11 +140,26 @@ public class SoyPortlet extends MVCPortlet {
 
 			render(renderRequestImpl, renderResponse);
 
-			String path = getPath(resourceRequest, resourceResponse);
+			String mvcRenderCommandName = ParamUtil.getString(
+				resourceRequest, "mvcRenderCommandName", "/");
 
-			MVCRenderCommand mvcRenderCommand = getMVCRenderCommand(path);
+			MVCRenderCommand mvcRenderCommand = getMVCRenderCommand(
+				mvcRenderCommandName);
 
-			mvcRenderCommand.render(renderRequestImpl, renderResponse);
+			String path = viewTemplate;
+
+			if (mvcRenderCommand != MVCRenderCommand.EMPTY) {
+				path = mvcRenderCommand.render(
+					renderRequestImpl, renderResponse);
+			}
+
+			resourceRequest.setAttribute(
+				getMVCPathAttributeName(renderResponse.getNamespace()), path);
+
+			String portletNamespace = renderResponse.getNamespace();
+
+			_prepareTemplate(
+				resourceRequest, resourceResponse, portletNamespace);
 
 			response.setContentType(ContentTypes.APPLICATION_JSON);
 
@@ -205,31 +216,13 @@ public class SoyPortlet extends MVCPortlet {
 	protected String getPath(
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
-		Map<String, String[]> parameters = new HashMap<>();
+		String path = super.getPath(portletRequest, portletResponse);
 
-		Map<String, String[]> requestParameters =
-			portletRequest.getParameterMap();
-
-		MapUtil.copy(requestParameters, parameters);
-
-		Map<String, String[]> originalParameters =
-			(Map<String, String[]>)portletRequest.getAttribute(
-				_ORIGINAL_PARAMETERS_MAP);
-
-		if (originalParameters != null) {
-			parameters.putAll(originalParameters);
+		if (Validator.isNull(path) || StringPool.SLASH.equals(path)) {
+			return viewTemplate;
 		}
 
-		if (parameters.containsKey("mvcRenderCommandName")) {
-			String[] mvcRenderCommandName = parameters.get(
-				"mvcRenderCommandName");
-
-			if (mvcRenderCommandName.length > 0) {
-				return mvcRenderCommandName[0];
-			}
-		}
-
-		return viewTemplate;
+		return path;
 	}
 
 	protected String getPortletWrapperId(String portletNamespace) {
@@ -252,6 +245,8 @@ public class SoyPortlet extends MVCPortlet {
 			String portletNamespace = portletResponse.getNamespace();
 
 			Writer writer = _getWriter(portletResponse);
+
+			_prepareTemplate(portletRequest, portletResponse, portletNamespace);
 
 			_writeTemplate(portletNamespace, writer);
 
@@ -406,9 +401,7 @@ public class SoyPortlet extends MVCPortlet {
 			propagateRequestParameters(portletRequest);
 		}
 
-		template.put(
-			TemplateConstants.NAMESPACE,
-			_soyPortletHelper.getTemplateNamespace(path));
+		template.put(TemplateConstants.NAMESPACE, path);
 
 		template.put("portletNamespace", portletNamespace);
 
@@ -423,7 +416,7 @@ public class SoyPortlet extends MVCPortlet {
 	private void _writeJavaScript(
 			PortletRequest portletRequest, PortletResponse portletResponse,
 			String portletNamespace, Writer writer)
-		throws IOException {
+		throws Exception {
 
 		String portletId = PortalUtil.getPortletId(portletRequest);
 

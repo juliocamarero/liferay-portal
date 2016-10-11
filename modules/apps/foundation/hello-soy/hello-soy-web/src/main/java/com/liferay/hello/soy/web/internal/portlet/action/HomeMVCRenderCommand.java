@@ -15,6 +15,8 @@
 package com.liferay.hello.soy.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.template.Template;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -37,8 +39,13 @@ public class HomeMVCRenderCommand implements MVCRenderCommand {
 	@Override
 	public String render(
 		RenderRequest renderRequest, RenderResponse renderResponse) {
+		
+		Template template = (Template)renderRequest.getAttribute(
+			WebKeys.TEMPLATE);
+		
+		template.put("path", "Home");
 
-		return "Home";
+		return "Home.render";
 	}
 
 }

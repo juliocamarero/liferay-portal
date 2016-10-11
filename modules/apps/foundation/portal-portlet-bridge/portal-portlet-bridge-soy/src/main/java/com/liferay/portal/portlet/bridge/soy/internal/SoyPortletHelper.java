@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.portlet.PortletException;
+
 import org.osgi.framework.Bundle;
 
 /**
@@ -54,10 +56,11 @@ public class SoyPortletHelper {
 	}
 
 	public String getRouterJavaScript(
-		String currentMVCRenderCommandName, String elementId,
-		Set<String> mvcRenderCommandNames, String portletId,
-		String portletNamespace, String portletWrapperId,
-		FriendlyURLMapper friendlyURLMapper, Template template) {
+			String currentMVCRenderCommandName, String elementId,
+			Set<String> mvcRenderCommandNames, String portletId,
+			String portletNamespace, String portletWrapperId,
+			FriendlyURLMapper friendlyURLMapper, Template template)
+		throws PortletException {
 
 		Set<String> filteredMVCRenderCommandNames = new LinkedHashSet<>();
 
@@ -112,33 +115,44 @@ public class SoyPortletHelper {
 			});
 	}
 
-	public String getTemplateNamespace(String path) {
-		return path.concat(".render");
-	}
-
 	public String serializeTemplate(Template template) {
 		return _jsonSerializer.serializeDeep(template);
 	}
 
-	protected String getControllerName(String mvcRenderCommandName) {
-		String controllerName = _controllersMap.get(mvcRenderCommandName);
+	protected String getControllerName(String path) throws PortletException {
+		String controllerName = _controllersMap.get(path);
 
 		if (controllerName != null) {
 			return controllerName;
 		}
 
-		URL url = _bundle.getEntry(
-			"/META-INF/resources/".concat(mvcRenderCommandName).concat(
-				".es.js"));
+		String basePath = "/META-INF/resources";
 
-		if (url != null) {
-			controllerName = mvcRenderCommandName.concat(".es");
-		}
-		else {
-			controllerName = mvcRenderCommandName.concat(".soy");
+		if (!path.startsWith(StringPool.SLASH)) {
+			basePath = basePath.concat(StringPool.SLASH);
 		}
 
-		_controllersMap.put(mvcRenderCommandName, controllerName);
+		URL url = _bundle.getEntry(basePath.concat(path).concat(".es.js"));
+
+		if (url == null) {
+			_bundle.getEntry(basePath.concat(path).concat(".soy"));
+		}
+
+		if (url == null) {
+			throw new PortletException(
+				"Could not find controller for path '" + path + "'");
+		}
+		
+		String filePath = url.getPath();
+
+		if (filePath.endsWith(".js")) {
+			filePath = StringUtil.replace(filePath, ".js", StringPool.BLANK);
+		}
+
+		controllerName = StringUtil.replace(
+			filePath, basePath, StringPool.BLANK);
+
+		_controllersMap.put(path, controllerName);
 
 		return controllerName;
 	}
@@ -155,12 +169,14 @@ public class SoyPortletHelper {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(json);
 
 		String moduleName = jsonObject.getString("name");
+		
+		String moduleVersion = jsonObject.getString("version");
 
 		if (Validator.isNull(moduleName)) {
 			return null;
 		}
 
-		return moduleName;
+		return moduleName.concat("@").concat(moduleVersion);
 	}
 
 	private List<Map<String, Object>> _getFriendlyURLRoutes(
@@ -180,10 +196,16 @@ public class SoyPortletHelper {
 		return routesMapping;
 	}
 
-	private String _getModulePath(String mvcRenderCommandName) {
-		String controllerName = getControllerName(mvcRenderCommandName);
+	private String _getModulePath(String path) throws PortletException {
+		String controllerName = getControllerName(path);
 
-		return _moduleName.concat(StringPool.SLASH).concat(controllerName);
+		String basePath = _moduleName;
+
+		if (!controllerName.startsWith(StringPool.SLASH)) {
+			basePath = basePath.concat(StringPool.SLASH);
+		}
+
+		return basePath.concat(controllerName);
 	}
 
 	private String _getRouterJavaScriptTPL() throws Exception {

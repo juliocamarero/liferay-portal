@@ -38,6 +38,9 @@
 							routes: routes
 						}
 					);
+				},
+				function(e) {
+					console.log(e);
 				}
 			]
 		)

@@ -37,7 +37,8 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=hello_soy_portlet", "mvc.command.name=Details"
+		"javax.portlet.name=hello_soy_portlet",
+		"mvc.command.name=/gallery/GalleryDetails"
 	},
 	service = MVCRenderCommand.class
 )
@@ -66,12 +67,13 @@ public class DetailsMVCRenderCommand implements MVCRenderCommand {
 
 			template.put("title", fileEntry.getFileName());
 			template.put("previewURL", previewURL);
+			template.put("path", "Details");
 		}
 		catch (PortalException pe) {
 			pe.printStackTrace();
 		}
 
-		return "Details";
+		return "GalleryDetails.render";
 	}
 
 }

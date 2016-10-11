@@ -64,19 +64,18 @@ public class HelloSoyPortlet extends SoyPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		template.put("path", getPath(renderRequest, renderResponse));
-
 		template.put("releaseInfo", ReleaseInfo.getReleaseInfo());
 
 		PortletURL detailsURL = renderResponse.createRenderURL();
 
-		detailsURL.setParameter("mvcRenderCommandName", "Details");
+		detailsURL.setParameter(
+			"mvcRenderCommandName", "/gallery/GalleryDetails");
 
 		template.put("detailsURL", detailsURL.toString());
 
 		PortletURL galleryURL = renderResponse.createRenderURL();
 
-		galleryURL.setParameter("mvcRenderCommandName", "Gallery");
+		galleryURL.setParameter("mvcRenderCommandName", "/gallery/GalleryHome");
 
 		template.put("galleryURL", galleryURL.toString());
 

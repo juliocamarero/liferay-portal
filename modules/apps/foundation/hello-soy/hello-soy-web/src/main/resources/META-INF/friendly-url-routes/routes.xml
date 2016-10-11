@@ -3,12 +3,12 @@
 
 <routes>
 <route>
-	<pattern>/details</pattern>
-		<implicit-parameter name="mvcRenderCommandName">Details</implicit-parameter>
+	<pattern>/gallery/details</pattern>
+		<implicit-parameter name="mvcRenderCommandName">/gallery/GalleryDetails</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/gallery</pattern>
-		<implicit-parameter name="mvcRenderCommandName">Gallery</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/gallery/GalleryHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/home</pattern>
