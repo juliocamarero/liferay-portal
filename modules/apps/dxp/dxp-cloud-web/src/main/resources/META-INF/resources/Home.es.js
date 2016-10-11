@@ -3,7 +3,7 @@ import templates from './Home.soy';
 import Soy from 'metal-soy';
 
 import './Content.es';
-import './Sidebar.es';
+import 'dxp-cloud-sidebar/DXPCloudSidebar.es';
 import './Topbar.es';
 
 class Home extends Component {

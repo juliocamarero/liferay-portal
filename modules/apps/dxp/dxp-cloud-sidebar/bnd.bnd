@@ -1,0 +1,5 @@
+Bundle-Name: Liferay DXP Cloud Sidebar
+Bundle-SymbolicName: com.liferay.dxp.cloud.sidebar
+Bundle-Version: 1.0.0
+Provide-Capability: soy;type="dxp-cloud-sidebar";version:Version="1.0.0"
+Web-ContextPath: /dxp-cloud-sidebar

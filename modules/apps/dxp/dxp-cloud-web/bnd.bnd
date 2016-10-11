@@ -1,5 +1,7 @@
 Bundle-Name: Liferay DXP Cloud Web
 Bundle-SymbolicName: com.liferay.dxp.cloud.web
 Bundle-Version: 1.0.0
-Require-Capability: soy;,osgi.extender;filter:="(&(osgi.extender=jsp.taglib))
+Require-Capability: \
+	soy;filter:="(type=metal)",\
+	soy;filter:="(type=dxp-cloud-sidebar)"
 Web-ContextPath: /dxp-cloud-web

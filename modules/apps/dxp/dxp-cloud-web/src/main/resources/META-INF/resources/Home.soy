@@ -4,10 +4,13 @@
  * Prints the DXP Cloud Portlet Main View
  *
  * @param id
+ * @param sidebarItems
  */
 {template .render}
 	<div id="{$id}">
-		{call Sidebar.render data="all"}{/call}
+		{call DXPCloudSidebar.render}
+			{param items: $sidebarItems /}
+		{/call}
 
 		<div class="sidebar-offset">
 			{call Topbar.render data="all"}{/call}

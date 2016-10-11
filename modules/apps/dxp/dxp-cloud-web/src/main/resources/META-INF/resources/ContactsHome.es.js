@@ -3,7 +3,7 @@ import templates from './ContactsHome.soy';
 import Soy from 'metal-soy';
 
 import './Topbar.es';
-import './Sidebar.es';
+import 'dxp-cloud-sidebar/DXPCloudSidebar.es';
 
 class ContactsHome extends Component {
 }

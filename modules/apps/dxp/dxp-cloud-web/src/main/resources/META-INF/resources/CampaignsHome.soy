@@ -4,12 +4,12 @@
  * Prints the DXP Cloud Portlet Campaigns Main View
  *
  * @param id
- * @param mvcRenderCommandName
+ * @param sidebarItems
  */
 {template .render}
 	<div id="{$id}">
-		{call Sidebar.render}
-			{param mvcRenderCommandName: $mvcRenderCommandName /}
+		{call DXPCloudSidebar.render}
+			{param items: $sidebarItems /}
 		{/call}
 
 		<div class="sidebar-offset">

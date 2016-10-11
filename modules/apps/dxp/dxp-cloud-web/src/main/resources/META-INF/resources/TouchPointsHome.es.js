@@ -3,7 +3,7 @@ import templates from './TouchPointsHome.soy';
 import Soy from 'metal-soy';
 
 import './Topbar.es';
-import './Sidebar.es';
+import 'dxp-cloud-sidebar/DXPCloudSidebar.es';
 
 class TouchPointsHome extends Component {
 }
