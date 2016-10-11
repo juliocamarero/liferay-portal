@@ -19,7 +19,7 @@ buildSenna {
 }
 
 buildMetalRouter {
-	dependsOn npmInstall
+	dependsOn buildSenna
 
 	eachFile new StripPathSegmentsAction(3)
 
@@ -34,7 +34,7 @@ buildMetalRouter {
 }
 
 configJSModules {
-	dependsOn buildSenna
+	dependsOn buildMetalRouter
 	include "**/*.js*"
 }
 

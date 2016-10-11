@@ -2,9 +2,16 @@
 <!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 7.0.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_7_0_0.dtd">
 
 <routes>
+<route>
+	<pattern>/details</pattern>
+		<implicit-parameter name="mvcRenderCommandName">Details</implicit-parameter>
+	</route>
 	<route>
-		<pattern></pattern>
-		<implicit-parameter name="mvcRenderCommandName">View</implicit-parameter>
-		<implicit-parameter name="p_p_lifecycle">0</implicit-parameter>
+		<pattern>/gallery</pattern>
+		<implicit-parameter name="mvcRenderCommandName">Gallery</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/home</pattern>
+		<implicit-parameter name="mvcRenderCommandName">Home</implicit-parameter>
 	</route>
 </routes>

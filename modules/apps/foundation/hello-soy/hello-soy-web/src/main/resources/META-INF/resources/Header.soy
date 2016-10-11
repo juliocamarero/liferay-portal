@@ -3,10 +3,46 @@
 /**
  * Prints the Hello Soy portlet header.
  *
+ * @param galleryURL
  * @param releaseInfo
+ * @param homeURL
  */
 {template .render}
+	<div class="navbar navbar-default" style="margin-bottom: 20px;">
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				{call .navItem data="all"}
+					{param name: 'Home' /}
+					{param url: $homeURL /}
+				{/call}
+				{call .navItem data="all"}
+					{param name: 'Gallery' /}
+					{param url: $galleryURL /}
+				{/call}
+			</ul>
+		</div>
+	</div>
+
 	<blockquote class="blockquote-primary">
 		<p>{msg desc=""}welcome-to-{$releaseInfo}{/msg}</p>
 	</blockquote>
+{/template}
+
+/**
+ * Prints a nav item.
+ *
+ * @param name
+ * @param path
+ * @param url
+ */
+{template .navItem}
+	<li {if $path == $name}class="active"{/if} role="presentation">
+		<a aria-controls="fields" href="{$url}">
+			{$name}
+
+			{if $path == $name}
+				<span class="sr-only">(current)</span>
+			{/if}
+		</a>
+	</li>
 {/template}

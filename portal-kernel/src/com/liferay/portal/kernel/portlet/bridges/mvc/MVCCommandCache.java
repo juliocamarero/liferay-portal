@@ -142,7 +142,7 @@ public class MVCCommandCache {
 
 	public Set<String> getMVCCommandNames() {
 		return _serviceTrackerMap.keySet();
-	} 
+	}
 
 	public List<? extends MVCCommand> getMVCCommands(String key) {
 		List<MVCCommand> mvcCommands = _mvcCommands.get(key);

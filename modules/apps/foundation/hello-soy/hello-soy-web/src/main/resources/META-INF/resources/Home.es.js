@@ -1,16 +1,16 @@
 import Component from 'metal-component/src/Component';
 import Footer from './Footer.es';
 import Header from './Header.es';
+import templates from './Home.soy';
 import Soy from 'metal-soy/src/Soy';
-import templates from './Navigation.soy';
 
-class Navigation extends Component {
+class Home extends Component {
 	created() {
-		console.log('Navigation component');
+		console.log('Home component');
 	}
 }
 
 // Register component
-Soy.register(Navigation, templates);
+Soy.register(Home, templates);
 
-export default Navigation;
+export default Home;

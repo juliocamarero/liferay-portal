@@ -1,10 +1,10 @@
-{namespace View}
+{namespace Home}
 
 /**
  * Prints the Hello Soy portlet main view.
  *
  * @param id
- * @param navigationURL
+ * @param galleryURL
  * @param themeDisplay
  */
 {template .render}
@@ -25,7 +25,7 @@
 
 		<h3>{msg desc=""}navigating-between-views{/msg}</h3>
 
-		<a href="{$navigationURL}">{msg desc=""}click-here-to-navigate-to-another-view{/msg}</a>
+		<a href="{$galleryURL}">{msg desc=""}click-here-to-navigate-to-another-view{/msg}</a>
 
 		{call Footer.render data="all"}{/call}
 	</div>

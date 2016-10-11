@@ -1,0 +1,47 @@
+{namespace Gallery}
+
+/**
+ * Prints the Hello Soy portlet navigation example page.
+ *
+ * @param files
+ * @param id
+ * @param homeURL
+ * @param detailsURL
+ * @param portletNamespace
+ */
+{template .render}
+	<div id="{$id}">
+		{call Header.render data="all"}{/call}
+
+		<p>{msg desc=""}This example shows how to list images. Click on an image description to go to the details page.{/msg}</p>
+
+		<ul class="display-style-icon list-unstyled row" data-qa-id="rows0">
+			{foreach $file in $files}
+				<li class=" entry-card lfr-asset-item " data-title="{$file.name}">
+					<div class="taglib-vertical-card entry-display-style selectable">
+						<div class="card">
+							<a href="{$detailsURL}?{$portletNamespace}fileEntryId={$file.fileEntryId}">
+								<div class="aspect-ratio null aspect-ratio-bg-center aspect-ratio-bg-cover" style="background-image: url('{$file.src}')">
+									<a href="{$detailsURL}?{$portletNamespace}fileEntryId={$file.fileEntryId}">
+										<img class="sr-only" src="{$file.src}">
+									</a>
+								</div>
+								<div class="card-row card-row-layout-fixed card-row-padded card-row-valign-top taglib-vertical-card-footer">
+									<div class="card-col-content lfr-card-details-column">
+										<span class="lfr-card-title-text truncate-text">
+											<a href="{$detailsURL}?{$portletNamespace}fileEntryId={$file.fileEntryId}" title="{$file.name}">{$file.name}</a>
+										</span>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</li>
+			{/foreach}
+		</ul>
+
+		<a href="{$homeURL}">{msg desc=""}click-here-to-navigate-back{/msg}</a>
+
+		{call Footer.render data="all"}{/call}
+	</div>
+{/template}

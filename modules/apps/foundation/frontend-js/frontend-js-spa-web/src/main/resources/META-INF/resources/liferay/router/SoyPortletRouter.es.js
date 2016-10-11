@@ -10,43 +10,31 @@ class SoyPortletRouter {
 		this.currentMVCRenderCommandName = config.currentMVCRenderCommandName;
 		this.defaultRoute = config.defaultRoute;
 		this.element = config.element;
+		this.friendlyURLRoutes = config.friendlyURLRoutes;
+		this.friendlyURLMapping = config.friendlyURLMapping;
 		this.portletId = config.portletId;
 		this.portletNamespace = config.portletNamespace;
 		this.portletWrapper = config.portletWrapper;
 		this.routes = config.routes;
 
 		this.createRoutes();
-	}
+		this.createFriendlyURLRoutes();
+		this.createDefaultRoute();
 
-	createRoute(route, extendConfig) {
-		var config = Object.assign(
-			{
-				component: route.controller,
-				fetch: true,
-				fetchUrl: this.getFetchUrl.bind(this),
-				path: this.matchPath.bind(this, route.mvcRenderCommandName)
-			},
-			extendConfig
+		Router.router().dispatch();
+
+		Liferay.once(
+			'beforeScreenFlip',
+			() => {
+				Router.routerInstance.dispose();
+
+				Router.routerInstance = null;
+				Router.activeRouter = null;
+			}
 		);
-
-		if (config.path(utils.getCurrentBrowserPath())) {
-			config.data = this.context;
-			config.element = this.element;
-			config.fetch = false;
-		}
-
-		new Router(config, this.portletWrapper);
 	}
 
-	_isDefaultPath(url) {
-		var uri = new Uri(url);
-
-		var hasMVCCommandNameParam = uri.hasParameter(this.portletNamespace + 'mvcRenderCommandName');
-
-		return !hasMVCCommandNameParam && this.currentMVCRenderCommandName === this.defaultRoute.mvcRenderCommandName;
-	}
-
-	createRoutes() {
+	createDefaultRoute() {
 		var defaultRoute = this.defaultRoute;
 
 		this.createRoute(
@@ -58,10 +46,81 @@ class SoyPortletRouter {
 				path: this._isDefaultPath.bind(this)
 			}
 		);
+	}
 
-		this.routes.forEach((route => this.createRoute(route)));
+	createFriendlyURLRoutes() {
+		this.friendlyURLRoutes.forEach(
+			(friendlyURLRoute) => {
+				let implicitParameters = friendlyURLRoute.implicitParameters;
 
-		Router.router().dispatch();
+				let route = this.routes.find(
+					(route) => {
+						return route.mvcRenderCommandName === implicitParameters.mvcRenderCommandName;
+					}
+				);
+
+				this.createRoute(
+					route,
+					{
+						path: (url) => {
+							var uri = new Uri(url);
+
+							var pathname = uri.getPathname();
+
+							var currentPath = pathname.substring(pathname.indexOf('/-/') + 2);
+
+							var mappedPath = '/' + this.friendlyURLMapping + friendlyURLRoute.pattern;
+
+							return currentPath === mappedPath;
+						}
+					}
+				)
+			}
+		);
+	}
+
+	isFriendlyURLRoute(url) {
+		var friendlyURLRoute = this.friendlyURLRoutes.find(
+			(friendlyURLRoute) => {
+				var uri = new Uri(url);
+
+				var pathname = uri.getPathname();
+
+				var currentPath = pathname.substring(pathname.indexOf('/-/') + 2);
+
+				var mappedPath = '/' + this.friendlyURLMapping + friendlyURLRoute.pattern;
+
+				return currentPath === mappedPath;
+			}
+		);
+
+		return !!friendlyURLRoute;
+	}
+
+	createRoute(route, extendConfig) {
+		var config = Object.assign(
+			{
+				component: route.controller,
+				element: this.element,
+				fetch: true,
+				fetchUrl: this.getFetchUrl.bind(this),
+				path: this.matchPath.bind(this, route.mvcRenderCommandName)
+			},
+			extendConfig
+		);
+
+		if (config.path(utils.getCurrentBrowserPath())) {
+			config.data = this.context;
+			// config.fetch = false;
+		}
+
+		var router = new Router(config, this.portletWrapper);
+
+		Liferay.once('beforeScreenFlip', () => router.dispose());
+	}
+
+	createRoutes() {
+		this.routes.forEach((route) => this.createRoute(route));
 	}
 
 	getFetchUrl(url) {
@@ -80,6 +139,30 @@ class SoyPortletRouter {
 		var portletIdParam = uri.getParameterValue('p_p_id');
 
 		return mvcRenderCommandNameParam === mvcRenderCommandName && portletIdParam === this.portletId;
+	}
+
+	_isDefaultPath(url) {
+		var uri = new Uri(url);
+
+		if (uri.hasParameter(this.portletNamespace + 'mvcRenderCommandName')) {
+			return false;
+		}
+
+		if (this.isFriendlyURLRoute(url)) {
+			return false;
+		}
+
+		var currentURI = new Uri(Liferay.currentURL);
+
+		if (uri.getPathname() === currentURI.getPathname()) {
+			return true;
+		}
+
+		if (uri.getPathname() === themeDisplay.getLayoutRelativeURL()) {
+			return true;
+		}
+
+		return false;
 	}
 }
 

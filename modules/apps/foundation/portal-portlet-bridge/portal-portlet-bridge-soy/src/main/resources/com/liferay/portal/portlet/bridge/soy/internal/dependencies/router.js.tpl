@@ -23,13 +23,15 @@
 					new SoyPortletRouter(
 						{
 							context: $CONTEXT,
-							element: '#$ELEMENT_ID',
 							currentMVCRenderCommandName: '$CURRENT_MVC_RENDER_COMMAND_NAME',
 							defaultRoute: routes.find(
 								function(route) {
 									return route.mvcRenderCommandName === '$DEFAULT_MVC_COMMAND_NAME';
 								}
 							),
+							element: '#$ELEMENT_ID',
+							friendlyURLRoutes: $FRIENDLY_URL_ROUTES,
+							friendlyURLMapping: '$FRIENDLY_URL_MAPPING',
 							portletId: '$PORTLET_ID',
 							portletNamespace: '$PORTLET_NAMESPACE',
 							portletWrapper: '#$PORTLET_WRAPPER_ID',

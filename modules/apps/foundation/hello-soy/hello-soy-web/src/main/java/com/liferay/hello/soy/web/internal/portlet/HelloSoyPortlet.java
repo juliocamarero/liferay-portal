@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -48,7 +49,7 @@ import org.osgi.service.component.annotations.Component;
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.copy-request-parameters=true",
 		"javax.portlet.init-param.template-path=/",
-		"javax.portlet.init-param.view-template=View",
+		"javax.portlet.init-param.view-template=Home",
 		"javax.portlet.name=hello_soy_portlet",
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=guest,power-user,user",
@@ -63,7 +64,27 @@ public class HelloSoyPortlet extends SoyPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		template.put("path", getPath(renderRequest, renderResponse));
+
 		template.put("releaseInfo", ReleaseInfo.getReleaseInfo());
+
+		PortletURL detailsURL = renderResponse.createRenderURL();
+
+		detailsURL.setParameter("mvcRenderCommandName", "Details");
+
+		template.put("detailsURL", detailsURL.toString());
+
+		PortletURL galleryURL = renderResponse.createRenderURL();
+
+		galleryURL.setParameter("mvcRenderCommandName", "Gallery");
+
+		template.put("galleryURL", galleryURL.toString());
+
+		PortletURL homeURL = renderResponse.createRenderURL();
+
+		homeURL.setParameter("mvcRenderCommandName", "Home");
+
+		template.put("homeURL", homeURL.toString());
 
 		super.render(renderRequest, renderResponse);
 	}

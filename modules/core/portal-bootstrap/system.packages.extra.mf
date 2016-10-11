@@ -2646,7 +2646,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  "7.0.0";uses:="com.liferay.portal.kernel.exception,javax.servlet.http
  ",com.liferay.portal.kernel.pop;version="6.2.0";uses:="com.liferay.po
  rtal.kernel.exception,javax.mail",com.liferay.portal.kernel.portlet;v
- ersion="7.4.0";uses:="com.liferay.asset.kernel.model,com.liferay.expa
+ ersion="7.5.0";uses:="com.liferay.asset.kernel.model,com.liferay.expa
  ndo.kernel.model,com.liferay.exportimport.kernel.lar,com.liferay.port
  al.kernel.atom,com.liferay.portal.kernel.exception,com.liferay.portal
  .kernel.json,com.liferay.portal.kernel.model,com.liferay.portal.kerne
@@ -4243,8 +4243,8 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  0.0",org.apache.xml.serializer;version="2.7.1",org.objectweb.asm.attr
  s;version="5.0.1",sun.misc;version="1.0.0",sun.net.util;version="1.0.
  0",sun.security.provider;version="1.0.0"
-Git-Descriptor: 099e78f-dirty
-Git-SHA: 099e78fe284c2ad7dd7c12848c2b283ff3123a7c
+Git-Descriptor: 133b1e7-dirty
+Git-SHA: 133b1e7b3a760ab51e22cdc7b5c13bef714adc7e
 Javac-Debug: on
 Javac-Deprecation: off
 Javac-Encoding: UTF-8

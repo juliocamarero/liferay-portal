@@ -1,0 +1,29 @@
+{namespace Details}
+
+/**
+ * Prints the Hello Soy portlet image details view.
+ *
+ * @param id
+ * @param galleryURL
+ * @param previewURL
+ * @param title
+ */
+{template .render}
+	<div id="{$id}">
+		{call Header.render data="all"}{/call}
+
+		<h2>(<a href="{$galleryURL}">Go Back</a>) {$title}</h2>
+
+		<div class="lfr-preview-file lfr-preview-image">
+			<div class="lfr-preview-file-content lfr-preview-image-content">
+				<div class="lfr-preview-file-image-current-column">
+					<div class="lfr-preview-file-image-container">
+						<img alt="Preview" class="lfr-preview-file-image-current" src="{$previewURL}">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{call Footer.render data="all"}{/call}
+	</div>
+{/template}

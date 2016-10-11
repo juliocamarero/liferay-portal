@@ -472,9 +472,21 @@ public class MVCPortlet extends LiferayPortlet {
 		}
 	}
 
+	protected MVCCommandCache getMVCActionCommandCache() {
+		return _mvcActionCommandCache;
+	}
+
 	protected String getMVCPathAttributeName(String namespace) {
 		return namespace.concat(StringPool.PERIOD).concat(
 			MVCRenderConstants.MVC_PATH_REQUEST_ATTRIBUTE_NAME);
+	}
+
+	protected MVCCommandCache getMVCRenderCommandCache() {
+		return _mvcRenderCommandCache;
+	}
+
+	protected MVCCommandCache getMVCResourceCommandCache() {
+		return _mvcResourceCommandCache;
 	}
 
 	protected String getPath(
@@ -592,18 +604,6 @@ public class MVCPortlet extends LiferayPortlet {
 		if (hideDefaultSuccessMessage) {
 			hideDefaultSuccessMessage(portletRequest);
 		}
-	}
-	
-	protected MVCCommandCache getMVCResourceCommandCache() {
-		return _mvcResourceCommandCache;
-	}
-	
-	protected MVCCommandCache getMVCActionCommandCache() {
-		return _mvcActionCommandCache;
-	}
-	
-	protected MVCCommandCache getMVCRenderCommandCache() {
-		return _mvcRenderCommandCache;
 	}
 
 	protected String aboutTemplate;

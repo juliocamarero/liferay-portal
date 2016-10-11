@@ -17,6 +17,9 @@ package com.liferay.portal.portlet.bridge.soy.internal;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONSerializer;
+import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
+import com.liferay.portal.kernel.portlet.Route;
+import com.liferay.portal.kernel.portlet.Router;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -26,8 +29,10 @@ import java.io.InputStream;
 
 import java.net.URL;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +56,8 @@ public class SoyPortletHelper {
 	public String getRouterJavaScript(
 		String currentMVCRenderCommandName, String elementId,
 		Set<String> mvcRenderCommandNames, String portletId,
-		String portletNamespace, String portletWrapperId, Template template) {
+		String portletNamespace, String portletWrapperId,
+		FriendlyURLMapper friendlyURLMapper, Template template) {
 
 		Set<String> filteredMVCRenderCommandNames = new LinkedHashSet<>();
 
@@ -80,18 +86,29 @@ public class SoyPortletHelper {
 
 		String contextString = _jsonSerializer.serializeDeep(template);
 
+		Router router = friendlyURLMapper.getRouter();
+
+		String friendlyURLMapping = friendlyURLMapper.getMapping();
+
+		List<Map<String, Object>> friendlyURLRoutes = _getFriendlyURLRoutes(
+			router.getRoutes());
+
+		String friendlyURLRoutesString = _jsonSerializer.serializeDeep(
+			friendlyURLRoutes);
+
 		return StringUtil.replace(
 			_routerJavaScriptTPL,
 			new String[] {
 				"$CURRENT_MVC_RENDER_COMMAND_NAME", "$DEFAULT_MVC_COMMAND_NAME",
 				"$ELEMENT_ID", "$MVC_RENDER_COMMAND_NAMES", "$MODULES",
 				"$PORTLET_ID", "$PORTLET_NAMESPACE", "$PORTLET_WRAPPER_ID",
-				"$CONTEXT"
+				"$CONTEXT", "$FRIENDLY_URL_ROUTES", "$FRIENDLY_URL_MAPPING"
 			},
 			new String[] {
 				currentMVCRenderCommandName, _defaultMVCRenderCommandName,
 				elementId, mvcRenderCommandNamesString, modulesString,
-				portletId, portletNamespace, portletWrapperId, contextString
+				portletId, portletNamespace, portletWrapperId, contextString,
+				friendlyURLRoutesString, friendlyURLMapping
 			});
 	}
 
@@ -144,6 +161,23 @@ public class SoyPortletHelper {
 		}
 
 		return moduleName;
+	}
+
+	private List<Map<String, Object>> _getFriendlyURLRoutes(
+		List<Route> routes) {
+
+		List<Map<String, Object>> routesMapping = new ArrayList<>();
+
+		for (Route route : routes) {
+			Map<String, Object> mapping = new HashMap<>();
+
+			mapping.put("implicitParameters", route.getImplicitParameters());
+			mapping.put("pattern", route.getPattern());
+
+			routesMapping.add(mapping);
+		}
+
+		return routesMapping;
 	}
 
 	private String _getModulePath(String mvcRenderCommandName) {

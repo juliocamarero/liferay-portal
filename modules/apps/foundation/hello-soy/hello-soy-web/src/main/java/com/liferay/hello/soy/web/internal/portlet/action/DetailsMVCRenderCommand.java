@@ -14,11 +14,18 @@
 
 package com.liferay.hello.soy.web.internal.portlet.action;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.document.library.kernel.util.DLUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.template.Template;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -30,11 +37,11 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=hello_soy_portlet", "mvc.command.name=Navigation"
+		"javax.portlet.name=hello_soy_portlet", "mvc.command.name=Details"
 	},
 	service = MVCRenderCommand.class
 )
-public class HelloSoyNavigationMVCRenderCommand implements MVCRenderCommand {
+public class DetailsMVCRenderCommand implements MVCRenderCommand {
 
 	@Override
 	public String render(
@@ -43,13 +50,28 @@ public class HelloSoyNavigationMVCRenderCommand implements MVCRenderCommand {
 		Template template = (Template)renderRequest.getAttribute(
 			WebKeys.TEMPLATE);
 
-		PortletURL viewURL = renderResponse.createRenderURL();
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		viewURL.setParameter("mvcRenderCommandName", "View");
+		long fileEntryId = ParamUtil.getLong(renderRequest, "fileEntryId");
 
-		template.put("viewURL", viewURL.toString());
+		try {
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+				fileEntryId);
 
-		return "Navigation";
+			FileVersion fileVersion = fileEntry.getLatestFileVersion();
+
+			String previewURL = DLUtil.getPreviewURL(
+				fileEntry, fileVersion, themeDisplay, StringPool.BLANK);
+
+			template.put("title", fileEntry.getFileName());
+			template.put("previewURL", previewURL);
+		}
+		catch (PortalException pe) {
+			pe.printStackTrace();
+		}
+
+		return "Details";
 	}
 
 }

@@ -2,15 +2,15 @@ import Component from 'metal-component/src/Component';
 import Footer from './Footer.es';
 import Header from './Header.es';
 import Soy from 'metal-soy/src/Soy';
-import templates from './View.soy';
+import templates from './Gallery.soy';
 
-class View extends Component {
+class Gallery extends Component {
 	created() {
-		console.log('View component');
+		console.log('Gallery component');
 	}
 }
 
 // Register component
-Soy.register(View, templates);
+Soy.register(Gallery, templates);
 
-export default View;
+export default Gallery;
