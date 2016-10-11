@@ -34,7 +34,8 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=dxp_cloud_portlet", "mvc.command.name=TouchPointsHome"
+		"javax.portlet.name=dxp_cloud_portlet",
+		"mvc.command.name=/touchpoints/TouchPointsHome"
 	},
 	service = MVCRenderCommand.class
 )
@@ -91,7 +92,7 @@ public class TouchPointsMVCRenderCommand implements MVCRenderCommand {
 
 		template.put("sidebarItems", sidebarItems);
 
-		return "TouchPointsHome";
+		return "TouchPointsHome.render";
 	}
 
 }

@@ -92,7 +92,7 @@ public class HomeMVCRenderCommand implements MVCRenderCommand {
 
 		template.put("sidebarItems", sidebarItems);
 
-		return "Home";
+		return "Home.render";
 	}
 
 }

@@ -34,7 +34,8 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=dxp_cloud_portlet", "mvc.command.name=SettingsHome"
+		"javax.portlet.name=dxp_cloud_portlet",
+		"mvc.command.name=/settings/SettingsHome"
 	},
 	service = MVCRenderCommand.class
 )
@@ -91,7 +92,7 @@ public class SettingsMVCRenderCommand implements MVCRenderCommand {
 
 		template.put("sidebarItems", sidebarItems);
 
-		return "SettingsHome";
+		return "SettingsHome.render";
 	}
 
 }

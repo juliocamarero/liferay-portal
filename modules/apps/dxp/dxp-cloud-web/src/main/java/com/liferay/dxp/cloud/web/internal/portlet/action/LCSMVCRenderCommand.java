@@ -34,7 +34,8 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=dxp_cloud_portlet", "mvc.command.name=LCSHome"
+		"javax.portlet.name=dxp_cloud_portlet",
+		"mvc.command.name=/lcs/LCSHome"
 	},
 	service = MVCRenderCommand.class
 )
@@ -91,7 +92,7 @@ public class LCSMVCRenderCommand implements MVCRenderCommand {
 
 		template.put("sidebarItems", sidebarItems);
 
-		return "LCSHome";
+		return "LCSHome.render";
 	}
 
 }

@@ -34,7 +34,8 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=dxp_cloud_portlet", "mvc.command.name=CampaignsHome"
+		"javax.portlet.name=dxp_cloud_portlet",
+		"mvc.command.name=/campaigns/CampaignsHome"
 	},
 	service = MVCRenderCommand.class
 )
@@ -91,7 +92,7 @@ public class CampaignsMVCRenderCommand implements MVCRenderCommand {
 
 		template.put("sidebarItems", sidebarItems);
 
-		return "CampaignsHome";
+		return "CampaignsHome.render";
 	}
 
 }

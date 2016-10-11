@@ -4,15 +4,15 @@
 <routes>
 	<route>
 		<pattern>/assets</pattern>
-		<implicit-parameter name="mvcRenderCommandName">AssetsHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/assets/AssetsHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/contacts</pattern>
-		<implicit-parameter name="mvcRenderCommandName">ContactsHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/contacts/ContactsHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/campaigns</pattern>
-		<implicit-parameter name="mvcRenderCommandName">CampaignsHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/campaigns/CampaignsHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/home</pattern>
@@ -20,18 +20,18 @@
 	</route>
 	<route>
 		<pattern>/lcs</pattern>
-		<implicit-parameter name="mvcRenderCommandName">LCSHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/lcs/LCSHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/overview</pattern>
-		<implicit-parameter name="mvcRenderCommandName">OverviewHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/overview/OverviewHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/settings</pattern>
-		<implicit-parameter name="mvcRenderCommandName">SettingsHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/settings/SettingsHome</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/touchpoints</pattern>
-		<implicit-parameter name="mvcRenderCommandName">TouchPointsHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/touchpoints/TouchPointsHome</implicit-parameter>
 	</route>
 </routes>
