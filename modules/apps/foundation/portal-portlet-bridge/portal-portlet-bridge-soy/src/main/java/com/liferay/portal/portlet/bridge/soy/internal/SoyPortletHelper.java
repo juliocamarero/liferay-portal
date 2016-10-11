@@ -142,7 +142,7 @@ public class SoyPortletHelper {
 			throw new PortletException(
 				"Could not find controller for path '" + path + "'");
 		}
-		
+
 		String filePath = url.getPath();
 
 		if (filePath.endsWith(".js")) {
@@ -169,7 +169,7 @@ public class SoyPortletHelper {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(json);
 
 		String moduleName = jsonObject.getString("name");
-		
+
 		String moduleVersion = jsonObject.getString("version");
 
 		if (Validator.isNull(moduleName)) {

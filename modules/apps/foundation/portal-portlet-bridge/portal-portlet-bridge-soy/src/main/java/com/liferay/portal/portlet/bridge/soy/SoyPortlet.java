@@ -105,10 +105,8 @@ public class SoyPortlet extends MVCPortlet {
 
 		renderRequest.setAttribute(WebKeys.TEMPLATE, template);
 
-		HttpServletRequest request = PortalUtil.getHttpServletRequest(
-			renderRequest);
-
-		boolean pjax = GetterUtil.getBoolean(request.getHeader("X-PJAX"));
+		boolean pjax = GetterUtil.getBoolean(
+			renderRequest.getParameter("pjax"));
 
 		if (!pjax) {
 			super.render(renderRequest, renderResponse);

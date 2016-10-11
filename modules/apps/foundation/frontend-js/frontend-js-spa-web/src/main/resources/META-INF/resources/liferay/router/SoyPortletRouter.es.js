@@ -134,6 +134,7 @@ class SoyPortletRouter {
 	getFetchUrl(url) {
 		var uri = new Uri(url);
 
+		uri.setParameterValue(this.portletNamespace + 'pjax', true);
 		uri.setParameterValue('p_p_lifecycle', '2');
 
 		return uri.toString();

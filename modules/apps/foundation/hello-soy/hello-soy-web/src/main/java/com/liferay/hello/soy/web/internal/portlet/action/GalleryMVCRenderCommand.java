@@ -15,8 +15,8 @@
 package com.liferay.hello.soy.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
-import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
-import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
+import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -34,6 +34,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bruno Basto
@@ -58,9 +59,8 @@ public class GalleryMVCRenderCommand implements MVCRenderCommand {
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		List<DLFileEntry> fileEntries =
-			DLFileEntryLocalServiceUtil.getFileEntries(
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		List<DLFileEntry> fileEntries = _dlFileEntryLocalService.getFileEntries(
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		List<Map<String, Object>> fileEntriesInfo = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public class GalleryMVCRenderCommand implements MVCRenderCommand {
 			FileEntry fileEntry = null;
 
 			try {
-				fileEntry = DLAppLocalServiceUtil.getFileEntry(
+				fileEntry = _dlAppLocalService.getFileEntry(
 					dlFileEntry.getFileEntryId());
 
 				String thumbnailSrc = DLUtil.getThumbnailSrc(
@@ -88,10 +88,16 @@ public class GalleryMVCRenderCommand implements MVCRenderCommand {
 		}
 
 		template.put("files", fileEntriesInfo);
-		
+
 		template.put("path", "Gallery");
 
 		return "GalleryHome.render";
 	}
+
+	@Reference
+	private DLAppLocalService _dlAppLocalService;
+
+	@Reference
+	private DLFileEntryLocalService _dlFileEntryLocalService;
 
 }

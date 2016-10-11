@@ -14,7 +14,7 @@
 
 package com.liferay.hello.soy.web.internal.portlet.action;
 
-import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -30,6 +30,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bruno Basto
@@ -57,8 +58,7 @@ public class DetailsMVCRenderCommand implements MVCRenderCommand {
 		long fileEntryId = ParamUtil.getLong(renderRequest, "fileEntryId");
 
 		try {
-			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
-				fileEntryId);
+			FileEntry fileEntry = _dlAppLocalService.getFileEntry(fileEntryId);
 
 			FileVersion fileVersion = fileEntry.getLatestFileVersion();
 
@@ -66,6 +66,7 @@ public class DetailsMVCRenderCommand implements MVCRenderCommand {
 				fileEntry, fileVersion, themeDisplay, StringPool.BLANK);
 
 			template.put("title", fileEntry.getFileName());
+
 			template.put("previewURL", previewURL);
 			template.put("path", "Details");
 		}
@@ -75,5 +76,8 @@ public class DetailsMVCRenderCommand implements MVCRenderCommand {
 
 		return "GalleryDetails.render";
 	}
+
+	@Reference
+	private DLAppLocalService _dlAppLocalService;
 
 }

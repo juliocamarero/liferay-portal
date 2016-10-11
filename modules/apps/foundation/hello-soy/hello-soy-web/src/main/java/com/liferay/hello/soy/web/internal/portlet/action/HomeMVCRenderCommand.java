@@ -39,10 +39,10 @@ public class HomeMVCRenderCommand implements MVCRenderCommand {
 	@Override
 	public String render(
 		RenderRequest renderRequest, RenderResponse renderResponse) {
-		
+
 		Template template = (Template)renderRequest.getAttribute(
 			WebKeys.TEMPLATE);
-		
+
 		template.put("path", "Home");
 
 		return "Home.render";
