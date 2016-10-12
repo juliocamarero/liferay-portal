@@ -17,6 +17,7 @@ package com.liferay.portal.portlet.bridge.soy;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletPreferencesIds;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.InvokerPortlet;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
@@ -32,17 +33,24 @@ import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.portlet.bridge.soy.internal.SoyPortletHelper;
 import com.liferay.portal.template.soy.utils.SoyTemplateResourcesCollector;
+import com.liferay.portlet.ActionRequestFactory;
+import com.liferay.portlet.ActionRequestImpl;
+import com.liferay.portlet.ActionResponseFactory;
+import com.liferay.portlet.ActionResponseImpl;
 import com.liferay.portlet.RenderRequestFactory;
 import com.liferay.portlet.RenderRequestImpl;
 import com.liferay.portlet.RenderResponseFactory;
@@ -125,44 +133,29 @@ public class SoyPortlet extends MVCPortlet {
 
 		Portlet portlet = _getPortlet(portletId);
 
-		resourceRequest.getParameterMap();
+		String portletNamespace = resourceResponse.getNamespace();
 
 		try {
-			RenderRequestImpl renderRequestImpl = _createRenderRequest(
-				resourceRequest, resourceResponse, portlet);
+			String method = resourceRequest.getMethod();
 
-			renderRequestImpl.getParameterMap();
+			if ("POST".equals(StringUtil.toUpperCase(method))) {
+				_callProcessAction(
+					resourceRequest, resourceResponse, response, portlet,
+					portletNamespace);
 
-			RenderResponse renderResponse = _createRenderResponse(
-				renderRequestImpl, resourceResponse, portlet);
-
-			render(renderRequestImpl, renderResponse);
-
-			String mvcRenderCommandName = ParamUtil.getString(
-				resourceRequest, "mvcRenderCommandName", "/");
-
-			MVCRenderCommand mvcRenderCommand = getMVCRenderCommand(
-				mvcRenderCommandName);
-
-			String path = viewTemplate;
-
-			if (mvcRenderCommand != MVCRenderCommand.EMPTY) {
-				path = mvcRenderCommand.render(
-					renderRequestImpl, renderResponse);
+				return;
 			}
+			else {
+				_callRender(resourceRequest, resourceResponse, portlet);
 
-			resourceRequest.setAttribute(
-				getMVCPathAttributeName(renderResponse.getNamespace()), path);
+				_prepareTemplate(
+					resourceRequest, resourceResponse, portletNamespace);
 
-			String portletNamespace = renderResponse.getNamespace();
+				response.setContentType(ContentTypes.APPLICATION_JSON);
 
-			_prepareTemplate(
-				resourceRequest, resourceResponse, portletNamespace);
-
-			response.setContentType(ContentTypes.APPLICATION_JSON);
-
-			ServletResponseUtil.write(
-				response, _soyPortletHelper.serializeTemplate(template));
+				ServletResponseUtil.write(
+					response, _soyPortletHelper.serializeTemplate(template));
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -290,6 +283,123 @@ public class SoyPortlet extends MVCPortlet {
 
 	protected boolean propagateRequestParameters;
 	protected Template template;
+
+	private void _callProcessAction(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse,
+			HttpServletResponse response, Portlet portlet,
+			String portletNamespace)
+		throws Exception {
+
+		ActionRequestImpl actionRequestImpl = _createActionRequest(
+			resourceRequest, portlet);
+
+		ActionResponseImpl actionResponseImpl = _createActionResponse(
+			actionRequestImpl, resourceResponse, portlet);
+
+		processAction(actionRequestImpl, actionResponseImpl);
+
+		String redirect = HttpUtil.setParameter(
+			actionResponseImpl.getRedirectLocation(), portletNamespace + "pjax",
+			"true");
+
+		redirect = HttpUtil.setParameter(redirect, "p_p_lifecycle", "2");
+		redirect = HttpUtil.setParameter(
+			redirect, "p_p_id", portlet.getPortletId());
+
+		response.sendRedirect(redirect);
+	}
+
+	private void _callRender(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse,
+			Portlet portlet)
+		throws Exception {
+
+		RenderRequestImpl renderRequestImpl = _createRenderRequest(
+			resourceRequest, resourceResponse, portlet);
+
+		renderRequestImpl.getParameterMap();
+
+		RenderResponse renderResponse = _createRenderResponse(
+			renderRequestImpl, resourceResponse, portlet);
+
+		render(renderRequestImpl, renderResponse);
+
+		String mvcRenderCommandName = ParamUtil.getString(
+			resourceRequest, "mvcRenderCommandName", "/");
+
+		MVCRenderCommand mvcRenderCommand = getMVCRenderCommand(
+			mvcRenderCommandName);
+
+		String path = viewTemplate;
+
+		if (mvcRenderCommand != MVCRenderCommand.EMPTY) {
+			path = mvcRenderCommand.render(renderRequestImpl, renderResponse);
+		}
+
+		resourceRequest.setAttribute(
+			getMVCPathAttributeName(renderResponse.getNamespace()), path);
+	}
+
+	private ActionRequestImpl _createActionRequest(
+			ResourceRequest resourceRequest, Portlet portlet)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			resourceRequest);
+
+		ServletContext servletContext = (ServletContext)request.getAttribute(
+			WebKeys.CTX);
+
+		InvokerPortlet invokerPortlet = PortletInstanceFactoryUtil.create(
+			portlet, servletContext);
+
+		PortletPreferencesIds portletPreferencesIds =
+			PortletPreferencesFactoryUtil.getPortletPreferencesIds(
+				request, portlet.getPortletId());
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesLocalServiceUtil.getStrictPreferences(
+				portletPreferencesIds);
+
+		PortletConfig portletConfig = PortletConfigFactoryUtil.create(
+			portlet, servletContext);
+
+		PortletContext portletContext = portletConfig.getPortletContext();
+
+		ActionRequestImpl actionRequestImpl = ActionRequestFactory.create(
+			request, portlet, invokerPortlet, portletContext,
+			resourceRequest.getWindowState(), resourceRequest.getPortletMode(),
+			portletPreferences, themeDisplay.getPlid());
+
+		actionRequestImpl.setPortletRequestDispatcherRequest(request);
+
+		return actionRequestImpl;
+	}
+
+	private ActionResponseImpl _createActionResponse(
+			ActionRequestImpl actionRequestImpl,
+			ResourceResponse resourceResponse, Portlet portlet)
+		throws Exception {
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)actionRequestImpl.getAttribute(WebKeys.THEME_DISPLAY);
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			actionRequestImpl);
+
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+			resourceResponse);
+
+		User user = PortalUtil.getUser(request);
+
+		return ActionResponseFactory.create(
+			actionRequestImpl, response, portlet.getPortletId(), user,
+			themeDisplay.getLayout(), actionRequestImpl.getWindowState(),
+			actionRequestImpl.getPortletMode());
+	}
 
 	private RenderRequestImpl _createRenderRequest(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse,

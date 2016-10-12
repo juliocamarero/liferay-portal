@@ -1,0 +1,31 @@
+{namespace SubmitForm}
+
+/**
+ * Prints the Hello Soy portlet footer.
+ *
+ * @param id
+ * @param portletNamespace
+ * @param submitFormActionURL
+ * @param value
+ */
+{template .render}
+	<div id="{$id}">
+		{call Header.render data="all"}{/call}
+
+		{if $value}
+			<h1>You submitted: <b>{$value}</b></h1>
+		{/if}
+
+		<form action="{$submitFormActionURL}" enctype="multipart/form-data" method="post">
+			<div class="form-group">
+				<label>Submit to the server the following value:</label>
+
+				<input class="form-control" name="{$portletNamespace}value" placeholder="Ex.: Brian Chan" type="text">
+			</div>
+
+			<button class="btn btn-primary" type="submit">{msg desc=""}submit{/msg}</button>
+		</form>
+
+		{call Footer.render data="all"}{/call}
+	</div>
+{/template}

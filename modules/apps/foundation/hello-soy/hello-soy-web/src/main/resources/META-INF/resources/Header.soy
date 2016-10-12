@@ -4,8 +4,9 @@
  * Prints the Hello Soy portlet header.
  *
  * @param galleryURL
- * @param releaseInfo
  * @param homeURL
+ * @param releaseInfo
+ * @param submitFormRenderURL
  */
 {template .render}
 	<div class="navbar navbar-default" style="margin-bottom: 20px;">
@@ -18,6 +19,10 @@
 				{call .navItem data="all"}
 					{param name: 'Gallery' /}
 					{param url: $galleryURL /}
+				{/call}
+				{call .navItem data="all"}
+					{param name: 'SubmitForm' /}
+					{param url: $submitFormRenderURL /}
 				{/call}
 			</ul>
 		</div>

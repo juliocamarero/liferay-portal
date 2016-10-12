@@ -1,8 +1,11 @@
 'use strict';
 
+import Component from 'metal-component/src/Component';
 import Router from 'metal-router/src/Router';
 import Uri from 'metal-uri/src/Uri';
 import utils from 'senna/src/utils/utils';
+import RequestScreen from 'senna/src/screen/RequestScreen';
+import IncrementalDomRenderer from 'metal-incremental-dom/src/IncrementalDomRenderer';
 
 class SoyPortletRouter {
 	constructor(config) {
@@ -17,6 +20,7 @@ class SoyPortletRouter {
 		this.portletWrapper = config.portletWrapper;
 		this.routes = config.routes;
 
+		this.createActionRoute();
 		this.createRoutes();
 		this.createFriendlyURLRoutes();
 		this.createDefaultRoute();
@@ -40,6 +44,28 @@ class SoyPortletRouter {
 
 	getActiveState() {
 		return Router.activeState;
+	}
+
+	createActionRoute() {
+		var instance = this;
+
+		var defaultRoute = this.defaultRoute;
+
+		this.createRoute(
+			{
+				controller: defaultRoute.controller
+			},
+			{
+				path: (url) => {
+					var uri = new Uri(url);
+
+					var portletIdParam = uri.getParameterValue('p_p_id');
+					var lifecycleParam = uri.getParameterValue('p_p_lifecycle');
+
+					return lifecycleParam === '1' && portletIdParam === this.portletId;
+				}
+			}
+		);
 	}
 
 	createDefaultRoute() {
@@ -106,13 +132,16 @@ class SoyPortletRouter {
 	}
 
 	createRoute(route, extendConfig) {
+		var instance = this;
+
 		var config = Object.assign(
 			{
 				component: route.controller,
 				element: this.element,
 				fetch: true,
 				fetchUrl: this.getFetchUrl.bind(this),
-				path: this.matchPath.bind(this, route.mvcRenderCommandName)
+				path: this.matchPath.bind(this, route.mvcRenderCommandName),
+				portletRoutes: this.routes
 			},
 			extendConfig
 		);
@@ -121,6 +150,21 @@ class SoyPortletRouter {
 			config.data = this.context;
 			config.fetch = false;
 		}
+
+		class DefaultScreen extends Router.defaultScreen {
+			beforeUpdateHistoryPath() {
+				var redirect = RequestScreen.prototype.beforeUpdateHistoryPath.apply(this, arguments);
+
+				var uri = new Uri(redirect);
+
+				uri.removeParameter('p_p_lifecycle');
+				uri.removeParameter(instance.portletNamespace + 'pjax');
+
+				return uri.toString();
+			}
+		}
+
+		Router.defaultScreen = DefaultScreen;
 
 		var router = new Router(config, this.portletWrapper);
 
@@ -134,8 +178,8 @@ class SoyPortletRouter {
 	getFetchUrl(url) {
 		var uri = new Uri(url);
 
-		uri.setParameterValue(this.portletNamespace + 'pjax', true);
 		uri.setParameterValue('p_p_lifecycle', '2');
+		uri.setParameterValue(this.portletNamespace + 'pjax', true);
 
 		return uri.toString();
 	}

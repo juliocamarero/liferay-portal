@@ -135,7 +135,7 @@ public class SoyPortletHelper {
 		URL url = _bundle.getEntry(basePath.concat(path).concat(".es.js"));
 
 		if (url == null) {
-			_bundle.getEntry(basePath.concat(path).concat(".soy"));
+			url = _bundle.getEntry(basePath.concat(path).concat(".soy"));
 		}
 
 		if (url == null) {
@@ -176,7 +176,7 @@ public class SoyPortletHelper {
 			return null;
 		}
 
-		return moduleName.concat("@").concat(moduleVersion);
+		return moduleName.concat(StringPool.AT).concat(moduleVersion);
 	}
 
 	private List<Map<String, Object>> _getFriendlyURLRoutes(

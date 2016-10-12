@@ -1,21 +1,31 @@
 <script>
+	var modules = $MODULES;
+
 	require.apply(
 		window,
-		$MODULES.concat(
+		modules.concat(
 			[
 				'frontend-js-spa-web/liferay/router/SoyPortletRouter.es',
 				function() {
 					var SoyPortletRouter = arguments[arguments.length - 1].default;
 
-					var controllers = Array.prototype.splice.call(arguments, 0, arguments.length - 1);
+					var modulesExports = Array.prototype.splice.call(arguments, 0, arguments.length - 1);
 
 					var mvcRenderCommandNames = $MVC_RENDER_COMMAND_NAMES;
 
-					var routes = controllers.map(
-						function(controller, index) {
+					var routes = modulesExports.map(
+						function(moduleExports, index) {
+							var controller = moduleExports.default;
+
+							var mvcRenderCommandName = mvcRenderCommandNames[index];
+
+							if (modules[index].indexOf('.es') === -1) {
+								controller = moduleExports[mvcRenderCommandName.split('/').pop()];
+							}
+
 							return {
-								controller: controller.default,
-								mvcRenderCommandName: mvcRenderCommandNames[index]
+								controller: controller,
+								mvcRenderCommandName: mvcRenderCommandName
 							};
 						}
 					);

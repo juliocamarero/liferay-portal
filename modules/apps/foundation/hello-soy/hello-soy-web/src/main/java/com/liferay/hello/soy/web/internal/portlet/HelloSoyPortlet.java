@@ -19,6 +19,7 @@ import com.liferay.portal.portlet.bridge.soy.SoyPortlet;
 
 import java.io.IOException;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
@@ -84,6 +85,20 @@ public class HelloSoyPortlet extends SoyPortlet {
 		homeURL.setParameter("mvcRenderCommandName", "Home");
 
 		template.put("homeURL", homeURL.toString());
+
+		PortletURL submitFormRenderURL = renderResponse.createRenderURL();
+
+		submitFormRenderURL.setParameter(
+			"mvcRenderCommandName", "/submit/SubmitForm");
+
+		template.put("submitFormRenderURL", submitFormRenderURL.toString());
+
+		PortletURL submitFormActionURL = renderResponse.createActionURL();
+
+		submitFormActionURL.setParameter(
+			ActionRequest.ACTION_NAME, "SubmitFormAction");
+
+		template.put("submitFormActionURL", submitFormActionURL.toString());
 
 		super.render(renderRequest, renderResponse);
 	}
