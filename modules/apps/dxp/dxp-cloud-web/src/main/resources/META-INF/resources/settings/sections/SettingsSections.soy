@@ -1,0 +1,49 @@
+{namespace SettingsSections}
+
+/**
+ * @param mvcRenderCommandName
+ */
+{template .render}
+	<style>
+		.content-tabs {lb}
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+			padding: 12px 8px;
+			margin-top: -24px;
+		{rb}
+
+		.content-tabs ul {lb}
+			margin: 0;
+			padding: 0;
+		{rb}
+
+		.content-tabs ul li {lb}
+			display: inline-block;
+			line-height: 36px;
+			list-style: none;
+			margin: 0 12px;
+		{rb}
+
+		.content-tabs ul li a {lb}
+			transition: color 0.3s ease-in-out;
+			font-size: 15px;
+			font-weight: 400;
+		{rb}
+
+		.content-tabs ul li.content-tab-selected a {lb}
+			color: rgba(0, 212, 106, 0.9);
+		{rb}
+
+		.content-tabs ul li.content-tab-selected a:hover, .content-tabs ul li.content-tab-selected a:focus {lb}
+			color: rgba(0, 212, 106, 0.9);
+		{rb}
+	</style>
+
+	<div class="content-tabs">
+		<ul>
+			<li class="{$mvcRenderCommandName == '/settings/userinformation/SettingsUserInformation' ? 'content-tab-selected' : ''}"><a href="/web/guest/home/-/dxp/settings/userinformation">User Information</a></li>
+			<li class="{$mvcRenderCommandName == '/settings/identification/SettingsIdentification' ? 'content-tab-selected' : ''}"><a href="/web/guest/home/-/dxp/settings/identification">Identification</a></li>
+			<li class="{$mvcRenderCommandName == '/settings/miscellaneous/SettingsMiscellaneous' ? 'content-tab-selected' : ''}"><a href="/web/guest/home/-/dxp/settings/miscellaneous">Miscellaneous</a></li>
+		</ul>
+	</div>
+{/template}

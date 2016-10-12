@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.dxp.cloud.web.internal.portlet.action;
+package com.liferay.dxp.cloud.web.internal.portlet.action.settings;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.template.Template;
@@ -23,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -35,7 +39,7 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true,
 	property = {
 		"javax.portlet.name=dxp_cloud_portlet",
-		"mvc.command.name=/settings/SettingsHome"
+		"mvc.command.name=/settings/userinformation/SettingsUserInformation"
 	},
 	service = MVCRenderCommand.class
 )
@@ -45,7 +49,13 @@ public class SettingsMVCRenderCommand implements MVCRenderCommand {
 	public String render(
 		RenderRequest renderRequest, RenderResponse renderResponse) {
 
-		return "SettingsHome.render";
+		Template template = (Template)renderRequest.getAttribute(WebKeys.TEMPLATE);
+
+		PortletURL saveURL = renderResponse.createActionURL();
+		saveURL.setParameter(ActionRequest.ACTION_NAME, "SaveSettingsAction");
+		template.put("saveURL", saveURL.toString());
+
+		return "SettingsUserInformation.render";
 	}
 
 }

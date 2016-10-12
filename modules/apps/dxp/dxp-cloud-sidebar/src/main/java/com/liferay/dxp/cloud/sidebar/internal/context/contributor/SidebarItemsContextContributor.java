@@ -42,35 +42,35 @@ public class SidebarItemsContextContributor
 
 		Map<String, Object> sidebarItem1 = new HashMap();
 		sidebarItem1.put("href", "/web/guest/home/-/dxp/home");
-		sidebarItem1.put("icon", "/o/dxp-cloud-web/images/dxp.png");
+		sidebarItem1.put("icon", "/o/dxp-cloud-sidebar/img/dxp.png");
 
 		Map<String, Object> sidebarItem2 = new HashMap();
 		sidebarItem2.put("href", "/web/guest/home/-/dxp/assets");
-		sidebarItem2.put("icon", "/o/dxp-cloud-web/images/Assets.png");
+		sidebarItem2.put("icon", "/o/dxp-cloud-sidebar/img/Assets.png");
 
 		Map<String, Object> sidebarItem3 = new HashMap();
 		sidebarItem3.put("href", "/web/guest/home/-/dxp/campaigns");
-		sidebarItem3.put("icon", "/o/dxp-cloud-web/images/Campaigns.png");
+		sidebarItem3.put("icon", "/o/dxp-cloud-sidebar/img/Campaigns.png");
 
 		Map<String, Object> sidebarItem4 = new HashMap();
 		sidebarItem4.put("href", "/web/guest/home/-/dxp/contacts");
-		sidebarItem4.put("icon", "/o/dxp-cloud-web/images/Contacts.png");
+		sidebarItem4.put("icon", "/o/dxp-cloud-sidebar/img/Contacts.png");
 
 		Map<String, Object> sidebarItem5 = new HashMap();
 		sidebarItem5.put("href", "/web/guest/home/-/dxp/lcs");
-		sidebarItem5.put("icon", "/o/dxp-cloud-web/images/LCS.png");
+		sidebarItem5.put("icon", "/o/dxp-cloud-sidebar/img/LCS.png");
 
 		Map<String, Object> sidebarItem6 = new HashMap();
 		sidebarItem6.put("href", "/web/guest/home/-/dxp/overview");
-		sidebarItem6.put("icon", "/o/dxp-cloud-web/images/Overview.png");
+		sidebarItem6.put("icon", "/o/dxp-cloud-sidebar/img/Overview.png");
 
 		Map<String, Object> sidebarItem7 = new HashMap();
 		sidebarItem7.put("href", "/web/guest/home/-/dxp/settings");
-		sidebarItem7.put("icon", "/o/dxp-cloud-web/images/Settings.png");
+		sidebarItem7.put("icon", "/o/dxp-cloud-sidebar/img/Settings.png");
 
 		Map<String, Object> sidebarItem8 = new HashMap();
 		sidebarItem8.put("href", "/web/guest/home/-/dxp/touchpoints");
-		sidebarItem8.put("icon", "/o/dxp-cloud-web/images/Touchpoints.png");
+		sidebarItem8.put("icon", "/o/dxp-cloud-sidebar/img/Touchpoints.png");
 
 		List<Map<String, Object>> sidebarItems = new ArrayList<>();
 		sidebarItems.add(sidebarItem1);

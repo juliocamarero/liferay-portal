@@ -1,0 +1,50 @@
+{namespace SettingsMiscellaneous}
+
+/**
+ * Prints the DXP Cloud Portlet LCS Main View
+ *
+ * @param id
+ * @param sidebar
+ */
+{template .render}
+	<div id="{$id}">
+		{call DXPCloudSidebar.render}
+			{param items: $sidebar.items /}
+		{/call}
+
+		<div class="sidebar-offset">
+			{call Topbar.render data="all"}{/call}
+
+			<div class="container-hybrid topbar-offset">
+				<div class="content-header"></div>
+				<div class="row">
+					<div class="col-xs-16">
+						{call SettingsSections.render data="all" /}
+					</div>
+					{call .form /}
+				</div>
+			</div>
+		</div>
+	</div>
+{/template}
+
+/**
+ *
+ */
+{template .form}
+	<form action="/" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="cmd" value="inviteCollaborator">
+
+		<div class="form-group">
+			<div class="input-group">
+				<input type="hidden" name="invitationId" value="alloyeditor">
+				<input id="collaboratorEmail" class="form-control input-btn-separated" name="email" type="email" placeholder="user@company.com" maxlength="100" required="" autofocus="" autocomplete="off">
+				<span class="input-group-btn input-group-btn-separated">
+					<button class="btn btn-sm btn-accent" name="cmd" value="inviteCollaborator">Send Invite</button>
+				</span>
+			</div>
+
+			<p id="collaboratorEmailHelp" class="help-block"></p>
+		</div>
+	</form>
+{/template}

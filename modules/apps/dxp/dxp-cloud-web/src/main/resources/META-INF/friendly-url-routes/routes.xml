@@ -28,7 +28,19 @@
 	</route>
 	<route>
 		<pattern>/settings</pattern>
-		<implicit-parameter name="mvcRenderCommandName">/settings/SettingsHome</implicit-parameter>
+		<implicit-parameter name="mvcRenderCommandName">/settings/userinformation/SettingsUserInformation</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/settings/userinformation</pattern>
+		<implicit-parameter name="mvcRenderCommandName">/settings/userinformation/SettingsUserInformation</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/settings/identification</pattern>
+		<implicit-parameter name="mvcRenderCommandName">/settings/identification/SettingsIdentification</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/settings/miscellaneous</pattern>
+		<implicit-parameter name="mvcRenderCommandName">/settings/miscellaneous/SettingsMiscellaneous</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/touchpoints</pattern>

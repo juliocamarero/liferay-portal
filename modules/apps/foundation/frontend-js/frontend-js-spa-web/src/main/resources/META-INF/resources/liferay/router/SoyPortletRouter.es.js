@@ -1,5 +1,3 @@
-'use strict';
-
 import Component from 'metal-component/src/Component';
 import Router from 'metal-router/src/Router';
 import Uri from 'metal-uri/src/Uri';
@@ -44,6 +42,10 @@ class SoyPortletRouter {
 
 	getActiveState() {
 		return Router.activeState;
+	}
+
+	getRouter() {
+		return Router.router();
 	}
 
 	createActionRoute() {
@@ -218,5 +220,13 @@ class SoyPortletRouter {
 		return false;
 	}
 }
+
+Router.router().on('endNavigate', (event) => {
+	if (event.error) {
+		if (event.error.requestError || event.error.invalidStatus) {
+			window.location.href = event.path;
+		}
+	}
+});
 
 export default SoyPortletRouter;

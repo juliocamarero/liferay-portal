@@ -1,4 +1,4 @@
-{namespace SettingsHome}
+{namespace SettingsIdentification}
 
 /**
  * Prints the DXP Cloud Portlet LCS Main View
@@ -18,7 +18,9 @@
 			<div class="container-hybrid topbar-offset">
 				<div class="content-header"></div>
 				<div class="row">
-					<h1>Settings</h1>
+					<div class="col-xs-16">
+						{call SettingsSections.render data="all" /}
+					</div>
 				</div>
 			</div>
 		</div>
