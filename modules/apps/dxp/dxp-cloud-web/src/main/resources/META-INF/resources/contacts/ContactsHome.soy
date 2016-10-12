@@ -4,12 +4,12 @@
  * Prints the DXP Cloud Portlet Contacts Main View
  *
  * @param id
- * @param sidebarItems
+ * @param sidebar
  */
 {template .render}
 	<div id="{$id}">
 		{call DXPCloudSidebar.render}
-			{param items: $sidebarItems /}
+			{param items: $sidebar.items /}
 		{/call}
 
 		<div class="sidebar-offset">
