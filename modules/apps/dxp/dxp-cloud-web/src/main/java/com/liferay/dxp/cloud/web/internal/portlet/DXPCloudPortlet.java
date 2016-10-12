@@ -64,28 +64,6 @@ public class DXPCloudPortlet extends SoyPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		template.put("path", getPath(renderRequest, renderResponse));
-
-		template.put("releaseInfo", ReleaseInfo.getReleaseInfo());
-
-		PortletURL detailsURL = renderResponse.createRenderURL();
-
-		detailsURL.setParameter("mvcRenderCommandName", "Details");
-
-		template.put("detailsURL", detailsURL.toString());
-
-		PortletURL galleryURL = renderResponse.createRenderURL();
-
-		galleryURL.setParameter("mvcRenderCommandName", "Gallery");
-
-		template.put("galleryURL", galleryURL.toString());
-
-		PortletURL homeURL = renderResponse.createRenderURL();
-
-		homeURL.setParameter("mvcRenderCommandName", "Home");
-
-		template.put("homeURL", homeURL.toString());
-
 		super.render(renderRequest, renderResponse);
 	}
 

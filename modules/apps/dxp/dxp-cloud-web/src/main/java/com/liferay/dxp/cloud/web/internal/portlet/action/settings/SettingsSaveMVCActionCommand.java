@@ -15,6 +15,7 @@
 package com.liferay.dxp.cloud.web.internal.portlet.action.settings;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.servlet.MultiSessionMessages;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
@@ -51,8 +52,7 @@ public class SettingsSaveMVCActionCommand extends BaseMVCActionCommand {
 
 		String redirect = getRedirect(actionRequest, actionResponse);
 
-		System.out.println("Save Settings and Redirect");
-		System.out.println(actionRequest);
+		MultiSessionMessages.add(actionRequest, "requestProcessed", "form-saved-successfully");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
 	}

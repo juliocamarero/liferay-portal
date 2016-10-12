@@ -24,14 +24,19 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.portal.template.TemplateResourceParser;
+import com.liferay.portal.kernel.servlet.MultiSessionMessages;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.JavaConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.framework.Bundle;
@@ -107,6 +112,26 @@ public class SoyTemplateContextHelper extends TemplateContextHelper {
 
 		contextObjects.put("locale", themeDisplay.getLocale());
 		contextObjects.put("themeDisplay", themeDisplay);
+
+		// Session Messages
+
+		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		Map<String, Object> sessionMessages = new HashMap();
+
+		for(String messageKey : MultiSessionMessages.keySet(portletRequest)) {
+			sessionMessages.put(messageKey, MultiSessionMessages.get(portletRequest, messageKey));
+		}
+
+		Map<String, Object> sessionErrors = new HashMap();
+
+		for(String errorKey : SessionErrors.keySet(request)) {
+			sessionErrors.put(errorKey, SessionErrors.get(request, errorKey));
+		}
+
+		contextObjects.put("sessionMessages", sessionMessages);
+		contextObjects.put("sessionErrors", sessionErrors);
 
 		// Custom template context contributors
 
