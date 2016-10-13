@@ -24,6 +24,7 @@ import com.liferay.document.library.kernel.model.DLFileEntryType;
 import com.liferay.document.library.kernel.model.DLFileEntryTypeConstants;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalService;
 import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -103,7 +104,8 @@ public class DLFileEntryAssetRendererFactory
 		}
 
 		DLFileEntryAssetRenderer dlFileEntryAssetRenderer =
-			new DLFileEntryAssetRenderer(fileEntry, fileVersion);
+			new DLFileEntryAssetRenderer(
+				fileEntry, fileVersion, _dlFileEntryLocalService);
 
 		dlFileEntryAssetRenderer.setAssetRendererType(type);
 
@@ -229,6 +231,13 @@ public class DLFileEntryAssetRendererFactory
 	}
 
 	@Reference(unbind = "-")
+	protected void setDLFileEntryLocalService(
+		DLFileEntryLocalService dlFileEntryLocalService) {
+
+		_dlFileEntryLocalService = dlFileEntryLocalService;
+	}
+
+	@Reference(unbind = "-")
 	protected void setDLFileEntryTypeLocalService(
 		DLFileEntryTypeLocalService dlFileEntryTypeLocalService) {
 
@@ -236,6 +245,7 @@ public class DLFileEntryAssetRendererFactory
 	}
 
 	private DLAppLocalService _dlAppLocalService;
+	private DLFileEntryLocalService _dlFileEntryLocalService;
 	private DLFileEntryTypeLocalService _dlFileEntryTypeLocalService;
 
 }
