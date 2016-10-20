@@ -2753,7 +2753,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  rsion="7.0.0";uses:="com.liferay.portal.kernel.messaging,com.liferay.
  portal.kernel.scheduler",com.liferay.portal.kernel.scripting;version=
  "7.0.0";uses:="com.liferay.portal.kernel.exception,javax.portlet",com
- .liferay.portal.kernel.search;version="7.2.0";uses:="com.liferay.asse
+ .liferay.portal.kernel.search;version="7.3.0";uses:="com.liferay.asse
  t.kernel.model,com.liferay.expando.kernel.model,com.liferay.portal.ke
  rnel.backgroundtask,com.liferay.portal.kernel.comment,com.liferay.por
  tal.kernel.exception,com.liferay.portal.kernel.json,com.liferay.porta
