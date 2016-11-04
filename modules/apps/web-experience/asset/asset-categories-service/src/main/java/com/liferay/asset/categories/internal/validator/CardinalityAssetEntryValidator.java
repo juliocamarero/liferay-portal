@@ -22,6 +22,8 @@ import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.asset.kernel.validator.AssetEntryValidator;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
@@ -49,8 +51,7 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 		throws PortalException {
 
 		List<AssetVocabulary> assetVocabularies =
-				_assetVocabularyLocalService.getGroupVocabularies(
-					groupId, false);
+			_assetVocabularyLocalService.getGroupVocabularies(groupId, false);
 
 		Group group = _groupLocalService.getGroup(groupId);
 
@@ -62,8 +63,8 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 				assetVocabularies = ListUtil.copy(assetVocabularies);
 
 				assetVocabularies.addAll(
-						_assetVocabularyLocalService.getGroupVocabularies(
-							companyGroup.getGroupId()));
+					_assetVocabularyLocalService.getGroupVocabularies(
+						companyGroup.getGroupId()));
 			}
 		}
 
@@ -115,6 +116,14 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 				}
 			}
 			catch (PortalException pe) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Entity with ClassPK: " + classPK +
+							" and ClassNameId: " + classNameId +
+								" is not categorizable",
+						pe);
+				}
+
 				return false;
 			}
 		}
@@ -156,18 +165,19 @@ public class CardinalityAssetEntryValidator implements AssetEntryValidator {
 				classNameId, classTypePK, categoryIds)) {
 
 			throw new AssetCategoryException(
-					assetVocabulary,
-					AssetCategoryException.AT_LEAST_ONE_CATEGORY);
+				assetVocabulary, AssetCategoryException.AT_LEAST_ONE_CATEGORY);
 		}
 
 		if (!assetVocabulary.isMultiValued() &&
 			assetVocabulary.hasMoreThanOneCategorySelected(categoryIds)) {
 
 			throw new AssetCategoryException(
-					assetVocabulary,
-					AssetCategoryException.TOO_MANY_CATEGORIES);
+				assetVocabulary, AssetCategoryException.TOO_MANY_CATEGORIES);
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CardinalityAssetEntryValidator.class.getName());
 
 	private AssetVocabularyLocalService _assetVocabularyLocalService;
 	private ClassNameLocalService _classNameLocalService;
