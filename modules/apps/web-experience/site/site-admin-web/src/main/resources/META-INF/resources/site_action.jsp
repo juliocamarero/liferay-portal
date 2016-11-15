@@ -93,7 +93,7 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 		<liferay-ui:icon
 			message="go-to-public-pages"
 			target="_blank"
-			url="<%= group.getDisplayURL(themeDisplay, false) %>"
+			url='<%= group.getDisplayURL(themeDisplay, false) + "&p_p_lifecycle=0" %>'
 		/>
 	</c:if>
 
@@ -101,7 +101,7 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 		<liferay-ui:icon
 			message="go-to-private-pages"
 			target="_blank"
-			url="<%= group.getDisplayURL(themeDisplay, true) %>"
+			url='<%= group.getDisplayURL(themeDisplay, true) + "&p_p_lifecycle=0" %>'
 		/>
 	</c:if>
 
