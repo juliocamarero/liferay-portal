@@ -25,7 +25,6 @@ import com.maxmind.geoip.LookupService;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -142,18 +141,13 @@ public class IPGeocoderImpl implements IPGeocoder {
 				System.getProperty("java.io.tmpdir") +
 					"/liferay/geoip/GeoIPCity.dat.xz");
 
-			write(xzFile, urlConnection.getInputStream());
+			FileUtil.write(xzFile, urlConnection.getInputStream());
 
-			write(file, new XZInputStream(new FileInputStream(xzFile)));
+			FileUtil.write(
+				file, new XZInputStream(new FileInputStream(xzFile)));
 		}
 
 		return file;
-	}
-
-	protected void write(File file, InputStream inputStream)
-		throws IOException {
-
-		FileUtil.write(file, inputStream);
 	}
 
 	private static final Logger _logger = Logger.getLogger(
