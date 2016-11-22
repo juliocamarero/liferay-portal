@@ -17,15 +17,13 @@ package com.liferay.ip.geocoder.internal;
 import com.liferay.ip.geocoder.IPGeocoder;
 import com.liferay.ip.geocoder.IPInfo;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.util.FileUtil;
 
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -155,39 +153,7 @@ public class IPGeocoderImpl implements IPGeocoder {
 	protected void write(File file, InputStream inputStream)
 		throws IOException {
 
-		File parentFile = file.getParentFile();
-
-		if (parentFile == null) {
-			return;
-		}
-
-		try {
-			if (!parentFile.exists()) {
-				parentFile.mkdirs();
-			}
-		}
-		catch (SecurityException se) {
-
-			// We may have the permission to write a specific file without
-			// having the permission to check if the parent file exists
-
-		}
-
-		BufferedInputStream bufferedInputStream = new BufferedInputStream(
-			inputStream);
-
-		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-			new FileOutputStream(file));
-
-		int i = 0;
-
-		while ((i = bufferedInputStream.read()) != -1) {
-			bufferedOutputStream.write(i);
-		}
-
-		bufferedOutputStream.flush();
-
-		bufferedInputStream.close();
+		FileUtil.write(file, inputStream);
 	}
 
 	private static final Logger _logger = Logger.getLogger(
