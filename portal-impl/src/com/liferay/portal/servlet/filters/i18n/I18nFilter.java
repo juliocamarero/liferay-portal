@@ -179,6 +179,12 @@ public class I18nFilter extends BasePortalFilter {
 
 				Group group = layoutSet.getGroup();
 
+				if (!LanguageUtil.isAvailableLocale(
+						group.getGroupId(), locale)) {
+
+					return null;
+				}
+
 				if (groupFriendlyURL.equals(group.getFriendlyURL())) {
 					redirect = contextPath + i18nPath + requestURI.substring(y);
 				}
