@@ -424,6 +424,15 @@ public class JournalFolderLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.dynamic.data.mapping.model.DDMStructure> getDDMStructures(
+		long groupId, long folderId, int restrictionType,
+		boolean excludeDuplicatedStructureKeys)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalFolderLocalService.getDDMStructures(groupId, folderId,
+			restrictionType, excludeDuplicatedStructureKeys);
+	}
+
+	@Override
+	public java.util.List<com.liferay.dynamic.data.mapping.model.DDMStructure> getDDMStructures(
 		long[] groupIds, long folderId, int restrictionType)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _journalFolderLocalService.getDDMStructures(groupIds, folderId,

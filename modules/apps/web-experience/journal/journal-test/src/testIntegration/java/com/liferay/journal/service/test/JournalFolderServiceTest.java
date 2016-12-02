@@ -111,11 +111,9 @@ public class JournalFolderServiceTest {
 
 		List<DDMStructure> ddmStructures =
 			JournalFolderLocalServiceUtil.getDDMStructures(
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(
-					_group.getGroupId()),
-				folder.getFolderId(),
+				_group.getGroupId(), folder.getFolderId(),
 				JournalFolderConstants.
-					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW);
+					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW, true);
 
 		Assert.assertFalse(ddmStructures.isEmpty());
 
@@ -158,10 +156,9 @@ public class JournalFolderServiceTest {
 		JournalFolderLocalServiceUtil.deleteFolder(folder.getFolderId());
 
 		ddmStructures = JournalFolderLocalServiceUtil.getDDMStructures(
-			PortalUtil.getCurrentAndAncestorSiteGroupIds(_group.getGroupId()),
-			folder.getFolderId(),
+			_group.getGroupId(), folder.getFolderId(),
 			JournalFolderConstants.
-				RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW);
+				RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW, true);
 
 		Assert.assertTrue(ddmStructures.isEmpty());
 	}

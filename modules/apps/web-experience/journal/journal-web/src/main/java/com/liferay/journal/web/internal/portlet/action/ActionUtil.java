@@ -14,6 +14,7 @@
 
 package com.liferay.journal.web.internal.portlet.action;
 
+import com.liferay.dynamic.data.mapping.exception.NoSuchStructureException;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureServiceUtil;
 import com.liferay.journal.exception.NoSuchArticleException;
@@ -253,6 +254,7 @@ public class ActionUtil {
 		long classNameId = ParamUtil.getLong(request, "classNameId");
 		long classPK = ParamUtil.getLong(request, "classPK");
 		String articleId = ParamUtil.getString(request, "articleId");
+		long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 		String ddmStructureKey = ParamUtil.getString(
 			request, "ddmStructureKey");
 		int status = ParamUtil.getInteger(
@@ -284,9 +286,23 @@ public class ActionUtil {
 			}
 		}
 		else {
-			DDMStructure ddmStructure = DDMStructureServiceUtil.fetchStructure(
-				groupId, PortalUtil.getClassNameId(JournalArticle.class),
-				ddmStructureKey, true);
+			DDMStructure ddmStructure = null;
+
+			if (ddmStructureId > 0) {
+				try {
+					ddmStructure = DDMStructureServiceUtil.getStructure(
+						ddmStructureId);
+				}
+				catch (NoSuchStructureException nsse) {
+					ddmStructure = null;
+				}
+			}
+
+			if (ddmStructure == null) {
+				ddmStructure = DDMStructureServiceUtil.fetchStructure(
+					groupId, PortalUtil.getClassNameId(JournalArticle.class),
+					ddmStructureKey, true);
+			}
 
 			if (ddmStructure == null) {
 				return null;

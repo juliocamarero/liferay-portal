@@ -23,12 +23,12 @@ DDMStructure ddmStructure = (DDMStructure)row.getObject();
 %>
 
 <c:choose>
-	<c:when test="<%= ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), ddmStructure.getStructureKey()) %>">
+	<c:when test="<%= ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), String.valueOf(ddmStructure.getStructureId())) %>">
 		<portlet:actionURL name="removeAddMenuFavItem" var="removeAddMenuFavItemURL">
 			<portlet:param name="mvcPath" value="/view_more_menu_items.jsp" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
-			<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
+			<portlet:param name="ddmStructureId" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
 		</portlet:actionURL>
 
 		<liferay-ui:icon
@@ -46,7 +46,7 @@ DDMStructure ddmStructure = (DDMStructure)row.getObject();
 					<portlet:param name="mvcPath" value="/view_more_menu_items.jsp" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
-					<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
+					<portlet:param name="ddmStructureId" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
 				</portlet:actionURL>
 
 				<liferay-ui:icon

@@ -8004,8 +8004,7 @@ public class JournalArticleLocalServiceImpl
 
 		List<DDMStructure> folderDDMStructures =
 			journalFolderLocalService.getDDMStructures(
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId), folderId,
-				restrictionType);
+				groupId, folderId, restrictionType, true);
 
 		for (DDMStructure folderDDMStructure : folderDDMStructures) {
 			if (folderDDMStructure.getStructureId() ==

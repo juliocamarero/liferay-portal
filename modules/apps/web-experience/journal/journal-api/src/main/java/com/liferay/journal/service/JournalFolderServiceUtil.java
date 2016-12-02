@@ -148,6 +148,15 @@ public class JournalFolderServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.dynamic.data.mapping.model.DDMStructure> getDDMStructures(
+		long groupId, long folderId, int restrictionType,
+		boolean excludeDuplicatedStructureKeys)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getDDMStructures(groupId, folderId, restrictionType,
+			excludeDuplicatedStructureKeys);
+	}
+
+	public static java.util.List<com.liferay.dynamic.data.mapping.model.DDMStructure> getDDMStructures(
 		long[] groupIds, long folderId, int restrictionType)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getDDMStructures(groupIds, folderId, restrictionType);

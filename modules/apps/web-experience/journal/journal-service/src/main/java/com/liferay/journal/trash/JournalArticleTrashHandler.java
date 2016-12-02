@@ -351,9 +351,7 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 
 		List<DDMStructure> folderDDMStructures =
 			_journalFolderLocalService.getDDMStructures(
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(
-					article.getGroupId()),
-				containerModelId, restrictionType);
+				article.getGroupId(), containerModelId, restrictionType, true);
 
 		for (DDMStructure folderDDMStructure : folderDDMStructures) {
 			if (folderDDMStructure.getStructureId() ==

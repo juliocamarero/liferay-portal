@@ -205,13 +205,9 @@ public class JournalFolderStagedModelDataHandler
 
 		List<DDMStructure> ddmStructures =
 			_journalFolderLocalService.getDDMStructures(
-				new long[] {
-					portletDataContext.getCompanyGroupId(),
-					portletDataContext.getScopeGroupId()
-				},
-				folder.getFolderId(),
+				portletDataContext.getScopeGroupId(), folder.getFolderId(),
 				JournalFolderConstants.
-					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW);
+					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW, true);
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			StagedModelDataHandlerUtil.exportReferenceStagedModel(

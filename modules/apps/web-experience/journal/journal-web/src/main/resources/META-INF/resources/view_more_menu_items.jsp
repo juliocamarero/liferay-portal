@@ -62,7 +62,7 @@ portletURL.setParameter("eventName", eventName);
 <aui:form cssClass="container-fluid-1280" name="addMenuItemFm">
 
 	<%
-	List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
+	List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(scopeGroupId, journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType(), true);
 	%>
 
 	<liferay-ui:search-container
@@ -83,7 +83,7 @@ portletURL.setParameter("eventName", eventName);
 			<%
 			Map<String, Object> data = new HashMap<>();
 
-			data.put("ddmStructureKey", ddmStructure.getStructureKey());
+			data.put("ddmStructureId", String.valueOf(ddmStructure.getStructureId()));
 			%>
 
 			<liferay-ui:search-container-column-text
@@ -124,7 +124,7 @@ portletURL.setParameter("eventName", eventName);
 			Util.getOpener().Liferay.fire(
 				'<%= HtmlUtil.escapeJS(eventName) %>',
 				{
-					ddmStructureKey: event.currentTarget.attr('data-ddmStructureKey')
+					ddmStructureId: event.currentTarget.attr('data-ddmStructureId')
 				}
 			);
 
