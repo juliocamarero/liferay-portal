@@ -109,13 +109,15 @@ public class FriendlyURLServlet extends HttpServlet {
 
 		String pathInfo = getPathInfo(request);
 
+		boolean forceRedirect = false;
 		boolean forcePermanentRedirect = false;
 
 		try {
 			Object[] redirectArray = _getRedirect(request, pathInfo);
 
 			redirect = (String)redirectArray[0];
-			forcePermanentRedirect = (Boolean)redirectArray[1];
+			forceRedirect = (Boolean)redirectArray[1];
+			forcePermanentRedirect = (Boolean)redirectArray[2];
 
 			if (request.getAttribute(WebKeys.LAST_PATH) == null) {
 				LastPath lastPath = null;
@@ -159,7 +161,7 @@ public class FriendlyURLServlet extends HttpServlet {
 			_log.debug("Redirect " + redirect);
 		}
 
-		if ((redirect.charAt(0) == CharPool.SLASH) && !forcePermanentRedirect) {
+		if ((redirect.charAt(0) == CharPool.SLASH) && !forceRedirect) {
 			ServletContext servletContext = getServletContext();
 
 			RequestDispatcher requestDispatcher =
@@ -396,7 +398,15 @@ public class FriendlyURLServlet extends HttpServlet {
 					String redirect = PortalUtil.getLocalizedFriendlyURL(
 						request, layout, locale, originalLocale);
 
-					return new Object[] {redirect, Boolean.TRUE};
+					Boolean forcePermanentRedirect = Boolean.TRUE;
+
+					if (Validator.isNull(i18nLanguageId)) {
+						forcePermanentRedirect = Boolean.FALSE;
+					}
+
+					return new Object[] {
+						redirect, Boolean.TRUE, forcePermanentRedirect
+					};
 				}
 			}
 		}
