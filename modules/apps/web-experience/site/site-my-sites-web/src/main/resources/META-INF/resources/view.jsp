@@ -64,6 +64,12 @@ groupSearch.setResults(groups);
 long[] groupIds = ListUtil.toLongArray(groups, Group.GROUP_ID_ACCESSOR);
 
 Map<Long, Integer> groupUsersCounts = UserLocalServiceUtil.searchCounts(company.getCompanyId(), WorkflowConstants.STATUS_APPROVED, groupIds);
+
+if (Validator.isNotNull(searchTerms.getKeywords())) {
+	String redirect = ParamUtil.getString(request, "redirect");
+	portletDisplay.setShowBackIcon(true);
+	portletDisplay.setURLBack(redirect);
+}
 %>
 
 <liferay-ui:success key="membershipRequestSent" message="your-request-was-sent-you-will-receive-a-reply-by-email" />
