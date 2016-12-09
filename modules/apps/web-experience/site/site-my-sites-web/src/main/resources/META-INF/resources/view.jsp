@@ -67,6 +67,7 @@ Map<Long, Integer> groupUsersCounts = UserLocalServiceUtil.searchCounts(company.
 
 if (Validator.isNotNull(searchTerms.getKeywords())) {
 	String redirect = ParamUtil.getString(request, "redirect");
+
 	portletDisplay.setShowBackIcon(true);
 	portletDisplay.setURLBack(redirect);
 }
