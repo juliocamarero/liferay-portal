@@ -224,32 +224,27 @@ RoleSearchTerms searchTerms = (RoleSearchTerms)roleSearchContainer.getSearchTerm
 							roleTypes = RoleConstants.TYPES_REGULAR;
 						}
 					}
-					else {
-						if (group != null) {
-							Group parentGroup = null;
+					else if (group != null) {
+						Group parentGroup = null;
 
-							if (group.isLayout()) {
-								parentGroup = GroupLocalServiceUtil.fetchGroup(
-									group.getParentGroupId());
-							}
+						if (group.isLayout()) {
+							parentGroup = GroupLocalServiceUtil.fetchGroup(
+								group.getParentGroupId());
+						}
 
-							if (parentGroup == null) {
-								if (group.isOrganization()) {
-									roleTypes = RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
-								}
-								else if (group.isUser()) {
-									roleTypes = RoleConstants.TYPES_REGULAR;
-								}
+						if (parentGroup == null) {
+							if (group.isOrganization()) {
+								roleTypes = RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
 							}
-							else {
-								if (parentGroup.isOrganization()) {
-									roleTypes =
-										RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
-								}
-								else if (parentGroup.isUser()) {
-									roleTypes = RoleConstants.TYPES_REGULAR;
-								}
+							else if (group.isUser()) {
+								roleTypes = RoleConstants.TYPES_REGULAR;
 							}
+						}
+						else if (parentGroup.isOrganization()) {
+							roleTypes = RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
+						}
+						else if (parentGroup.isUser()) {
+							roleTypes = RoleConstants.TYPES_REGULAR;
 						}
 					}
 				}
@@ -293,7 +288,7 @@ RoleSearchTerms searchTerms = (RoleSearchTerms)roleSearchContainer.getSearchTerm
 
 				List<String> excludedRoleNames = new ArrayList<>();
 
-					excludedRoleNames.add(RoleConstants.ADMINISTRATOR);
+				excludedRoleNames.add(RoleConstants.ADMINISTRATOR);
 
 				if (filterGroupRoles) {
 					excludedRoleNames.add(RoleConstants.ORGANIZATION_ADMINISTRATOR);
