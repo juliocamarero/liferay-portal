@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.exception.RequiredLayoutException;
 import com.liferay.portal.kernel.exception.SitemapChangeFrequencyException;
 import com.liferay.portal.kernel.exception.SitemapIncludeException;
 import com.liferay.portal.kernel.exception.SitemapPagePriorityException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ColorScheme;
@@ -1003,6 +1004,7 @@ public class LayoutAdminPortlet extends MVCPortlet {
 			cause instanceof SitemapChangeFrequencyException ||
 			cause instanceof SitemapIncludeException ||
 			cause instanceof SitemapPagePriorityException ||
+			cause instanceof SystemException ||
 			cause instanceof PrincipalException ||
 			cause instanceof UploadException) {
 
