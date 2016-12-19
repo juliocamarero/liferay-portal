@@ -967,6 +967,41 @@
 				(ResourceTypePermission.roleId = ?)
 		]]>
 	</sql>
+	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.countByGroupRoleAndTeamRole">
+		<![CDATA[
+			SELECT
+				COUNT(Role_.roleId) AS COUNT_VALUE
+			FROM
+				Role_
+			WHERE
+				(Role_.companyId = ?) AND
+				(
+					(name NOT IN ([$EXCLUDED_NAMES$])) AND
+					(type_ IN ([$TYPES$])) AND
+					(
+						(lower(Role_.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+						(lower(Role_.description) LIKE ? [$AND_OR_NULL_CHECK$])
+					)
+				) OR
+				(
+					(classNameId = ?) AND
+					(roleId != ?) AND
+					(classPK IN (
+						SELECT
+							teamId
+						FROM
+							Team
+						WHERE
+							(groupId = ?) AND
+							(
+								(lower(name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+								(lower(description) LIKE ? [$AND_OR_NULL_CHECK$])
+							)
+						)
+					)
+				)
+		]]>
+	</sql>
 	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.countByOrganization">
 		<![CDATA[
 			SELECT
@@ -1111,6 +1146,43 @@
 					(lower(Role_.description) LIKE ? [$AND_OR_NULL_CHECK$])
 				)
 				[$TYPE$]
+		]]>
+	</sql>
+	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.findByGroupRoleAndTeamRole">
+		<![CDATA[
+			SELECT
+				{Role_.*}
+			FROM
+				Role_
+			WHERE
+				(Role_.companyId = ?) AND
+				(
+					(name NOT IN ([$EXCLUDED_NAMES$])) AND
+					(type_ IN ([$TYPES$])) AND
+					(
+						(lower(Role_.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+						(lower(Role_.description) LIKE ? [$AND_OR_NULL_CHECK$])
+					)
+				) OR
+				(
+					(classNameId = ?) AND
+					(roleId != ?) AND
+					(classPK IN (
+						SELECT
+							teamId
+						FROM
+							Team
+						WHERE
+							(groupId = ?) AND
+							(
+								(lower(name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+								(lower(description) LIKE ? [$AND_OR_NULL_CHECK$])
+							)
+						)
+					)
+				)
+			ORDER BY
+				Role_.name ASC
 		]]>
 	</sql>
 	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.findBySystem">

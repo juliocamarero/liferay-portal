@@ -114,6 +114,19 @@ definePermissionsURL.setParameter("backURL", currentURL);
 definePermissionsURL.setPortletMode(PortletMode.VIEW);
 definePermissionsURL.setRefererPlid(plid);
 definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
+
+PortletURL roleSearchURL = PortletURLFactoryUtil.create(renderRequest, PortletConfigurationPortletKeys.PORTLET_CONFIGURATION, PortletRequest.RENDER_PHASE);
+
+roleSearchURL.setParameter("mvcPath", "/edit_permissions.jsp");
+roleSearchURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+roleSearchURL.setParameter("portletConfiguration", Boolean.TRUE.toString());
+roleSearchURL.setParameter("portletResource", portletResource);
+roleSearchURL.setParameter("resourcePrimKey", resourcePrimKey);
+roleSearchURL.setWindowState(LiferayWindowState.POP_UP);
+
+SearchContainer roleSearchContainer = new RoleSearch(renderRequest, roleSearchURL);
+
+RoleSearchTerms searchTerms = (RoleSearchTerms)roleSearchContainer.getSearchTerms();
 %>
 
 <div class="edit-permissions portlet-configuration-edit-permissions">
@@ -132,15 +145,21 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 		<portlet:param name="roleTypes" value="<%= roleTypesParam %>" />
 	</portlet:actionURL>
 
-	<aui:form action="<%= updateRolePermissionsURL.toString() %>" cssClass="form" method="post" name="fm">
-		<aui:input name="resourceId" type="hidden" value="<%= resource.getResourceId() %>" />
+	<div class="portlet-configuration-body-content">
+		<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+			<aui:nav cssClass="navbar-nav">
+				<aui:nav-item label="permissions" selected="<%= true %>" />
+			</aui:nav>
 
-		<div class="portlet-configuration-body-content">
-			<aui:nav-bar markupView="lexicon">
-				<aui:nav cssClass="navbar-nav">
-					<aui:nav-item label="permissions" selected="<%= true %>" />
-				</aui:nav>
-			</aui:nav-bar>
+			<aui:nav-bar-search>
+				<aui:form action="<%= roleSearchURL.toString() %>" name="searchFm">
+					<liferay-ui:input-search markupView="lexicon" />
+				</aui:form>
+			</aui:nav-bar-search>
+		</aui:nav-bar>
+
+		<aui:form action="<%= updateRolePermissionsURL.toString() %>" cssClass="form" method="post" name="fm">
+			<aui:input name="resourceId" type="hidden" value="<%= resource.getResourceId() %>" />
 
 			<div class="container-fluid-1280">
 
@@ -192,28 +211,42 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 					}
 				}
 
-				List<Role> roles = ListUtil.copy(ResourceActionsUtil.getRoles(company.getCompanyId(), group, modelResource, roleTypes));
+				if (roleTypes == null) {
+					roleTypes = RoleConstants.TYPES_REGULAR_AND_SITE;
 
-				Role administratorRole = RoleLocalServiceUtil.getRole(company.getCompanyId(), RoleConstants.ADMINISTRATOR);
+					if (ResourceActionsUtil.isPortalModelResource(modelResource)) {
+						if (modelResource.equals(Organization.class.getName()) ||
+							modelResource.equals(User.class.getName())) {
 
-				roles.remove(administratorRole);
+							roleTypes = RoleConstants.TYPES_ORGANIZATION_AND_REGULAR;
+						}
+						else {
+							roleTypes = RoleConstants.TYPES_REGULAR;
+						}
+					}
+					else if (group != null) {
+						Group parentGroup = null;
 
-				if (filterGroupRoles) {
-					Role organizationAdministratorRole = RoleLocalServiceUtil.getRole(company.getCompanyId(), RoleConstants.ORGANIZATION_ADMINISTRATOR);
+						if (group.isLayout()) {
+							parentGroup = GroupLocalServiceUtil.fetchGroup(
+								group.getParentGroupId());
+						}
 
-					roles.remove(organizationAdministratorRole);
-
-					Role organizationOwnerRole = RoleLocalServiceUtil.getRole(company.getCompanyId(), RoleConstants.ORGANIZATION_OWNER);
-
-					roles.remove(organizationOwnerRole);
-
-					Role siteAdministratorRole = RoleLocalServiceUtil.getRole(company.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
-
-					roles.remove(siteAdministratorRole);
-
-					Role siteOwnerRole = RoleLocalServiceUtil.getRole(company.getCompanyId(), RoleConstants.SITE_OWNER);
-
-					roles.remove(siteOwnerRole);
+						if (parentGroup == null) {
+							if (group.isOrganization()) {
+								roleTypes = RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
+							}
+							else if (group.isUser()) {
+								roleTypes = RoleConstants.TYPES_REGULAR;
+							}
+						}
+						else if (parentGroup.isOrganization()) {
+							roleTypes = RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
+						}
+						else if (parentGroup.isUser()) {
+							roleTypes = RoleConstants.TYPES_REGULAR;
+						}
+					}
 				}
 
 				long modelResourceRoleId = 0;
@@ -222,59 +255,76 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 					modelResourceRoleId = GetterUtil.getLong(resourcePrimKey);
 				}
 
-				roles.addAll(RoleLocalServiceUtil.getTeamRoles(groupId, new long[] {modelResourceRoleId}));
+				boolean filterGuestRole = false;
 
-				Iterator<Role> itr = roles.iterator();
+				if (modelResource.equals(Layout.class.getName())) {
+					Layout resourceLayout = LayoutLocalServiceUtil.getLayout(GetterUtil.getLong(resourcePrimKey));
 
-				while (itr.hasNext()) {
-					Role role = itr.next();
+					if (resourceLayout.isPrivateLayout()) {
+						Group resourceLayoutGroup = resourceLayout.getGroup();
 
-					String name = role.getName();
-
-					if (!name.equals(RoleConstants.GUEST) && !RolePermissionUtil.contains(permissionChecker, groupId, role.getRoleId(), ActionKeys.VIEW) && (!role.isTeam() || !TeamPermissionUtil.contains(permissionChecker, role.getClassPK(), ActionKeys.PERMISSIONS))) {
-						itr.remove();
+						if (!resourceLayoutGroup.isLayoutSetPrototype()) {
+							filterGuestRole = true;
+						}
 					}
+				}
+				else if (Validator.isNotNull(portletResource)) {
+					int pos = resourcePrimKey.indexOf(PortletConstants.LAYOUT_SEPARATOR);
 
-					if (name.equals(RoleConstants.GUEST) && modelResource.equals(Layout.class.getName())) {
-						Layout resourceLayout = LayoutLocalServiceUtil.getLayout(GetterUtil.getLong(resourcePrimKey));
+					if (pos > 0) {
+						long resourcePlid = GetterUtil.getLong(resourcePrimKey.substring(0, pos));
+
+						Layout resourceLayout = LayoutLocalServiceUtil.getLayout(resourcePlid);
 
 						if (resourceLayout.isPrivateLayout()) {
 							Group resourceLayoutGroup = resourceLayout.getGroup();
 
-							if (!resourceLayoutGroup.isLayoutSetPrototype()) {
-								itr.remove();
-							}
-						}
-					}
-
-					if (name.equals(RoleConstants.GUEST) && Validator.isNotNull(portletResource)) {
-						int pos = resourcePrimKey.indexOf(PortletConstants.LAYOUT_SEPARATOR);
-
-						if (pos > 0) {
-							long resourcePlid = GetterUtil.getLong(resourcePrimKey.substring(0, pos));
-
-							Layout resourceLayout = LayoutLocalServiceUtil.getLayout(resourcePlid);
-
-							if (resourceLayout.isPrivateLayout()) {
-								Group resourceLayoutGroup = resourceLayout.getGroup();
-
-								if (!resourceLayoutGroup.isLayoutPrototype() && !resourceLayoutGroup.isLayoutSetPrototype()) {
-									itr.remove();
-								}
+							if (!resourceLayoutGroup.isLayoutPrototype() && !resourceLayoutGroup.isLayoutSetPrototype()) {
+								filterGuestRole = true;
 							}
 						}
 					}
 				}
+
+				List<String> excludedRoleNames = new ArrayList<>();
+
+				excludedRoleNames.add(RoleConstants.ADMINISTRATOR);
+
+				if (filterGroupRoles) {
+					excludedRoleNames.add(RoleConstants.ORGANIZATION_ADMINISTRATOR);
+
+					excludedRoleNames.add(RoleConstants.ORGANIZATION_OWNER);
+
+					excludedRoleNames.add(RoleConstants.SITE_ADMINISTRATOR);
+
+					excludedRoleNames.add(RoleConstants.SITE_OWNER);
+				}
+
+				if (filterGuestRole) {
+					excludedRoleNames.add(RoleConstants.GUEST);
+				}
+
+				long teamGroupId = group.getGroupId();
+
+				if (group.isLayout()) {
+					teamGroupId = group.getParentGroupId();
+				}
+
+				roleSearchContainer.setEmptyResultsMessageCssClass(searchTerms.isSearch() ? StringPool.BLANK : "taglib-empty-result-message-header-has-plus-btn");
+
+				int count = RoleLocalServiceUtil.getGroupRolesAndTeamRolesCount(company.getCompanyId(), searchTerms.getKeywords(), excludedRoleNames, roleTypes, modelResourceRoleId, teamGroupId);
+
+				roleSearchContainer.setTotal(count);
+
+				List<Role> roles = RoleLocalServiceUtil.getGroupRolesAndTeamRoles(company.getCompanyId(), searchTerms.getKeywords(), excludedRoleNames, roleTypes, modelResourceRoleId, teamGroupId, roleSearchContainer.getStart(), roleSearchContainer.getResultEnd());
+
+				roleSearchContainer.setResults(roles);
 				%>
 
 				<liferay-ui:search-container
-					iteratorURL="<%= currentURLObj %>"
-					total="<%= roles.size() %>"
+					iteratorURL="<%= roleSearchURL %>"
+					searchContainer="<%= roleSearchContainer %>"
 				>
-					<liferay-ui:search-container-results
-						results="<%= roles.subList(searchContainer.getStart(), searchContainer.getResultEnd()) %>"
-					/>
-
 					<liferay-ui:search-container-row
 						className="com.liferay.portal.kernel.model.Role"
 						escapedModel="<%= true %>"
@@ -376,18 +426,20 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 
 					</liferay-ui:search-container-row>
 
-					<liferay-ui:search-iterator markupView="lexicon" searchContainer="<%= searchContainer %>" />
+					<liferay-ui:search-iterator markupView="lexicon" />
 				</liferay-ui:search-container>
 			</div>
-		</div>
+		</aui:form>
+	</div>
 
-		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
-		</aui:button-row>
-	</aui:form>
+	<aui:button-row>
+		<aui:button cssClass="btn-lg" name="saveButton" type="submit" />
+	</aui:button-row>
 </div>
 
 <aui:script sandbox="<%= true %>">
+	var form = $(document.<portlet:namespace />fm);
+
 	$('#<portlet:namespace />fm').on(
 		'mouseover',
 		'.lfr-checkbox-preselected',
@@ -395,6 +447,17 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 			var currentTarget = $(event.currentTarget);
 
 			Liferay.Portal.ToolTip.show(currentTarget, currentTarget.data('message'));
+		}
+	);
+
+	$('#<portlet:namespace />saveButton').on(
+		'click',
+		function(event) {
+			event.preventDefault();
+
+			if (<%= roleSearchContainer.getTotal() != 0 %>) {
+				submitForm(form);
+			}
 		}
 	);
 </aui:script>
