@@ -333,14 +333,14 @@ public class PortletExportController implements ExportController {
 			exportPortletPreferences(
 				portletDataContext, portletDataContext.getCompanyId(),
 				PortletKeys.PREFS_OWNER_TYPE_COMPANY, false, layout, plid,
-				portlet.getRootPortletId(), portletElement);
+				portlet.getPortletId(), portletElement);
 
 			// Group
 
 			exportPortletPreferences(
 				portletDataContext, portletDataContext.getScopeGroupId(),
 				PortletKeys.PREFS_OWNER_TYPE_GROUP, false, layout,
-				PortletKeys.PREFS_PLID_SHARED, portlet.getRootPortletId(),
+				PortletKeys.PREFS_PLID_SHARED, portlet.getPortletId(),
 				portletElement);
 
 			// Layout

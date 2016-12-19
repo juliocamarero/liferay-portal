@@ -850,7 +850,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 
 		PortletPreferencesIds portletPreferencesIds = new PortletPreferencesIds(
 			themeDisplay.getCompanyId(), layout.getGroupId(),
-			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, PortletKeys.PREFS_PLID_SHARED,
+			PortletKeys.PREFS_OWNER_TYPE_GROUP, PortletKeys.PREFS_PLID_SHARED,
 			portletId);
 
 		return _portletPreferencesLocalService.getPreferences(
