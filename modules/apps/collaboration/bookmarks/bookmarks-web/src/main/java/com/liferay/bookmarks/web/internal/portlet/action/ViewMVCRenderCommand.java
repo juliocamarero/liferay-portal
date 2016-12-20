@@ -19,9 +19,13 @@ import com.liferay.bookmarks.constants.BookmarksWebKeys;
 import com.liferay.bookmarks.exception.NoSuchFolderException;
 import com.liferay.bookmarks.model.BookmarksFolder;
 import com.liferay.bookmarks.web.internal.portlet.toolbar.contributor.BookmarksPortletToolbarContributor;
+import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.reference.ReferenceController;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -51,6 +55,10 @@ public class ViewMVCRenderCommand implements MVCRenderCommand {
 		throws PortletException {
 
 		try {
+			_referenceController.processReferences();
+
+			_referenceController.printGraph();
+
 			BookmarksFolder folder = ActionUtil.getFolder(renderRequest);
 
 			renderRequest.setAttribute(
@@ -84,7 +92,16 @@ public class ViewMVCRenderCommand implements MVCRenderCommand {
 			bookmarksPortletToolbarContributor;
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		ViewMVCRenderCommand.class);
+
 	private BookmarksPortletToolbarContributor
 		_bookmarksPortletToolbarContributor;
+
+	@Reference
+	private JournalArticleLocalService _journalArticleLocalService;
+
+	@Reference
+	private ReferenceController _referenceController;
 
 }
