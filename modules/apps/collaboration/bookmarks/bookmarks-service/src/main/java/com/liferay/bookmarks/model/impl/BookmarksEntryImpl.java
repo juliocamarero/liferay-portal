@@ -20,6 +20,8 @@ import com.liferay.bookmarks.service.BookmarksFolderLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.StringPool;
 
+import java.util.Optional;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -45,6 +47,21 @@ public class BookmarksEntryImpl extends BookmarksEntryBaseImpl {
 		}
 
 		return BookmarksFolderLocalServiceUtil.getFolder(getFolderId());
+	}
+
+	@Override
+	public Optional<BookmarksFolder> getOptionalFolder() {
+		if (getFolderId() <= 0) {
+			return Optional.ofNullable(null);
+		}
+
+		try {
+			return Optional.ofNullable(
+				BookmarksFolderLocalServiceUtil.getFolder(getFolderId()));
+		}
+		catch (PortalException pe) {
+			return Optional.ofNullable(null);
+		}
 	}
 
 }

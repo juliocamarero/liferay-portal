@@ -582,6 +582,11 @@ public class BookmarksEntryWrapper implements BookmarksEntry,
 		return _bookmarksEntry.getStatusDate();
 	}
 
+	@Override
+	public java.util.Optional<BookmarksFolder> getOptionalFolder() {
+		return _bookmarksEntry.getOptionalFolder();
+	}
+
 	/**
 	* Returns the company ID of this bookmarks entry.
 	*
