@@ -14,8 +14,11 @@
 
 package com.liferay.taglib.theme;
 
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -55,7 +58,14 @@ public class DefineObjectsTag extends TagSupport {
 				"layoutTypePortlet", themeDisplay.getLayoutTypePortlet());
 		}
 
-		pageContext.setAttribute("locale", themeDisplay.getLocale());
+		Locale locale = themeDisplay.getLocale();
+		User user = themeDisplay.getUser();
+
+		if (!locale.equals(user.getLocale())) {
+			locale = user.getLocale();
+		}
+
+		pageContext.setAttribute("locale", locale);
 		pageContext.setAttribute(
 			"permissionChecker", themeDisplay.getPermissionChecker());
 		pageContext.setAttribute("plid", Long.valueOf(themeDisplay.getPlid()));
