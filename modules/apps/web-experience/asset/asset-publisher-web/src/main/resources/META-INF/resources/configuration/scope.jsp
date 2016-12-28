@@ -153,7 +153,7 @@ List<Group> selectedGroups = GroupLocalServiceUtil.getGroups(assetPublisherDispl
 	}
 	%>
 
-	<c:if test="<%= (siteBrowserURL != null) && !types.isEmpty() && !siteGroup.isLayoutPrototype() && !siteGroup.isLayoutSetPrototype() %>">
+	<c:if test="<%= (siteBrowserURL != null) && !types.isEmpty() %>">
 
 		<%
 		data = new HashMap<String, Object>();
