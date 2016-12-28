@@ -120,6 +120,9 @@ request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 					PortletURL assignMembersURL = PortalUtil.getControlPanelPortletURL(request, portletId, PortletRequest.RENDER_PHASE);
 
+					long groupId = group.getGroupId();
+
+					assignMembersURL.setParameter("groupId", String.valueOf(groupId));
 					assignMembersURL.setParameter("redirect", currentURL);
 					assignMembersURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 					%>
@@ -148,7 +151,7 @@ request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 						<liferay-portlet:renderURL portletName="<%= portletId %>" var="viewMembershipRequestsURL">
 							<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
 							<portlet:param name="redirect" value="<%= currentURL %>" />
-							<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+							<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 						</liferay-portlet:renderURL>
 
 						<p>
@@ -172,12 +175,12 @@ request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 					<liferay-ui:asset-categories-summary
 						className="<%= Group.class.getName() %>"
-						classPK="<%= group.getGroupId() %>"
+						classPK="<%= groupId %>"
 					/>
 
 					<liferay-ui:asset-tags-summary
 						className="<%= Group.class.getName() %>"
-						classPK="<%= group.getGroupId() %>"
+						classPK="<%= groupId %>"
 					/>
 				</div>
 			</c:otherwise>
