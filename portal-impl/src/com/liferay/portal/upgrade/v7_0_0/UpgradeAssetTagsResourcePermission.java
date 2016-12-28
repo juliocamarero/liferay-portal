@@ -34,6 +34,11 @@ public class UpgradeAssetTagsResourcePermission extends UpgradeProcess {
 				"delete from ResourcePermission where name = " +
 					"'com.liferay.portlet.asset.model.AssetTag' and scope = " +
 						ResourceConstants.SCOPE_INDIVIDUAL);
+
+			runSQL(
+				"delete from ResourcePermission where name = '" +
+					"com.liferay.portlet.asset.model.AssetTag' and scope = " +
+						ResourceConstants.SCOPE_INDIVIDUAL);
 		}
 	}
 
