@@ -1542,7 +1542,7 @@ public class LanguageImpl implements Language, Serializable {
 		return GetterUtil.getBoolean(
 			group.getTypeSettingsProperty(
 				GroupConstants.TYPE_SETTINGS_KEY_INHERIT_LOCALES),
-			true);
+			false);
 	}
 
 	@Override
