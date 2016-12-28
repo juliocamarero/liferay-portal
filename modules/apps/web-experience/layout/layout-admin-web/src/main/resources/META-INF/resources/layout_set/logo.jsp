@@ -61,11 +61,18 @@ String companyLogoURL = themeDisplay.getPathImage() + "/company_logo?img_id=" + 
 />
 
 <%
-boolean showSiteNameSupported = GetterUtil.getBoolean(selLayoutSet.getTheme().getSetting("show-site-name-supported"), true);
-
-boolean showSiteNameDefault = GetterUtil.getBoolean(selLayoutSet.getTheme().getSetting("show-site-name-default"), showSiteNameSupported);
-
-boolean showSiteName = GetterUtil.getBoolean(selLayoutSet.getSettingsProperty("showSiteName"), showSiteNameDefault);
+Group group = layoutsAdminDisplayContext.getGroup();
 %>
 
-<aui:input disabled="<%= !showSiteNameSupported %>" helpMessage='<%= showSiteNameSupported ? StringPool.BLANK : "the-theme-selected-for-the-site-does-not-support-displaying-the-title" %>' label="show-site-name" name="TypeSettingsProperties--showSiteName--" type="toggle-switch" value="<%= showSiteName %>" />
+<c:if test="<%= !group.isUser() %>">
+
+	<%
+	boolean showSiteNameSupported = GetterUtil.getBoolean(selLayoutSet.getTheme().getSetting("show-site-name-supported"), true);
+
+	boolean showSiteNameDefault = GetterUtil.getBoolean(selLayoutSet.getTheme().getSetting("show-site-name-default"), showSiteNameSupported);
+
+	boolean showSiteName = GetterUtil.getBoolean(selLayoutSet.getSettingsProperty("showSiteName"), showSiteNameDefault);
+	%>
+
+	<aui:input disabled="<%= !showSiteNameSupported %>" helpMessage='<%= showSiteNameSupported ? StringPool.BLANK : "the-theme-selected-for-the-site-does-not-support-displaying-the-title" %>' label="show-site-name" name="TypeSettingsProperties--showSiteName--" type="toggle-switch" value="<%= showSiteName %>" />
+</c:if>
