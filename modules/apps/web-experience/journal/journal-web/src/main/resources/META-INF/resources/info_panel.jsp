@@ -67,8 +67,8 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(articles)) {
 			</h6>
 		</div>
 
-		<aui:nav-bar markupView="lexicon">
-			<aui:nav cssClass="navbar-nav">
+		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
+			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
 				<aui:nav-item label="details" selected="<%= true %>" />
 			</aui:nav>
 		</aui:nav-bar>
@@ -129,8 +129,8 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(articles)) {
 			</c:if>
 		</div>
 
-		<aui:nav-bar markupView="lexicon">
-			<aui:nav cssClass="navbar-nav">
+		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
+			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
 				<aui:nav-item label="details" selected="<%= true %>" />
 			</aui:nav>
 		</aui:nav-bar>
@@ -226,8 +226,8 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(articles)) {
 			<h4><liferay-ui:message arguments="<%= folders.size() + articles.size() %>" key="x-items-are-selected" /></h4>
 		</div>
 
-		<aui:nav-bar>
-			<aui:nav cssClass="navbar-nav">
+		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
+			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
 				<aui:nav-item label="details" selected="<%= true %>" />
 			</aui:nav>
 		</aui:nav-bar>
