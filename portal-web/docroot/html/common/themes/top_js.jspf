@@ -223,6 +223,22 @@
 			getSessionId: function() {
 				return '<%= PropsValues.SESSION_ENABLE_URL_WITH_SESSION_ID ? session.getId() : StringPool.BLANK %>';
 			},
+			getSiteAdminURL: function() {
+
+				<%
+				long controlPanelPlid = PortalUtil.getControlPanelPlid(themeDisplay.getCompanyId());
+
+				Layout controlPanelLayout = LayoutLocalServiceUtil.getLayout(controlPanelPlid);
+
+				Group scopeGroup = themeDisplay.getScopeGroup();
+
+				if (!scopeGroup.isControlPanel()) {
+					controlPanelLayout = new VirtualLayout(controlPanelLayout, scopeGroup);
+				}
+				%>
+
+				return '<%= PortalUtil.getLayoutFriendlyURL(controlPanelLayout, themeDisplay) %>';
+			},
 			getSiteGroupId: function() {
 				return '<%= themeDisplay.getSiteGroupId() %>';
 			},
