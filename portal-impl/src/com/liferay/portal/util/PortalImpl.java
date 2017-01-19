@@ -1623,13 +1623,11 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public String getControlPanelFullURL(
-			long scopeGroupId, String ppid, Map<String, String[]> params)
+	public String getSiteAdminURL(
+			Group group, String ppid, Map<String, String[]> params)
 		throws PortalException {
 
 		StringBundler sb = new StringBundler(7);
-
-		Group group = GroupLocalServiceUtil.getGroup(scopeGroupId);
 
 		Company company = CompanyLocalServiceUtil.getCompany(
 			group.getCompanyId());
@@ -1641,13 +1639,8 @@ public class PortalImpl implements Portal {
 
 		sb.append(getPathFriendlyURLPrivateGroup());
 
-		Group controlPanelDisplayGroup = getControlPanelDisplayGroup(
-			group.getCompanyId(), scopeGroupId, 0, ppid);
-
-		if ((controlPanelDisplayGroup != null) &&
-			!controlPanelDisplayGroup.isControlPanel()) {
-
-			sb.append(controlPanelDisplayGroup.getFriendlyURL());
+		if ((group != null) && !group.isControlPanel()) {
+			sb.append(group.getFriendlyURL());
 			sb.append(VirtualLayoutConstants.CANONICAL_URL_SEPARATOR);
 		}
 
@@ -1661,7 +1654,10 @@ public class PortalImpl implements Portal {
 			params = new LinkedHashMap<>();
 		}
 
-		params.put("p_p_id", new String[] {ppid});
+		if (Validator.isNotNull(ppid)) {
+			params.put("p_p_id", new String[] {ppid});
+		}
+
 		params.put("p_p_lifecycle", new String[] {"0"});
 		params.put(
 			"p_p_state", new String[] {WindowState.MAXIMIZED.toString()});
@@ -1670,6 +1666,19 @@ public class PortalImpl implements Portal {
 		sb.append(HttpUtil.parameterMapToString(params, true));
 
 		return sb.toString();
+	}
+
+	@Override
+	public String getControlPanelFullURL(
+			long scopeGroupId, String ppid, Map<String, String[]> params)
+		throws PortalException {
+
+		Group group = GroupLocalServiceUtil.getGroup(scopeGroupId);
+
+		Group controlPanelDisplayGroup = getControlPanelDisplayGroup(
+			group.getCompanyId(), scopeGroupId, 0, ppid);
+
+		return getSiteAdminURL(controlPanelDisplayGroup, ppid, params);
 	}
 
 	@Override
