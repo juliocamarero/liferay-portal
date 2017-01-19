@@ -1623,7 +1623,7 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public String getControlPanelFullURL(
+	public String getSiteAdminURL(
 			Group group, String ppid, Map<String, String[]> params)
 		throws PortalException {
 
@@ -1678,7 +1678,7 @@ public class PortalImpl implements Portal {
 		Group controlPanelDisplayGroup = getControlPanelDisplayGroup(
 			group.getCompanyId(), scopeGroupId, 0, ppid);
 
-		return getControlPanelFullURL(controlPanelDisplayGroup, ppid, params);
+		return getSiteAdminURL(controlPanelDisplayGroup, ppid, params);
 	}
 
 	@Override

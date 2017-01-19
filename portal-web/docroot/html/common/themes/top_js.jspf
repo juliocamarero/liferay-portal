@@ -172,6 +172,9 @@
 			getCDNHost: function() {
 				return '<%= themeDisplay.getCDNHost() %>';
 			},
+			getSiteAdminURL: function() {
+				return '<%= PortalUtil.getSiteAdminURL(themeDisplay.getScopeGroup(), StringPool.BLANK, null) %>';
+			},
 			getCompanyGroupId: function() {
 				return '<%= themeDisplay.getCompanyGroupId() %>';
 			},
