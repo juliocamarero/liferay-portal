@@ -111,7 +111,9 @@ iteratorURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 iteratorURL.setParameter("portletConfiguration", Boolean.TRUE.toString());
 iteratorURL.setParameter("portletResource", portletResource);
 iteratorURL.setParameter("modelResource", modelResource);
+iteratorURL.setParameter("resourceGroupId", String.valueOf(resourceGroupId));
 iteratorURL.setParameter("resourcePrimKey", resourcePrimKey);
+iteratorURL.setParameter("roleTypes", roleTypesParam);
 iteratorURL.setWindowState(LiferayWindowState.POP_UP);
 
 SearchContainer roleSearchContainer = new RoleSearch(renderRequest, iteratorURL);
