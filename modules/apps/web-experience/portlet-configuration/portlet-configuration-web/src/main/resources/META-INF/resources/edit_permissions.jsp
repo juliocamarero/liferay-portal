@@ -110,6 +110,7 @@ iteratorURL.setParameter("mvcPath", "/edit_permissions.jsp");
 iteratorURL.setParameter("returnToFullPageURL", returnToFullPageURL);
 iteratorURL.setParameter("portletConfiguration", Boolean.TRUE.toString());
 iteratorURL.setParameter("portletResource", portletResource);
+iteratorURL.setParameter("modelResource", modelResource);
 iteratorURL.setParameter("resourcePrimKey", resourcePrimKey);
 iteratorURL.setWindowState(LiferayWindowState.POP_UP);
 

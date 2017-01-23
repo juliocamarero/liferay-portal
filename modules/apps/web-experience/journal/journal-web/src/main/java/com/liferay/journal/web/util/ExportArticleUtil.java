@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -98,9 +98,9 @@ public class ExportArticleUtil {
 			portletRequest, portletResponse);
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
-		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+		HttpServletRequest request = _portal.getHttpServletRequest(
 			portletRequest);
-		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+		HttpServletResponse response = _portal.getHttpServletResponse(
 			portletResponse);
 
 		JournalArticleDisplay articleDisplay = _journalContent.getDisplay(
@@ -174,5 +174,8 @@ public class ExportArticleUtil {
 	}
 
 	private JournalContent _journalContent;
+
+	@Reference
+	private Portal _portal;
 
 }
