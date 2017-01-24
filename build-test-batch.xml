@@ -668,16 +668,22 @@ app.server.type=@{app.server.type}]]></echo>
 							</antcall>
 
 							<if>
-								<and>
-									<matches pattern="https?://" string="@{test.license.xml.url}" />
-									<not>
-										<equals arg1="${test.deploy.license}" arg2="false" />
-									</not>
-								</and>
+								<matches pattern="https?://" string="@{test.license.xml.url}" />
 								<then>
-									<antcall target="deploy-license-xml">
-										<param name="test.build.license.xml.zip.url" value="@{test.license.xml.url}" />
-									</antcall>
+									<var name="test.build.license.xml.zip.url" unset="true" />
+
+									<property name="test.build.license.xml.zip.url" value="@{test.license.xml.url}" />
+
+									<echo append="true" file="test.${env.HOSTNAME}.properties"><![CDATA[${line.separator}test.build.license.xml.zip.url=@{test.license.xml.url}]]></echo>
+								</then>
+							</if>
+
+							<if>
+								<not>
+									<equals arg1="${test.deploy.license}" arg2="false" />
+								</not>
+								<then>
+									<antcall target="deploy-license-xml" />
 								</then>
 							</if>
 
@@ -2492,7 +2498,6 @@ information. Make sure to commit in all build services results.
 				<move file="${module.base.dir}/settings.gradle" tofile="${module.base.dir}/settings.gradle.temp" />
 
 				<gradle-execute dir="${module.base.dir}" task="checkSourceFormatting">
-					<arg value="-Pcom.liferay.source.formatter.ignore.local=true" />
 					<arg value="-PdependencyCheckerIgnoreFailures=false" />
 				</gradle-execute>
 			</try>

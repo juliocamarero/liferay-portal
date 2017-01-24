@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -100,9 +100,9 @@ public class ExportArticleMVCResourceCommand extends BaseMVCResourceCommand {
 		catch (Exception e) {
 			_log.error("Unable to export article", e);
 
-			PortalUtil.sendError(
-				e, PortalUtil.getHttpServletRequest(resourceRequest),
-				PortalUtil.getHttpServletResponse(resourceResponse));
+			_portal.sendError(
+				e, _portal.getHttpServletRequest(resourceRequest),
+				_portal.getHttpServletResponse(resourceResponse));
 		}
 	}
 
@@ -123,5 +123,8 @@ public class ExportArticleMVCResourceCommand extends BaseMVCResourceCommand {
 
 	private ExportArticleUtil _exportArticleUtil;
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }
