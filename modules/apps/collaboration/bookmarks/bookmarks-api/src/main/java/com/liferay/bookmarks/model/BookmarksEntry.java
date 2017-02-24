@@ -62,4 +62,6 @@ public interface BookmarksEntry extends BookmarksEntryModel, PermissionedModel,
 
 	public BookmarksFolder getFolder()
 		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public java.util.Optional<BookmarksFolder> getOptionalFolder();
 }
