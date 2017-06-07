@@ -5361,8 +5361,10 @@ public class PortalImpl implements Portal {
 
 			request.setAttribute(WebKeys.UNIQUE_ELEMENT_IDS, uniqueElementIds);
 		}
-		else {
+//		else {
 			int i = 1;
+
+			uniqueElementId = uniqueElementId.concat(String.valueOf(i));
 
 			while (uniqueElementIds.contains(
 						namespace.concat(uniqueElementId))) {
@@ -5380,7 +5382,7 @@ public class PortalImpl implements Portal {
 
 				i++;
 			}
-		}
+//		}
 
 		uniqueElementIds.add(namespace.concat(uniqueElementId));
 
