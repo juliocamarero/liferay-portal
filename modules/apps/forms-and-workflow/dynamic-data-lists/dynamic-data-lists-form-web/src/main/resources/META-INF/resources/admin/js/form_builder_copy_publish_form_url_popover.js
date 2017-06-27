@@ -46,7 +46,7 @@ AUI.add(
 					setAlign: function(value) {
 						var instance = this;
 
-						instance._popover.set("align", value);
+						instance._popover.set('align', value);
 					},
 
 					show: function() {
@@ -66,12 +66,13 @@ AUI.add(
 								position: 'left',
 								visible: false,
 								width: 500,
-								zIndex: 999
+								zIndex: Liferay.zIndex.OVERLAY
 							}
 						).render();
 
 						popover.set(
-							'hideOn',[
+							'hideOn',
+							[
 								{
 									eventName: 'key',
 									keyCode: 'esc',
@@ -84,24 +85,26 @@ AUI.add(
 							]
 						);
 
-						popover.after("visibleChange", function(event) {
+						popover.after(
+							'visibleChange',
+							function(event) {
+								if (event.prevVal) {
+									var popoverContent = A.one('.publish-popover-content');
 
-							if (event.prevVal) {
-								var popoverContent = A.one('.publish-popover-content');
+									var formGroup = popoverContent.one('.form-group');
 
-								var formGroup = popoverContent.one('.form-group');
+									formGroup.removeClass('has-error');
+									formGroup.removeClass('has-success');
 
-								formGroup.removeClass('has-error');
-								formGroup.removeClass('has-success');
+									var copyButton = popoverContent.one('.btn');
 
-								var copyButton = popoverContent.one('.btn');
+									copyButton.removeClass('btn-danger');
+									copyButton.removeClass('btn-success');
 
-								copyButton.removeClass('btn-danger');
-								copyButton.removeClass('btn-success');
-
-								popoverContent.one('.publish-button-text').html(Liferay.Language.get('copy'));
+									popoverContent.one('.publish-button-text').html(Liferay.Language.get('copy'));
+								}
 							}
-						});
+						);
 
 						return popover;
 					},

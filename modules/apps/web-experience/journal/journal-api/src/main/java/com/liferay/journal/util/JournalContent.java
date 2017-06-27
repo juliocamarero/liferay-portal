@@ -33,6 +33,9 @@ public interface JournalContent {
 		long groupId, String articleId, String ddmTemplateKey);
 
 	public String getContent(
+		long groupId, String articleId, String viewMode, String languageId);
+
+	public String getContent(
 		long groupId, String articleId, String viewMode, String languageId,
 		PortletRequestModel portletRequestModel);
 

@@ -6,7 +6,13 @@ Import-Package:\
 	\
 	!com.google.gson.*,\
 	\
+	!org.apache.commons.digester.*,\
+	!org.apache.commons.jexl2.*,\
+	!org.apache.commons.jxpath.*,\
+	!org.apache.commons.vfs2.*,\
 	!org.apache.tapestry5.json.*,\
+	!org.apache.xml.resolver.*,\
+	\
 	*
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Dynamic Data Mapping

@@ -11,14 +11,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AssertHighestRatededAsset" priority="4">
@@ -50,9 +45,8 @@
 			<var name="portletName" value="Asset Publisher" />
 		</execute>
 
-		<execute macro="AssetPublisherPortlet#configureFlaggableDisplaySettingsPG">
-			<var name="enableRatings" value="true" />
-			<var name="portletName" value="Asset Publisher" />
+		<execute macro="AssetPublisherPortlet#configureDisplaySettings">
+			<var name="displaySettings" value="Ratings" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -64,8 +58,8 @@
 			<var name="portletName" value="Highest Rated Assets" />
 		</execute>
 
-		<execute macro="AssetPublisherPortlet#configureFlaggableDisplaySettingsPG">
-			<var name="enableRatings" value="true" />
+		<execute macro="AssetPublisherPortlet#configureDisplaySettings">
+			<var name="displaySettings" value="Ratings" />
 			<var name="portletName" value="Highest Rated Assets" />
 		</execute>
 

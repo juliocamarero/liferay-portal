@@ -899,6 +899,8 @@ public interface PropsKeys {
 
 	public static final String HIBERNATE_JDBC_BATCH_SIZE = "hibernate.jdbc.batch_size";
 
+	public static final String HIBERNATE_SESSION_FACTORY_IMPORTED_CLASS_NAME_REGEXP = "hibernate.session.factory.imported.class.name.regexp";
+
 	public static final String HOT_DEPLOY_DEPENDENCY_MANAGEMENT_ENABLED = "hot.deploy.dependency.management.enabled";
 
 	public static final String HOT_DEPLOY_LISTENERS = "hot.deploy.listeners";
@@ -1867,6 +1869,8 @@ public interface PropsKeys {
 
 	public static final String PORTLET_RESOURCE_ID_BANNED_PATHS_REGEXP = "portlet.resource.id.banned.paths.regexp";
 
+	public static final String PORTLET_SESSION_REPLICATE_ENABLED = "portlet.session.replicate.enabled";
+
 	public static final String PORTLET_URL_ANCHOR_ENABLE = "portlet.url.anchor.enable";
 
 	public static final String PORTLET_URL_APPEND_PARAMETERS = "portlet.url.append.parameters";
@@ -2350,8 +2354,16 @@ public interface PropsKeys {
 
 	public static final String UPGRADE_PROCESSES = "upgrade.processes";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE = "com.liferay.portal.upload.UploadServletRequestImpl.max.size";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String UPLOAD_SERVLET_REQUEST_IMPL_TEMP_DIR = "com.liferay.portal.upload.UploadServletRequestImpl.temp.dir";
 
 	public static final String USER_GROUPS_COPY_LAYOUTS_TO_USER_PERSONAL_SITE = "user.groups.copy.layouts.to.user.personal.site";

@@ -21,11 +21,16 @@
 		<!-- Other fields -->
 
 		<column name="name" type="String" />
+		<column name="redirectURI" type="String" />
 		<column name="clientId" type="String" />
 		<column name="clientSecret" type="String" />
 
 		<!-- Finder methods -->
 
+		<finder name="RU_CI" return-type="WeDeployAuthApp">
+			<finder-column name="redirectURI" />
+			<finder-column name="clientId" />
+		</finder>
 		<finder name="CI_CS" return-type="WeDeployAuthApp">
 			<finder-column name="clientId" />
 			<finder-column name="clientSecret" />
@@ -53,10 +58,17 @@
 
 		<!-- Finder methods -->
 
+		<finder name="T_T" return-type="WeDeployAuthToken">
+			<finder-column name="token" />
+			<finder-column name="type" />
+		</finder>
 		<finder name="CI_T_T" return-type="WeDeployAuthToken">
 			<finder-column name="clientId" />
 			<finder-column name="token" />
 			<finder-column name="type" />
 		</finder>
 	</entity>
+	<exceptions>
+		<exception>WeDeployAuthTokenExpired</exception>
+	</exceptions>
 </service-builder>

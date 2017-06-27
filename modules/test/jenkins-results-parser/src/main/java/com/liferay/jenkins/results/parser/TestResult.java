@@ -19,11 +19,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.dom4j.Element;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  * @author Leslie Wong
+ * @author Yi-Chen Tsai
  */
 public class TestResult {
 
@@ -72,6 +77,10 @@ public class TestResult {
 		testName = caseJSONObject.getString("name");
 
 		status = caseJSONObject.getString("status");
+
+		if (status.equals("FAILED")) {
+			errorStackTrace = caseJSONObject.getString("errorStackTrace");
+		}
 	}
 
 	public AxisBuild getAxisBuild() {
@@ -82,10 +91,10 @@ public class TestResult {
 		return className;
 	}
 
-	public String getConsoleOutputURL() {
+	public String getConsoleOutputURL(String testrayLogsURL) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(axisBuild.getTestRayLogsURL());
+		sb.append(testrayLogsURL);
 		sb.append("/jenkins-console.txt.gz");
 
 		return sb.toString();
@@ -103,12 +112,52 @@ public class TestResult {
 		return duration;
 	}
 
-	public String getLiferayLogURL() {
+	public Element getGitHubElement(String testrayLogsURL) {
+		String testReportURL = getTestReportURL();
+
+		Element downstreamBuildListItemElement = Dom4JUtil.getNewElement(
+			"div", null);
+
+		downstreamBuildListItemElement.add(
+			Dom4JUtil.getNewAnchorElement(testReportURL, getDisplayName()));
+
+		if (errorStackTrace != null) {
+			String trimmedStackTrace = StringUtils.abbreviate(
+				errorStackTrace, _MAX_ERROR_STACK_DISPLAY_LENGTH);
+
+			downstreamBuildListItemElement.add(
+				Dom4JUtil.toCodeSnippetElement(trimmedStackTrace));
+		}
+
+		if (testReportURL.contains("com.liferay.poshi.runner/PoshiRunner")) {
+			Dom4JUtil.addToElement(
+				downstreamBuildListItemElement, " - ",
+				Dom4JUtil.getNewAnchorElement(
+					getPoshiReportURL(testrayLogsURL), "Poshi Report"),
+				" - ",
+				Dom4JUtil.getNewAnchorElement(
+					getPoshiSummaryURL(testrayLogsURL), "Poshi Summary"),
+				" - ",
+				Dom4JUtil.getNewAnchorElement(
+					getConsoleOutputURL(testrayLogsURL), "Console Output"));
+
+			if (hasLiferayLog(testrayLogsURL)) {
+				Dom4JUtil.addToElement(
+					downstreamBuildListItemElement, " - ",
+					Dom4JUtil.getNewAnchorElement(
+						getLiferayLogURL(testrayLogsURL), "Liferay Log"));
+			}
+		}
+
+		return downstreamBuildListItemElement;
+	}
+
+	public String getLiferayLogURL(String testrayLogsURL) {
 		StringBuilder sb = new StringBuilder();
 
 		String name = getDisplayName();
 
-		sb.append(axisBuild.getTestRayLogsURL());
+		sb.append(testrayLogsURL);
 		sb.append("/");
 		sb.append(name.replace("#", "_"));
 		sb.append("/liferay-log.txt.gz");
@@ -116,12 +165,12 @@ public class TestResult {
 		return sb.toString();
 	}
 
-	public String getPoshiReportURL() {
+	public String getPoshiReportURL(String testrayLogsURL) {
 		StringBuilder sb = new StringBuilder();
 
 		String name = getDisplayName();
 
-		sb.append(axisBuild.getTestRayLogsURL());
+		sb.append(testrayLogsURL);
 		sb.append("/");
 		sb.append(name.replace("#", "_"));
 		sb.append("/index.html.gz");
@@ -129,12 +178,12 @@ public class TestResult {
 		return sb.toString();
 	}
 
-	public String getPoshiSummaryURL() {
+	public String getPoshiSummaryURL(String testrayLogsURL) {
 		StringBuilder sb = new StringBuilder();
 
 		String name = getDisplayName();
 
-		sb.append(axisBuild.getTestRayLogsURL());
+		sb.append(testrayLogsURL);
 		sb.append("/");
 		sb.append(name.replace("#", "_"));
 		sb.append("/summary.html.gz");
@@ -175,12 +224,12 @@ public class TestResult {
 		return sb.toString();
 	}
 
-	public boolean hasLiferayLog() {
+	public boolean hasLiferayLog(String testrayLogsURL) {
 		String liferayLog = null;
 
 		try {
 			liferayLog = JenkinsResultsParserUtil.toString(
-				getLiferayLogURL(), false, 0, 0, 0);
+				getLiferayLogURL(testrayLogsURL), false, 0, 0, 0);
 		}
 		catch (IOException ioe) {
 			return false;
@@ -192,9 +241,12 @@ public class TestResult {
 	protected AxisBuild axisBuild;
 	protected String className;
 	protected long duration;
+	protected String errorStackTrace;
 	protected String packageName;
 	protected String simpleClassName;
 	protected String status;
 	protected String testName;
+
+	private static final int _MAX_ERROR_STACK_DISPLAY_LENGTH = 1500;
 
 }

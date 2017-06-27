@@ -10,23 +10,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="User#tearDownCP" />
-
-				<execute macro="Site#tearDownCP" />
-
-				<execute macro="Suborganization#tearDownCP" />
-
-				<execute macro="Organization#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="ActivateUserActions" priority="3">
@@ -78,59 +64,6 @@
 			<var name="password" value="test" />
 			<var name="userEmailAddress" value="test@liferay.com" />
 			<var name="userScreenName" value="usersn" />
-		</execute>
-	</command>
-
-	<command name="AddChildOrganization" priority="4">
-		<execute macro="ProductMenu#gotoControlPanelUsers">
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="Organization#addCP">
-			<var name="orgName" value="Organization Name" />
-			<var name="orgType" value="Organization" />
-		</execute>
-
-		<execute macro="ProductMenu#gotoControlPanelUsers">
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="UsersAndOrganizationsNavigator#gotoOrganizations" />
-
-		<execute macro="Organization#searchCP">
-			<var name="orgName" value="Organization Name" />
-			<var name="searchTerm" value="Organization Name" />
-		</execute>
-
-		<execute macro="Organization#viewCP">
-			<var name="orgName" value="Organization Name" />
-			<var name="orgType" value="Organization" />
-		</execute>
-
-		<execute macro="ProductMenu#gotoControlPanelUsers">
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="UsersAndOrganizationsNavigator#gotoOrganizations" />
-
-		<execute macro="Suborganization#addCP">
-			<var name="orgName" value="Organization Name" />
-			<var name="orgType" value="Organization" />
-			<var name="suborgName" value="Sub Organization Name" />
-			<var name="suborgType" value="Regular Organization" />
-		</execute>
-
-		<execute macro="ProductMenu#gotoControlPanelUsers">
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="UsersAndOrganizationsNavigator#gotoOrganizations" />
-
-		<execute macro="Organization#viewSubOrganizationCP">
-			<var name="orgName" value="Organization Name" />
-			<var name="orgType" value="Organization" />
-			<var name="suborgName" value="Sub Organization Name" />
-			<var name="suborgType" value="Organization" />
 		</execute>
 	</command>
 
@@ -955,49 +888,17 @@
 	</command>
 
 	<command name="AddUsers" priority="4">
-		<var name="count" value="1" />
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Users and Organizations" />
+		</execute>
 
-		<while>
-			<not>
-				<equals arg1="${count}" arg2="4" />
-			</not>
-			<then>
-				<execute macro="ProductMenu#gotoControlPanelUsers">
-					<var name="portlet" value="Users and Organizations" />
-				</execute>
+		<execute macro="User#addMultipleCP">
+			<var name="numberOfUsers" value="4" />
+		</execute>
 
-				<execute macro="User#addCP">
-					<var name="userEmailAddress" value="userea${count}@liferay.com" />
-					<var name="userFirstName" value="userfn${count}" />
-					<var name="userLastName" value="userln${count}" />
-					<var name="userScreenName" value="usersn${count}" />
-				</execute>
-
-				<var method="MathUtil#sum('${count}', '1')" name="count" />
-			</then>
-		</while>
-
-		<var name="count" value="1" />
-
-		<while>
-			<not>
-				<equals arg1="${count}" arg2="4" />
-			</not>
-			<then>
-				<execute macro="ProductMenu#gotoControlPanelUsers">
-					<var name="portlet" value="Users and Organizations" />
-				</execute>
-
-				<execute macro="User#viewCP">
-					<var name="userEmailAddress" value="userea${count}@liferay.com" />
-					<var name="userFirstName" value="userfn${count}" />
-					<var name="userLastName" value="userln${count}" />
-					<var name="userScreenName" value="usersn${count}" />
-				</execute>
-
-				<var method="MathUtil#sum('${count}', '1')" name="count" />
-			</then>
-		</while>
+		<execute macro="User#viewMultipleCP">
+			<var name="numberOfUsers" value="4" />
+		</execute>
 	</command>
 
 	<command name="AddUserScreenNameInvalid" priority="3">

@@ -71,6 +71,9 @@ describe(
 						delete copiedFieldContext.fieldName;
 						delete fieldContext.repeatedIndex;
 						delete copiedFieldContext.repeatedIndex;
+						delete fieldContext.instanceId;
+						delete copiedFieldContext.instanceId;
+						delete copiedFieldContext.value;
 
 						assert.deepEqual(fieldContext, copiedFieldContext);
 

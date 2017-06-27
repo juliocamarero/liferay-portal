@@ -210,7 +210,11 @@
 		<if>
 			<isset var="categoryName" />
 			<then>
-				<execute macro="KBArticle#selectCategoryCP">
+				<execute macro="Panel#expandPanel">
+					<var name="panelHeading" value="Categorization" />
+				</execute>
+
+				<execute macro="AssetCategorization#addCategory">
 					<var name="categoryName" value="${categoryName}" />
 					<var name="vocabularyName" value="${vocabularyName}" />
 				</execute>
@@ -971,7 +975,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#MOVE" value1="Move" />
 
-		<execute function="AssertTextEquals" locator1="ControlMenu#HEADER_TITLE" value1="${kbArticleTitle}" />
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="${kbArticleTitle}" />
 		<execute function="AssertTextEquals" locator1="KnowledgeBase#MOVE_CURRENT_PARENT_TITLE_LABEL" value1="Current Parent" />
 		<execute function="AssertTextEquals" locator1="KnowledgeBase#MOVE_CURRENT_PARENT_TITLE_FIELD" value1="${kbArticleCurrentParent}" />
 		<execute function="AssertTextEquals" locator1="KnowledgeBase#MOVE_CURRENT_PARENT_PRIORITY_LABEL" value1="Priority" />
@@ -1067,32 +1071,6 @@
 		<execute function="AssertClick" locator1="Button#SELECT_FILES" value1="Select Files" />
 
 		<execute function="SikuliUploadCommonFile" locator1="OS#FILE_DIALOG_BOX_FILE_NAME_FIELD_PNG" value1="${kbArticleAttachment}" />
-	</command>
-
-	<command name="selectCategoryCP">
-		<var name="key_categoryName" value="${categoryName}" />
-		<var name="key_vocabularyName" value="${vocabularyName}" />
-
-		<if>
-			<condition function="IsElementNotPresent" locator1="AssetCategorization#CATEGORIZATION_PANEL_EXPANDED" />
-			<then>
-				<execute function="Click" locator1="AssetCategorization#CATEGORIZATION_PANEL_COLLAPSED" />
-			</then>
-		</if>
-
-		<execute function="AssertClick" locator1="Button#SELECT_VOCABULARY" value1="Select" />
-
-		<execute function="SelectFrame" locator1="IFrame#SELECT_CATEGORY" />
-
-		<execute function="AssertClick" locator1="AssetCategorization#CATEGORY_UNSELECTED" value1="${categoryName}" />
-
-		<execute function="AssertElementPresent" locator1="AssetCategorization#CATEGORY_SELECTED" value1="${categoryName}" />
-
-		<execute function="SelectFrameTop" />
-
-		<execute function="Click" locator1="KnowledgeBaseArticle#SELECT_CATEGORIES_IFRAME" />
-
-		<execute function="Click" locator1="Button#DONE" value1="Done" />
 	</command>
 
 	<command name="selectParentArticleCP">
@@ -1296,11 +1274,11 @@
 
 		<var name="key_versionNumber" value="${kbArticleVersionNew}" />
 
-		<execute function="Check" locator1="KnowledgeBaseArticle#HISTORY_SELECT_VERSION_CHECKBOX" value1="${key_versionNumber}" />
+		<execute function="Check" locator1="KnowledgeBaseArticle#HISTORY_SELECT_VERSION_CHECKBOX" value1="${kbArticleVersionNew}" />
 
 		<var name="key_versionNumber" value="${kbArticleVersionOld}" />
 
-		<execute function="Check" locator1="KnowledgeBaseArticle#HISTORY_SELECT_VERSION_CHECKBOX" value1="${key_versionNumber}" />
+		<execute function="Check" locator1="KnowledgeBaseArticle#HISTORY_SELECT_VERSION_CHECKBOX" value1="${kbArticleVersionOld}" />
 
 		<execute function="AssertClick" locator1="Button#COMPARE_VERSIONS" value1="Compare Versions" />
 
@@ -1386,7 +1364,7 @@
 		<var name="key_kbArticleTitle" value="${kbArticleTitle}" />
 		<var name="key_kbChildArticleTitle" value="${kbChildArticleTitle}" />
 
-		<execute function="AssertClick#assertTextClickNoMouseOver" locator1="KnowledgeBase#HIERARCHY_NAVIGATION_CHILD" value1="${key_kbChildArticleTitle}" />
+		<execute function="AssertClick#assertTextClickNoMouseOver" locator1="KnowledgeBase#HIERARCHY_NAVIGATION_CHILD" value1="${kbChildArticleTitle}" />
 
 		<execute function="AssertTextEquals" locator1="KnowledgeBase#DISPLAY_TITLE" value1="${kbChildArticleTitle}" />
 		<execute function="AssertTextEquals" locator1="KnowledgeBase#DISPLAY_CONTENT" value1="${kbChildArticleContent}" />

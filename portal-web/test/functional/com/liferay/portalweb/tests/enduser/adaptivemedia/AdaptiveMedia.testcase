@@ -30,14 +30,14 @@
 			<var name="imageName" value="Low Resolution" />
 			<var name="maxHeight" value="480" />
 			<var name="maxWidth" value="320" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
 			<var name="imageName" value="Low Resolution-2x" />
 			<var name="maxHeight" value="960" />
 			<var name="maxWidth" value="640" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 	</command>
 
@@ -84,7 +84,7 @@
 			<var name="imageName" value="Low Resolution" />
 			<var name="maxHeight" value="480" />
 			<var name="maxWidth" value="320" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -101,9 +101,9 @@
 			<var name="portlet" value="Adaptive Media" />
 		</execute>
 
-		<execute macro="AdaptiveMedia#optimizeRemainingImages">
+		<execute macro="AdaptiveMedia#adaptRemainingImages">
 			<var name="imageName" value="Low Resolution" />
-			<var name="percentOptimized" value="100" />
+			<var name="percentAdapted" value="100" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#addImageResolution">
@@ -116,15 +116,15 @@
 			<var name="imageName" value="High Resolution" />
 			<var name="maxHeight" value="1280" />
 			<var name="maxWidth" value="1440" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#selectAdaptiveMediaImage">
 			<var name="imageName" value="High Resolution" />
 		</execute>
 
-		<execute macro="AdaptiveMedia#viewNumberOfOptimizedImages">
-			<var name="numberOfOptimizedImages" value="0/1" />
+		<execute macro="AdaptiveMedia#viewNumberOfAdaptedImages">
+			<var name="numberOfAdaptedImages" value="0/1" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#editImageResolution">
@@ -138,8 +138,8 @@
 			<var name="imageName" value="High Resolution Edited" />
 		</execute>
 
-		<execute macro="AdaptiveMedia#viewNumberOfOptimizedImages">
-			<var name="numberOfOptimizedImages" value="0/1" />
+		<execute macro="AdaptiveMedia#viewNumberOfAdaptedImages">
+			<var name="numberOfAdaptedImages" value="0/1" />
 		</execute>
 	</command>
 
@@ -199,14 +199,14 @@
 			<var name="imageName" value="Small Image Variant" />
 			<var name="maxHeight" value="100" />
 			<var name="maxWidth" value="100" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
 			<var name="imageName" value="Large Image Variant" />
 			<var name="maxHeight" value="1000" />
 			<var name="maxWidth" value="1000" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -225,28 +225,28 @@
 			<var name="portlet" value="Adaptive Media" />
 		</execute>
 
-		<execute macro="AdaptiveMedia#optimizeRemainingImages">
+		<execute macro="AdaptiveMedia#adaptRemainingImages">
 			<var name="imageName" value="Small Image Variant" />
-			<var name="percentOptimized" value="100" />
+			<var name="percentAdapted" value="100" />
 		</execute>
 
-		<execute macro="AdaptiveMedia#optimizeRemainingImages">
+		<execute macro="AdaptiveMedia#adaptRemainingImages">
 			<var name="imageName" value="Large Image Variant" />
-			<var name="percentOptimized" value="100" />
+			<var name="percentAdapted" value="100" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
 			<var name="imageName" value="Small Image Variant" />
 			<var name="maxHeight" value="100" />
 			<var name="maxWidth" value="100" />
-			<var name="percentOptimized" value="100" />
+			<var name="percentAdapted" value="100" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
 			<var name="imageName" value="Large Image Variant" />
 			<var name="maxHeight" value="1000" />
 			<var name="maxWidth" value="1000" />
-			<var name="percentOptimized" value="100" />
+			<var name="percentAdapted" value="100" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -308,7 +308,7 @@
 			<var name="imageState" value="Enabled" />
 			<var name="maxHeight" value="100" />
 			<var name="maxWidth" value="100" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#disableImageResolution">
@@ -328,7 +328,7 @@
 			<var name="imageState" value="Disabled" />
 			<var name="maxHeight" value="1000" />
 			<var name="maxWidth" value="1000" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#deleteImageResolution">
@@ -336,7 +336,7 @@
 		</execute>
 	</command>
 
-	<command name="EditImageResolutionWithOptimizedImages" priority="5">
+	<command name="EditImageResolutionWithAdaptedImages" priority="5">
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Adaptive Media" />
 		</execute>
@@ -352,7 +352,7 @@
 			<var name="imageState" value="Enabled" />
 			<var name="maxHeight" value="100" />
 			<var name="maxWidth" value="100" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -382,7 +382,7 @@
 		</execute>
 	</command>
 
-	<command name="EditImageResolutionWithoutOptimizedImage" priority="5">
+	<command name="EditImageResolutionWithoutAdaptedImage" priority="5">
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Adaptive Media" />
 		</execute>
@@ -398,7 +398,7 @@
 			<var name="imageState" value="Enabled" />
 			<var name="maxHeight" value="100" />
 			<var name="maxWidth" value="100" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 
 		<execute macro="AdaptiveMedia#editImageResolution">
@@ -414,8 +414,44 @@
 			<var name="imageState" value="Enabled" />
 			<var name="maxHeight" value="1000" />
 			<var name="maxWidth" value="1000" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
+	</command>
+
+	<command name="OptimizeAllImageResolutions" priority="4">
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
+		<execute macro="DMDocument#addCP">
+			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFile" value="Document_1.jpg" />
+			<var name="dmDocumentTitle" value="Document_1.jpg" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Small Image Variant" />
+			<var name="maxHeight" value="100" />
+			<var name="maxWidth" value="100" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Medium Image Variant" />
+			<var name="maxHeight" value="500" />
+			<var name="maxWidth" value="500" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Large Image Variant" />
+			<var name="maxHeight" value="1000" />
+			<var name="maxWidth" value="1000" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#adaptAllImages" />
 	</command>
 
 	<command name="ViewAutomaticAndCustomImageVariantIDs" priority="4">
@@ -491,6 +527,46 @@
 		</execute>
 	</command>
 
+	<command name="ViewAutomaticOptimizationForImageResolution" priority="4">
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Automatically optimized variant" />
+			<var name="maxHeight" value="500" />
+			<var name="maxWidth" value="400" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Automatically optimized variant" />
+			<var name="maxHeight" value="500" />
+			<var name="maxWidth" value="400" />
+			<var name="percentAdapted" value="0" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
+		<execute macro="DMDocument#addCP">
+			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFile" value="Document_1.jpg" />
+			<var name="dmDocumentTitle" value="Document_1.jpg" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Automatically optimized variant" />
+			<var name="maxHeight" value="500" />
+			<var name="maxWidth" value="400" />
+			<var name="percentAdapted" value="100" />
+		</execute>
+	</command>
+
 	<command name="ViewImageResolutionAcrossSites" priority="4">
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Adaptive Media" />
@@ -522,11 +598,13 @@
 			<var name="imageName" value="This should appear on a new site" />
 			<var name="maxHeight" value="400" />
 			<var name="maxWidth" value="300" />
-			<var name="percentOptimized" value="0" />
+			<var name="percentAdapted" value="0" />
 		</execute>
 	</command>
 
 	<command name="ViewNoImageResolutionInNewVirtualInstance" priority="4">
+		<property name="test.name.skip.portal.instance" value="AdaptiveMedia#ViewNoImageResolutionInNewVirtualInstance" />
+
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Virtual Instances" />
 		</execute>
@@ -567,6 +645,109 @@
 
 		<execute macro="AdaptiveMedia#viewNoImageResolution">
 			<var name="imageName" value="This should not appear on new virtual instance" />
+		</execute>
+	</command>
+
+	<command name="ViewNumberOfAdaptedImagesAfterAdaptingImages" priority="5">
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#addImageResolution">
+			<var name="imageName" value="Low Resolution" />
+			<var name="maxHeight" value="480" />
+			<var name="maxWidth" value="320" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewImageResolutionTableEntry">
+			<var name="imageName" value="Low Resolution" />
+			<var name="maxHeight" value="480" />
+			<var name="maxWidth" value="320" />
+			<var name="percentAdapted" value="0" />
+		</execute>
+
+		<for list="1,2" param="entryCount" >
+			<execute macro="ProductMenu#gotoSitesContent">
+				<var name="portlet" value="Documents and Media" />
+			</execute>
+
+			<execute macro="DMDocument#addCP">
+				<var name="dmDocumentDescription" value="DM Document Description" />
+				<var name="dmDocumentFile" value="Document_${entryCount}.jpg" />
+				<var name="dmDocumentTitle" value="Document_${entryCount}.jpg" />
+			</execute>
+		</for>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#adaptRemainingImages">
+			<var name="imageName" value="Low Resolution" />
+			<var name="percentAdapted" value="100" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#disableImageResolution">
+			<var name="imageName" value="Low Resolution" />
+			<var name="imageState" value="Disabled" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelSites">
+			<var name="portlet" value="Sites" />
+		</execute>
+
+		<execute macro="Site#addBlankCP">
+			<var name="siteName" value="New Site" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="New Site" />
+		</execute>
+
+		<for list="1,2" param="entryCount" >
+			<execute macro="ProductMenu#gotoSitesContent">
+				<var name="portlet" value="Documents and Media" />
+			</execute>
+
+			<execute macro="DMDocument#addCP">
+				<var name="dmDocumentDescription" value="DM Document Description" />
+				<var name="dmDocumentFile" value="Document_${entryCount}.jpg" />
+				<var name="dmDocumentTitle" value="Document_${entryCount}.jpg" />
+			</execute>
+		</for>
+
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Liferay" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Adaptive Media" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#selectAdaptiveMediaImage">
+			<var name="imageName" value="Low Resolution" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewNumberOfAdaptedImages">
+			<var name="numberOfAdaptedImages" value="2/4" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#enableImageResolution">
+			<var name="imageName" value="Low Resolution" />
+			<var name="imageState" value="Enabled" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#adaptRemainingImages">
+			<var name="imageName" value="Low Resolution" />
+			<var name="percentAdapted" value="100" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#selectAdaptiveMediaImage">
+			<var name="imageName" value="Low Resolution" />
+		</execute>
+
+		<execute macro="AdaptiveMedia#viewNumberOfAdaptedImages">
+			<var name="numberOfAdaptedImages" value="4/4" />
 		</execute>
 	</command>
 </definition>

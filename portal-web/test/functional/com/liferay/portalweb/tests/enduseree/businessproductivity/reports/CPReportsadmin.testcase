@@ -11,21 +11,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="ReportsAdmin#tearDownReports" />
-				<execute macro="ReportsAdmin#tearDownDefinitions" />
-				<execute macro="ReportsAdmin#tearDownSources" />
-
-				<execute macro="ServerAdministration#tearDownMailServerSettings" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AddReportInvalidEmail" priority="4">
@@ -582,6 +570,7 @@
 
 	<command name="ViewEmailNotificationDelivery" priority="4">
 		<property name="test.assert.javascript.errors" value="false" />
+		<property name="test.name.skip.portal.instance" value="CPReportsadmin#ViewEmailNotificationDelivery" />
 
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
 
@@ -665,6 +654,8 @@
 	</command>
 
 	<command ignore="true" name="ViewEmailRecipientDelivery" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPReportsadmin#ViewEmailRecipientDelivery" />
+
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
 
 		<property name="test.assert.javascript.errors" value="false" />

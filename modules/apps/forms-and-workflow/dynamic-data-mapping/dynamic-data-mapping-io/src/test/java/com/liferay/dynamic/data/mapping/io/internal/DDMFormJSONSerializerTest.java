@@ -18,13 +18,17 @@ import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldRenderer;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeSettings;
-import com.liferay.dynamic.data.mapping.io.DDMFormFieldJSONObjectTransformer;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONSerializer;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormRule;
 import com.liferay.dynamic.data.mapping.model.DDMFormSuccessPageSettings;
+import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormFieldTypeSettingsTestUtil;
 import com.liferay.portal.json.JSONFactoryImpl;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ReflectionUtil;
+
+import java.lang.reflect.Field;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,23 +93,17 @@ public class DDMFormJSONSerializerTest extends BaseDDMFormSerializerTestCase {
 	}
 
 	protected DDMFormSuccessPageSettings createDDMFormSuccessPageSettings() {
-		return new DDMFormSuccessPageSettings("Body Text", "Title Text", true);
-	}
+		LocalizedValue body = new LocalizedValue(LocaleUtil.US);
 
-	protected DDMFormFieldJSONObjectTransformer
-		getDDMFormFieldJSONObjectConverter() {
+		body.addString(LocaleUtil.US, "Body Text");
+		body.addString(LocaleUtil.BRAZIL, "Texto");
 
-		DDMFormFieldJSONObjectTransformerImpl
-			ddmFormFieldJSONObjectTransformerImpl =
-				new DDMFormFieldJSONObjectTransformerImpl();
+		LocalizedValue title = new LocalizedValue(LocaleUtil.US);
 
-		ddmFormFieldJSONObjectTransformerImpl.
-			ddmFormFieldToJSONObjectTransformer =
-				new DDMFormFieldToJSONObjectTransformer(
-					getMockedDDMFormFieldTypeServicesTracker(),
-					new JSONFactoryImpl());
+		title.addString(LocaleUtil.US, "Title Text");
+		title.addString(LocaleUtil.BRAZIL, "Título");
 
-		return ddmFormFieldJSONObjectTransformerImpl;
+		return new DDMFormSuccessPageSettings(body, title, true);
 	}
 
 	protected DDMFormFieldTypeServicesTracker
@@ -151,15 +149,22 @@ public class DDMFormJSONSerializerTest extends BaseDDMFormSerializerTestCase {
 	}
 
 	protected void setUpDDMFormJSONSerializer() throws Exception {
-		DDMFormJSONSerializerImpl ddmFormJSONSerializerImpl =
-			new DDMFormJSONSerializerImpl();
 
-		ddmFormJSONSerializerImpl.ddmFormFieldJSONObjectTransformer =
-			getDDMFormFieldJSONObjectConverter();
+		// DDM form field type services tracker
 
-		ddmFormJSONSerializerImpl.jsonFactory = new JSONFactoryImpl();
+		Field field = ReflectionUtil.getDeclaredField(
+			DDMFormJSONSerializerImpl.class,
+			"_ddmFormFieldTypeServicesTracker");
 
-		_ddmFormJSONSerializer = ddmFormJSONSerializerImpl;
+		field.set(
+			_ddmFormJSONSerializer, getMockedDDMFormFieldTypeServicesTracker());
+
+		// JSON factory
+
+		field = ReflectionUtil.getDeclaredField(
+			DDMFormJSONSerializerImpl.class, "_jsonFactory");
+
+		field.set(_ddmFormJSONSerializer, new JSONFactoryImpl());
 	}
 
 	protected void setUpDefaultDDMFormFieldType() {
@@ -180,7 +185,8 @@ public class DDMFormJSONSerializerTest extends BaseDDMFormSerializerTestCase {
 		);
 	}
 
-	private DDMFormJSONSerializer _ddmFormJSONSerializer;
+	private final DDMFormJSONSerializer _ddmFormJSONSerializer =
+		new DDMFormJSONSerializerImpl();
 
 	@Mock
 	private DDMFormFieldType _defaultDDMFormFieldType;

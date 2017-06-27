@@ -49,6 +49,8 @@
 /lib/development/appium.jar
 /lib/development/catalina.jar
 /lib/development/cobertura.jar
+/lib/development/com.liferay.ant.bnd.jar
+/lib/development/com.liferay.util.taglib.compat.jar
 /lib/development/db2jcc.jar
 /lib/development/db2jcc_license_cu.jar
 /lib/development/deployment.jar
@@ -114,6 +116,7 @@
 /lib/development/velocity-tools.jar
 /lib/development/websocket-api.jar
 /lib/development/xmlresolver.jar
+/lib/global/portlet.jar
 /lib/portal/abdera.jar
 /lib/portal/ant.jar
 /lib/portal/antlr2.jar
@@ -126,6 +129,7 @@
 /lib/portal/axiom-api.jar
 /lib/portal/axiom-impl.jar
 /lib/portal/axis-ant.jar
+/lib/portal/axis.jar
 /lib/portal/bcmail.jar
 /lib/portal/bcprov.jar
 /lib/portal/boilerpipe.jar
@@ -140,6 +144,7 @@
 /lib/portal/chemistry-opencmis-client-impl.jar
 /lib/portal/chemistry-opencmis-commons-api.jar
 /lib/portal/chemistry-opencmis-commons-impl.jar
+/lib/portal/closure-compiler.jar
 /lib/portal/commons-beanutils.jar
 /lib/portal/commons-chain.jar
 /lib/portal/commons-codec.jar
@@ -198,10 +203,12 @@
 /lib/portal/jcommon.jar
 /lib/portal/jdom.jar
 /lib/portal/jempbox.jar
+/lib/portal/jena.jar
 /lib/portal/jericho-html.jar
 /lib/portal/jfreechart.jar
 /lib/portal/jhighlight.jar
 /lib/portal/jhlabs-filters.jar
+/lib/portal/jmatio.jar
 /lib/portal/jna.jar
 /lib/portal/jodconverter.jar
 /lib/portal/jodd-bean.jar
@@ -212,6 +219,7 @@
 /lib/portal/jodd-servlet.jar
 /lib/portal/jodd-upload.jar
 /lib/portal/json-java.jar
+/lib/portal/json-schema-validator.jar
 /lib/portal/jrcs-diff.jar
 /lib/portal/jsr107cache.jar
 /lib/portal/jstl-api.jar
@@ -242,6 +250,8 @@
 /lib/portal/poi.jar
 /lib/portal/portals-bridges.jar
 /lib/portal/rdffilter.jar
+/lib/portal/rhino.jar
+/lib/portal/rome.jar
 /lib/portal/rometools.jar
 /lib/portal/saaj-api.jar
 /lib/portal/saaj-impl.jar
@@ -297,6 +307,7 @@
 /lib/portal/xstream.jar
 /lib/portal/xuggle-xuggler-noarch.jar
 /lib/portal/xz.jar
+/lib/portal/yui-compressor.jar
 /nbproject/private
 /out
 /portal-client/*.ipr

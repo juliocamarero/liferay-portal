@@ -170,6 +170,8 @@ public abstract class BaseDDLExporter implements DDLExporter {
 			}
 		}
 
+		valueString = HtmlUtil.render(valueString);
+
 		return new DDMFormFieldRenderedValue(
 			ddmFormField.getName(), ddmFormField.getLabel(), valueString);
 	}
@@ -206,8 +208,8 @@ public abstract class BaseDDLExporter implements DDLExporter {
 			ddmFormValues.getDDMFormFieldValuesMap();
 
 		Stream<DDMFormField> ddmFormFieldStream = ddmFormFields.stream().filter(
-			ddmFormField ->
-				ddmFormFieldValueMap.containsKey(ddmFormField.getName()));
+			ddmFormField -> ddmFormFieldValueMap.containsKey(
+				ddmFormField.getName()));
 
 		Stream<DDMFormFieldRenderedValue> valueStream = ddmFormFieldStream.map(
 			ddmFormField -> getDDMFormFieldRenderedValue(

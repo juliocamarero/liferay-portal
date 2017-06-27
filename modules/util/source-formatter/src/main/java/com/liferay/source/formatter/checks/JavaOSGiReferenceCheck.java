@@ -15,10 +15,12 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.source.formatter.BNDSettings;
 import com.liferay.source.formatter.checks.util.JavaSourceUtil;
 import com.liferay.source.formatter.parser.JavaClass;
@@ -31,6 +33,7 @@ import com.liferay.source.formatter.util.FileUtil;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,13 +51,20 @@ public class JavaOSGiReferenceCheck extends BaseFileCheck {
 	@Override
 	public void init() throws Exception {
 		_moduleFileNamesMap = _getModuleFileNamesMap();
-		_serviceReferenceUtilClassNames = getPropertyList(
-			"service.reference.util.class.names");
+		_serviceProxyFactoryUtilClassNames =
+			_getServiceProxyFactoryUtilClassNames();
 	}
 
 	@Override
 	public boolean isModulesCheck() {
 		return true;
+	}
+
+	public void setServiceReferenceUtilClassNames(
+		String serviceReferenceUtilClassNames) {
+
+		_serviceReferenceUtilClassNames = StringUtil.split(
+			serviceReferenceUtilClassNames);
 	}
 
 	@Override
@@ -81,6 +91,16 @@ public class JavaOSGiReferenceCheck extends BaseFileCheck {
 
 		content = _formatDuplicateReferenceMethods(
 			fileName, content, moduleSuperClassContent);
+
+		if (GetterUtil.getBoolean(getProperty("tom.wang.flag"))) {
+			for (String serviceProxyFactoryUtilClassName :
+					_serviceProxyFactoryUtilClassNames) {
+
+				_checkUtilUsage(
+					fileName, content, serviceProxyFactoryUtilClassName,
+					moduleSuperClassContent);
+			}
+		}
 
 		for (String serviceReferenceUtilClassName :
 				_serviceReferenceUtilClassNames) {
@@ -513,6 +533,51 @@ public class JavaOSGiReferenceCheck extends BaseFileCheck {
 		return _getModuleClassContent(superClassFullClassName);
 	}
 
+	private List<String> _getServiceProxyFactoryUtilClassNames()
+		throws Exception {
+
+		if (!isPortalSource()) {
+			return Collections.emptyList();
+		}
+
+		String portalKernelLocation = "portal-kernel/";
+
+		for (int i = 0; i < ToolsUtil.PORTAL_MAX_DIR_LEVEL - 1; i++) {
+			File file = new File(getBaseDirName() + portalKernelLocation);
+
+			if (!file.exists()) {
+				portalKernelLocation = "../" + portalKernelLocation;
+
+				continue;
+			}
+
+			List<String> serviceProxyFactoryUtilClassNames = new ArrayList<>();
+
+			List<String> utilFileNames = getFileNames(
+				getBaseDirName() + portalKernelLocation, new String[0],
+				new String[] {"**/*Util.java"});
+
+			for (String fileName : utilFileNames) {
+				fileName = StringUtil.replace(
+					fileName, CharPool.BACK_SLASH, CharPool.SLASH);
+
+				String content = FileUtil.read(new File(fileName));
+
+				if (content.contains(
+						"com.liferay.portal.kernel.util.ServiceProxyFactory")) {
+
+					serviceProxyFactoryUtilClassNames.add(
+						JavaSourceUtil.getPackagePath(content) + "." +
+							JavaSourceUtil.getClassName(fileName));
+				}
+			}
+
+			return serviceProxyFactoryUtilClassNames;
+		}
+
+		return Collections.emptyList();
+	}
+
 	private final Set<String> _bndFileNames = new CopyOnWriteArraySet<>();
 	private final Map<String, String> _moduleFileContentsMap =
 		new ConcurrentHashMap<>();
@@ -522,7 +587,8 @@ public class JavaOSGiReferenceCheck extends BaseFileCheck {
 	private final Pattern _referenceMethodPattern = Pattern.compile(
 		"\n\t@Reference([\\s\\S]*?)\\s+((protected|public) void (\\w+?))\\(" +
 			"\\s*([ ,<>\\w]+)\\s+\\w+\\) \\{\\s+([\\s\\S]*?)\\s*?\n\t\\}\n");
-	private List<String> _serviceReferenceUtilClassNames;
+	private List<String> _serviceProxyFactoryUtilClassNames;
+	private String[] _serviceReferenceUtilClassNames = new String[0];
 	private final Pattern _serviceUtilImportPattern = Pattern.compile(
 		"\nimport ([A-Za-z1-9\\.]*)\\.([A-Za-z1-9]*ServiceUtil);");
 

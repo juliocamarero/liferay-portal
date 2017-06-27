@@ -14,8 +14,6 @@
 
 package com.liferay.portal.workflow.kaleo.service.impl;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -45,7 +43,6 @@ import java.util.List;
 /**
  * @author Inácio Nery
  */
-@ProviderType
 public class KaleoDefinitionVersionLocalServiceImpl
 	extends KaleoDefinitionVersionLocalServiceBaseImpl {
 

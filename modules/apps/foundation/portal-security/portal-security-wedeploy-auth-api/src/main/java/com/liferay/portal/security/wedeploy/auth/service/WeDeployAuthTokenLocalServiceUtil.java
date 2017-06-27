@@ -69,22 +69,23 @@ public class WeDeployAuthTokenLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAccessWeDeployAuthToken(
-		long userId, java.lang.String clientId, java.lang.String clientSecret,
-		java.lang.String authorizationToken, int type,
+		java.lang.String redirectURI, java.lang.String clientId,
+		java.lang.String clientSecret, java.lang.String authorizationToken,
+		int type,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addAccessWeDeployAuthToken(userId, clientId, clientSecret,
-			authorizationToken, type, serviceContext);
+				   .addAccessWeDeployAuthToken(redirectURI, clientId,
+			clientSecret, authorizationToken, type, serviceContext);
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAuthorizationWeDeployAuthToken(
-		long userId, java.lang.String clientId,
+		long userId, java.lang.String redirectURI, java.lang.String clientId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addAuthorizationWeDeployAuthToken(userId, clientId,
-			serviceContext);
+				   .addAuthorizationWeDeployAuthToken(userId, redirectURI,
+			clientId, serviceContext);
 	}
 
 	/**
@@ -146,6 +147,12 @@ public class WeDeployAuthTokenLocalServiceUtil {
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken fetchWeDeployAuthToken(
 		long weDeployAuthTokenId) {
 		return getService().fetchWeDeployAuthToken(weDeployAuthTokenId);
+	}
+
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken getWeDeployAuthToken(
+		java.lang.String token, int type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getWeDeployAuthToken(token, type);
 	}
 
 	/**

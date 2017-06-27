@@ -14,8 +14,6 @@
 
 package com.liferay.friendly.url.service.impl;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.friendly.url.model.FriendlyURLEntry;
 import com.liferay.friendly.url.model.FriendlyURLEntryLocalization;
 import com.liferay.friendly.url.service.base.FriendlyURLEntryLocalizationLocalServiceBaseImpl;
@@ -33,7 +31,6 @@ import java.util.Map;
 /**
  * @author Pavel Savinov
  */
-@ProviderType
 public class FriendlyURLEntryLocalizationLocalServiceImpl
 	extends FriendlyURLEntryLocalizationLocalServiceBaseImpl {
 
@@ -103,12 +100,11 @@ public class FriendlyURLEntryLocalizationLocalServiceImpl
 
 	@Override
 	public FriendlyURLEntryLocalization fetchFriendlyURLEntryLocalization(
-		long companyId, long groupId, long classNameId, long classPK,
-		String languageId) {
+		long groupId, long classNameId, long classPK, String languageId) {
 
 		FriendlyURLEntry friendlyURLEntry =
-			friendlyURLEntryPersistence.fetchByG_C_C_C_M(
-				groupId, companyId, classNameId, classPK, true);
+			friendlyURLEntryPersistence.fetchByG_C_C_M(
+				groupId, classNameId, classPK, true);
 
 		if (friendlyURLEntry == null) {
 			return null;

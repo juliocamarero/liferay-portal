@@ -144,7 +144,7 @@ String backURL = PortalUtil.getCurrentURL(request);
 
 					var hiddenItems = [];
 
-					if (instance.calendarResourceId !== '<%= groupCalendarResource.getCalendarResourceId() %>') {
+					if (!(instance.calendarResourceId === '<%= groupCalendarResource.getCalendarResourceId() %>') || !<%= CalendarPortletPermission.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS) %>) {
 						hiddenItems.push('permissions');
 					}
 
@@ -632,7 +632,8 @@ String backURL = PortalUtil.getCurrentURL(request);
 				}
 			},
 			date: new Date(<%= String.valueOf(date) %>),
-			locale: 'en',
+			headerRenderer: '<%= HtmlUtil.escapeJS(LanguageUtil.get(request, "b-y")) %>',
+			locale: '<%= themeDisplay.getLocale() %>',
 			'strings.first_weekday': <%= weekStartsOn %>
 		}
 	).render('#<portlet:namespace />miniCalendarContainer');

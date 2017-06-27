@@ -10,21 +10,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="WebContent#tearDownCP" />
-
-				<execute macro="WebContentTemplates#tearDownCP" />
-
-				<execute macro="WebContentStructures#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AddFolder" priority="5">
@@ -2030,6 +2018,60 @@
 			<var name="larFileName" value="Web_Content.portlet.lar" />
 			<var name="linkedPageName" value="Test Page" />
 			<var name="siteName" value="Site Name" />
+		</execute>
+	</command>
+
+	<command ignore="true" name="ImportTrainingLAR" priority="5">
+		<property name="testray.component.names" value="Training" />
+
+		<execute macro="ProductMenu#gotoControlPanelSites">
+			<var name="portlet" value="Sites" />
+		</execute>
+
+		<execute macro="Site#addBlankCP">
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Page#add">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="LAR#importPortlet">
+			<var name="larFileName" value="space-content-7.0.lar" />
+			<var name="siteName" value="Site Name" />
+			<var name="uploadFrom" value="dependencies" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Web Content Display" />
+		</execute>
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="Web Content Display" />
+			<var name="portletOption" value="Look and Feel Configuration" />
+		</execute>
+
+		<execute macro="Portlet#selectApplicationDecorator">
+			<var name="decorator" value="Barebone" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#viewApplicationDecorator">
+			<var name="decorator" value="Barebone" />
 		</execute>
 	</command>
 

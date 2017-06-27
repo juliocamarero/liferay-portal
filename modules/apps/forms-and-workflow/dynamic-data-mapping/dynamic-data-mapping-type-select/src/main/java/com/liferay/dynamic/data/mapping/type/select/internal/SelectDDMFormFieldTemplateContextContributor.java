@@ -50,8 +50,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true, property = "ddm.form.field.type.name=select",
 	service = {
-		SelectDDMFormFieldTemplateContextContributor.class,
-		DDMFormFieldTemplateContextContributor.class
+		DDMFormFieldTemplateContextContributor.class,
+		SelectDDMFormFieldTemplateContextContributor.class
 	}
 )
 public class SelectDDMFormFieldTemplateContextContributor
@@ -64,6 +64,10 @@ public class SelectDDMFormFieldTemplateContextContributor
 
 		Map<String, Object> parameters = new HashMap<>();
 
+		parameters.put(
+			"dataSourceType",
+			GetterUtil.getString(
+				ddmFormField.getProperty("dataSourceType"), "manual"));
 		parameters.put(
 			"multiple",
 			ddmFormField.isMultiple() ? "multiple" : StringPool.BLANK);
@@ -86,10 +90,13 @@ public class SelectDDMFormFieldTemplateContextContributor
 			"chooseAnOption",
 			LanguageUtil.get(resourceBundle, "choose-an-option"));
 		stringsMap.put(
-			"chooseOptions",
-			LanguageUtil.get(resourceBundle, "choose-options"));
+			"dynamicallyLoadedData",
+			LanguageUtil.get(resourceBundle, "dynamically-loaded-data"));
+		stringsMap.put(
+			"emptyList", LanguageUtil.get(resourceBundle, "empty-list"));
 
 		parameters.put("strings", stringsMap);
+
 		parameters.put(
 			"value", getValue(ddmFormFieldRenderingContext.getValue()));
 

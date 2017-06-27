@@ -69,15 +69,15 @@ public class BNDSourceUtil {
 		fileSpecificDefinitionKeysMap.put(
 			"bnd.bnd",
 			_populateDefinitionKeysMap(
-				"-metatype-inherit", "Can-Redefine-Classes",
+				"-jsp", "-metatype-inherit", "-sass", "Can-Redefine-Classes",
 				"Can-Retransform-Classes", "Implementation-Version",
 				"JPM-Command", "Liferay-Configuration-Path",
 				"Liferay-Export-JS-Submodules", "Liferay-JS-Config",
 				"Liferay-Releng-App-Description",
 				"Liferay-Releng-Module-Group-Description",
 				"Liferay-Releng-Module-Group-Title",
-				"Liferay-Require-SchemaVersion", "Liferay-Service",
-				"Liferay-Theme-Contributor-Type",
+				"Liferay-Require-SchemaVersion", "Liferay-RTL-Support-Required",
+				"Liferay-Service", "Liferay-Theme-Contributor-Type",
 				"Liferay-Theme-Contributor-Weight", "Main-Class",
 				"Premain-Class", "Web-ContextPath"));
 		fileSpecificDefinitionKeysMap.put(

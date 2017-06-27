@@ -41,8 +41,8 @@ import com.liferay.registry.ServiceReference;
 import com.liferay.registry.ServiceTracker;
 import com.liferay.registry.ServiceTrackerCustomizer;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -55,15 +55,6 @@ import javax.servlet.http.HttpSession;
  * @author Raymond Augé
  */
 public class AutoLoginFilter extends BasePortalFilter {
-
-	public AutoLoginFilter() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(
-			AutoLogin.class, new AutoLoginServiceTrackerCustomizer());
-
-		_serviceTracker.open();
-	}
 
 	protected String getLoginRemoteUser(
 			HttpServletRequest request, HttpServletResponse response,
@@ -276,10 +267,9 @@ public class AutoLoginFilter extends BasePortalFilter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		AutoLoginFilter.class);
 
-	private static final List<AutoLogin> _autoLogins =
-		new CopyOnWriteArrayList<>();
-
-	private final ServiceTracker<?, AutoLogin> _serviceTracker;
+	private static final Set<AutoLogin> _autoLogins =
+		new CopyOnWriteArraySet<>();
+	private static final ServiceTracker<?, AutoLogin> _serviceTracker;
 
 	private static class AutoLoginServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer<AutoLogin, AutoLogin> {
@@ -317,6 +307,15 @@ public class AutoLoginFilter extends BasePortalFilter {
 			_autoLogins.remove(autoLogin);
 		}
 
+	}
+
+	static {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			AutoLogin.class, new AutoLoginServiceTrackerCustomizer());
+
+		_serviceTracker.open();
 	}
 
 }

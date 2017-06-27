@@ -14,8 +14,6 @@
 
 package com.liferay.dynamic.data.lists.service.impl;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.dynamic.data.lists.model.DDLRecordSetVersion;
 import com.liferay.dynamic.data.lists.service.base.DDLRecordSetVersionServiceBaseImpl;
 import com.liferay.dynamic.data.lists.service.permission.DDLRecordSetPermission;
@@ -27,11 +25,11 @@ import java.util.List;
 
 /**
  * Provides the remote service for accessing, adding, deleting, and updating
- * dynamic data list (DDL) record set version. Its methods include permission checks.
+ * dynamic data list (DDL) record set version. Its methods include permission
+ * checks.
  *
  * @author Leonardo Barros
  */
-@ProviderType
 public class DDLRecordSetVersionServiceImpl
 	extends DDLRecordSetVersionServiceBaseImpl {
 

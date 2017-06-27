@@ -13,6 +13,17 @@
 		<execute function="Type" locator1="TextArea#SUMMARY" value1="${abstractSummary}" />
 	</command>
 
+	<command name="addArticleCP">
+		<execute macro="WebContentNavigator#gotoAddCP" />
+
+		<execute macro="WebContent#addCP">
+			<var name="webContentContent" value="${webContentContent}" />
+			<var name="webContentTitle" value="${webContentTitle}" />
+		</execute>
+
+		<execute macro="PortletEntry#publish" />
+	</command>
+
 	<command name="addCP">
 		<if>
 			<isset var="webContentTitle" />
@@ -199,6 +210,25 @@
 		<execute function="SelectFrame" value1="relative=top" />
 	</command>
 
+	<command name="addMultipleArticlesCP">
+		<var method="MathUtil#sum('${articleCount}', '1')" name="articleCount" />
+		<var name="count" value="1" />
+
+		<while>
+			<not>
+				<equals arg1="${count}" arg2="${articleCount}" />
+			</not>
+			<then>
+				<execute macro="WebContent#addArticleCP">
+					<var name="webContentContent" value="WC Content ${count}" />
+					<var name="webContentTitle" value="WC Title ${count}" />
+				</execute>
+
+				<var method="MathUtil#sum('${count}', '1')" name="count" />
+			</then>
+		</while>
+	</command>
+
 	<command name="addNullCP">
 		<if>
 			<isset var="webContentContent" />
@@ -379,15 +409,7 @@
 
 		<execute function="AssertClickNoError" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME_LINK" value1="${structureName}" />
 
-		<toggle name="LPS-70946">
-			<off>
-				<execute function="Confirm#assertConfirmationNoWait" value1="Selecting a new structure changes the available input fields and available templates. Do you want to proceed?" />
-			</off>
-
-			<on>
-				<execute function="Confirm#assertConfirmationNoWait" value1="Selecting a new structure deletes all unsaved content. Do you want to proceed?" />
-			</on>
-		</toggle>
+		<execute function="Confirm#assertConfirmationNoWait" value1="Selecting a new structure deletes all unsaved content. Do you want to proceed?" />
 
 		<execute function="SelectFrame" value1="relative=top" />
 
@@ -509,8 +531,6 @@
 		<if>
 			<isset var="webContentImage" />
 			<then>
-				<var name="key_fieldName" value="Image" />
-
 				<execute function="Click" locator1="Button#SELECT" />
 
 				<execute macro="ItemSelector#uploadFile">
@@ -821,17 +841,10 @@
 
 		<execute function="SelectFrame" locator1="WCSelectDisplayPage#DISPLAY_PAGE_CONFIGURATION_IFRAME" />
 
-		<while>
-			<condition function="IsElementPresent" locator1="PagesConfiguration#PAGE_TREE_NODE_COLLAPSED" />
-			<then>
-				<execute function="Click" locator1="PagesConfiguration#PAGE_TREE_NODE_COLLAPSED" />
-			</then>
-		</while>
+		<execute macro="Portlet#expandTree" />
 
-		<execute function="AssertElementPresent" locator1="PagesConfiguration#PAGE_TREE_NODE_EXPANDED" />
-
-		<execute function="Click#mouseOverClick" locator1="PagesConfiguration#PAGE_TREE_LINK">
-			<var name="key_pageName" value="${pageName}" />
+		<execute macro="Portlet#selectTreeNode">
+			<var name="nodeName" value="${pageName}" />
 		</execute>
 
 		<execute function="SelectFrameTop" />
@@ -868,6 +881,30 @@
 		<execute function="Pause" locator1="3000" />
 
 		<execute function="SelectFrame" value1="relative=top" />
+	</command>
+
+	<command name="editInReview">
+		<execute macro="PortletEntry#inputTitle">
+			<var name="title" value="${webContentTitleEdit}" />
+		</execute>
+
+		<if>
+			<isset var="webContentImage" />
+			<then>
+				<execute function="Click" locator1="Button#SELECT" />
+
+				<execute function="SelectFrameTop" value1="relative=top" />
+
+				<execute macro="ItemSelector#uploadFile">
+					<var name="navTab" value="Web Content Images" />
+					<var name="uploadFileName" value="${webContentImage}" />
+				</execute>
+			</then>
+		</if>
+
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+
+		<execute macro="Button#clickSave" />
 	</command>
 
 	<command name="editNullCP">
@@ -963,20 +1000,6 @@
 		</if>
 	</command>
 
-	<command name="expandFolderTreeCP">
-		<while>
-			<and>
-				<condition function="IsElementPresent" locator1="WC#WEB_CONTENT_PLUS_ICON_COLLAPSED" />
-				<condition function="IsVisible" locator1="WC#WEB_CONTENT_PLUS_ICON_COLLAPSED" />
-			</and>
-			<then>
-				<execute function="Click" locator1="WC#WEB_CONTENT_PLUS_ICON_COLLAPSED" />
-			</then>
-		</while>
-
-		<execute function="AssertElementNotPresent" locator1="WC#WEB_CONTENT_PLUS_ICON_COLLAPSED" />
-	</command>
-
 	<command name="expireCP">
 		<for list="${webContentTitleList}" param="webContentTitle">
 			<execute function="Check" locator1="WC#ENTRY_DESCRIPTIVE_CHECKBOX">
@@ -1050,10 +1073,10 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<execute macro="WebContent#expandFolderTreeCP" />
+		<execute macro="Portlet#expandTree" />
 
-		<execute function="Click" locator1="WC#SELECT_FOLDER">
-			<var name="key_folderName" value="${folderName}" />
+		<execute macro="Portlet#selectTreeNode">
+			<var name="nodeName" value="${folderName}" />
 		</execute>
 
 		<execute function="SelectFrame" value1="relative=top" />
@@ -1081,10 +1104,10 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<execute macro="WebContent#expandFolderTreeCP" />
+		<execute macro="Portlet#expandTree" />
 
-		<execute function="Click" locator1="WC#SELECT_FOLDER">
-			<var name="key_folderName" value="${folderName}" />
+		<execute macro="Portlet#selectTreeNode">
+			<var name="nodeName" value="${folderName}" />
 		</execute>
 
 		<execute function="SelectFrame" value1="relative=top" />
@@ -1156,9 +1179,9 @@
 
 		<execute function="AssertClick#assertPartialTextClickAt" locator1="Pagination#ITEMS_PER_PAGE_SELECT" value1="20 Entries" />
 
-		<var name="key_itemsPerPage" value="${itemsPerPage}" />
-
-		<execute function="AssertClick" locator1="MenuItem#ITEMS_PER_PAGE" value1="${itemsPerPage}" />
+		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${itemsPerPage}">
+			<var name="key_menuItem" value="${itemsPerPage}" />
+		</execute>
 	</command>
 
 	<command name="preview">
@@ -1543,6 +1566,13 @@
 				<var name="key_fieldName" value="${fieldName}" />
 
 				<execute function="AssertTextEquals" locator1="DDMField#GEOLOCATION" value1="${fieldFieldLabel}" />
+			</then>
+		</if>
+
+		<if>
+			<equals arg1="${field}" arg2="Image" />
+			<then>
+				<execute function="AssertTextEquals" locator1="WCEditWebContent#SELECTED_IMAGE" value1="${webContentImage}" />
 			</then>
 		</if>
 	</command>

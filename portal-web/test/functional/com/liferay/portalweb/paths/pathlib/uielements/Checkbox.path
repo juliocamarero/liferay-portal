@@ -54,6 +54,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>ANY_CHECKBOX</td>
+	<td>//label[contains(.,'${checkboxName}')]/input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>BLOGS_ENTRY</td>
 	<td>//input[contains(@id,'BlogsEntry')]</td>
 	<td></td>
@@ -180,7 +185,7 @@
 </tr>
 <tr>
 	<td>ENABLE_SOCIAL_BOOKMARKS</td>
-	<td>//label[contains(.,'Enable Social Bookmarks')]/input[@type='checkbox']</td>
+	<td>//input[@type='checkbox' and contains(@name,'enableSocialBookmarks')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -310,7 +315,7 @@
 </tr>
 <tr>
 	<td>SELECT_ALL</td>
-	<td>//*[@data-qa-id='selectAllCheckbox'] | //div[@class='checkbox']//input[@title='Select All'] | //input[contains(@id,'allRowIds') or contains(@name,'allRowIds') or contains(@class,'select-all-checkboxes')]</td>
+	<td>//*[@data-qa-id='selectAllCheckbox'] | //div[@class='checkbox']//input[@title='Select All'] | //input[contains(@id,'allRowIds') or contains(@name,'allRowIds') or contains(@class,'select-all-checkboxes')] | //input[contains(@id,'selectAllCheckbox')]</td>
 	<td></td>
 </tr>
 <tr>

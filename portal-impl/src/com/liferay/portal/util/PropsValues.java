@@ -697,6 +697,8 @@ public class PropsValues {
 
 	public static final int HIBERNATE_JDBC_BATCH_SIZE = GetterUtil.getInteger(PropsUtil.get(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE));
 
+	public static final String HIBERNATE_SESSION_FACTORY_IMPORTED_CLASS_NAME_REGEXP = PropsUtil.get(PropsKeys.HIBERNATE_SESSION_FACTORY_IMPORTED_CLASS_NAME_REGEXP);
+
 	public static final boolean HOT_UNDEPLOY_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.HOT_UNDEPLOY_ENABLED));
 
 	public static final int HOT_UNDEPLOY_INTERVAL = GetterUtil.getInteger(PropsUtil.get(PropsKeys.HOT_UNDEPLOY_INTERVAL));
@@ -1363,6 +1365,8 @@ public class PropsValues {
 
 	public static final String PORTLET_RESOURCE_ID_BANNED_PATHS_REGEXP = PropsUtil.get(PropsKeys.PORTLET_RESOURCE_ID_BANNED_PATHS_REGEXP);
 
+	public static final boolean PORTLET_SESSION_REPLICATE_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.PORTLET_SESSION_REPLICATE_ENABLED));
+
 	public static final boolean PORTLET_URL_ANCHOR_ENABLE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.PORTLET_URL_ANCHOR_ENABLE));
 
 	public static final boolean PORTLET_URL_APPEND_PARAMETERS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.PORTLET_URL_APPEND_PARAMETERS));
@@ -1645,6 +1649,10 @@ public class PropsValues {
 
 	public static final boolean UPGRADE_DATABASE_TRANSACTIONS_DISABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.UPGRADE_DATABASE_TRANSACTIONS_DISABLED));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final long UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE = GetterUtil.getLong(PropsUtil.get(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE));
 
 	public static boolean USER_GROUPS_COPY_LAYOUTS_TO_USER_PERSONAL_SITE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.USER_GROUPS_COPY_LAYOUTS_TO_USER_PERSONAL_SITE));

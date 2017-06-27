@@ -237,11 +237,10 @@ AUI.add(
 
 						var portletNamespace = instance.get('portletNamespace');
 
-						var portletURL = Liferay.PortletURL.createURL(themeDisplay.getSiteAdminURL());
+						var portletURL = Liferay.PortletURL.createURL(themeDisplay.getURLControlPanel());
 
 						portletURL.setParameter('criteria', 'com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion');
 						portletURL.setParameter('itemSelectedEventName', portletNamespace + 'selectDocumentLibrary');
-						portletURL.setParameter('p_p_auth', container.getData('itemSelectorAuthToken'));
 
 						var criterionJSON = {
 							desiredItemSelectorReturnTypes: 'com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType'
@@ -266,7 +265,7 @@ AUI.add(
 					_getUploadURL: function() {
 						var instance = this;
 
-						var portletURL = Liferay.PortletURL.createURL(themeDisplay.getSiteAdminURL());
+						var portletURL = Liferay.PortletURL.createURL(themeDisplay.getURLControlPanel());
 
 						portletURL.setLifecycle(Liferay.PortletURL.ACTION_PHASE);
 						portletURL.setParameter('cmd', 'add_temp');
@@ -1007,7 +1006,7 @@ AUI.add(
 				'keyword': Liferay.Language.get('yes')
 			};
 
-			if (type == 'text') {
+			if (type == 'ddm-image' || type == 'text') {
 				indexTypeOptions = {
 					'': Liferay.Language.get('not-indexable'),
 					'keyword': Liferay.Language.get('indexable-keyword'),
@@ -1377,6 +1376,10 @@ AUI.add(
 
 					fieldNamespace: {
 						value: 'ddm'
+					},
+
+					indexType: {
+						value: 'text'
 					}
 				},
 

@@ -326,7 +326,7 @@
 	<command name="flagPG">
 		<var name="key_entryTitle" value="${entryTitle}" />
 
-		<execute function="AssertClick" locator1="BlogsEntry#FLAG_LINK" value1="Flag" />
+		<execute function="Click" locator1="BlogsEntry#FLAG_LINK" />
 
 		<execute function="AssertElementPresent#assertVisible" locator1="BlogsEntry#FLAG_MODAL" />
 		<execute function="AssertTextEquals" locator1="ReportContent#WARNING" value1="You are about to report a violation of our Terms of Use. All reports are strictly confidential." />
@@ -561,17 +561,8 @@
 
 		<execute function="AssertTextEquals" locator1="Message#INFO" value1="No entries were found that matched the keywords: ${entrySearchTerm}." />
 
-		<if>
-			<equals arg1="${soPage}" arg2="true" />
-			<then>
-				<execute function="AssertElementNotPresent" locator1="SOBlogs#SEARCH_RESULTS_ENTRY_TITLE" value1="${entryTitle}" />
-				<execute function="AssertElementNotPresent" locator1="SOBlogs#SEARCH_RESULTS_ENTRY_DESCRIPTION" value1="${entryContent}" />
-			</then>
-			<else>
-				<execute function="AssertElementNotPresent" locator1="Blogs#SEARCH_RESULTS_ENTRY_TITLE" value1="${entryTitle}" />
-				<execute function="AssertElementNotPresent" locator1="Blogs#SEARCH_RESULTS_ENTRY_DESCRIPTION" value1="${entryContent}" />
-			</else>
-		</if>
+		<execute function="AssertElementNotPresent" locator1="Blogs#SEARCH_RESULTS_ENTRY_TITLE" value1="${entryTitle}" />
+		<execute function="AssertElementNotPresent" locator1="Blogs#SEARCH_RESULTS_ENTRY_DESCRIPTION" value1="${entryContent}" />
 	</command>
 
 	<command name="searchNoResultsCP">
@@ -594,17 +585,8 @@
 		<execute function="Type" locator1="TextInput#SEARCH" value1="${entrySearchTerm}" />
 		<execute function="AssertClick" locator1="Button#SEARCH" value1="Search" />
 
-		<if>
-			<equals arg1="${soPage}" arg2="true" />
-			<then>
-				<execute function="AssertTextEquals" locator1="SOBlogs#SEARCH_RESULTS_ENTRY_TITLE" value1="${entryTitle}" />
-				<execute function="AssertTextEquals" locator1="SOBlogs#SEARCH_RESULTS_ENTRY_DESCRIPTION" value1="${entryContent}" />
-			</then>
-			<else>
-				<execute function="AssertTextEquals" locator1="Blogs#SEARCH_RESULTS_ENTRY_TITLE" value1="${entryTitle}" />
-				<execute function="AssertTextEquals" locator1="Blogs#SEARCH_RESULTS_ENTRY_DESCRIPTION" value1="${entryContent}" />
-			</else>
-		</if>
+		<execute function="AssertTextEquals" locator1="Blogs#SEARCH_RESULTS_ENTRY_TITLE" value1="${entryTitle}" />
+		<execute function="AssertTextEquals" locator1="Blogs#SEARCH_RESULTS_ENTRY_DESCRIPTION" value1="${entryContent}" />
 	</command>
 
 	<command name="subscribePG">

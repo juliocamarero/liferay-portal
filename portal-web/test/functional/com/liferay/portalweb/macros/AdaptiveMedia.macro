@@ -1,4 +1,29 @@
 <definition>
+	<command name="adaptAllImages">
+		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
+
+		<execute function="AssertClick" locator1="MenuItem#ADAPT_ALL_IMAGES" value1="Adapt All Images" />
+
+		<execute macro="Alert#viewSuccessMessage" />
+	</command>
+
+	<command name="adaptRemainingImages">
+		<var name="key_imageName" value="${imageName}" />
+		<var name="key_percentAdapted" value="${percentAdapted}" />
+
+		<if>
+			<condition function="IsElementNotPresent" locator1="AdaptiveMediaTable#PROGRESS" />
+			<then>
+				<execute function="Click" locator1="AdaptiveMediaTable#IMAGE_RESOLUTION_OPTIONS" />
+
+				<execute function="AssertClick" locator1="MenuItem#ADAPT_REMAINING" value1="Adapt Remaining" />
+			</then>
+		</if>
+
+		<execute function="AssertVisible" locator1="AdaptiveMediaTable#PROGRESS" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#PROGRESS" value1="${percentAdapted}" />
+	</command>
+
 	<command name="addImageResolution">
 		<execute function="Click" locator1="Button#PLUS" />
 
@@ -83,7 +108,7 @@
 
 	<command name="editImageResolution">
 		<var name="key_imageName" value="${imageName}" />
-		<var name="key_percentOptimized" value="${percentOptimized}" />
+		<var name="key_percentAdapted" value="${percentAdapted}" />
 
 		<execute function="Click" locator1="AdaptiveMediaTable#IMAGE_RESOLUTION_OPTIONS" />
 
@@ -101,7 +126,7 @@
 		<execute function="AssertElementNotPresent" locator1="Checkbox#ADD_HIGH_DENSITY_DISPLAY" />
 
 		<if>
-			<condition function="IsTextEqual" locator1="Message#INFO" value1="This resolution has already optimized images. Please, if you want different dimension values you must create a new image resolution." />
+			<condition function="IsTextEqual" locator1="Message#INFO" value1="The images for this resolution are already adapted." />
 			<then>
 				<execute function="AssertNotEditable" locator1="TextInput#IMAGE_ID" />
 				<execute function="AssertNotEditable" locator1="TextInput#MAX_HEIGHT" />
@@ -147,27 +172,22 @@
 		<execute macro="PortletEntry#save" />
 	</command>
 
+	<command name="enableImageResolution">
+		<var name="key_imageName" value="${imageName}" />
+
+		<execute function="Click" locator1="AdaptiveMediaTable#IMAGE_RESOLUTION_OPTIONS" />
+
+		<execute function="AssertClick" locator1="MenuItem#ENABLE" value1="Enable" />
+
+		<var name="key_imageState" value="${imageState}" />
+
+		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#STATE" value1="Enabled" />
+	</command>
+
 	<command name="gotoImageVariantEntry">
 		<var name="key_imageName" value="${imageName}" />
 
 		<execute function="AssertClick" locator1="AdaptiveMediaTable#NAME" value1="${imageName}" />
-	</command>
-
-	<command name="optimizeRemainingImages">
-		<var name="key_imageName" value="${imageName}" />
-		<var name="key_percentOptimized" value="${percentOptimized}" />
-
-		<if>
-			<condition function="IsElementNotPresent" locator1="AdaptiveMediaTable#PROGRESS" />
-			<then>
-				<execute function="Click" locator1="AdaptiveMediaTable#IMAGE_RESOLUTION_OPTIONS" />
-
-				<execute function="AssertClick" locator1="MenuItem#OPTIMIZE_REMAINING" value1="Optimize Remaining" />
-			</then>
-		</if>
-
-		<execute function="AssertVisible" locator1="AdaptiveMediaTable#PROGRESS" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#PROGRESS" value1="${percentOptimized}" />
 	</command>
 
 	<command name="selectAdaptiveMediaImage">
@@ -190,12 +210,12 @@
 			</then>
 		</if>
 
-		<var name="key_percentOptimized" value="${percentOptimized}" />
+		<var name="key_percentAdapted" value="${percentAdapted}" />
 
 		<if>
-			<isset var="percentOptimized" />
+			<isset var="percentAdapted" />
 			<then>
-				<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#PROGRESS" value1="${percentOptimized}" />
+				<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#PROGRESS" value1="${percentAdapted}" />
 			</then>
 		</if>
 
@@ -219,11 +239,11 @@
 		<execute function="AssertElementNotPresent" locator1="AdaptiveMediaTable#NAME" />
 	</command>
 
-	<command name="viewNumberOfOptimizedImages">
+	<command name="viewNumberOfAdaptedImages">
 		<execute function="Click" locator1="AdaptiveMediaTable#INFO_ICON" />
 
-		<var name="key_numberOfOptimizedImages" value="${numberOfOptimizedImages}" />
+		<var name="key_numberOfAdaptedImages" value="${numberOfAdaptedImages}" />
 
-		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#IMAGE_INFO_DETAILS_OPTIMIZED_IMAGES" value1="${numberOfOptimizedImages}" />
+		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#IMAGE_INFO_DETAILS_ADAPTED_IMAGES" value1="${numberOfAdaptedImages}" />
 	</command>
 </definition>

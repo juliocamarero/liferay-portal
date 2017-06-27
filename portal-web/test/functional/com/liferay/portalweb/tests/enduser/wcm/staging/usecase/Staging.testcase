@@ -27,17 +27,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="Site#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="ActivateStagingPageVersioningWithCustomDefaultLanguage" priority="5">
@@ -1146,7 +1138,9 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="WebContentDisplayPortlet#viewDeletedArticle" />
+		<execute macro="WebContentDisplayPortlet#viewRecycleBinMessage">
+			<var name="webContentTitle" value="Web Content Title 2" />
+		</execute>
 
 		<execute macro="Staging#gotoPublishToLive" />
 
@@ -1157,7 +1151,9 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="WebContentDisplayPortlet#viewDeletedArticle" />
+		<execute macro="WebContentDisplayPortlet#viewRecycleBinMessage">
+			<var name="webContentTitle" value="Web Content Title 2" />
+		</execute>
 	</command>
 
 	<command name="StagingRemoteDocumentSubtypeViaAP" priority="3">

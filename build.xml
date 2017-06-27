@@ -392,6 +392,12 @@
 						</gradle-execute>
 					</else>
 				</if>
+
+				<gradle-execute dir="${project.dir}/modules" task="copyCompiledJSP">
+					<arg value="-Dbuild.exclude.dirs=${build.exclude.dirs}" />
+					<arg value="-Dbuild.include.dirs=${build.include.dirs}" />
+					<arg value="-Dbuild.profile=${build.profile}" />
+				</gradle-execute>
 			</then>
 		</if>
 
@@ -1016,6 +1022,13 @@ print AdminControl.invoke(appManager, 'startApplication', 'liferay-portal')
 				<delete file="wsadmin.py" />
 			</then>
 		</if>
+	</target>
+
+	<target name="update-binaries-cache">
+		<sync-dir
+			dir="${project.dir}/.gradle/caches/modules-2/files-2.1"
+			toDir="${build.binaries.cache.dir}/.gradle/caches/modules-2/files-2.1"
+		/>
 	</target>
 
 	<target name="update-gradle-cache">

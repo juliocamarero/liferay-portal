@@ -129,6 +129,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -1273,6 +1274,18 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			String attachmentURLPrefix, ServiceContext serviceContext)
 		throws PortalException {
 
+		return getPageDisplay(
+			page, viewPageURL, () -> editPageURL, attachmentURLPrefix,
+			serviceContext);
+	}
+
+	@Override
+	public WikiPageDisplay getPageDisplay(
+			WikiPage page, PortletURL viewPageURL,
+			Supplier<PortletURL> editPageURLSupplier,
+			String attachmentURLPrefix, ServiceContext serviceContext)
+		throws PortalException {
+
 		HttpServletRequest request = serviceContext.getRequest();
 
 		boolean workflowAssetPreview = false;
@@ -1284,12 +1297,12 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		if (!workflowAssetPreview && page.isApproved()) {
 			return wikiCacheHelper.getDisplay(
-				page.getNodeId(), page.getTitle(), viewPageURL, editPageURL,
-				attachmentURLPrefix);
+				page.getNodeId(), page.getTitle(), viewPageURL,
+				editPageURLSupplier, attachmentURLPrefix);
 		}
 
 		return getPageDisplay(
-			page, viewPageURL, editPageURL, attachmentURLPrefix);
+			page, viewPageURL, editPageURLSupplier.get(), attachmentURLPrefix);
 	}
 
 	@Override
@@ -1960,7 +1973,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			assetEntry = assetEntryLocalService.updateEntry(
 				userId, page.getGroupId(), page.getCreateDate(),
 				page.getModifiedDate(), WikiPage.class.getName(),
-				page.getPrimaryKey(), page.getUuid(), 0, assetCategoryIds,
+				page.getResourcePrimKey(), page.getUuid(), 0, assetCategoryIds,
 				assetTagNames, true, false, null, null, publishDate, null,
 				ContentTypes.TEXT_HTML, page.getTitle(), null, null, null, null,
 				0, 0, priority);

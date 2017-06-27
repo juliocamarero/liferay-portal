@@ -10,25 +10,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="Navigator#openURL" />
-
-				<execute macro="ProductMenu#gotoSitesContent">
-					<var name="portlet" value="Forms" />
-				</execute>
-
-				<execute macro="FormsAdmin#teardownForms" />
-
-				<execute macro="Page#tearDownPG" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="ConfigureAutofillRule" priority="5">
@@ -332,7 +316,7 @@
 		<execute macro="FormRules#addRule" />
 
 		<execute macro="FormRules#configureConditionOptions">
-			<var name="conditionField" value="Text Field" />=
+			<var name="conditionField" value="Text Field" />
 			<var name="conditionFieldValue" value="test" />
 			<var name="conditionOperator" value="Is equal to" />
 			<var name="conditionRowNumber" value="1" />
@@ -547,8 +531,8 @@
 		<execute macro="FormRules#addRule" />
 
 		<execute macro="FormRules#configureConditionOptions">
-			<var name="conditionField" value="User" />=
-			<var name="conditionOperator" value="belongs to" />
+			<var name="conditionField" value="User" />
+			<var name="conditionOperator" value="Belongs to" />
 			<var name="conditionRowNumber" value="1" />
 			<var name="conditionValueType" value="Site Administrator" />
 		</execute>
@@ -574,7 +558,7 @@
 			<var name="actionTarget" value="Manager" />
 			<var name="conditionField" value="User" />
 			<var name="conditionFieldConstant" value="Site Administrator" />
-			<var name="conditionOperator" value="belongs to" />
+			<var name="conditionOperator" value="Belongs to" />
 			<var name="ruleNumber" value="1" />
 		</execute>
 
@@ -583,7 +567,7 @@
 			<var name="actionTarget" value="Manager" />
 			<var name="conditionField" value="User" />
 			<var name="conditionFieldConstant" value="Site Administrator" />
-			<var name="conditionOperator" value="belongs to" />
+			<var name="conditionOperator" value="Belongs to" />
 			<var name="ruleNumber" value="1" />
 		</execute>
 
@@ -717,7 +701,7 @@
 		<execute macro="FormRules#addRule" />
 
 		<execute macro="FormRules#configureConditionOptions">
-			<var name="conditionField" value="Text Field" />=
+			<var name="conditionField" value="Text Field" />
 			<var name="conditionFieldValue" value="test" />
 			<var name="conditionOperator" value="Is equal to" />
 			<var name="conditionRowNumber" value="1" />
@@ -801,7 +785,7 @@
 		<execute macro="FormRules#addRule" />
 
 		<execute macro="FormRules#configureConditionOptions">
-			<var name="conditionField" value="A" />=
+			<var name="conditionField" value="A" />
 			<var name="conditionOperator" value="Is not empty" />
 			<var name="conditionRowNumber" value="1" />
 		</execute>
@@ -859,9 +843,8 @@
 			<var name="fieldName" value="B" />
 		</execute>
 
-		<execute macro="FormFields#editText">
+		<execute macro="FormFields#editTextWithBackspace">
 			<var name="fieldName" value="A" />
-			<var name="fieldValue" value=" " />
 		</execute>
 
 		<execute macro="FormFields#viewDateFieldNotPresent">

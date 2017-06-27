@@ -145,7 +145,17 @@ portletURL.setParameter("displayStyle", displayStyle);
 		}
 	);
 
-	Liferay.on('destroyPortlet', function() {
-		copyPublishFormURLPopover.destroy();
-	});
+	A.all('.searchcontainer-content .dropdown-toggle.icon-monospaced').before(
+		'click',
+		function() {
+			copyPublishFormURLPopover.hide();
+		}
+	);
+
+	Liferay.on(
+		'destroyPortlet',
+		function() {
+			copyPublishFormURLPopover.destroy();
+		}
+	);
 </aui:script>

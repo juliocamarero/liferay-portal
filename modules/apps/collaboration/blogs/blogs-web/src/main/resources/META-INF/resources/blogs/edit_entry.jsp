@@ -65,17 +65,19 @@ if (portletTitleBasedNavigation) {
 </liferay-util:buffer>
 
 <liferay-util:buffer var="readingTime">
+	<c:if test="<%= blogsPortletInstanceConfiguration.enableReadingTime() %>">
 
-	<%
-	int readingTimeInMinutes = (entry == null) ? 0 : com.liferay.blogs.web.internal.util.BlogsUtil.getReadingTimeMinutes(entry.getContent());
-	%>
+		<%
+		int readingTimeInMinutes = (entry == null) ? 0 : com.liferay.blogs.web.internal.util.BlogsUtil.getReadingTimeMinutes(entry.getContent());
+		%>
 
-	<small class="text-capitalize text-muted" id="<portlet:namespace />readingTime">
-		<c:if test="<%= readingTimeInMinutes > 0 %>">
-			&nbsp;-&nbsp;
-			<liferay-ui:message arguments="<%= readingTimeInMinutes %>" key="x-minutes-read" translateArguments="<%= false %>" />
-		</c:if>
-	</small>
+		<small class="text-capitalize text-muted" id="<portlet:namespace />readingTime">
+			<c:if test="<%= readingTimeInMinutes > 0 %>">
+				&nbsp;-&nbsp;
+				<liferay-ui:message arguments="<%= readingTimeInMinutes %>" key="x-minutes-read" translateArguments="<%= false %>" />
+			</c:if>
+		</small>
+	</c:if>
 </liferay-util:buffer>
 
 <c:if test="<%= portletTitleBasedNavigation %>">
@@ -121,7 +123,7 @@ if (portletTitleBasedNavigation) {
 			</liferay-ui:error>
 
 			<liferay-ui:error exception="<%= UploadRequestSizeException.class %>">
-				<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(PrefsPropsUtil.getLong(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE), locale) %>" key="request-is-larger-than-x-and-could-not-be-processed" translateArguments="<%= false %>" />
+				<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(UploadServletRequestConfigurationHelperUtil.getMaxSize(), locale) %>" key="request-is-larger-than-x-and-could-not-be-processed" translateArguments="<%= false %>" />
 			</liferay-ui:error>
 
 			<liferay-ui:asset-categories-error />

@@ -27,6 +27,7 @@ import com.liferay.document.library.kernel.service.DLFileEntryMetadataLocalServi
 import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalService;
 import com.liferay.document.library.kernel.service.DLFileVersionLocalService;
 import com.liferay.document.library.kernel.service.DLTrashService;
+import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.document.library.kernel.util.DLProcessorThreadLocal;
 import com.liferay.dynamic.data.mapping.exportimport.content.processor.DDMFormValuesExportImportContentProcessor;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesJSONDeserializer;
@@ -47,6 +48,7 @@ import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Repository;
@@ -57,11 +59,16 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.RepositoryLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.TransactionConfig;
+import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
@@ -77,6 +84,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -555,14 +563,26 @@ public class FileEntryStagedModelDataHandler
 						if (deleteFileEntry &&
 							ExportImportThreadLocal.isStagingInProcess()) {
 
-							_dlAppService.deleteFileVersion(
-								latestExistingFileVersion.getFileEntryId(),
-								latestExistingFileVersion.getVersion());
+							String latestExistingVersion =
+								latestExistingFileVersion.getVersion();
+
+							if (!latestExistingVersion.equals(
+									importedFileEntry.getVersion())) {
+
+								_dlAppService.deleteFileVersion(
+									latestExistingFileVersion.getFileEntryId(),
+									latestExistingFileVersion.getVersion());
+							}
 						}
 					}
 					finally {
 						serviceContext.setIndexingEnabled(indexEnabled);
 					}
+				}
+
+				if (ExportImportThreadLocal.isStagingInProcess()) {
+					_overrideFileVersion(
+						importedFileEntry, fileVersion.getVersion());
 				}
 			}
 			else {
@@ -769,9 +789,15 @@ public class FileEntryStagedModelDataHandler
 				portletDataContext, structureFieldsElement, ddmStructure);
 
 			serviceContext.setAttribute(
-				DDMFormValues.class.getName() + ddmStructure.getStructureId(),
+				DDMFormValues.class.getName() + StringPool.POUND +
+					ddmStructure.getStructureId(),
 				ddmFormValues);
 		}
+	}
+
+	@Override
+	protected boolean isStagedModelInTrash(FileEntry fileEntry) {
+		return fileEntry.isInTrash();
 	}
 
 	@Reference(unbind = "-")
@@ -871,7 +897,10 @@ public class FileEntryStagedModelDataHandler
 			PortletDataException pde = new PortletDataException(
 				PortletDataException.INVALID_GROUP);
 
-			pde.setStagedModel(fileEntry);
+			pde.setStagedModelDisplayName(getDisplayName(fileEntry));
+			pde.setStagedModelClassName(fileEntry.getModelClassName());
+			pde.setStagedModelClassPK(
+				GetterUtil.getString(fileEntry.getFileEntryId()));
 
 			throw pde;
 		}
@@ -886,7 +915,10 @@ public class FileEntryStagedModelDataHandler
 				PortletDataException pde = new PortletDataException(
 					PortletDataException.STATUS_UNAVAILABLE);
 
-				pde.setStagedModel(fileVersion);
+				pde.setStagedModelDisplayName(getDisplayName(fileEntry));
+				pde.setStagedModelClassName(fileVersion.getModelClassName());
+				pde.setStagedModelClassPK(
+					GetterUtil.getString(fileVersion.getFileVersionId()));
 
 				throw pde;
 			}
@@ -915,8 +947,68 @@ public class FileEntryStagedModelDataHandler
 		}
 	}
 
+	private void _overrideFileVersion(
+			final FileEntry importedFileEntry, final String version)
+		throws PortalException {
+
+		try {
+			TransactionInvokerUtil.invoke(
+				_transactionConfig,
+				new Callable<Void>() {
+
+					@Override
+					public Void call() throws Exception {
+						DLFileEntry dlFileEntry =
+							(DLFileEntry)importedFileEntry.getModel();
+
+						if (version.equals(dlFileEntry.getVersion())) {
+							return null;
+						}
+
+						DLFileVersion dlFileVersion =
+							dlFileEntry.getFileVersion();
+
+						String oldVersion = dlFileVersion.getVersion();
+
+						dlFileVersion.setVersion(version);
+
+						_dlFileVersionLocalService.updateDLFileVersion(
+							dlFileVersion);
+
+						dlFileEntry.setVersion(version);
+
+						_dlFileEntryLocalService.updateDLFileEntry(dlFileEntry);
+
+						if (DLStoreUtil.hasFile(
+								dlFileEntry.getCompanyId(),
+								dlFileEntry.getDataRepositoryId(),
+								dlFileEntry.getName(), oldVersion)) {
+
+							DLStoreUtil.updateFileVersion(
+								dlFileEntry.getCompanyId(),
+								dlFileEntry.getDataRepositoryId(),
+								dlFileEntry.getName(), oldVersion, version);
+						}
+
+						return null;
+					}
+
+				});
+		}
+		catch (PortalException | SystemException e) {
+			throw e;
+		}
+		catch (Throwable t) {
+			throw new PortalException(t);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		FileEntryStagedModelDataHandler.class);
+
+	private static final TransactionConfig _transactionConfig =
+		TransactionConfig.Factory.create(
+			Propagation.REQUIRED, new Class<?>[] {Exception.class});
 
 	private DDMFormValuesExportImportContentProcessor
 		_ddmFormValuesExportImportContentProcessor;

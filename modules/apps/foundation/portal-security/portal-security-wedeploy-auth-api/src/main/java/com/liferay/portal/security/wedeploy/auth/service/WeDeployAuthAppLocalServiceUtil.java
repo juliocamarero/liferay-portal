@@ -80,10 +80,11 @@ public class WeDeployAuthAppLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp addWeDeployAuthApp(
-		long userId, java.lang.String name,
+		long userId, java.lang.String name, java.lang.String redirectURI,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().addWeDeployAuthApp(userId, name, serviceContext);
+		return getService()
+				   .addWeDeployAuthApp(userId, name, redirectURI, serviceContext);
 	}
 
 	/**
@@ -119,6 +120,11 @@ public class WeDeployAuthAppLocalServiceUtil {
 		long weDeployAuthAppId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteWeDeployAuthApp(weDeployAuthAppId);
+	}
+
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp fetchWeDeployAuthApp(
+		java.lang.String redirectURI, java.lang.String clientId) {
+		return getService().fetchWeDeployAuthApp(redirectURI, clientId);
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp fetchWeDeployAuthApp(

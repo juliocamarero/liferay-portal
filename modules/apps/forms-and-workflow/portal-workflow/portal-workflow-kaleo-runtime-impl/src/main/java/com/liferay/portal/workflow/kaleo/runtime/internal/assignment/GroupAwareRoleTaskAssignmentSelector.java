@@ -16,9 +16,11 @@ package com.liferay.portal.workflow.kaleo.runtime.internal.assignment;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.workflow.kaleo.KaleoTaskAssignmentFactory;
@@ -51,23 +53,60 @@ public class GroupAwareRoleTaskAssignmentSelector
 			ExecutionContext executionContext)
 		throws PortalException {
 
-		List<KaleoTaskAssignment> calculatedKaleoTaskAssignments =
-			new ArrayList<>();
-
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();
 
 		Role role = _roleLocalService.getRole(
 			kaleoTaskAssignment.getAssigneeClassPK());
 
-		populateKaleoTaskAssigments(
-			calculatedKaleoTaskAssignments, kaleoInstanceToken.getGroupId(),
-			role);
-
-		return calculatedKaleoTaskAssignments;
+		return createKaleoTaskAssigments(kaleoInstanceToken.getGroupId(), role);
 	}
 
-	protected KaleoTaskAssignment getKaleoTaskAssignments(
+	protected List<KaleoTaskAssignment> createKaleoTaskAssigments(
+			long groupId, Role role)
+		throws PortalException {
+
+		List<Long> groupIds = new ArrayList<>();
+
+		Group group = null;
+
+		if (groupId != WorkflowConstants.DEFAULT_GROUP_ID) {
+			group = _groupLocalService.getGroup(groupId);
+
+			if (group.isOrganization()) {
+				groupIds.addAll(getAncestorOrganizationGroupIds(group, role));
+			}
+
+			if (group.isSite()) {
+				groupIds.addAll(getAncestorGroupIds(group, role));
+			}
+
+			if (group.isLayout()) {
+				group = _groupLocalService.getGroup(group.getParentGroupId());
+			}
+		}
+
+		if (isValidAssignment(group, role)) {
+			groupIds.add(groupId);
+		}
+
+		return createKaleoTaskAssigments(role, groupIds);
+	}
+
+	protected List<KaleoTaskAssignment> createKaleoTaskAssigments(
+			Role role, List<Long> groupIds)
+		throws PortalException {
+
+		List<KaleoTaskAssignment> kaleoTaskAssignments = new ArrayList<>();
+
+		for (Long groupId : groupIds) {
+			kaleoTaskAssignments.add(createKaleoTaskAssignment(role, groupId));
+		}
+
+		return kaleoTaskAssignments;
+	}
+
+	protected KaleoTaskAssignment createKaleoTaskAssignment(
 		Role role, long groupId) {
 
 		KaleoTaskAssignment kaleoTaskAssignment =
@@ -80,7 +119,38 @@ public class GroupAwareRoleTaskAssignmentSelector
 		return kaleoTaskAssignment;
 	}
 
-	protected boolean isValidAssignment(Role role, Group group)
+	protected List<Long> getAncestorGroupIds(Group group, Role role)
+		throws PortalException {
+
+		List<Long> groupIds = new ArrayList<>();
+
+		for (Group ancestorGroup : group.getAncestors()) {
+			if (isValidAssignment(group, role)) {
+				groupIds.add(ancestorGroup.getGroupId());
+			}
+		}
+
+		return groupIds;
+	}
+
+	protected List<Long> getAncestorOrganizationGroupIds(Group group, Role role)
+		throws PortalException {
+
+		List<Long> groupIds = new ArrayList<>();
+
+		Organization organization = _organizationLocalService.getOrganization(
+			group.getClassPK());
+
+		for (Organization ancestorOrganization : organization.getAncestors()) {
+			if (isValidAssignment(group, role)) {
+				groupIds.add(ancestorOrganization.getGroupId());
+			}
+		}
+
+		return groupIds;
+	}
+
+	protected boolean isValidAssignment(Group group, Role role)
 		throws PortalException {
 
 		if (role.getType() == RoleConstants.TYPE_REGULAR) {
@@ -100,38 +170,14 @@ public class GroupAwareRoleTaskAssignmentSelector
 		return false;
 	}
 
-	protected void populateKaleoTaskAssigments(
-			List<KaleoTaskAssignment> kaleoTaskAssignments, long groupId,
-			Role role)
-		throws PortalException {
-
-		Group group = null;
-
-		if (groupId != WorkflowConstants.DEFAULT_GROUP_ID) {
-			group = _groupLocalService.getGroup(groupId);
-
-			if (group.isSite()) {
-				for (Group ancestorGroup : group.getAncestors()) {
-					populateKaleoTaskAssigments(
-						kaleoTaskAssignments, ancestorGroup.getGroupId(), role);
-				}
-			}
-
-			if (group.isLayout()) {
-				group = _groupLocalService.getGroup(group.getParentGroupId());
-			}
-		}
-
-		if (isValidAssignment(role, group)) {
-			kaleoTaskAssignments.add(getKaleoTaskAssignments(role, groupId));
-		}
-	}
-
 	@Reference
 	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private KaleoTaskAssignmentFactory _kaleoTaskAssignmentFactory;
+
+	@Reference
+	private OrganizationLocalService _organizationLocalService;
 
 	@Reference
 	private RoleLocalService _roleLocalService;

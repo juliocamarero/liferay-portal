@@ -10,20 +10,14 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="BlogsEntry#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
-	<command description="Ensure that a user can add multiple Blogs Entries." name="AddBlogsEntries" priority="4">
+	<command name="AddBlogsEntries" priority="4">
+		<description message="Ensure that a user can add multiple Blogs Entries." />
+
 		<property name="testray.component.names" value="Blogs" />
 		<property name="testray.main.component.name" value="Blogs" />
 

@@ -152,6 +152,7 @@ page import="com.liferay.portal.kernel.service.permission.PortletPermissionUtil"
 page import="com.liferay.portal.kernel.servlet.HttpHeaders" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionMessages" %><%@
 page import="com.liferay.portal.kernel.upload.UploadRequestSizeException" %><%@
+page import="com.liferay.portal.kernel.upload.UploadServletRequestConfigurationHelperUtil" %><%@
 page import="com.liferay.portal.kernel.util.ArrayUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatConstants" %><%@
@@ -208,7 +209,7 @@ page import="javax.portlet.WindowState" %>
 <portlet:defineObjects />
 
 <%
-String redirect = ParamUtil.getString(request, "redirect", currentURL);
+String redirect = PortalUtil.escapeRedirect(ParamUtil.getString(request, "redirect", currentURL));
 
 String rootPortletId = portletDisplay.getRootPortletId();
 

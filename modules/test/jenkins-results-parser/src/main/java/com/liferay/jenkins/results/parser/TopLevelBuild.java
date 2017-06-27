@@ -14,6 +14,13 @@
 
 package com.liferay.jenkins.results.parser;
 
+import com.liferay.jenkins.results.parser.failure.message.generator.DownstreamFailureMessageGenerator;
+import com.liferay.jenkins.results.parser.failure.message.generator.FailureMessageGenerator;
+import com.liferay.jenkins.results.parser.failure.message.generator.GenericFailureMessageGenerator;
+import com.liferay.jenkins.results.parser.failure.message.generator.PoshiTestFailureMessageGenerator;
+import com.liferay.jenkins.results.parser.failure.message.generator.PoshiValidationFailureMessageGenerator;
+import com.liferay.jenkins.results.parser.failure.message.generator.RebaseFailureMessageGenerator;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -231,6 +238,26 @@ public class TopLevelBuild extends BaseBuild {
 		catch (IOException ioe) {
 			throw new RuntimeException("Unable to get build properties", ioe);
 		}
+	}
+
+	@Override
+	protected void findDownstreamBuilds() {
+		if (getParentBuild() != null) {
+			return;
+		}
+
+		super.findDownstreamBuilds();
+	}
+
+	@Override
+	protected List<String> findDownstreamBuildsInConsoleText(
+		String consoleText) {
+
+		if (getParentBuild() != null) {
+			return Collections.emptyList();
+		}
+
+		return super.findDownstreamBuildsInConsoleText(consoleText);
 	}
 
 	protected Element getBaseBranchDetailsElement() {
@@ -460,13 +487,6 @@ public class TopLevelBuild extends BaseBuild {
 				rootElement, Dom4JUtil.getNewElement("hr"),
 				Dom4JUtil.getNewElement("h4", null, "Failed Jobs:"));
 
-			Element failedJobsOrderedListElement = Dom4JUtil.getNewElement(
-				"ol", rootElement,
-				Dom4JUtil.getNewElement(
-					"li", null, super.getGitHubMessageElement()));
-
-			int failureCount = 1;
-
 			List<Element> failureElements = new ArrayList<>();
 
 			for (Build downstreamBuild : getDownstreamBuilds(null)) {
@@ -488,20 +508,9 @@ public class TopLevelBuild extends BaseBuild {
 				failureElements.add(downstreamBuild.getGitHubMessageElement());
 			}
 
-			for (Element failureElement : failureElements) {
-				Element failedJobsListItemElement = Dom4JUtil.getNewElement(
-					"li", failedJobsOrderedListElement);
+			failureElements.add(0, super.getGitHubMessageElement());
 
-				if (failureCount == 5) {
-					failedJobsListItemElement.addText("...");
-
-					break;
-				}
-
-				failedJobsListItemElement.add(failureElement);
-
-				failureCount++;
-			}
+			Dom4JUtil.getOrderedListElement(failureElements, rootElement, 5);
 
 			String jobName = getJobName();
 
@@ -552,6 +561,7 @@ public class TopLevelBuild extends BaseBuild {
 
 	private static final FailureMessageGenerator[] _FAILURE_MESSAGE_GENERATORS =
 		{
+			new PoshiTestFailureMessageGenerator(),
 			new PoshiValidationFailureMessageGenerator(),
 			new RebaseFailureMessageGenerator(),
 

@@ -30,18 +30,16 @@
 	</command>
 
 	<command name="addMultipleCategories">
-		<var name="key_vocabularyName" value="${vocabularyName}" />
+		<execute function="AssertClick" locator1="AssetCategorization#CATEGORY_SELECT" value1="Select" >
+			<var name="key_vocabularyName" value="${vocabularyName}" />
+		</execute>
 
-		<execute function="AssertClick" locator1="AssetCategorization#CATEGORY_SELECT" value1="Select" />
-
-		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+		<execute macro="AssetCategorization#gotoSelectCategory" />
 
 		<for list="${categoryNameList}" param="categoryName">
-			<var name="key_categoryName" value="${categoryName}" />
-
-			<execute function="Click" locator1="AssetCategorization#CATEGORIES_CATEGORY_CHECKBOX" />
-
-			<execute function="AssertVisible" locator1="AssetCategorization#CATEGORIES_CATEGORY_CHECKBOX_CHECKED" />
+			<execute macro="Portlet#selectTreeNode">
+				<var name="nodeName" value="${categoryName}" />
+			</execute>
 		</for>
 
 		<execute function="SelectFrame" value1="relative=top" />
@@ -66,6 +64,19 @@
 		<execute function="AssertTextEquals" locator1="AssetCategorization#TAG" value1="${tagName}" />
 	</command>
 
+	<command name="gotoSelectCategory">
+		<execute function="SelectFrameTop" />
+
+		<if>
+			<condition function="IsElementPresent" locator1="IFrame#SELECT_CATEGORY" />
+			<then>
+				<execute macro="IFrame#selectCategoryFrame" />
+			</then>
+		</if>
+
+		<execute macro="Portlet#expandTree" />
+	</command>
+
 	<command name="removeTag">
 		<var name="key_tagName" value="${tagName}" />
 
@@ -77,20 +88,11 @@
 	</command>
 
 	<command name="selectCategory">
-		<execute function="SelectFrameTop" />
+		<execute macro="AssetCategorization#gotoSelectCategory" />
 
-		<if>
-			<condition function="IsElementPresent" locator1="IFrame#SELECT_CATEGORY" />
-			<then>
-				<execute macro="IFrame#selectCategoryFrame" />
-			</then>
-		</if>
-
-		<var name="key_categoryName" value="${categoryName}" />
-
-		<execute function="Click" locator1="AssetCategorization#CATEGORIES_CATEGORY_CHECKBOX" />
-
-		<execute function="AssertVisible" locator1="AssetCategorization#CATEGORIES_CATEGORY_CHECKBOX_CHECKED" />
+		<execute macro="Portlet#selectTreeNode">
+			<var name="nodeName" value="${categoryName}" />
+		</execute>
 
 		<execute function="SelectFrameTop" />
 

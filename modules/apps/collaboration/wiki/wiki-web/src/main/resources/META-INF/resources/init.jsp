@@ -85,6 +85,7 @@ page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.PrefsPropsUtil" %><%@
 page import="com.liferay.portal.kernel.util.PropsKeys" %><%@
 page import="com.liferay.portal.kernel.util.PropsUtil" %><%@
+page import="com.liferay.portal.kernel.util.ReflectionUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringBundler" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
@@ -127,7 +128,8 @@ page import="java.util.HashSet" %><%@
 page import="java.util.Iterator" %><%@
 page import="java.util.List" %><%@
 page import="java.util.Map" %><%@
-page import="java.util.Set" %>
+page import="java.util.Set" %><%@
+page import="java.util.function.Supplier" %>
 
 <%@ page import="javax.portlet.ActionRequest" %><%@
 page import="javax.portlet.PortletMode" %><%@

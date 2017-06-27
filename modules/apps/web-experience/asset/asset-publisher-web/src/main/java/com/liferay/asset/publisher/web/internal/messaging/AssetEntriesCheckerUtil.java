@@ -19,8 +19,8 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
-import com.liferay.asset.publisher.web.internal.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -28,9 +28,9 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.PortletInstance;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -76,7 +76,10 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Eudaldo Alonso
  */
-@Component(immediate = true, service = AssetEntriesCheckerUtil.class)
+@Component(
+	configurationPid = "com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration",
+	immediate = true, service = AssetEntriesCheckerUtil.class
+)
 @ProviderType
 public class AssetEntriesCheckerUtil {
 
@@ -92,12 +95,11 @@ public class AssetEntriesCheckerUtil {
 					Property property = PropertyFactoryUtil.forName(
 						"portletId");
 
-					PortletInstance portletInstance = new PortletInstance(
-						AssetPublisherPortletKeys.ASSET_PUBLISHER,
-						StringPool.PERCENT);
-
 					dynamicQuery.add(
-						property.like(portletInstance.getPortletInstanceKey()));
+						property.like(
+							PortletIdCodec.encode(
+								AssetPublisherPortletKeys.ASSET_PUBLISHER,
+								StringPool.PERCENT)));
 				}
 
 			});

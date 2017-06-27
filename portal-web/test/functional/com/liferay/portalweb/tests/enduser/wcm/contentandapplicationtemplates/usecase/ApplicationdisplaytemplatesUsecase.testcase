@@ -28,22 +28,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="User#logoutAndLoginPG">
-					<var name="userLoginEmailAddress" value="test@liferay.com" />
-					<var name="userLoginFullName" value="Test Test" />
-				</execute>
-
-				<execute macro="Site#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AddRSSADTViaPortletConfiguration" priority="5">
@@ -67,7 +54,8 @@
 		<execute macro="RSS#addFeed">
 			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Latimes > Technology News" />
-			<var name="feedUrlLink" value="http://www.latimes.com/business/technology/rss2.0.xml" />
+			<var name="feedType" value="file" />
+			<var name="feedUrlLink" value="rss2.0.xml" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />
@@ -129,7 +117,8 @@
 		<execute macro="RSS#addFeed">
 			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Latimes > Technology News" />
-			<var name="feedUrlLink" value="http://www.latimes.com/business/technology/rss2.0.xml" />
+			<var name="feedType" value="file" />
+			<var name="feedUrlLink" value="rss2.0.xml" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />
@@ -182,7 +171,8 @@
 		<execute macro="RSS#addFeed">
 			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Technology" />
-			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
+			<var name="feedType" value="file" />
+			<var name="feedUrlLink" value="Technology.xml" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />
@@ -260,7 +250,9 @@
 			<var name="siteName" value="Test Site Name" />
 		</execute>
 
-		<execute macro="AssetPublisherPortlet#configureFlagAllDisplaySettingsCheckboxes" />
+		<execute macro="AssetPublisherPortlet#configureDisplaySettings">
+			<var name="displaySettings" value="Comments,Comment Ratings,Enable Social Bookmarks,Flags,Print,Ratings,Related Assets" />
+		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
 			<var name="pageName" value="ADT Test Page" />

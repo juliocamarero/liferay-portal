@@ -83,7 +83,7 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -285,20 +285,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		DynamicActionRequest dynamicActionRequest = new DynamicActionRequest(
-			actionRequest);
-
-		long prefixId = getListTypeId(
-			actionRequest, "prefixValue", ListTypeConstants.CONTACT_PREFIX);
-
-		dynamicActionRequest.setParameter("prefixId", String.valueOf(prefixId));
-
-		long suffixId = getListTypeId(
-			actionRequest, "suffixValue", ListTypeConstants.CONTACT_SUFFIX);
-
-		dynamicActionRequest.setParameter("suffixId", String.valueOf(suffixId));
-
-		actionRequest = dynamicActionRequest;
+		actionRequest = _wrapActionRequest(actionRequest);
 
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
@@ -382,7 +369,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 						redirect, themeDisplay.getI18nPath(), i18nPath);
 				}
 
-				redirect = HttpUtil.setParameter(
+				redirect = http.setParameter(
 					redirect, actionResponse.getNamespace() + "p_u_i_d",
 					user.getUserId());
 			}
@@ -393,8 +380,8 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 				(userLocalService.fetchUserById(scopeGroup.getClassPK()) ==
 					null)) {
 
-				redirect = HttpUtil.setParameter(redirect, "doAsGroupId", 0);
-				redirect = HttpUtil.setParameter(redirect, "refererPlid", 0);
+				redirect = http.setParameter(redirect, "doAsGroupId", 0);
+				redirect = http.setParameter(redirect, "refererPlid", 0);
 			}
 
 			sendRedirect(actionRequest, actionResponse, redirect);
@@ -467,7 +454,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 					if (submittedPassword) {
 						User user = portal.getSelectedUser(actionRequest);
 
-						redirect = HttpUtil.setParameter(
+						redirect = http.setParameter(
 							redirect, actionResponse.getNamespace() + "p_u_i_d",
 							user.getUserId());
 					}
@@ -821,9 +808,31 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	@Reference
+	protected Http http;
+
+	@Reference
 	protected Portal portal;
 
 	protected UserLocalService userLocalService;
+
+	private ActionRequest _wrapActionRequest(ActionRequest actionRequest)
+		throws Exception {
+
+		DynamicActionRequest dynamicActionRequest = new DynamicActionRequest(
+			actionRequest);
+
+		long prefixId = getListTypeId(
+			actionRequest, "prefixValue", ListTypeConstants.CONTACT_PREFIX);
+
+		dynamicActionRequest.setParameter("prefixId", String.valueOf(prefixId));
+
+		long suffixId = getListTypeId(
+			actionRequest, "suffixValue", ListTypeConstants.CONTACT_SUFFIX);
+
+		dynamicActionRequest.setParameter("suffixId", String.valueOf(suffixId));
+
+		return dynamicActionRequest;
+	}
 
 	private AnnouncementsDeliveryLocalService
 		_announcementsDeliveryLocalService;

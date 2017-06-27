@@ -55,7 +55,7 @@ import java.nio.charset.Charset;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -824,7 +824,7 @@ public class HttpImpl implements Http {
 
 	@Override
 	public Map<String, String[]> parameterMapFromString(String queryString) {
-		Map<String, String[]> parameterMap = new HashMap<>();
+		Map<String, String[]> parameterMap = new LinkedHashMap<>();
 
 		if (Validator.isNull(queryString)) {
 			return parameterMap;

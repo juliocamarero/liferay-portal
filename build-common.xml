@@ -83,10 +83,9 @@
 	<taskdef classpathref="lib.classpath" resource="tasks.properties" />
 
 	<taskdef classname="com.liferay.ant.beanshell.BeanShellTask" classpathref="lib.classpath" name="beanshell" />
-	<taskdef classname="com.liferay.ant.bnd.BaselineJarTask" classpathref="lib.classpath" name="baseline-jar" />
-	<taskdef classname="com.liferay.ant.bnd.ReleaseToRepoTask" classpathref="lib.classpath" name="release-to-repo" />
 	<taskdef classname="com.liferay.ant.build.logger.LiferayBuildLoggerInstallerTask" classpath="${project.dir}/lib/development/com.liferay.ant.build.logger.jar" name="liferay-build-logger-installer" />
 	<taskdef classname="com.liferay.ant.mirrors.get.MirrorsGetTask" classpathref="lib.classpath" name="mirrors-get" />
+	<taskdef classname="com.liferay.ant.sync.dir.SyncDirTask" classpathref="lib.classpath" name="sync-dir" />
 
 	<liferay-build-logger-installer />
 
@@ -560,6 +559,7 @@ information.
 	</macrodef>
 
 	<macrodef name="gradle-execute">
+		<attribute default="false" name="checktask" />
 		<attribute default="${basedir}" name="dir" />
 		<attribute default="true" name="failonerror" />
 		<attribute default="true" name="forcedcacheenabled" />
@@ -568,6 +568,8 @@ information.
 		<element implicit="true" name="args" optional="true" />
 
 		<sequential>
+			<setup-binaries-cache unless:true="${setup.binaries.cache.executed}" />
+
 			<if>
 				<os family="unix" />
 				<then>
@@ -580,18 +582,54 @@ information.
 				</else>
 			</if>
 
-			<exec dir="@{dir}" executable="${project.dir}/gradlew${gradlew.suffix}" failonerror="@{failonerror}">
-				<args />
-				<arg value="--no-daemon" />
-				<arg value="--project-cache-dir=${project.dir}/.gradle" />
-				<arg value="--stacktrace" />
-				<arg value="-Dapp.server.parent.dir=${app.server.parent.dir}" />
-				<arg value="-Dforced.cache.enabled=@{forcedcacheenabled}" />
-				<arg value="-Dliferay.home=${liferay.home}" />
-				<arg value="@{task}" />
-				<env key="GRADLE_OPTS" value="${env.ANT_OPTS}" />
-				<redirector errorproperty="@{outputproperty}.error" outputproperty="@{outputproperty}" unless:blank="@{outputproperty}" />
-			</exec>
+			<local name="task.available" />
+
+			<if>
+				<equals arg1="@{checktask}" arg2="true" />
+				<then>
+					<local name="tasks.output" />
+
+					<exec dir="@{dir}" executable="${project.dir}/gradlew${gradlew.suffix}" failonerror="@{failonerror}">
+						<arg value="--no-daemon" />
+						<arg value="--project-cache-dir=${project.dir}/.gradle" />
+						<arg value="--stacktrace" />
+						<arg value="-Dapp.server.parent.dir=${app.server.parent.dir}" />
+						<arg value="-Dforced.cache.enabled=@{forcedcacheenabled}" />
+						<arg value="-Dliferay.home=${liferay.home}" />
+						<arg value="tasks" />
+						<arg value="--all" />
+						<env key="GRADLE_OPTS" value="${env.ANT_OPTS}" />
+						<redirector outputproperty="tasks.output" unless:blank="tasks.output" />
+					</exec>
+
+					<condition else="false" property="task.available" value="true">
+						<contains string="${tasks.output}" substring="@{task} -" />
+					</condition>
+				</then>
+			</if>
+
+			<property name="task.available" value="true" />
+
+			<if>
+				<equals arg1="${task.available}" arg2="true" />
+				<then>
+					<exec dir="@{dir}" executable="${project.dir}/gradlew${gradlew.suffix}" failonerror="@{failonerror}">
+						<args />
+						<arg value="--no-daemon" />
+						<arg value="--project-cache-dir=${project.dir}/.gradle" />
+						<arg value="--stacktrace" />
+						<arg value="-Dapp.server.parent.dir=${app.server.parent.dir}" />
+						<arg value="-Dforced.cache.enabled=@{forcedcacheenabled}" />
+						<arg value="-Dliferay.home=${liferay.home}" />
+						<arg value="@{task}" />
+						<env key="GRADLE_OPTS" value="${env.ANT_OPTS}" />
+						<redirector errorproperty="@{outputproperty}.error" outputproperty="@{outputproperty}" unless:blank="@{outputproperty}" />
+					</exec>
+				</then>
+				<else>
+					<echo>Skipped unavailable task: @{task}.</echo>
+				</else>
+			</if>
 		</sequential>
 	</macrodef>
 
@@ -672,6 +710,7 @@ information.
 				<sysproperty key="junit.code.coverage" value="${junit.code.coverage}" />
 				<sysproperty if:true="${jvm.debug}" key="jvm.debug" value="true" />
 				<sysproperty key="liferay.lib.portal.dir" value="${app.server.tomcat.lib.portal.dir}" />
+				<sysproperty key="liferay.temp.dir" value="${app.server.tomcat.temp.dir}" />
 				<sysproperty if:true="${aspectj.weaver.enabled}" key="org.aspectj.weaver.loadtime.configuration" value="${aspectj.configuration}" />
 				<sysproperty key="whip.agent" value="${whip.agent}" />
 				<sysproperty file="test-coverage/@{test.type}/whip.dat" key="whip.datafile" />
@@ -956,6 +995,39 @@ information.
 					<fail>Test class ${test.class} cannot be found.</fail>
 				</else>
 			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setup-binaries-cache">
+		<sequential>
+			<if>
+				<and>
+					<available file="${project.dir}/${build.binaries.cache.dir}" type="dir" />
+					<not>
+						<isset property="env.JENKINS_HOME" />
+					</not>
+				</and>
+				<then>
+					<exec dir="${project.dir}/${build.binaries.cache.dir}" executable="git" failonerror="true">
+						<arg value="pull" />
+						<arg value="--rebase" />
+					</exec>
+				</then>
+			</if>
+
+			<var name="gradle.build.binaries.cache.dir" value="${project.dir}/${build.binaries.cache.dir}/.gradle/caches/modules-2/files-2.1" />
+
+			<if>
+				<available file="${gradle.build.binaries.cache.dir}" type="dir" />
+				<then>
+					<sync-dir
+						dir="${gradle.build.binaries.cache.dir}"
+						toDir="${project.dir}/.gradle/caches/modules-2/files-2.1"
+					/>
+				</then>
+			</if>
+
+			<property name="setup.binaries.cache.executed" value="true" />
 		</sequential>
 	</macrodef>
 
@@ -1244,10 +1316,12 @@ rerun your task.
 					<propertyref name="liferay.releng.product.display.name" />
 					<propertyref name="liferay.releng.public" />
 					<propertyref name="liferay.releng.supported" />
+					<propertyref name="org.gradle.daemon" />
 					<propertyref name="release.versions.test.other.dir" />
 					<propertyref name="sass.compiler.class.name" />
 					<propertyref name="sass.generate.source.map" />
 					<propertyref name="sass.precision" />
+					<propertyref name="sdk.dir" />
 					<propertyref name="source.formatter.include.subrepositories" />
 					<propertyref name="source.formatter.max.line.length" />
 					<propertyref name="source.formatter.processor.thread.count" />

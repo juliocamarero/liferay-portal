@@ -101,6 +101,8 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 	public List<Bundle> deploy(BundleContext bundleContext, File lpkgFile)
 		throws IOException {
 
+		lpkgFile = lpkgFile.getCanonicalFile();
+
 		Path lpkgFilePath = lpkgFile.toPath();
 
 		if (!lpkgFilePath.startsWith(_deploymentDirPath)) {
@@ -153,6 +155,15 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 
 			lpkgBundle = bundleContext.installBundle(
 				location, toBundle(lpkgFile));
+
+			if (lpkgBundle.getState() == Bundle.UNINSTALLED) {
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						"Skipped deployment of outdated LPKG " + lpkgFile);
+				}
+
+				return bundles;
+			}
 
 			BundleStartLevel bundleStartLevel = lpkgBundle.adapt(
 				BundleStartLevel.class);
@@ -286,11 +297,14 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 	private Path _getDeploymentDirPath(BundleContext bundleContext)
 		throws IOException {
 
-		String deploymentDir = GetterUtil.getString(
-			bundleContext.getProperty("lpkg.deployer.dir"),
-			PropsValues.MODULE_FRAMEWORK_MARKETPLACE_DIR);
+		File deploymentDir = new File(
+			GetterUtil.getString(
+				bundleContext.getProperty("lpkg.deployer.dir"),
+				PropsValues.MODULE_FRAMEWORK_MARKETPLACE_DIR));
 
-		Path deploymentDirPath = Paths.get(deploymentDir);
+		deploymentDir = deploymentDir.getCanonicalFile();
+
+		Path deploymentDirPath = deploymentDir.toPath();
 
 		Files.createDirectories(deploymentDirPath);
 

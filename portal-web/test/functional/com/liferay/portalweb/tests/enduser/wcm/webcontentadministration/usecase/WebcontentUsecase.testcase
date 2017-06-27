@@ -12,29 +12,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="User#firstLoginPG" />
-
-				<execute macro="WebContent#tearDownCP" />
-
-				<execute macro="WebContentTemplates#tearDownCP" />
-
-				<execute macro="WebContentStructures#tearDownCP" />
-
-				<execute macro="WebContentStructures#tearDownCP">
-					<var name="siteScopeName" value="${globalSiteName}" />
-				</execute>
-
-				<execute macro="Page#tearDownPG" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AddAndViewStructureAndTemplateWithPermissions" priority="4">
@@ -270,23 +250,6 @@
 		<property name="custom.properties" value="editor.wysiwyg.portal-impl.portlet.ddm.text_html.ftl=ckeditor" />
 		<property name="test.name.skip.portal.instance" value="WebcontentUsecase#AddAudioViaWebContent" />
 		<property name="testray.component.names" value="Web Content Administration" />
-
-		<execute macro="ProductMenu#gotoControlPanelConfiguration">
-			<var name="portlet" value="Server Administration" />
-		</execute>
-
-		<execute macro="ServerAdministration#configureExternalServices">
-			<var name="installXuggler" value="true" />
-			<var name="xugglerJarFile" value="Linux 32-bit JVM (with GNU libc v6) (xuggle-xuggler-arch-i686-pc-linux-gnu.jar)" />
-		</execute>
-
-		<execute macro="Portlet#shutdownServer" />
-
-		<execute macro="Portlet#startServer" />
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="User#firstLoginPG" />
 
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Server Administration" />
@@ -587,9 +550,8 @@
 			<var name="siteName" value="Blank Site Name" />
 		</execute>
 
-		<execute macro="AssetPublisherPortlet#configureFlaggableDisplaySettingsPG">
-			<var name="portletName" value="Asset Publisher" />
-			<var name="setAsDefaultPage" value="true" />
+		<execute macro="AssetPublisherPortlet#configureDisplaySettings">
+			<var name="displaySettings" value="Set as the Default Asset Publisher for This Page" />
 		</execute>
 
 		<execute macro="Navigator#openSiteURL">
@@ -698,23 +660,6 @@
 		<property name="custom.properties" value="editor.wysiwyg.portal-impl.portlet.ddm.text_html.ftl=ckeditor" />
 		<property name="test.name.skip.portal.instance" value="WebcontentUsecase#AddVideoViaWebContent" />
 		<property name="testray.component.names" value="Web Content Administration" />
-
-		<execute macro="ProductMenu#gotoControlPanelConfiguration">
-			<var name="portlet" value="Server Administration" />
-		</execute>
-
-		<execute macro="ServerAdministration#configureExternalServices">
-			<var name="installXuggler" value="true" />
-			<var name="xugglerJarFile" value="Linux 32-bit JVM (with GNU libc v6) (xuggle-xuggler-arch-i686-pc-linux-gnu.jar)" />
-		</execute>
-
-		<execute macro="Portlet#shutdownServer" />
-
-		<execute macro="Portlet#startServer" />
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="User#firstLoginPG" />
 
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Server Administration" />

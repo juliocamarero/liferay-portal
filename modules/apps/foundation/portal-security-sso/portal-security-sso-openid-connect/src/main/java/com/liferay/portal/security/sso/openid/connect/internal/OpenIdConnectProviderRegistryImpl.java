@@ -16,9 +16,10 @@ package com.liferay.portal.security.sso.openid.connect.internal;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectMetadataFactory;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
-import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderMetadataFactory;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
+import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.configuration.OpenIdConnectProviderConfiguration;
 
 import java.net.URL;
@@ -49,6 +50,21 @@ public class OpenIdConnectProviderRegistryImpl
 	@Override
 	public void deleted(String factoryPid) {
 		removeOpenConnectIdProvider(factoryPid);
+	}
+
+	@Override
+	public OpenIdConnectProvider findOpenIdConnectProvider(String name)
+		throws OpenIdConnectServiceException.ProviderException {
+
+		OpenIdConnectProvider openIdConnectProvider = getOpenIdConnectProvider(
+			name);
+
+		if (openIdConnectProvider == null) {
+			throw new OpenIdConnectServiceException.ProviderException(
+				"Unable to get OpenId Connect provider with name " + name);
+		}
+
+		return openIdConnectProvider;
 	}
 
 	@Override
@@ -106,15 +122,14 @@ public class OpenIdConnectProviderRegistryImpl
 				openIdConnectProviderConfiguration)
 		throws ConfigurationException {
 
-		OpenIdConnectProviderMetadataFactory
-			openIdConnectProviderMetadataFactory = null;
+		OpenIdConnectMetadataFactory openIdConnectMetadataFactory = null;
 
 		try {
 			if (Validator.isNotNull(
 					openIdConnectProviderConfiguration.discoveryEndPoint())) {
 
-				openIdConnectProviderMetadataFactory =
-					new OpenIdConnectProviderMetadataFactoryImpl(
+				openIdConnectMetadataFactory =
+					new OpenIdConnectMetadataFactoryImpl(
 						openIdConnectProviderConfiguration.providerName(),
 						new URL(
 							openIdConnectProviderConfiguration.
@@ -123,8 +138,8 @@ public class OpenIdConnectProviderRegistryImpl
 							discoveryEndPointCacheInMillis());
 			}
 			else {
-				openIdConnectProviderMetadataFactory =
-					new OpenIdConnectProviderMetadataFactoryImpl(
+				openIdConnectMetadataFactory =
+					new OpenIdConnectMetadataFactoryImpl(
 						openIdConnectProviderConfiguration.providerName(),
 						openIdConnectProviderConfiguration.issuerURL(),
 						openIdConnectProviderConfiguration.subjectTypes(),
@@ -148,7 +163,7 @@ public class OpenIdConnectProviderRegistryImpl
 			openIdConnectProviderConfiguration.openIdConnectClientId(),
 			openIdConnectProviderConfiguration.openIdConnectClientSecret(),
 			openIdConnectProviderConfiguration.scopes(),
-			openIdConnectProviderMetadataFactory);
+			openIdConnectMetadataFactory);
 
 		return openIdConnectProvider;
 	}

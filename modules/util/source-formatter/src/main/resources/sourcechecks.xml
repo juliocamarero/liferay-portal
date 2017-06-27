@@ -17,7 +17,7 @@
 
 		<!-- Module checks -->
 
-		<check name="BNDBundleNameCheck" />
+		<check name="BNDBundleInformationCheck" />
 		<check name="BNDDirectoryNameCheck" />
 		<check name="BNDExportsCheck" />
 		<check name="BNDIncludeResourceCheck" />
@@ -37,6 +37,7 @@
 	</source-processor>
 	<source-processor name="GradleSourceProcessor">
 		<check name="GradleDependenciesCheck" />
+		<check name="GradleImportsCheck" />
 		<check name="GradleVersionCheck" />
 		<check name="WhitespaceCheck" />
 	</source-processor>
@@ -47,15 +48,17 @@
 		<check name="CopyrightCheck">
 			<property name="copyrightFileName" value="copyright.txt" />
 		</check>
-		<check name="EmptyArrayCheck" />
+		<check name="ArrayCheck" />
 		<check name="EmptyCollectionCheck" />
 		<check name="GetterUtilCheck" />
 		<check name="Java2HTMLCheck" />
+		<check name="JavaAggregateTestRuleParameterOrder" />
 		<check name="JavaAnnotationsCheck" />
 		<check name="JavaAssertEqualsCheck" />
 		<check name="JavaBooleanStatementCheck" />
 		<check name="JavaBooleanUsageCheck" />
 		<check name="JavaCombineLinesCheck" />
+		<check name="JavaConfigurationAdminCheck" />
 		<check name="JavaConstructorParameterOrder" />
 		<check name="JavaConstructorSuperCallCheck" />
 		<check name="JavaDataAccessConnectionCheck" />
@@ -78,6 +81,7 @@
 		<check name="JavaLongLinesCheck" />
 		<check name="JavaPackagePathCheck" />
 		<check name="JavaProcessCallableCheck" />
+		<check name="JavaProviderTypeAnnotationCheck" />
 		<check name="JavaRedundantConstructorCheck" />
 		<check name="JavaResultSetCheck" />
 		<check name="JavaReturnStatementCheck" />
@@ -109,8 +113,11 @@
 		</check>
 		<check name="JavaModuleInternalImportsCheck" />
 		<check name="JavaModuleServiceProxyFactoryCheck" />
+		<check name="JavaModuleServiceReferenceCheck" />
 		<check name="JavaModuleTestCheck" />
-		<check name="JavaOSGiReferenceCheck" />
+		<check name="JavaOSGiReferenceCheck">
+			<property name="serviceReferenceUtilClassNames" value="com.liferay.exportimport.kernel.staging.StagingUtil,com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil,com.liferay.portal.kernel.backgroundtask.display.BackgroundTaskDisplayFactoryUtil,com.liferay.portal.kernel.captcha.CaptchaUtil,com.liferay.portal.kernel.comment.CommentManagerUtil,com.liferay.portal.kernel.util.HttpUtil,com.liferay.portal.kernel.util.PortalUtil" />
+		</check>
 
 		<!-- Plugins checks -->
 
@@ -142,7 +149,7 @@
 		<check name="CopyrightCheck">
 			<property name="copyrightFileName" value="copyright.txt" />
 		</check>
-		<check name="EmptyArrayCheck" />
+		<check name="ArrayCheck" />
 		<check name="EmptyCollectionCheck" />
 		<check name="GetterUtilCheck" />
 		<check name="JSPButtonTagCheck" />
@@ -154,6 +161,7 @@
 		<check name="JSPIncludeCheck" />
 		<check name="JSPIndentationCheck" />
 		<check name="JSPLanguageUtilCheck" />
+		<check name="JSPLineBreakCheck" />
 		<check name="JSPLogFileNameCheck" />
 		<check name="JSPRedirectBackURLCheck" />
 		<check name="JSPSendRedirectCheck" />
@@ -196,6 +204,8 @@
 		<check name="LanguageKeysCheck" />
 	</source-processor>
 	<source-processor name="MarkdownSourceProcessor">
+		<check name="MarkdownFileExtensionCheck" />
+		<check name="MarkdownStylingCheck" />
 		<check name="WhitespaceCheck">
 			<property name="allowLeadingSpaces" value="true" />
 		</check>
@@ -230,6 +240,7 @@
 		<check name="XMLCustomSQLFileCheck" />
 		<check name="XMLDDLStructuresFileCheck" />
 		<check name="XMLFriendlyURLRoutesFileCheck" />
+		<check name="XMLFSBExcludeFileCheck" />
 		<check name="XMLHBMFileCheck" />
 		<check name="XMLLog4jFileCheck" />
 		<check name="XMLLookAndFeelFileCheck" />
@@ -252,5 +263,11 @@
 		<check name="XMLTestIgnorableErrorLinesFileCheck" />
 		<check name="XMLTilesDefsFileCheck" />
 		<check name="XMLWebFileCheck" />
+	</source-processor>
+	<source-processor name="YMLSourceProcessor">
+		<check name="WhitespaceCheck">
+			<property name="allowLeadingSpaces" value="true" />
+		</check>
+		<check name="YMLDefintionOrderCheck" />
 	</source-processor>
 </source-formatter>

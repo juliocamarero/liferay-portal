@@ -23,15 +23,18 @@ public class PropertiesSourceProcessor extends BaseSourceProcessor {
 
 	@Override
 	protected List<String> doGetFileNames() throws Exception {
-		return getFileNames(new String[0], getIncludes());
+		return getFileNames(new String[] {"**/docroot/dtd/**"}, getIncludes());
 	}
 
 	@Override
 	protected String[] doGetIncludes() {
-		if (portalSource) {
+		if (portalSource || subrepository) {
 			return new String[] {
-				"**/lib/*/dependencies.properties",
-				"**/liferay-plugin-package.properties", "**/portal.properties",
+				"**/app-server.properties", "**/ci.properties",
+				"**/lib/*/dependencies.properties", "**/framework.properties",
+				"**/gradle-wrapper.properties", "**/imported-files.properties",
+				"**/Language*.properties",
+				"**/liferay-plugin-package*.properties", "**/portal.properties",
 				"**/portal-ext.properties", "**/portal-legacy-*.properties",
 				"**/portlet.properties", "**/source-formatter.properties",
 				"**/test.properties"

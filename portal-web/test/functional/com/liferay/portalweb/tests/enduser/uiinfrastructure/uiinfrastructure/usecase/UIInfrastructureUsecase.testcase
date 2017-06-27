@@ -10,17 +10,14 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
-	<command description="Ensure that a user can access portlet options and drag and drop portlets." name="Smoke" priority="5">
+	<command name="Smoke" priority="5">
+		<description message="Ensure that a user can access portlet options and drag and drop portlets." />
+
 		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Page#add">

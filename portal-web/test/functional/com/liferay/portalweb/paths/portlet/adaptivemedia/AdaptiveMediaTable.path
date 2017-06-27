@@ -35,7 +35,7 @@
 </tr>
 <tr>
 	<td>PROGRESS</td>
-	<td>//td[contains(.,'${key_imageName}')]/../..//div[contains(@class,'progress')]/div[@aria-valuenow='${key_percentOptimized}']</td>
+	<td>//td[contains(.,'${key_imageName}')]/../..//div[contains(@class,'progress')]/div[@aria-valuenow='${key_percentAdapted}']</td>
 	<td></td>
 </tr>
 <tr>
@@ -55,8 +55,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>IMAGE_INFO_DETAILS_OPTIMIZED_IMAGES</td>
-	<td>//dl[contains(@class,'sidebar-block')]/dt[contains(.,'Optimized Images')]/following-sibling::dd[contains(.,'${key_numberOfOptimizedImages}')]</td>
+	<td>IMAGE_INFO_DETAILS_ADAPTED_IMAGES</td>
+	<td>//dl[contains(@class,'sidebar-block')]/dt[contains(.,'Adapted Images')]/following-sibling::dd[contains(.,'${key_numberOfAdaptedImages}')]</td>
 	<td></td>
 </tr>
 <tr>

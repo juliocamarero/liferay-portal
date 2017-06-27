@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -42,6 +41,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.lang.reflect.Field;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -100,19 +100,18 @@ public class SPAUtil {
 
 		sb.append(StringPool.OPEN_CURLY_BRACE);
 
-		List<Portlet> companyPortlets = _portletLocalService.getPortlets(
-			themeDisplay.getCompanyId());
+		_portletLocalService.visitPortlets(
+			themeDisplay.getCompanyId(),
+			portlet -> {
+				if (!portlet.isSinglePageApplication() &&
+					!portlet.isUndeployedPortlet() && portlet.isActive() &&
+					portlet.isReady()) {
 
-		for (Portlet portlet : companyPortlets) {
-			if (!portlet.isSinglePageApplication() &&
-				!portlet.isUndeployedPortlet() && portlet.isActive() &&
-				portlet.isReady()) {
-
-				sb.append(StringPool.QUOTE);
-				sb.append(portlet.getPortletId());
-				sb.append("\":true,");
-			}
-		}
+					sb.append(StringPool.QUOTE);
+					sb.append(portlet.getPortletId());
+					sb.append("\":true,");
+				}
+			});
 
 		if (sb.index() == 1) {
 			sb.append(StringPool.CLOSE_CURLY_BRACE);
@@ -180,8 +179,9 @@ public class SPAUtil {
 
 		_spaConfiguration = spaConfiguration;
 
-		_navigationExceptionSelectors.addAll(
-			Arrays.asList(_spaConfiguration.navigationExceptionSelectors()));
+		Collections.addAll(
+			_navigationExceptionSelectors,
+			_spaConfiguration.navigationExceptionSelectors());
 
 		_navigationExceptionSelectorsString = ListUtil.toString(
 			_navigationExceptionSelectors, (String)null, StringPool.BLANK);
@@ -211,8 +211,9 @@ public class SPAUtil {
 
 		_spaConfiguration = spaConfiguration;
 
-		_navigationExceptionSelectors.addAll(
-			Arrays.asList(_spaConfiguration.navigationExceptionSelectors()));
+		Collections.addAll(
+			_navigationExceptionSelectors,
+			_spaConfiguration.navigationExceptionSelectors());
 
 		_navigationExceptionSelectorsString = ListUtil.toString(
 			_navigationExceptionSelectors, (String)null, StringPool.BLANK);
@@ -274,7 +275,7 @@ public class SPAUtil {
 			SPAConfigurationUtil.get("spa.excluded.paths"));
 
 		for (String excludedPath : excludedPaths) {
-			jsonArray.put(excludedPath);
+			jsonArray.put(PortalUtil.getPathContext() + excludedPath);
 		}
 
 		_spaExcludedPaths = jsonArray.toString();

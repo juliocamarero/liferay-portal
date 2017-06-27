@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.PwdGenerator;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
@@ -64,8 +65,20 @@ public class OpenIdConnectUserInfoProcessorImpl
 		if (Validator.isNull(firstName) || Validator.isNull(lastName) ||
 			Validator.isNull(emailAddress)) {
 
-			throw new OpenIdConnectServiceException.UserInfoMissingException(
-				"User information has missing fields");
+			StringBundler sb = new StringBundler(9);
+
+			sb.append("Unable to map OpenId Connect user to the portal, ");
+			sb.append("missing or invalid profile information: ");
+			sb.append("{emailAddresss=");
+			sb.append(emailAddress);
+			sb.append(", firstName=");
+			sb.append(firstName);
+			sb.append(", lastName=");
+			sb.append(lastName);
+			sb.append("}");
+
+			throw new OpenIdConnectServiceException.UserMappingException(
+				sb.toString());
 		}
 
 		long creatorUserId = 0;

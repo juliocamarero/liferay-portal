@@ -7,10 +7,18 @@
 	inputEditorName = "${namespacedFieldName}Editor"
 
 	fieldValue = paramUtil.getString(request, "${inputEditorName}", fieldValue)
+
+	toolbarSet = "liferay"
 />
 
 <#if editorName?starts_with("alloyeditor")>
 	<#assign cssClass = "form-control" />
+</#if>
+
+<#if editorName?ends_with("bbcode")>
+	<#assign toolbarSet = "bbcode" />
+<#elseif editorName?ends_with("creole")>
+	<#assign toolbarSet = "creole" />
 </#if>
 
 <@liferay_aui["field-wrapper"] cssClass="field-wrapper-html form-builder-field" data=data helpMessage=escape(fieldStructure.tip) label=escape(label) name=inputEditorName required=required>
@@ -26,6 +34,7 @@
 			name="${namespacedFieldName}Editor"
 			onChangeMethod="${namespacedFieldName}OnChangeEditor"
 			skipEditorLoading=skipEditorLoading
+			toolbarSet="${toolbarSet}"
 		/>
 
 		<@liferay_aui.input name=namespacedFieldName type="hidden" value=fieldValue>

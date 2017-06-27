@@ -19,17 +19,27 @@ import com.liferay.dynamic.data.mapping.annotations.DDMFormField;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
+import com.liferay.portal.json.JSONFactoryImpl;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Arrays;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Marcellus Tavares
  */
 public class DDMFormInstanceFactoryTest {
+
+	@Before
+	public void setUp() {
+		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
+
+		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
+	}
 
 	@Test
 	public void testCreateDynamicFormWithFieldSet() {
@@ -311,9 +321,8 @@ public class DDMFormInstanceFactoryTest {
 		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
 			ddmForm);
 
-		String[][] expectedParameters = {
-			{"Parameter 1", "Value 1"}, {"Parameter 2", "Value 2"}
-		};
+		String[][] expectedParameters =
+			{{"Parameter 1", "Value 1"}, {"Parameter 2", "Value 2"}};
 
 		for (int i = 0; i < expectedParameters.length; i++) {
 			DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
@@ -343,6 +352,37 @@ public class DDMFormInstanceFactoryTest {
 			Assert.assertEquals(expectedParameters[i][0], parameter.name());
 			Assert.assertEquals(expectedParameters[i][1], parameter.value());
 		}
+	}
+
+	@Test
+	public void testCreateDynamicFormWithSelectFields() {
+		com.liferay.dynamic.data.mapping.model.DDMForm ddmForm =
+			DDMFormFactory.create(DynamicFormWithSelectFields.class);
+
+		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
+			ddmForm);
+
+		ddmFormValues.addDDMFormFieldValue(
+			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
+				"letters", "[\"b\", \"c\"]"));
+
+		ddmFormValues.addDDMFormFieldValue(
+			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
+				"letters", "[\"c\"]"));
+
+		DynamicFormWithSelectFields dynamicFormWithSelectFields =
+			DDMFormInstanceFactory.create(
+				DynamicFormWithSelectFields.class, ddmFormValues);
+
+		String[] actualLetters = dynamicFormWithSelectFields.letters();
+
+		Assert.assertEquals(
+			Arrays.toString(actualLetters), 2, actualLetters.length);
+
+		Assert.assertEquals("b,c", actualLetters[0]);
+		Assert.assertEquals("c", actualLetters[1]);
+
+		Assert.assertEquals("b", dynamicFormWithSelectFields.letter());
 	}
 
 	@Test
@@ -614,6 +654,23 @@ public class DDMFormInstanceFactoryTest {
 
 		@DDMFormField
 		public DynamicFormWithPrimitiveArrayTypes[] primitiveArrayTypes();
+
+	}
+
+	@DDMForm
+	private interface DynamicFormWithSelectFields {
+
+		@DDMFormField(
+			optionLabels = {"A", "B", "C"}, optionValues = {"a", "b", "c"},
+			predefinedValue = "[\"b\"]", type = "select"
+		)
+		public String letter();
+
+		@DDMFormField(
+			optionLabels = {"A", "B", "C"}, optionValues = {"a", "b", "c"},
+			type = "select"
+		)
+		public String[] letters();
 
 	}
 

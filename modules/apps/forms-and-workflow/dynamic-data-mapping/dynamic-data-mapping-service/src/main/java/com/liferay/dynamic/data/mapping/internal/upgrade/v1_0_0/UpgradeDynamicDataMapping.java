@@ -1580,9 +1580,8 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 	private static final String _CLASS_NAME_DDM_TEMPLATE =
 		"com.liferay.dynamic.data.mapping.model.DDMTemplate";
 
-	private static final String[] _DLFOLDER_GROUP_PERMISSIONS = {
-		"ADD_DOCUMENT", "ADD_SHORTCUT", "ADD_SUBFOLDER", "SUBSCRIBE", "VIEW"
-	};
+	private static final String[] _DLFOLDER_GROUP_PERMISSIONS =
+		{"ADD_DOCUMENT", "ADD_SHORTCUT", "ADD_SUBFOLDER", "SUBSCRIBE", "VIEW"};
 
 	private static final String[] _DLFOLDER_GUEST_PERMISSIONS = {"VIEW"};
 
@@ -1842,18 +1841,20 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				Element fieldsDisplayDynamicContent =
 					fieldsDisplayElement.element("dynamic-content");
 
-				String fieldsDisplayText =
-					fieldsDisplayDynamicContent.getText();
+				if (fieldsDisplayDynamicContent != null) {
+					String fieldsDisplayText =
+						fieldsDisplayDynamicContent.getText();
 
-				for (String fieldDisplayValue :
-						StringUtil.split(fieldsDisplayText)) {
+					for (String fieldDisplayValue :
+							StringUtil.split(fieldsDisplayText)) {
 
-					if (extractFieldName) {
-						fieldDisplayValue = StringUtil.extractFirst(
-							fieldDisplayValue, DDMImpl.INSTANCE_SEPARATOR);
+						if (extractFieldName) {
+							fieldDisplayValue = StringUtil.extractFirst(
+								fieldDisplayValue, DDMImpl.INSTANCE_SEPARATOR);
+						}
+
+						ddmFieldsDisplayValues.add(fieldDisplayValue);
 					}
-
-					ddmFieldsDisplayValues.add(fieldDisplayValue);
 				}
 			}
 

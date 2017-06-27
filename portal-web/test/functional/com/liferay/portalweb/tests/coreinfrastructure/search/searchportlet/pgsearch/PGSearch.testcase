@@ -17,31 +17,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="BlogsEntry#tearDownCP" />
-
-				<execute macro="MessageboardsThread#tearDownCP" />
-
-				<execute macro="User#tearDownCP" />
-
-				<execute macro="WebContent#tearDownCP" />
-
-				<execute macro="WikiPage#tearDownCP" />
-
-				<execute macro="Vocabulary#tearDownCP" />
-
-				<execute macro="Tag#tearDownCP" />
-
-				<execute macro="Page#tearDownPG" />
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="SearchBlogsEntry" priority="4">
@@ -703,7 +681,9 @@
 		</execute>
 	</command>
 
-	<command name="SearchDocumentsAndMediaDocument" priority="4">
+	<command name="SearchDocumentsAndMediaDocument" priority="5">
+		<property name="testray.component.names" value="Training" />
+
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -715,6 +695,7 @@
 			<var name="dmDocumentFile" value="Document_1.txt" />
 			<var name="dmDocumentSize" value="0k" />
 			<var name="dmDocumentTitle" value="DM Document Title" />
+			<var name="tagNameList" value="moon rocks" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -777,6 +758,24 @@
 
 		<execute macro="Search#searchPG">
 			<var name="searchTerm" value="Document Title" />
+		</execute>
+
+		<execute macro="Search#viewSearchResultPG">
+			<var name="searchAssetTitle" value="DM Document Title" />
+			<var name="searchAssetType" value="Document" />
+		</execute>
+
+		<execute macro="Search#searchPG">
+			<var name="searchTerm" value="moon rocks" />
+		</execute>
+
+		<execute macro="Search#viewSearchResultPG">
+			<var name="searchAssetTitle" value="DM Document Title" />
+			<var name="searchAssetType" value="Document" />
+		</execute>
+
+		<execute macro="Search#addTagFacet">
+			<var name="tagName" value="moon rocks" />
 		</execute>
 
 		<execute macro="Search#viewSearchResultPG">

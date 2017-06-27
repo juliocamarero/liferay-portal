@@ -212,6 +212,7 @@ jdbc.default.password=${database.password}
 
 // HikariCP
 
+jdbc.default.connectionTimeout=600000
 jdbc.default.maximumPoolSize=20
 jdbc.default.minimumIdle=0
 
@@ -1396,6 +1397,8 @@ war.path=${app.server.weblogic.portal.dir}/</echo>
 		<attribute name="task" />
 
 		<sequential>
+			<update-gradle-properties />
+
 			<if>
 				<equals arg1="${test.poshi.runner.local.release}" arg2="true" />
 				<then>
@@ -1454,6 +1457,28 @@ war.path=${app.server.weblogic.portal.dir}/</echo>
 								<include name="*.sh" />
 							</fileset>
 						</chmod>
+
+						<local name="jmx.remote.port.overwrite" />
+
+						<math
+							datatype="int"
+							operand1="${app.server.bundle.index}"
+							operand2="${jmx.remote.port}"
+							operation="+"
+							result="jmx.remote.port.overwrite"
+						/>
+
+						<replace
+							file="${test.app.server.bin.dir}/setenv.sh"
+							token="-Dcom.sun.management.jmxremote.port=${jmx.remote.port}"
+							value="-Dcom.sun.management.jmxremote.port=${jmx.remote.port.overwrite}"
+						/>
+
+						<replace
+							file="${test.app.server.bin.dir}/setenv.bat"
+							token="-Dcom.sun.management.jmxremote.port=${jmx.remote.port}"
+							value="-Dcom.sun.management.jmxremote.port=${jmx.remote.port.overwrite}"
+						/>
 
 						<replaceregexp
 							file="${test.app.server.dir}/conf/server.xml"
@@ -2102,14 +2127,12 @@ tell application "Safari" to quit
 						</then>
 						<else>
 							<ant antfile="build-dist.xml" inheritAll="false" target="build-dist-tomcat" />
-
-							<setup-testable-tomcat />
 						</else>
 					</if>
 				</else>
 			</if>
 
-			<prepare-tomcat-setenv />
+			<setup-testable-tomcat />
 
 			<antcall inheritAll="false" target="prepare-test-build-tomcat-dependents" />
 
@@ -2254,9 +2277,26 @@ tell application "Safari" to quit
 		</sequential>
 	</macrodef>
 
-	<macrodef name="prepare-tomcat-setenv">
+	<macrodef name="prepare-test-ext-properties">
 		<sequential>
-			<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}" token="${app.server.tomcat.setenv.gc.old}" value="${app.server.tomcat.setenv.gc.new}" />
+			<if>
+				<equals arg1="${app.server.type}" arg2="tcserver" />
+				<then>
+					<replace file="${app.server.tcserver.dir}/liferay/conf/catalina.properties">
+						<replacetoken><![CDATA[common.loader=${catalina.base}/lib,${catalina.base}/lib/*.jar,${catalina.home}/lib,${catalina.home}/lib/*.jar]]></replacetoken>
+						<replacevalue><![CDATA[common.loader=${catalina.base}/lib,${catalina.base}/lib/*.jar,${catalina.home}/lib,${catalina.home}/lib/*.jar,${catalina.home}/lib/ext/global,${catalina.home}/lib/ext/global/*.jar,${catalina.home}/lib/ext,${catalina.home}/lib/ext/*.jar]]></replacevalue>
+					</replace>
+				</then>
+				<elseif>
+					<equals arg1="${app.server.type}" arg2="tomcat" />
+					<then>
+						<replace file="${app.server.tomcat.dir}/conf/catalina.properties">
+							<replacetoken><![CDATA[common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"]]></replacetoken>
+							<replacevalue><![CDATA[common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar","${catalina.home}/lib/ext/global","${catalina.home}/lib/ext/global/*.jar","${catalina.home}/lib/ext","${catalina.home}/lib/ext/*.jar"]]></replacevalue>
+						</replace>
+					</then>
+				</elseif>
+			</if>
 		</sequential>
 	</macrodef>
 
@@ -2691,7 +2731,7 @@ ${tomcat-gc-log}
 									<unzip dest="${tstamp.value}" src="${war.path}">
 										<flattenmapper />
 										<patternset>
-											<include name="WEB-INF/src/dfc.properties" />
+											<include name="WEB-INF/classes/dfc.properties" />
 										</patternset>
 									</unzip>
 
@@ -2700,7 +2740,7 @@ ${tomcat-gc-log}
 									</propertyfile>
 
 									<war destfile="${war.path}" update="true">
-										<zipfileset file="${tstamp.value}/dfc.properties" fullpath="WEB-INF/src/dfc.properties" />
+										<zipfileset file="${tstamp.value}/dfc.properties" fullpath="WEB-INF/classes/dfc.properties" />
 									</war>
 
 									<delete file="${tstamp.value}/dfc.properties" />
@@ -2937,9 +2977,11 @@ go</echo>
 				</elseif>
 				<elseif>
 					<or>
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.0" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.1" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.2" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.3" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.4" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.1" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.2" />
 						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.3" />
@@ -2984,15 +3026,11 @@ go</echo>
 		<sequential>
 			<setup-testable-tomcat-logging />
 
-			<setup-testable-tomcat-aspectj-agent />
-
-			<setup-testable-tomcat-jmx />
-
-			<setup-testable-tomcat-jpda-address />
-
 			<setup-testable-tomcat-manager />
 
 			<setup-testable-tomcat-osgi-modules />
+
+			<setup-testable-tomcat-setenv />
 		</sequential>
 	</macrodef>
 
@@ -3006,6 +3044,77 @@ go</echo>
 					<echo append="true" file="${app.server.tomcat.dir}/bin/setenv.sh">
 						<![CDATA[
 							CATALINA_OPTS="${CATALINA_OPTS} ${aspectj.agent} -Dorg.aspectj.weaver.loadtime.configuration=${aspectj.configuration}"
+						]]>
+					</echo>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setup-testable-tomcat-gc">
+		<sequential>
+			<if>
+				<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.bat" substring="${app.server.tomcat.setenv.gc.old}" />
+				<then>
+					<replace file="${app.server.tomcat.dir}/bin/setenv.bat" token="${app.server.tomcat.setenv.gc.old}" value="${app.server.tomcat.setenv.gc.new}" />
+				</then>
+				<else>
+					<if>
+						<not>
+							<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.bat" substring="${app.server.tomcat.setenv.gc.new}" />
+						</not>
+						<then>
+							<fail message="Unable to setup tomcat gc properties for ${app.server.tomcat.dir}/bin/setenv.bat" />
+						</then>
+					</if>
+				</else>
+			</if>
+
+			<if>
+				<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.sh" substring="${app.server.tomcat.setenv.gc.old}" />
+				<then>
+					<replace file="${app.server.tomcat.dir}/bin/setenv.sh" token="${app.server.tomcat.setenv.gc.old}" value="${app.server.tomcat.setenv.gc.new}" />
+				</then>
+				<else>
+					<if>
+						<not>
+							<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.sh" substring="${app.server.tomcat.setenv.gc.new}" />
+						</not>
+						<then>
+							<fail message="Unable to setup tomcat gc properties for ${app.server.tomcat.dir}/bin/setenv.sh" />
+						</then>
+					</if>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setup-testable-tomcat-heap-dump-on-oom">
+		<sequential>
+			<local name="heap.dump.on.oom" />
+
+			<property name="heap.dump.on.oom" value="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${app.server.tomcat.setenv.heap.dump.path}" />
+
+			<if>
+				<not>
+					<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.bat" substring="${heap.dump.on.oom}" />
+				</not>
+				<then>
+					<echo append="true" file="${app.server.tomcat.dir}/bin/setenv.bat">
+						<![CDATA[
+							set "CATALINA_OPTS=%CATALINA_OPTS% ${heap.dump.on.oom}"
+						]]>
+					</echo>
+				</then>
+			</if>
+			<if>
+				<not>
+					<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.sh" substring="${heap.dump.on.oom}" />
+				</not>
+				<then>
+					<echo append="true" file="${app.server.tomcat.dir}/bin/setenv.sh">
+						<![CDATA[
+							CATALINA_OPTS="${CATALINA_OPTS} ${heap.dump.on.oom}"
 						]]>
 					</echo>
 				</then>
@@ -3216,6 +3325,55 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 		</sequential>
 	</macrodef>
 
+	<macrodef name="setup-testable-tomcat-print-final-flags">
+		<sequential>
+			<local name="print.final.flags" />
+
+			<property name="print.final.flags" value="-XX:+PrintFlagsFinal" />
+
+			<if>
+				<not>
+					<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.bat" substring="${print.final.flags}" />
+				</not>
+				<then>
+					<echo append="true" file="${app.server.tomcat.dir}/bin/setenv.bat">
+						<![CDATA[
+							set "CATALINA_OPTS=%CATALINA_OPTS% ${print.final.flags}"
+						]]>
+					</echo>
+				</then>
+			</if>
+			<if>
+				<not>
+					<resourcecontains resource="${app.server.tomcat.dir}/bin/setenv.sh" substring="${print.final.flags}" />
+				</not>
+				<then>
+					<echo append="true" file="${app.server.tomcat.dir}/bin/setenv.sh">
+						<![CDATA[
+							CATALINA_OPTS="${CATALINA_OPTS} ${print.final.flags}"
+						]]>
+					</echo>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setup-testable-tomcat-setenv">
+		<sequential>
+			<setup-testable-tomcat-aspectj-agent />
+
+			<setup-testable-tomcat-gc />
+
+			<setup-testable-tomcat-heap-dump-on-oom />
+
+			<setup-testable-tomcat-jmx />
+
+			<setup-testable-tomcat-jpda-address />
+
+			<setup-testable-tomcat-print-final-flags />
+		</sequential>
+	</macrodef>
+
 	<macrodef name="start-android-device">
 		<sequential>
 			<fail message="Please set the property ${mobile.android.home}." unless="mobile.android.home" />
@@ -3398,10 +3556,20 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 							<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
 						</then>
 						<else>
+							<get-testcase-property property.name="ext.plugins.includes" />
+
 							<parallel>
-								<sequential>
-									<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
-								</sequential>
+								<if>
+									<not>
+										<isset property="ext.plugins.includes" />
+									</not>
+									<then>
+										<sequential>
+											<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
+										</sequential>
+									</then>
+								</if>
+
 								<daemons>
 									<exec dir="${test.app.server.bin.dir}" executable="${app.server.start.executable}" failonerror="true" resolveexecutable="true">
 										<arg line="${app.server.start.executable.arg.line}" />
@@ -5101,6 +5269,23 @@ go]]></replacevalue>
 									<else>
 										<echo>Deploying all relevant modules that make up ${Liferay-Releng-App-Title}.lpkg.</echo>
 
+										<for param="module.dir.path">
+											<path>
+												<dirset dir="@{app.dir}">
+													<include name="*" />
+												</dirset>
+											</path>
+											<sequential>
+												<basename file="@{module.dir.path}" property="module.war.name" />
+
+												<delete failonerror="false" verbose="true">
+													<fileset dir="${liferay.home}/deploy">
+														<include name="${module.war.name}*" />
+													</fileset>
+												</delete>
+											</sequential>
+										</for>
+
 										<gradle-execute dir="@{app.dir}" task="deploy">
 											<arg value="clean" />
 										</gradle-execute>
@@ -5852,6 +6037,9 @@ go]]></replacevalue>
 				<fileset dir="util-java/test-results" erroronmissingdir="false">
 					<include name="**/TEST-*.xml" />
 				</fileset>
+				<fileset dir="${blade.samples.dir}/liferay-workspace/tests" erroronmissingdir="false">
+					<include name="**/TEST-*.xml" />
+				</fileset>
 				<report format="frames" todir="test-results/html" />
 			</junitreport>
 		</parallel>
@@ -6165,6 +6353,7 @@ jdbc.default.password=${database.password}
 
 // HikariCP
 
+jdbc.default.connectionTimeout=600000
 jdbc.default.maximumPoolSize=20
 jdbc.default.minimumIdle=0
 
@@ -9389,6 +9578,15 @@ jdbc.default.password=${database.mysql.password}</echo>
 			<equals arg1="${cluster.enabled}" arg2="true" />
 			<then>
 				<prepare-test-cluster-properties />
+			</then>
+		</if>
+
+		<get-testcase-property property.name="ext.plugins.includes" />
+
+		<if>
+			<isset property="ext.plugins.includes" />
+			<then>
+				<prepare-test-ext-properties />
 			</then>
 		</if>
 

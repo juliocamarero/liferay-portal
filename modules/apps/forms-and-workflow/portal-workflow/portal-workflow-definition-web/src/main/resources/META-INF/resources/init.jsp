@@ -26,6 +26,7 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.frontend.taglib.servlet.taglib.AddMenuItem" %><%@
+page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanPropertiesUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
@@ -38,6 +39,7 @@ page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.kernel.workflow.RequiredWorkflowDefinitionException" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowDefinition" %><%@
+page import="com.liferay.portal.kernel.workflow.WorkflowDefinitionFileException" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowException" %><%@
 page import="com.liferay.portal.workflow.definition.web.internal.display.context.WorkflowDefinitionDisplayContext" %><%@
 page import="com.liferay.portal.workflow.definition.web.internal.search.WorkflowDefinitionDisplayTerms" %><%@

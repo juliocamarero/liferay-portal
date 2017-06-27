@@ -618,8 +618,13 @@ public class LayoutImportController implements ImportController {
 
 		List<Node> nodes = xPath.selectNodes(layoutsElement);
 
-		nodes.stream().map(
-			(node) -> (Element)node).forEach(portletElements::add);
+		Stream<Node> nodesStream = nodes.stream();
+
+		nodesStream.map(
+			(node) -> (Element)node
+		).forEach(
+			portletElements::add
+		);
 
 		return portletElements;
 	}
@@ -838,9 +843,8 @@ public class LayoutImportController implements ImportController {
 		}
 		else {
 			BiPredicate<Version, Version> majorVersionBiPredicate =
-				(currentVersion, importVersion) ->
-					Objects.equals(
-						currentVersion.getMajor(), importVersion.getMajor());
+				(currentVersion, importVersion) -> Objects.equals(
+					currentVersion.getMajor(), importVersion.getMajor());
 
 			BiPredicate<Version, Version> minorVersionBiPredicate =
 				(currentVersion, importVersion) -> {

@@ -142,6 +142,7 @@ page import="com.liferay.portal.kernel.service.*" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionMessages" %><%@
 page import="com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorConstants" %><%@
 page import="com.liferay.portal.kernel.upload.LiferayFileItemException" %><%@
+page import="com.liferay.portal.kernel.upload.UploadServletRequestConfigurationHelperUtil" %><%@
 page import="com.liferay.portal.kernel.util.ArrayUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
@@ -172,8 +173,7 @@ page import="com.liferay.portal.upload.LiferayFileItem" %><%@
 page import="com.liferay.portal.util.PrefsPropsUtil" %><%@
 page import="com.liferay.rss.util.RSSUtil" %><%@
 page import="com.liferay.taglib.search.ResultRow" %><%@
-page import="com.liferay.taglib.util.CustomAttributesUtil" %><%@
-page import="com.liferay.trash.kernel.util.TrashUtil" %>
+page import="com.liferay.taglib.util.CustomAttributesUtil" %>
 
 <%@ page import="java.text.Format" %>
 
@@ -197,12 +197,14 @@ page import="javax.portlet.WindowState" %>
 
 <liferay-theme:defineObjects />
 
+<liferay-trash:defineObjects />
+
 <portlet:defineObjects />
 
 <%
 JournalWebConfiguration journalWebConfiguration = (JournalWebConfiguration)request.getAttribute(JournalWebConfiguration.class.getName());
 
-JournalDisplayContext journalDisplayContext = new JournalDisplayContext(request, liferayPortletRequest, liferayPortletResponse, portletPreferences);
+JournalDisplayContext journalDisplayContext = new JournalDisplayContext(request, liferayPortletRequest, liferayPortletResponse, portletPreferences, trashHelper);
 
 JournalWebRequestHelper journalWebRequestHelper = new JournalWebRequestHelper(request);
 

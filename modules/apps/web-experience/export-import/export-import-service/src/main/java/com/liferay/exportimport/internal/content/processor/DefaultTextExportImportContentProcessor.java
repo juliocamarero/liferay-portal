@@ -45,7 +45,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -146,7 +146,7 @@ public class DefaultTextExportImportContentProcessor
 
 		String urlParams = sb.substring(beginPos + 1, endPos);
 
-		urlParams = HttpUtil.removeParameter(urlParams, "t");
+		urlParams = _http.removeParameter(urlParams, "t");
 
 		sb.replace(beginPos + 1, endPos, urlParams);
 	}
@@ -191,8 +191,7 @@ public class DefaultTextExportImportContentProcessor
 			}
 			else if (pathArray.length == 5) {
 				map.put("folderId", new String[] {pathArray[3]});
-				map.put(
-					"title", new String[] {HttpUtil.decodeURL(pathArray[4])});
+				map.put("title", new String[] {_http.decodeURL(pathArray[4])});
 			}
 			else if (pathArray.length > 5) {
 				map.put("uuid", new String[] {pathArray[5]});
@@ -202,7 +201,7 @@ public class DefaultTextExportImportContentProcessor
 			dlReference = dlReference.substring(
 				dlReference.indexOf(CharPool.QUESTION) + 1);
 
-			map = HttpUtil.parameterMapFromString(dlReference);
+			map = _http.parameterMapFromString(dlReference);
 
 			String[] imageIds = null;
 
@@ -395,11 +394,11 @@ public class DefaultTextExportImportContentProcessor
 			long groupId, String url, StringBundler urlSB)
 		throws PortalException {
 
-		if (!HttpUtil.hasProtocol(url)) {
+		if (!_http.hasProtocol(url)) {
 			return url;
 		}
 
-		boolean secure = HttpUtil.isSecure(url);
+		boolean secure = _http.isSecure(url);
 
 		int serverPort = _portal.getPortalServerPort(secure);
 
@@ -1430,7 +1429,8 @@ public class DefaultTextExportImportContentProcessor
 	private static final char[] _LAYOUT_REFERENCE_STOP_CHARS = {
 		CharPool.APOSTROPHE, CharPool.CLOSE_BRACKET, CharPool.CLOSE_CURLY_BRACE,
 		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
-		CharPool.PIPE, CharPool.QUESTION, CharPool.QUOTE, CharPool.SPACE
+		CharPool.PIPE, CharPool.POUND, CharPool.QUESTION, CharPool.QUOTE,
+		CharPool.SPACE
 	};
 
 	private static final String _PRIVATE_GROUP_SERVLET_MAPPING =
@@ -1467,6 +1467,9 @@ public class DefaultTextExportImportContentProcessor
 
 	@Reference
 	private GroupLocalService _groupLocalService;
+
+	@Reference
+	private Http _http;
 
 	@Reference
 	private LayoutFriendlyURLLocalService _layoutFriendlyURLLocalService;

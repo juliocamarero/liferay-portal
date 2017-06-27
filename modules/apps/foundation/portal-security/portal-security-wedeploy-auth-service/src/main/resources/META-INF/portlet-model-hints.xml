@@ -8,7 +8,12 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="name" type="String" />
+		<field name="name" type="String">
+			<validator name="required" />
+		</field>
+		<field name="redirectURI" type="String">
+			<validator name="required" />
+		</field>
 		<field name="clientId" type="String" />
 		<field name="clientSecret" type="String" />
 	</model>

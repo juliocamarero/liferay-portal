@@ -67,44 +67,9 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
-
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="DMRepository#tearDownCP" />
-
-				<execute macro="DMDocument#tearDownCP" />
-
-				<execute macro="Page#gotoMyAccount">
-					<var name="portletName" value="Account Settings" />
-				</execute>
-
-				<execute macro="User#editDetailsViaMyAccount">
-					<var name="userScreenNameEdit" value="test" />
-				</execute>
-
-				<execute macro="Page#gotoMyAccount">
-					<var name="portletName" value="Account Settings" />
-				</execute>
-
-				<execute macro="User#editPasswordViaMyAccount">
-					<var name="currentPassword" value="password" />
-					<var name="newPassword" value="test" />
-				</execute>
-
-				<execute macro="User#logoutPG" />
-
-				<execute macro="User#loginPG">
-					<var name="authenticationMethod" value="By Screen Name" />
-					<var name="password" value="test" />
-					<var name="userScreenName" value="test" />
-				</execute>
-			</else>
-		</if>
+		<execute macro="PortalInstances#tearDownCP">
+			<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		</execute>
 	</tear-down>
 
 	<command name="AddDocument" priority="4">
@@ -197,6 +162,8 @@
 	</command>
 
 	<command name="CheckinDocument" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#CheckinDocument" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -258,6 +225,8 @@
 	</command>
 
 	<command name="CheckoutDocument" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#DeleteDocumentInSubfolder" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -388,6 +357,8 @@
 	</command>
 
 	<command name="DeleteSubfolder" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#DeleteSubfolder" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -419,6 +390,8 @@
 	</command>
 
 	<command name="EditDocumentFile" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#EditDocumentFile" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -463,6 +436,8 @@
 	</command>
 
 	<command name="MoveCheckedoutDocumentToFolder" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#MoveCheckedoutDocumentToFolder" />
+
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -560,6 +535,8 @@
 	</command>
 
 	<command name="MoveDocumentToHome" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#MoveDocumentToHome" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -623,6 +600,8 @@
 	</command>
 
 	<command name="SearchDocumentViaHome" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#SearchDocumentViaHome" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -649,6 +628,8 @@
 	</command>
 
 	<command name="ViewEditedCheckedoutDocument" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#ViewEditedCheckedoutDocument" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -709,6 +690,8 @@
 	</command>
 
 	<command name="ViewOriginalFileExtensionAfterUnsuccessfulExtensionChange" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#ViewOriginalFileExtensionAfterUnsuccessfulExtensionChange" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -752,6 +735,8 @@
 	</command>
 
 	<command name="ViewOriginalFileExtensionAfterUnsuccessfulExtensionRemoval" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#ViewOriginalFileExtensionAfterUnsuccessfulExtensionRemoval" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -795,6 +780,8 @@
 	</command>
 
 	<command name="ViewRepository" priority="4">
+		<property name="test.name.skip.portal.instance" value="CPSharepoint#ViewRepository" />
+
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">

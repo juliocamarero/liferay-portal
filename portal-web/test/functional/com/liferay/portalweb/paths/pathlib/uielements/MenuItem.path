@@ -659,8 +659,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>OPTIMIZE_REMAINING</td>
-	<td>//span[contains(@class,'taglib-text-icon') and contains(.,'Optimize Remaining')]</td>
+	<td>ADAPT_ALL_IMAGES</td>
+	<td>//span[contains(@class,'taglib-text-icon') and contains(.,'Adapt All Images')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADAPT_REMAINING</td>
+	<td>//span[contains(@class,'taglib-text-icon') and contains(.,'Adapt Remaining')]</td>
 	<td></td>
 </tr>
 <tr>

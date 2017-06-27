@@ -14,19 +14,16 @@
 
 package com.liferay.portal.workflow.definition.web.internal.portlet.action;
 
-import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.workflow.WorkflowDefinitionManager;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Leonardo Barros
@@ -40,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = MVCActionCommand.class
 )
 public class DeleteWorkflowDefinitionMVCActionCommand
-	extends BaseMVCActionCommand {
+	extends UpdateWorkflowDefinitionMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
@@ -57,8 +54,5 @@ public class DeleteWorkflowDefinitionMVCActionCommand
 			themeDisplay.getCompanyId(), themeDisplay.getUserId(), name,
 			version);
 	}
-
-	@Reference
-	protected WorkflowDefinitionManager workflowDefinitionManager;
 
 }

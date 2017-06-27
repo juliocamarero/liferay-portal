@@ -63,7 +63,7 @@ public class PortletDataContextFactoryImpl
 		}
 
 		PortletDataContext clonePortletDataContext = new PortletDataContextImpl(
-			_lockManager);
+			_lockManager, false);
 
 		clonePortletDataContext.setCompanyId(portletDataContext.getCompanyId());
 		clonePortletDataContext.setCompanyGroupId(
@@ -71,7 +71,11 @@ public class PortletDataContextFactoryImpl
 		clonePortletDataContext.setDataStrategy(
 			portletDataContext.getDataStrategy());
 		clonePortletDataContext.setEndDate(portletDataContext.getEndDate());
+		clonePortletDataContext.setExportDataRootElement(
+			portletDataContext.getExportDataRootElement());
 		clonePortletDataContext.setGroupId(portletDataContext.getGroupId());
+		clonePortletDataContext.setImportDataRootElement(
+			portletDataContext.getImportDataRootElement());
 
 		long[] layoutIds = portletDataContext.getLayoutIds();
 
@@ -110,6 +114,8 @@ public class PortletDataContextFactoryImpl
 			portletDataContext.getUserIdStrategy());
 		clonePortletDataContext.setUserPersonalSiteGroupId(
 			portletDataContext.getUserPersonalSiteGroupId());
+		clonePortletDataContext.setZipReader(portletDataContext.getZipReader());
+		clonePortletDataContext.setZipWriter(portletDataContext.getZipWriter());
 
 		return clonePortletDataContext;
 	}
@@ -154,6 +160,14 @@ public class PortletDataContextFactoryImpl
 		portletDataContext.setZipReader(zipReader);
 
 		readXML(portletDataContext);
+
+		Map<Long, Long> groupIds =
+			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+				Group.class);
+
+		groupIds.put(
+			portletDataContext.getSourceCompanyGroupId(),
+			portletDataContext.getCompanyGroupId());
 
 		return portletDataContext;
 	}

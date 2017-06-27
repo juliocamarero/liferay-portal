@@ -49,6 +49,7 @@ import java.io.Serializable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.portlet.PortletURL;
 
@@ -325,6 +326,12 @@ public interface WikiPageLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public WikiPage updateWikiPage(WikiPage wikiPage);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public WikiPageDisplay getPageDisplay(WikiPage page,
+		PortletURL viewPageURL, Supplier<PortletURL> editPageURLSupplier,
+		java.lang.String attachmentURLPrefix, ServiceContext serviceContext)
+		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WikiPageDisplay getPageDisplay(WikiPage page,

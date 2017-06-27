@@ -1,7 +1,9 @@
 <definition component-name="portal-smoke">
 	<property name="portal.release" value="true" />
+	<property name="portal.smoke" value="true" />
 	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Smoke" />
+	<property name="test.assert.warning.exceptions" value="true" />
 
 	<set-up>
 		<execute macro="TestCase#setUpPortalInstance" />
@@ -10,24 +12,21 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		<execute macro="Page#tearDownPG" />
 
-		<if>
-			<equals arg1="${testPortalInstance}" arg2="true" />
-			<then>
-				<execute macro="PortalInstances#tearDownCP" />
-			</then>
-			<else>
-				<execute macro="Page#tearDownPG" />
-
-				<execute macro="WebContent#tearDownCP" />
-			</else>
-		</if>
+		<execute macro="WebContent#tearDownCP" />
 	</tear-down>
 
-	<command description="Ensure that the super admin can add pages, add portlets, navigate to the product menu, use the WYSIWYG editor, and view alert messages." name="Smoke" priority="5">
-		<property name="portal.smoke" value="true" />
-		<property name="test.assert.warning.exceptions" value="true" />
+	<command name="Smoke" priority="5">
+		<description message="Ensure that the super admin can add pages, add portlets, navigate to the product menu, use the WYSIWYG editor, and view alert messages." />
+
+		<execute macro="Smoke#viewWelcomePage" />
+
+		<execute macro="Smoke#runSmoke" />
+	</command>
+
+	<command name="SmokeWithSPADisabled" priority="5">
+		<property name="custom.properties" value="javascript.single.page.application.enabled=false" />
 
 		<execute macro="Smoke#viewWelcomePage" />
 

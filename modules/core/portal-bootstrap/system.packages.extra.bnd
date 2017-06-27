@@ -271,6 +271,7 @@ Export-Package:\
 	sun.net.util,\
 	\
 	sun.security.provider,\
+	\
 	*
 Import-Package: !*
 -includeresource:\
@@ -349,4 +350,6 @@ Import-Package: !*
 	@lib/com.liferay.portal.impl.blogs.compat.jar,\
 	@lib/com.liferay.portal.kernel.blogs.compat.jar,\
 	@lib/com.liferay.registry.api.jar
--removeheaders: Private-Package, Service-Component
+-removeheaders:\
+	Private-Package,\
+	Service-Component

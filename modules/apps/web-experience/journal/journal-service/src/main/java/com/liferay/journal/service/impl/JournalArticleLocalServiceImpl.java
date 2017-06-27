@@ -122,7 +122,6 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextUtil;
 import com.liferay.portal.kernel.settings.GroupServiceSettingsLocator;
 import com.liferay.portal.kernel.social.SocialActivityManagerUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
@@ -148,7 +147,6 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -487,15 +485,11 @@ public class JournalArticleLocalServiceImpl
 
 		// Email
 
-		PortletPreferences preferences =
-			ServiceContextUtil.getPortletPreferences(serviceContext);
-
 		articleURL = buildArticleURL(articleURL, groupId, folderId, articleId);
 
 		serviceContext.setAttribute("articleURL", articleURL);
 
-		sendEmail(
-			article, articleURL, preferences, "requested", serviceContext);
+		sendEmail(article, articleURL, "requested", serviceContext);
 
 		// Workflow
 
@@ -986,22 +980,17 @@ public class JournalArticleLocalServiceImpl
 
 		// Email
 
-		if ((serviceContext != null) && Validator.isNotNull(articleURL)) {
-			PortletPreferences preferences =
-				ServiceContextUtil.getPortletPreferences(serviceContext);
+		if ((serviceContext != null) && Validator.isNotNull(articleURL) &&
+			!article.isApproved() &&
+			isLatestVersion(
+				article.getGroupId(), article.getArticleId(),
+				article.getVersion())) {
 
-			if ((preferences != null) && !article.isApproved() &&
-				isLatestVersion(
-					article.getGroupId(), article.getArticleId(),
-					article.getVersion())) {
+			articleURL = buildArticleURL(
+				articleURL, article.getGroupId(), article.getFolderId(),
+				article.getArticleId());
 
-				articleURL = buildArticleURL(
-					articleURL, article.getGroupId(), article.getFolderId(),
-					article.getArticleId());
-
-				sendEmail(
-					article, articleURL, preferences, "denied", serviceContext);
-			}
+			sendEmail(article, articleURL, "denied", serviceContext);
 		}
 
 		// Dynamic data mapping
@@ -5544,12 +5533,7 @@ public class JournalArticleLocalServiceImpl
 			smallImage, article.getSmallImageId(), smallImageFile,
 			smallImageBytes);
 
-		// Email
-
-		PortletPreferences preferences =
-			ServiceContextUtil.getPortletPreferences(serviceContext);
-
-		// Workflow
+		// Email and workflow
 
 		if (expired && imported) {
 			updateStatus(
@@ -5565,8 +5549,7 @@ public class JournalArticleLocalServiceImpl
 
 			serviceContext.setAttribute("articleURL", articleURL);
 
-			sendEmail(
-				article, articleURL, preferences, "requested", serviceContext);
+			sendEmail(article, articleURL, "requested", serviceContext);
 
 			startWorkflowInstance(userId, article, serviceContext);
 		}
@@ -5835,9 +5818,10 @@ public class JournalArticleLocalServiceImpl
 				article.getModifiedDate(), JournalArticle.class.getName(),
 				article.getPrimaryKey(), article.getUuid(),
 				getClassTypeId(article), assetCategoryIds, assetTagNames,
-				isListable(article), false, null, null, null, null,
-				ContentTypes.TEXT_HTML, title, description, description, null,
-				article.getLayoutUuid(), 0, 0, priority);
+				isListable(article), false, null, null, null,
+				article.getExpirationDate(), ContentTypes.TEXT_HTML, title,
+				description, description, null, article.getLayoutUuid(), 0, 0,
+				priority);
 		}
 		else {
 			JournalArticleResource journalArticleResource =
@@ -5856,9 +5840,9 @@ public class JournalArticleLocalServiceImpl
 				journalArticleResource.getResourcePrimKey(),
 				journalArticleResource.getUuid(), getClassTypeId(article),
 				assetCategoryIds, assetTagNames, isListable(article), visible,
-				null, null, publishDate, null, ContentTypes.TEXT_HTML, title,
-				description, description, null, article.getLayoutUuid(), 0, 0,
-				priority);
+				null, null, publishDate, article.getExpirationDate(),
+				ContentTypes.TEXT_HTML, title, description, description, null,
+				article.getLayoutUuid(), 0, 0, priority);
 		}
 
 		assetLinkLocalService.updateLinks(
@@ -6111,16 +6095,11 @@ public class JournalArticleLocalServiceImpl
 				}
 
 				try {
-					PortletPreferences preferences =
-						ServiceContextUtil.getPortletPreferences(
-							serviceContext);
-
 					articleURL = buildArticleURL(
 						articleURL, article.getGroupId(), article.getFolderId(),
 						article.getArticleId());
 
-					sendEmail(
-						article, articleURL, preferences, msg, serviceContext);
+					sendEmail(article, articleURL, msg, serviceContext);
 				}
 				catch (Exception e) {
 					_log.error(
@@ -6324,11 +6303,11 @@ public class JournalArticleLocalServiceImpl
 				Folder folder = article.addImagesFolder();
 
 				String fileEntryName = DLUtil.getUniqueFileName(
-					fileEntry.getGroupId(), folder.getFolderId(),
+					folder.getGroupId(), folder.getFolderId(),
 					fileEntry.getFileName());
 
 				fileEntry = PortletFileRepositoryUtil.addPortletFileEntry(
-					groupId, fileEntry.getUserId(),
+					folder.getGroupId(), fileEntry.getUserId(),
 					JournalArticle.class.getName(),
 					article.getResourcePrimKey(), JournalConstants.SERVICE_NAME,
 					folder.getFolderId(), fileEntry.getContentStream(),
@@ -6572,17 +6551,9 @@ public class JournalArticleLocalServiceImpl
 
 				latestArticles.add(article);
 
-				long ownerId = article.getGroupId();
-				int ownerType = PortletKeys.PREFS_OWNER_TYPE_GROUP;
-				long plid = PortletKeys.PREFS_PLID_SHARED;
 				String portletId = PortletProviderUtil.getPortletId(
 					JournalArticle.class.getName(),
 					PortletProvider.Action.EDIT);
-
-				PortletPreferences preferences =
-					portletPreferencesLocalService.getPreferences(
-						article.getCompanyId(), ownerId, ownerType, plid,
-						portletId);
 
 				String articleURL = PortalUtil.getControlPanelFullURL(
 					article.getGroupId(), portletId, null);
@@ -6591,9 +6562,7 @@ public class JournalArticleLocalServiceImpl
 					articleURL, article.getGroupId(), article.getFolderId(),
 					article.getArticleId());
 
-				sendEmail(
-					article, articleURL, preferences, "review",
-					new ServiceContext());
+				sendEmail(article, articleURL, "review", new ServiceContext());
 			}
 		}
 	}
@@ -7624,21 +7593,31 @@ public class JournalArticleLocalServiceImpl
 			"Unable to fix the search index after 10 attempts");
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #sendEmail(JournalArticle,
+	 *             String, String, ServiceContext)}
+	 */
+	@Deprecated
 	protected void sendEmail(
 			JournalArticle article, String articleURL,
 			PortletPreferences preferences, String emailType,
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		sendEmail(article, articleURL, emailType, serviceContext);
+	}
+
+	protected void sendEmail(
+			JournalArticle article, String articleURL, String emailType,
+			ServiceContext serviceContext)
+		throws PortalException {
+
 		JournalGroupServiceConfiguration journalGroupServiceConfiguration =
 			getJournalGroupServiceConfiguration(article.getGroupId());
 
-		if (preferences == null) {
-			return;
-		}
-		else if (emailType.equals("denied") &&
-				 journalGroupServiceConfiguration.
-					 emailArticleApprovalDeniedEnabled()) {
+		if (emailType.equals("denied") &&
+			journalGroupServiceConfiguration.
+				emailArticleApprovalDeniedEnabled()) {
 		}
 		else if (emailType.equals("granted") &&
 				 journalGroupServiceConfiguration.

@@ -14,6 +14,7 @@
 
 package com.liferay.trash.web.internal.portlet;
 
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.TrashPermissionException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
@@ -27,15 +28,16 @@ import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.trash.TrashHelper;
-import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.model.TrashEntry;
-import com.liferay.trash.kernel.model.TrashEntryConstants;
-import com.liferay.trash.kernel.service.TrashEntryLocalService;
-import com.liferay.trash.kernel.service.TrashEntryService;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.model.TrashEntryConstants;
+import com.liferay.trash.service.TrashEntryLocalService;
+import com.liferay.trash.service.TrashEntryService;
 import com.liferay.trash.web.internal.constants.TrashPortletKeys;
 import com.liferay.trash.web.internal.constants.TrashWebKeys;
 import com.liferay.trash.web.internal.util.TrashUndoUtil;
@@ -293,13 +295,15 @@ public class TrashPortlet extends MVCPortlet {
 
 		try {
 			trashHandler.checkRestorableEntry(
-				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
+				ModelAdapterUtil.adapt(
+					com.liferay.trash.kernel.model.TrashEntry.class, entry),
+				TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
 		}
 		catch (RestoreEntryException ree) {
 			String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 			LiferayPortletResponse liferayPortletResponse =
-				(LiferayPortletResponse)actionResponse;
+				_portal.getLiferayPortletResponse(actionResponse);
 
 			PortletURL renderURL = liferayPortletResponse.createRenderURL();
 
@@ -345,6 +349,9 @@ public class TrashPortlet extends MVCPortlet {
 	protected void setTrashEntryService(TrashEntryService trashEntryService) {
 		_trashEntryService = trashEntryService;
 	}
+
+	@Reference
+	private Portal _portal;
 
 	private TrashEntryLocalService _trashEntryLocalService;
 	private TrashEntryService _trashEntryService;

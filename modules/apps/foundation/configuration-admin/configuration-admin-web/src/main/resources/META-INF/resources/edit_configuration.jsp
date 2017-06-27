@@ -62,6 +62,16 @@ renderResponse.setTitle(configurationModelName);
 					</aui:alert>
 				</c:if>
 
+				<%
+				String configurationModelDescription = (componentResourceBundle != null) ? LanguageUtil.get(componentResourceBundle, configurationModel.getDescription()) : configurationModel.getDescription();
+				%>
+
+				<c:if test="<%= !Validator.isBlank(configurationModelDescription) %>">
+					<p class="text-default">
+						<strong><%= configurationModelDescription %></strong>
+					</p>
+				</c:if>
+
 				<%= ddmFormHTML %>
 			</aui:fieldset-group>
 		</div>

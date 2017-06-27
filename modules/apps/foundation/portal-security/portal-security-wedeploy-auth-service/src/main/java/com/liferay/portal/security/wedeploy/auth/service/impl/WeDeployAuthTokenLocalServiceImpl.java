@@ -16,13 +16,17 @@ package com.liferay.portal.security.wedeploy.auth.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
+import com.liferay.portal.security.wedeploy.auth.configuration.WeDeployAuthWebConfiguration;
 import com.liferay.portal.security.wedeploy.auth.constants.WeDeployAuthTokenConstants;
+import com.liferay.portal.security.wedeploy.auth.exception.WeDeployAuthTokenExpiredException;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthTokenLocalServiceBaseImpl;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.util.Date;
 
@@ -32,25 +36,48 @@ import java.util.Date;
 public class WeDeployAuthTokenLocalServiceImpl
 	extends WeDeployAuthTokenLocalServiceBaseImpl {
 
+	@Override
 	public WeDeployAuthToken addAccessWeDeployAuthToken(
-			long userId, String clientId, String clientSecret,
+			String redirectURI, String clientId, String clientSecret,
 			String authorizationToken, int type, ServiceContext serviceContext)
 		throws PortalException {
 
-		validate(clientId, clientSecret, authorizationToken, type);
+		validateAccess(redirectURI, clientId, clientSecret);
+
+		WeDeployAuthToken weDeployAuthToken =
+			weDeployAuthTokenPersistence.removeByCI_T_T(
+				clientId, authorizationToken, type);
+
+		Date date = weDeployAuthToken.getCreateDate();
+
+		WeDeployAuthWebConfiguration weDeployAuthWebConfiguration =
+			configurationProvider.getSystemConfiguration(
+				WeDeployAuthWebConfiguration.class);
+
+		long expirationTime =
+			date.getTime() +
+				weDeployAuthWebConfiguration.authorizationTokenExpirationTime();
+
+		if (System.currentTimeMillis() > expirationTime) {
+			throw new WeDeployAuthTokenExpiredException();
+		}
 
 		String token = DigesterUtil.digestHex(
 			Digester.MD5, clientId.concat(authorizationToken),
 			PwdGenerator.getPassword());
 
 		return addWeDeployAuthToken(
-			userId, clientId, token, WeDeployAuthTokenConstants.TYPE_ACCESS,
-			new ServiceContext());
+			weDeployAuthToken.getUserId(), clientId, token,
+			WeDeployAuthTokenConstants.TYPE_ACCESS, serviceContext);
 	}
 
+	@Override
 	public WeDeployAuthToken addAuthorizationWeDeployAuthToken(
-			long userId, String clientId, ServiceContext serviceContext)
+			long userId, String redirectURI, String clientId,
+			ServiceContext serviceContext)
 		throws PortalException {
+
+		validateAuthorization(redirectURI, clientId);
 
 		String token = DigesterUtil.digestHex(
 			Digester.MD5, clientId, PwdGenerator.getPassword());
@@ -61,6 +88,7 @@ public class WeDeployAuthTokenLocalServiceImpl
 			new ServiceContext());
 	}
 
+	@Override
 	public WeDeployAuthToken addWeDeployAuthToken(
 			long userId, String clientId, String token, int type,
 			ServiceContext serviceContext)
@@ -95,15 +123,28 @@ public class WeDeployAuthTokenLocalServiceImpl
 		return weDeployAuthToken;
 	}
 
-	protected void validate(
-			String clientId, String clientSecret, String authorizationToken,
-			int type)
+	public WeDeployAuthToken getWeDeployAuthToken(String token, int type)
 		throws PortalException {
 
-		weDeployAuthAppPersistence.findByCI_CS(clientId, clientSecret);
-
-		weDeployAuthTokenPersistence.findByCI_T_T(
-			clientId, authorizationToken, type);
+		return weDeployAuthTokenPersistence.findByT_T(token, type);
 	}
+
+	protected void validateAccess(
+			String redirectURI, String clientId, String clientSecret)
+		throws PortalException {
+
+		weDeployAuthAppPersistence.findByRU_CI(redirectURI, clientId);
+
+		weDeployAuthAppPersistence.findByCI_CS(clientId, clientSecret);
+	}
+
+	protected void validateAuthorization(String redirectURI, String clientId)
+		throws PortalException {
+
+		weDeployAuthAppPersistence.findByRU_CI(redirectURI, clientId);
+	}
+
+	@ServiceReference(type = ConfigurationProvider.class)
+	protected ConfigurationProvider configurationProvider;
 
 }

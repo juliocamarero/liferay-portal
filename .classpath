@@ -33,6 +33,7 @@
 	<classpathentry kind="lib" path="lib/development/com.liferay.ant.bnd.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.ant.build.logger.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.ant.mirrors.get.jar"/>
+	<classpathentry kind="lib" path="lib/development/com.liferay.ant.sync.dir.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.util.taglib.compat.jar"/>
 	<classpathentry kind="lib" path="lib/development/deployment.jar"/>
 	<classpathentry kind="lib" path="lib/development/dtddoc.jar"/>
@@ -209,7 +210,6 @@
 	<classpathentry kind="lib" path="lib/portal/jurt.jar"/>
 	<classpathentry kind="lib" path="lib/portal/kxml2.jar"/>
 	<classpathentry kind="lib" path="lib/portal/liferay-icu4j.jar"/>
-	<classpathentry kind="lib" path="lib/portal/liferay-yui-compressor.jar"/>
 	<classpathentry kind="lib" path="lib/portal/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/portal/log4j-extras.jar"/>
 	<classpathentry kind="lib" path="lib/portal/mchange-commons-java.jar"/>
@@ -231,6 +231,7 @@
 	<classpathentry kind="lib" path="lib/portal/portal-client.jar"/>
 	<classpathentry kind="lib" path="lib/portal/portals-bridges.jar"/>
 	<classpathentry kind="lib" path="lib/portal/rdffilter.jar"/>
+	<classpathentry kind="lib" path="lib/portal/rhino.jar"/>
 	<classpathentry kind="lib" path="lib/portal/ridl.jar"/>
 	<classpathentry kind="lib" path="lib/portal/rome.jar"/>
 	<classpathentry kind="lib" path="lib/portal/rometools.jar"/>
@@ -288,5 +289,6 @@
 	<classpathentry kind="lib" path="lib/portal/xstream.jar"/>
 	<classpathentry kind="lib" path="lib/portal/xuggle-xuggler-noarch.jar"/>
 	<classpathentry kind="lib" path="lib/portal/xz.jar"/>
+	<classpathentry kind="lib" path="lib/portal/yui-compressor.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
