@@ -31,7 +31,15 @@ public abstract class ExpressionVisitor<T> {
 		return null;
 	}
 
+	public T visit(FloatingPointLiteral floatingPointLiteral) {
+		return null;
+	}
+
 	public T visit(FunctionCallExpression functionCallExpression) {
+		return null;
+	}
+
+	public T visit(IntegerLiteral integerLiteral) {
 		return null;
 	}
 
@@ -48,6 +56,10 @@ public abstract class ExpressionVisitor<T> {
 	}
 
 	public T visit(Parenthesis parenthesis) {
+		return null;
+	}
+
+	public T visit(StringLiteral stringLiteral) {
 		return null;
 	}
 

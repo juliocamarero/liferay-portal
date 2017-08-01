@@ -75,10 +75,11 @@ public class ExpressionVisitorTest {
 	@Test
 	public void testNotExpression2() {
 		Expression getValueExpression = new FunctionCallExpression(
-			"getValue", Arrays.asList(new StringTerm("Field1")));
+			"getValue", Arrays.asList(new StringLiteral("Field1")));
 
 		Expression equalsExpression = new FunctionCallExpression(
-			"equals", Arrays.asList(getValueExpression, new StringTerm("Joe")));
+			"equals",
+			Arrays.asList(getValueExpression, new StringLiteral("Joe")));
 
 		Expression expression = new NotExpression(equalsExpression);
 

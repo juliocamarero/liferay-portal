@@ -45,12 +45,14 @@ import com.liferay.dynamic.data.mapping.expression.model.AndExpression;
 import com.liferay.dynamic.data.mapping.expression.model.ArithmeticExpression;
 import com.liferay.dynamic.data.mapping.expression.model.ComparisonExpression;
 import com.liferay.dynamic.data.mapping.expression.model.Expression;
+import com.liferay.dynamic.data.mapping.expression.model.FloatingPointLiteral;
 import com.liferay.dynamic.data.mapping.expression.model.FunctionCallExpression;
+import com.liferay.dynamic.data.mapping.expression.model.IntegerLiteral;
 import com.liferay.dynamic.data.mapping.expression.model.MinusExpression;
 import com.liferay.dynamic.data.mapping.expression.model.NotExpression;
 import com.liferay.dynamic.data.mapping.expression.model.OrExpression;
 import com.liferay.dynamic.data.mapping.expression.model.Parenthesis;
-import com.liferay.dynamic.data.mapping.expression.model.StringTerm;
+import com.liferay.dynamic.data.mapping.expression.model.StringLiteral;
 import com.liferay.dynamic.data.mapping.expression.model.Term;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -128,7 +130,7 @@ public class DDMExpressionModelVisitor
 	public Expression visitFloatingPointLiteral(
 		@NotNull FloatingPointLiteralContext context) {
 
-		return new Term(context.getText());
+		return new FloatingPointLiteral(context.getText());
 	}
 
 	@Override
@@ -167,7 +169,7 @@ public class DDMExpressionModelVisitor
 	public Expression visitIntegerLiteral(
 		@NotNull IntegerLiteralContext context) {
 
-		return new Term(context.getText());
+		return new IntegerLiteral(context.getText());
 	}
 
 	@Override
@@ -274,7 +276,7 @@ public class DDMExpressionModelVisitor
 	public Expression visitStringLiteral(
 		@NotNull StringLiteralContext context) {
 
-		return new StringTerm(StringUtil.unquote(context.getText()));
+		return new StringLiteral(StringUtil.unquote(context.getText()));
 	}
 
 	@Override

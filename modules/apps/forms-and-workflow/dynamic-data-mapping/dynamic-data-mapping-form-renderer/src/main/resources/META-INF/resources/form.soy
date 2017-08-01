@@ -39,7 +39,7 @@
 			function(A) {lb}
 				Liferay.DDM.Renderer.FieldTypes.register({$fieldTypes|noAutoescape});
 
-				Liferay.component(
+				var form = Liferay.component(
 					'{$containerId}DDMForm',
 					new Liferay.DDM.Renderer.Form(
 						{lb}
@@ -50,6 +50,13 @@
 							readOnly: {$readOnly}
 						{rb}
 					).render()
+				);
+
+				Liferay.fire(
+					'{$containerId}DDMForm:render',
+					{lb}
+						form: form
+					{rb}
 				);
 
 				var destroyFormHandle = function(event) {lb}
