@@ -103,7 +103,10 @@
 	</command>
 
 	<command name="addSubtitle">
-		<execute function="Type#typeEditor" locator1="AlloyEditor#SUBTITLE_FIELD" value1="${entrySubtitle}" />
+		<execute macro="AlloyEditor#typeEditor">
+			<var name="content" value="${entrySubtitle}" />
+			<var name="editor" value="subtitle" />
+		</execute>
 	</command>
 
 	<command name="addTag">
@@ -172,7 +175,7 @@
 
 		<execute macro="BlogsNavigator#gotoAbstractField" />
 
-		<execute function="Paste" locator1="AlloyEditor#TRACKBACKS_TO_SEND" />
+		<execute function="Paste" locator1="TextInput#TRACKBACKS" />
 
 		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
 
@@ -222,7 +225,9 @@
 	</command>
 
 	<command name="editContent">
-		<execute function="AssertTextEquals" locator1="AlloyEditor#CONTENT_FIELD" value1="${entryContent}" />
+		<execute function="AssertTextEquals" locator1="AlloyEditor#EDITOR" value1="${entryContent}">
+			<var name="key_editor" value="content" />
+		</execute>
 
 		<execute macro="AlloyEditor#addContent">
 			<var name="content" value="${entryContentEdit}" />
@@ -277,13 +282,20 @@
 	</command>
 
 	<command name="editSubtitle">
-		<execute function="AssertTextEquals" locator1="AlloyEditor#SUBTITLE_FIELD" value1="${entrySubtitle}" />
+		<execute function="AssertTextEquals" locator1="AlloyEditor#EDITOR" value1="${entrySubtitle}">
+			<var name="key_editor" value="subtitle" />
+		</execute>
 
-		<execute function="Type#typeEditor" locator1="AlloyEditor#SUBTITLE_FIELD" value1="${entrySubtitleEdit}" />
+		<execute macro="AlloyEditor#typeEditor">
+			<var name="content" value="${entrySubtitleEdit}" />
+			<var name="editor" value="subtitle" />
+		</execute>
 	</command>
 
 	<command name="editTitle">
-		<execute function="AssertTextEquals" locator1="AlloyEditor#TITLE_FIELD" value1="${entryTitle}" />
+		<execute function="AssertTextEquals" locator1="AlloyEditor#EDITOR" value1="${entryTitle}">
+			<var name="key_editor" value="title" />
+		</execute>
 
 		<execute macro="AlloyEditor#addTitle">
 			<var name="title" value="${entryTitleEdit}" />
@@ -489,18 +501,18 @@
 	</command>
 
 	<command name="scheduleBlogEntry">
-		<var locator="TextInput#DISPLAY_DATE_DAY" name="displayDateDay" />
-		<var locator="TextInput#DISPLAY_DATE_MONTH" name="displayDateMonth" />
+		<var method="selenium#getElementValue(TextInput#DISPLAY_DATE_DAY)" name="displayDateDay" />
+		<var method="selenium#getElementValue(TextInput#DISPLAY_DATE_MONTH)" name="displayDateMonth" />
 
 		<var method="MathUtil#sum('${displayDateMonth}','1')" name="displayDateMonth" />
 
-		<var locator="TextInput#DISPLAY_DATE_YEAR" name="displayDateYear" />
+		<var method="selenium#getElementValue(TextInput#DISPLAY_DATE_YEAR)" name="displayDateYear" />
 
 		<var name="displayDate" value="${displayDateMonth}/${displayDateDay}/${displayDateYear}" />
 
 		<execute function="Type" locator1="TextInput#DISPLAY_DATE" value1="${displayDate}" />
 
-		<var locator="TextInput#DISPLAY_DATE_HOUR" name="displayDateHour" />
+		<var method="selenium#getElementValue(TextInput#DISPLAY_DATE_HOUR)" name="displayDateHour" />
 
 		<var name="displayDateHourLength" value="${displayDateHour?length()}" />
 
@@ -511,7 +523,7 @@
 			</then>
 		</if>
 
-		<var locator="TextInput#DISPLAY_DATE_MINUTE" name="displayDateMinute" />
+		<var method="selenium#getElementValue(TextInput#DISPLAY_DATE_MINUTE)" name="displayDateMinute" />
 
 		<var method="MathUtil#sum('${displayDateMinute}','3')" name="displayDateMinuteFuture" />
 
@@ -524,7 +536,7 @@
 			</then>
 		</if>
 
-		<var locator="TextInput#DISPLAY_DATE_MERIDIAN" name="displayDateMeridian" />
+		<var method="selenium#getElementValue(TextInput#DISPLAY_DATE_MERIDIAN)" name="displayDateMeridian" />
 
 		<var method="StringUtil#replace('${displayDateMeridian}', '0', 'AM')" name="displayDateMeridian" />
 		<var method="StringUtil#replace('${displayDateMeridian}', '1', 'PM')" name="displayDateMeridian" />
@@ -596,7 +608,9 @@
 	</command>
 
 	<command name="selectFormattingStyle">
-		<execute function="SelectFieldText" locator1="AlloyEditor#CONTENT_FIELD" />
+		<execute function="SelectFieldText" locator1="AlloyEditor#EDITOR">
+			<var name="key_editor" value="content" />
+		</execute>
 
 		<execute function="Click" locator1="AlloyEditor#TEXT_FORMATTING_STYLE" />
 
@@ -1150,7 +1164,7 @@
 
 		<execute function="AssertClick" locator1="BlogsEntry#TITLE_LINK" value1="${entryTitle}" />
 
-		<var locator="BlogsEntry#ENTRY_VIEW_COUNT" name="entryViewCount" />
+		<var method="selenium#getText(BlogsEntry#ENTRY_VIEW_COUNT)" name="entryViewCount" />
 
 		<var method="StringUtil#extractLast('${entryViewCount}',',')" name="entryViewCount" />
 		<var method="StringUtil#extractDigits('${entryViewCount}')" name="entryViewCount" />

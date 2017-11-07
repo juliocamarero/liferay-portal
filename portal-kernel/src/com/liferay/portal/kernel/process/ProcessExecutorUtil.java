@@ -19,8 +19,10 @@ import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermissio
 import java.io.Serializable;
 
 /**
- * @author Shuyang Zhou
+ * @author     Shuyang Zhou
+ * @deprecated As of 7.0.0, with no direct replacement
  */
+@Deprecated
 public class ProcessExecutorUtil {
 
 	public static <T extends Serializable> ProcessChannel<T> execute(

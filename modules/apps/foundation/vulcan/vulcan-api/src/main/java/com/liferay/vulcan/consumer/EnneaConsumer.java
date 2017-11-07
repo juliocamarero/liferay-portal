@@ -17,23 +17,21 @@ package com.liferay.vulcan.consumer;
 import java.util.Objects;
 
 /**
- * Represents an operation that accepts nine input arguments and returns no
- * result. This is the nine-arity specialization of {@link
- * java.util.function.Consumer}. Unlike most other functional interfaces, {@code
- * TriConsumer} is expected to operate via side-effects.
+ * Defines a {@code java.util.function.Consumer} that takes nine input
+ * parameters. This consumer, like all consumers, doesn't return a result.
  *
- * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(Object, Object, Object, Object,
- * Object, Object, Object, Object, Object)}.
+ * <p>
+ * This interface can be implemented with a lambda function.
+ * </p>
  *
  * @author Alejandro Hernández
- * @see    java.util.function.Consumer
  */
 @FunctionalInterface
 public interface EnneaConsumer<A, B, C, D, E, F, G, H, I> {
 
 	/**
-	 * Performs this operation on the given arguments.
+	 * Operates with nine parameters and returns {@code void}. This function can
+	 * be implemented explicitly or with a lambda.
 	 *
 	 * @param a the first function argument
 	 * @param b the second function argument
@@ -48,15 +46,14 @@ public interface EnneaConsumer<A, B, C, D, E, F, G, H, I> {
 	public void accept(A a, B b, C c, D d, E e, F f, G g, H h, I i);
 
 	/**
-	 * Returns a composed {@code EnneaConsumer} that performs, in sequence, this
-	 * operation followed by the {@code after} operation. If performing either
-	 * operation throws an exception, it is relayed to the caller of the
-	 * composed operation. If performing this operation throws an exception, the
-	 * {@code after} operation will not be performed.
+	 * Returns the {@code EnneaConsumer} function that first executes the
+	 * current {@code EnneaConsumer} instance's {@code accept} method, then
+	 * executes the {@code after} parameter's {@code accept} method.
 	 *
-	 * @param  after the operation to perform after this operation
-	 * @return a composed {@code EnneaConsumer} that performs in sequence this
-	 *         operation followed by the {@code after} operation
+	 * @param  after the {@code EnneaConsumer} instance to execute after the
+	 *         current instance
+	 * @return the {@code EnneaConsumer} that executes the current instance's
+	 *         {@code accept} method, as well as that of {@code after}
 	 */
 	public default EnneaConsumer<A, B, C, D, E, F, G, H, I> andThen(
 		EnneaConsumer<? super A, ? super B, ? super C, ? super D, ? super E,

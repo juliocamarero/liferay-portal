@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portlet.documentlibrary.store.StoreFactory;
@@ -98,9 +99,9 @@ public class VerifyProperties extends VerifyProcess {
 
 		if (portalProperties.containsKey(oldKey)) {
 			_log.error(
-				"Portal property \"" + oldKey +
-					"\" was migrated to the system property \"" + newKey +
-						"\"");
+				StringBundler.concat(
+					"Portal property \"", oldKey,
+					"\" was migrated to the system property \"", newKey, "\""));
 		}
 	}
 
@@ -111,9 +112,9 @@ public class VerifyProperties extends VerifyProcess {
 
 		if (value != null) {
 			_log.error(
-				"System property \"" + oldKey +
-					"\" was migrated to the portal property \"" + newKey +
-						"\"");
+				StringBundler.concat(
+					"System property \"", oldKey,
+					"\" was migrated to the portal property \"", newKey, "\""));
 		}
 	}
 
@@ -124,8 +125,9 @@ public class VerifyProperties extends VerifyProcess {
 
 		if (portalProperties.containsKey(oldKey)) {
 			_log.error(
-				"Portal property \"" + oldKey + "\" was modularized to " +
-					moduleName + " as \"" + newKey + "\"");
+				StringBundler.concat(
+					"Portal property \"", oldKey, "\" was modularized to ",
+					moduleName, " as \"", newKey, "\""));
 		}
 	}
 
@@ -136,8 +138,9 @@ public class VerifyProperties extends VerifyProcess {
 
 		if (systemProperties.containsKey(oldKey)) {
 			_log.error(
-				"System property \"" + oldKey + "\" was modularized to " +
-					moduleName + " as \"" + newKey + "\"");
+				StringBundler.concat(
+					"System property \"", oldKey, "\" was modularized to ",
+					moduleName, " as \"", newKey, "\""));
 		}
 	}
 
@@ -197,8 +200,9 @@ public class VerifyProperties extends VerifyProcess {
 
 		if (portalProperties.containsKey(oldKey)) {
 			_log.error(
-				"Portal property \"" + oldKey + "\" was renamed to \"" +
-					newKey + "\"");
+				StringBundler.concat(
+					"Portal property \"", oldKey, "\" was renamed to \"",
+					newKey, "\""));
 		}
 	}
 
@@ -209,8 +213,9 @@ public class VerifyProperties extends VerifyProcess {
 
 		if (value != null) {
 			_log.error(
-				"System property \"" + oldKey + "\" was renamed to \"" +
-					newKey + "\"");
+				StringBundler.concat(
+					"System property \"", oldKey, "\" was renamed to \"",
+					newKey, "\""));
 		}
 	}
 
@@ -454,6 +459,22 @@ public class VerifyProperties extends VerifyProcess {
 		},
 
 		new String[] {
+			"auth.verifier.ImageRequestAuthVerifier.hosts.allowed",
+			"auth.verifier.ImageRequestAuthVerifier.hosts.allowed",
+			"com.liferay.document.library.document.conversion"
+		},
+		new String[] {
+			"auth.verifier.ImageRequestAuthVerifier.urls.excludes",
+			"auth.verifier.ImageRequestAuthVerifier.urls.excludes",
+			"com.liferay.document.library.document.conversion"
+		},
+		new String[] {
+			"auth.verifier.ImageRequestAuthVerifier.urls.includes",
+			"auth.verifier.ImageRequestAuthVerifier.urls.includes",
+			"com.liferay.document.library.document.conversion"
+		},
+
+		new String[] {
 			"auth.verifier.ParameterAutoLogin.hosts.allowed",
 			"auth.verifier.RequestParameterAuthVerifier.hosts.allowed",
 			"com.liferay.portal.security.auth.verifier"
@@ -645,6 +666,14 @@ public class VerifyProperties extends VerifyProcess {
 
 		// Document Library
 
+		new String[] {
+			"dl.file.rank.check.interval", "check.file.ranks.interval",
+			"com.liferay.recent.documents.web"
+		},
+		new String[] {
+			"dl.file.rank.max.size", "max.size",
+			"com.liferay.document.library.file.rank.service"
+		},
 		new String[] {
 			"dl.display.templates.config", "display.templates.config",
 			"com.liferay.document.library.web"
@@ -1745,8 +1774,8 @@ public class VerifyProperties extends VerifyProcess {
 		"dl.file.entry.image.exif.metadata.rotation.enabled",
 		"dl.file.entry.previewable.processor.max.size",
 		"dl.file.entry.read.count.enabled", "dl.file.extensions",
-		"dl.file.max.size", "dl.folder.menu.visible", "dockbar.add.portlets",
-		"dockbar.administrative.links.show.in.pop.up",
+		"dl.file.max.size", "dl.file.rank.enabled", "dl.folder.menu.visible",
+		"dockbar.add.portlets", "dockbar.administrative.links.show.in.pop.up",
 		"dynamic.data.lists.record.set.force.autogenerate.key",
 		"dynamic.data.lists.template.language.parser[ftl]",
 		"dynamic.data.lists.template.language.parser[vm]",
@@ -1813,11 +1842,13 @@ public class VerifyProperties extends VerifyProcess {
 		"layout.edit.page[control_panel]", "layout.edit.page[link_to_layout]",
 		"layout.first.pageable[control_panel]",
 		"layout.first.pageable[link_to_layout]", "layout.form.add",
-		"layout.form.update", "layout.parentable[control_panel]",
-		"layout.parentable[link_to_layout]", "layout.reset.portlet.ids",
-		"layout.set.form.update", "layout.sitemapable[link_to_layout]",
-		"layout.types", "layout.url[control_panel]",
-		"layout.url[link_to_layout]", "layout.url.friendliable[control_panel]",
+		"layout.form.update",
+		"layout.parallel.render.thread.pool.allow.core.thread.timeout",
+		"layout.parentable[control_panel]", "layout.parentable[link_to_layout]",
+		"layout.reset.portlet.ids", "layout.set.form.update",
+		"layout.sitemapable[link_to_layout]", "layout.types",
+		"layout.url[control_panel]", "layout.url[link_to_layout]",
+		"layout.url.friendliable[control_panel]",
 		"layout.url.friendliable[link_to_layout]",
 		"layout.view.page[control_panel]", "layout.view.page[link_to_layout]",
 		"library.download.url.resin.jar", "library.download.url.script-10.jar",

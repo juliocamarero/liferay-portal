@@ -17,23 +17,21 @@ package com.liferay.vulcan.consumer;
 import java.util.Objects;
 
 /**
- * Represents an operation that accepts six input arguments and returns no
- * result. This is the six-arity specialization of {@link
- * java.util.function.Consumer}. Unlike most other functional interfaces, {@code
- * TriConsumer} is expected to operate via side-effects.
+ * Defines a {@code java.util.function.Consumer} that takes six input
+ * parameters. This consumer, like all consumers, doesn't return a result.
  *
- * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(Object, Object, Object, Object,
- * Object, Object)}.
+ * <p>
+ * This interface can be implemented with a lambda function.
+ * </p>
  *
  * @author Alejandro Hernández
- * @see    java.util.function.Consumer
  */
 @FunctionalInterface
 public interface HexaConsumer<A, B, C, D, E, F> {
 
 	/**
-	 * Performs this operation on the given arguments.
+	 * Operates with six parameters and returns {@code void}. This function can
+	 * be implemented explicitly or with a lambda.
 	 *
 	 * @param a the first function argument
 	 * @param b the second function argument
@@ -45,15 +43,14 @@ public interface HexaConsumer<A, B, C, D, E, F> {
 	public void accept(A a, B b, C c, D d, E e, F f);
 
 	/**
-	 * Returns a composed {@code HexaConsumer} that performs, in sequence, this
-	 * operation followed by the {@code after} operation. If performing either
-	 * operation throws an exception, it is relayed to the caller of the
-	 * composed operation. If performing this operation throws an exception, the
-	 * {@code after} operation will not be performed.
+	 * Returns the {@code HexaConsumer} function that first executes the current
+	 * {@code HexaConsumer} instance's {@code accept} method, then executes the
+	 * {@code after} parameter's {@code accept} method.
 	 *
-	 * @param  after the operation to perform after this operation
-	 * @return a composed {@code HexaConsumer} that performs in sequence this
-	 *         operation followed by the {@code after} operation
+	 * @param  after the {@code HexaConsumer} instance to execute after the
+	 *         current instance
+	 * @return the {@code HexaConsumer} that executes the current instance's
+	 *         {@code accept} method, as well as that of {@code after}
 	 */
 	public default HexaConsumer<A, B, C, D, E, F> andThen(
 		HexaConsumer<? super A, ? super B, ? super C, ? super D, ? super E,

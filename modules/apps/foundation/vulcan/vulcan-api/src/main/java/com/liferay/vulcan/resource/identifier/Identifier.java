@@ -15,7 +15,8 @@
 package com.liferay.vulcan.resource.identifier;
 
 /**
- * Represents a resource identifier.
+ * Represents a resource identifier. Resources shouldn't use this class
+ * directly.
  *
  * @author Alejandro Hernández
  */

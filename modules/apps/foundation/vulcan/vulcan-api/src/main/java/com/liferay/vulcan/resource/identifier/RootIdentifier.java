@@ -15,9 +15,8 @@
 package com.liferay.vulcan.resource.identifier;
 
 /**
- * Instances of this interface represents the root identifier of a resource.
- * Resources hanging directly from the root of the application will have this
- * identifier as its only identifier.
+ * Represents a resource's root identifier. For resources hanging directly from
+ * the application root, this is their only identifier.
  *
  * @author Alejandro Hernández
  */

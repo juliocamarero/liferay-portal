@@ -14,6 +14,8 @@
 
 package com.liferay.vulcan.sample.liferay.portal.resource.identifier;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.vulcan.resource.identifier.Identifier;
 
@@ -28,7 +30,9 @@ import com.liferay.vulcan.resource.identifier.Identifier;
  * </p>
  *
  * @author Alejandro Hernández
+ * @review
  */
+@ProviderType
 public interface AggregateRatingIdentifier extends Identifier {
 
 	/**
@@ -38,6 +42,7 @@ public interface AggregateRatingIdentifier extends Identifier {
 	 * @param  className the className of the identifier.
 	 * @param  classPK the classPK of the identifier.
 	 * @return the {@code AggregateRatingIdentifier}.
+	 * @review
 	 */
 	public static AggregateRatingIdentifier create(
 		String className, long classPK) {
@@ -63,6 +68,7 @@ public interface AggregateRatingIdentifier extends Identifier {
 	 *
 	 * @param  t a {@link ClassedModel} model.
 	 * @return the {@code AggregateRatingIdentifier}.
+	 * @review
 	 */
 	public static <T extends ClassedModel> AggregateRatingIdentifier create(
 		T t) {
@@ -74,6 +80,7 @@ public interface AggregateRatingIdentifier extends Identifier {
 	 * Returns the class name.
 	 *
 	 * @return the class name.
+	 * @review
 	 */
 	public String getClassName();
 
@@ -81,6 +88,7 @@ public interface AggregateRatingIdentifier extends Identifier {
 	 * Returns the class PK.
 	 *
 	 * @return the class PK.
+	 * @review
 	 */
 	public long getClassPK();
 

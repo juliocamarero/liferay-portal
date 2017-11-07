@@ -14,6 +14,8 @@
 
 package com.liferay.vulcan.sample.liferay.portal.resource.identifier;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.vulcan.resource.identifier.Identifier;
@@ -35,7 +37,9 @@ import com.liferay.vulcan.resource.identifier.Identifier;
  * </p>
  *
  * @author Alejandro Hernández
+ * @review
  */
+@ProviderType
 public interface CommentableIdentifier extends Identifier {
 
 	/**
@@ -46,6 +50,7 @@ public interface CommentableIdentifier extends Identifier {
 	 * @param  classPK the classPK of the identifier.
 	 * @param  groupId the groupId of the identifier.
 	 * @return the {@code CommentableIdentifier}.
+	 * @review
 	 */
 	public static CommentableIdentifier create(
 		String className, long classPK, long groupId) {
@@ -76,6 +81,7 @@ public interface CommentableIdentifier extends Identifier {
 	 *
 	 * @param  t a {@link GroupedModel} & {@link ClassedModel} model.
 	 * @return the {@code CommentableIdentifier}.
+	 * @review
 	 */
 	public static <T extends GroupedModel & ClassedModel> CommentableIdentifier
 		create(T t) {
@@ -88,6 +94,7 @@ public interface CommentableIdentifier extends Identifier {
 	 * Returns the class name.
 	 *
 	 * @return the class name.
+	 * @review
 	 */
 	public String getClassName();
 
@@ -95,6 +102,7 @@ public interface CommentableIdentifier extends Identifier {
 	 * Returns the class PK.
 	 *
 	 * @return the class PK.
+	 * @review
 	 */
 	public long getClassPK();
 
@@ -102,6 +110,7 @@ public interface CommentableIdentifier extends Identifier {
 	 * Returns the group ID.
 	 *
 	 * @return the group ID.
+	 * @review
 	 */
 	public long getGroupId();
 

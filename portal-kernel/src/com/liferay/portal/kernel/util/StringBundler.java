@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.petra.lang.CentralizedThreadLocal;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -33,6 +35,12 @@ import java.lang.ref.SoftReference;
 public class StringBundler implements Serializable {
 
 	public static String concat(String... strings) {
+		for (int i = 0; i < strings.length; i++) {
+			if (strings[i] == null) {
+				strings[i] = StringPool.NULL;
+			}
+		}
+
 		return _toString(strings, strings.length);
 	}
 

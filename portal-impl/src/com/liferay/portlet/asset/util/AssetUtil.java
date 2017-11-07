@@ -98,8 +98,8 @@ import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Brian Wing Shun Chan
- * @author Jorge Ferrer
+ * @author     Brian Wing Shun Chan
+ * @author     Jorge Ferrer
  * @deprecated As of 7.0.0, replaced by {@link
  *             com.liferay.asset.util.impl.AssetUtil}
  */
@@ -753,8 +753,9 @@ public class AssetUtil {
 				if (c == invalidChar) {
 					if (_log.isDebugEnabled()) {
 						_log.debug(
-							"Word " + word + " is not valid because " + c +
-								" is not allowed");
+							StringBundler.concat(
+								"Word ", word, " is not valid because ",
+								String.valueOf(c), " is not allowed"));
 					}
 
 					return false;

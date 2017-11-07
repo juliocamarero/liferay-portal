@@ -15,7 +15,7 @@
 package com.liferay.vulcan.pagination;
 
 /**
- * Provides a wrapper over a model for skipping problems related to the Java
+ * Provides a wrapper for a model. This avoids problems related to the Java
  * generics system.
  *
  * @author Alejandro Hernández
@@ -30,7 +30,7 @@ public class SingleModel<T> {
 	/**
 	 * Returns the model.
 	 *
-	 * @return the model.
+	 * @return the model
 	 */
 	public T getModel() {
 		return _model;
@@ -39,7 +39,7 @@ public class SingleModel<T> {
 	/**
 	 * Returns the model class.
 	 *
-	 * @return the model class.
+	 * @return the model class
 	 */
 	public Class<T> getModelClass() {
 		return _modelClass;

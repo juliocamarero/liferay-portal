@@ -19,9 +19,9 @@ import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfigurat
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
 import com.liferay.asset.publisher.web.internal.action.AssetEntryActionRegistry;
+import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizer;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizerRegistry;
-import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
 import com.liferay.asset.publisher.web.util.AssetRSSUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.storage.Field;
@@ -235,6 +235,10 @@ public class AssetPublisherPortlet extends MVCPortlet {
 				AssetPublisherWebKeys.ASSET_PUBLISHER_CUSTOMIZER,
 				assetPublisherCustomizer);
 
+			resourceRequest.setAttribute(
+				AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_UTIL,
+				assetPublisherWebUtil);
+
 			byte[] bytes = AssetRSSUtil.getRSS(
 				resourceRequest, resourceResponse);
 
@@ -243,6 +247,18 @@ public class AssetPublisherPortlet extends MVCPortlet {
 		catch (Exception e) {
 			_log.error("Unable to get RSS feed", e);
 		}
+	}
+
+	@Override
+	public void render(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		renderRequest.setAttribute(
+			AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_UTIL,
+			assetPublisherWebUtil);
+
+		super.render(renderRequest, renderResponse);
 	}
 
 	@Override
@@ -271,7 +287,7 @@ public class AssetPublisherPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		AssetPublisherUtil.subscribe(
+		assetPublisherWebUtil.subscribe(
 			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(),
 			themeDisplay.getPlid(), themeDisplay.getPpid());
 	}
@@ -283,7 +299,7 @@ public class AssetPublisherPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		AssetPublisherUtil.unsubscribe(
+		assetPublisherWebUtil.unsubscribe(
 			themeDisplay.getPermissionChecker(), themeDisplay.getPlid(),
 			themeDisplay.getPpid());
 	}
@@ -372,6 +388,9 @@ public class AssetPublisherPortlet extends MVCPortlet {
 	protected AssetPublisherCustomizerRegistry assetPublisherCustomizerRegistry;
 
 	protected AssetPublisherWebConfiguration assetPublisherWebConfiguration;
+
+	@Reference
+	protected AssetPublisherWebUtil assetPublisherWebUtil;
 
 	@Reference
 	protected Portal portal;

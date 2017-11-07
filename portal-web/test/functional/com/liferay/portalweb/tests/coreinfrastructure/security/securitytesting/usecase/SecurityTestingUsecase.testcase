@@ -26,7 +26,7 @@
 	</tear-down>
 
 	<command name="NoGuestRoleFromWCDArticleHistoryURL" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
 		<var name="url" value="${portalURL}/web/guest/home?&amp;p_p_id=com_liferay_journal_web_portlet_JournalPortlet&amp;p_p_lifecycle=0&amp;p_p_state=maximized&amp;p_p_mode=view&amp;_com_liferay_journal_web_portlet_JournalPortlet_struts_action=%2Fjournal%2Fview_article_history&amp;_com_liferay_journal_web_portlet_JournalPortlet_groupId=10180&amp;_com_liferay_journal_web_portlet_JournalPortlet_articleId=" />
@@ -53,7 +53,7 @@
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
 
-		<var locator="WCEditWebContent#ARTICLE_ID" name="articleID" />
+		<var method="selenium#getText(WCEditWebContent#ARTICLE_ID)" name="articleID" />
 
 		<execute macro="User#logoutPG" />
 
@@ -171,7 +171,7 @@
 
 		<execute function="Pause" locator1="5000" />
 
-		<var locator="UsersAndOrganizationsEditUser#DETAILS_USER_ID_FIELD" name="userId" />
+		<var method="selenium#getElementValue(UsersAndOrganizationsEditUser#DETAILS_USER_ID_FIELD)" name="userId" />
 
 		<execute macro="Api#apiJsonwsUserView" />
 

@@ -35,19 +35,19 @@ public class RelatedCollection<T, S> {
 	}
 
 	/**
-	 * Returns the function that can be used to create the identifier for the
-	 * related collection.
+	 * Returns the function you can use to create the related collection's
+	 * identifier.
 	 *
-	 * @return function to calculate the related collection's identifier.
+	 * @return the function that calculates the related collection's identifier
 	 */
 	public Function<T, Identifier> getIdentifierFunction() {
 		return _identifierFunction;
 	}
 
 	/**
-	 * Returns the key of the relation.
+	 * Returns the relation's key.
 	 *
-	 * @return key of the relation.
+	 * @return the relation's key
 	 */
 	public String getKey() {
 		return _key;
@@ -56,7 +56,7 @@ public class RelatedCollection<T, S> {
 	/**
 	 * Returns the class of the collection's related models.
 	 *
-	 * @return class of the collection's related models.
+	 * @return the class of the collection's related models
 	 */
 	public Class<S> getModelClass() {
 		return _modelClass;

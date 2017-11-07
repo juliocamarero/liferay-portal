@@ -219,14 +219,6 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Staging#gotoPublishToLive" />
-
-		<execute macro="Staging#publishToLive" />
-
-		<execute macro="Navigator#openSiteURL">
-			<var name="siteName" value="Site Name" />
-		</execute>
-
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
 			<var name="panel" value="Site Administration" />
@@ -1022,7 +1014,7 @@
 
 		<var name="key_portletTitleName" value="Web Content Display" />
 
-		<execute function="AssertTextNotPresent" locator1="Portlet#SPECIFIC_TITLE" value1="Web Content Display" />
+		<execute function="AssertElementNotPresent" locator1="Portlet#SPECIFIC_TITLE" />
 
 		<execute macro="User#loginPG">
 			<var name="password" value="test" />
@@ -1036,7 +1028,7 @@
 
 		<var name="key_portletTitleName" value="Web Content Display" />
 
-		<execute function="AssertTextNotPresent" locator1="Portlet#SPECIFIC_TITLE" value1="Web Content Display" />
+		<execute function="AssertElementNotPresent" locator1="Portlet#SPECIFIC_TITLE" />
 
 		<execute macro="Navigator#gotoStagedSitePage">
 			<var name="pageName" value="Staging Test Page" />
@@ -1264,7 +1256,15 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute function="AssertTextNotPresent" locator1="WCD#WEB_CONTENT_CONTENT" value1="Web Content Title 2" />
+		<if>
+			<condition function="IsElementPresent" locator1="WCD#WEB_CONTENT_CONTENT" />
+			<then>
+				<execute function="AssertTextNotEquals" locator1="WCD#WEB_CONTENT_CONTENT" value1="Web Content Title 2" />
+			</then>
+			<else>
+				<execute function="AssertElementNotPresent" locator1="WCD#WEB_CONTENT_CONTENT" />
+			</else>
+		</if>
 
 		<execute macro="Page#gotoMyAccount">
 			<var name="portletName" value="My Workflow Tasks" />
@@ -1893,7 +1893,7 @@
 
 		<execute function="SelectFrame" locator1="IFrame#METADATA_SETS_IFRAME" />
 
-		<var locator="Staging#HISTORY_VERSION" name="historyVersion" />
+		<var method="selenium#getText(Staging#HISTORY_VERSION)" name="historyVersion" />
 
 		<execute macro="User#logoutAndLoginPG">
 			<var name="userLoginEmailAddress" value="test@liferay.com" />
@@ -1977,16 +1977,6 @@
 		<execute macro="Staging#activateStagingCP">
 			<var name="siteName" value="Site Name" />
 		</execute>
-
-		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Site Name" />
-		</execute>
-
-		<execute macro="Navigator#gotoStagedView" />
-
-		<execute macro="Staging#gotoPublishToLive" />
-
-		<execute macro="Staging#publishToLive" />
 
 		<execute macro="Navigator#openSiteURL">
 			<var name="siteName" value="Site Name" />

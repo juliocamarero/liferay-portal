@@ -22,6 +22,8 @@ import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
+import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionException;
+import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNameException;
 import com.liferay.mobile.device.rules.model.MDRAction;
 import com.liferay.mobile.device.rules.model.MDRRuleGroupInstance;
 import com.liferay.mobile.device.rules.service.MDRActionLocalService;
@@ -319,11 +321,15 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		MultiSessionMessages.add(
 			actionRequest, portletResource + "layoutAdded", layout);
 
-		String redirect = portal.getLayoutFullURL(layout, themeDisplay);
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
-		if (layout.isTypeURL()) {
-			redirect = portal.getGroupFriendlyURL(
-				layout.getLayoutSet(), themeDisplay);
+		if (Validator.isNull(redirect)) {
+			redirect = portal.getLayoutFullURL(layout, themeDisplay);
+
+			if (layout.isTypeURL()) {
+				redirect = portal.getGroupFriendlyURL(
+					layout.getLayoutSet(), themeDisplay);
+			}
 		}
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
@@ -558,7 +564,11 @@ public class LayoutAdminPortlet extends MVCPortlet {
 			stagingGroupId, privateLayout, layout.getLayoutId(),
 			layout.getTypeSettingsProperties());
 
-		String redirect = portal.getLayoutFullURL(layout, themeDisplay);
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
+
+		if (Validator.isNull(redirect)) {
+			redirect = portal.getLayoutFullURL(layout, themeDisplay);
+		}
 
 		MultiSessionMessages.add(actionRequest, "layoutUpdated", layout);
 
@@ -1052,10 +1062,12 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	@Override
 	protected boolean isSessionErrorException(Throwable cause) {
 		if (cause instanceof AssetCategoryException ||
+			cause instanceof DuplicateLayoutPageTemplateCollectionException ||
 			cause instanceof ImageTypeException ||
 			cause instanceof LayoutFriendlyURLException ||
 			cause instanceof LayoutFriendlyURLsException ||
 			cause instanceof LayoutNameException ||
+			cause instanceof LayoutPageTemplateCollectionNameException ||
 			cause instanceof LayoutParentLayoutIdException ||
 			cause instanceof LayoutSetVirtualHostException ||
 			cause instanceof LayoutTypeException ||

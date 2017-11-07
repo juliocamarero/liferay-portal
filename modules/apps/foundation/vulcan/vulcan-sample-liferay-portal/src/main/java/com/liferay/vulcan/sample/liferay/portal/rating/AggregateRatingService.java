@@ -14,6 +14,8 @@
 
 package com.liferay.vulcan.sample.liferay.portal.rating;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.vulcan.sample.liferay.portal.resource.identifier.AggregateRatingIdentifier;
 
 /**
@@ -21,7 +23,9 @@ import com.liferay.vulcan.sample.liferay.portal.resource.identifier.AggregateRat
  * AggregateRating} for a certain combination of className/classPK.
  *
  * @author Alejandro Hernández
+ * @review
  */
+@ProviderType
 public interface AggregateRatingService {
 
 	/**
@@ -29,6 +33,7 @@ public interface AggregateRatingService {
 	 *
 	 * @param  aggregateRatingIdentifier the rating identifier.
 	 * @return the aggregate rating.
+	 * @review
 	 */
 	public AggregateRating getAggregateRating(
 		AggregateRatingIdentifier aggregateRatingIdentifier);

@@ -54,6 +54,7 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.impl.ResourceBlockImpl;
 import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.base.ResourceBlockLocalServiceBaseImpl;
@@ -79,7 +80,9 @@ import javax.sql.DataSource;
  *
  * @author Connor McKay
  * @author Shuyang Zhou
+ * @deprecated As of 7.0.0, with no direct replacement
  */
+@Deprecated
 public class ResourceBlockLocalServiceImpl
 	extends ResourceBlockLocalServiceBaseImpl {
 
@@ -487,11 +490,6 @@ public class ResourceBlockLocalServiceImpl
 							resourceBlockPermissionLocalService.
 								deleteResourceBlockPermissions(resourceBlockId);
 						}
-
-						PermissionCacheUtil.clearResourceBlockCache(
-							resourceBlock.getCompanyId(),
-							resourceBlock.getGroupId(),
-							resourceBlock.getName());
 					}
 				}
 
@@ -502,8 +500,10 @@ public class ResourceBlockLocalServiceImpl
 			catch (ORMException orme) {
 				if (_log.isWarnEnabled()) {
 					_log.warn(
-						"Unable to decrement reference count for resource " +
-							"block " + resourceBlockId + ". Retrying.");
+						StringBundler.concat(
+							"Unable to decrement reference count for resource ",
+							"block ", String.valueOf(resourceBlockId),
+							". Retrying."));
 				}
 			}
 		}
@@ -752,9 +752,6 @@ public class ResourceBlockLocalServiceImpl
 			PermissionThreadLocal.setFlushResourceBlockEnabled(
 				companyId, groupId, name, flushResourceBlockEnabled);
 
-			PermissionCacheUtil.clearResourceBlockCache(
-				companyId, groupId, name);
-
 			PermissionCacheUtil.clearResourcePermissionCache(
 				ResourceConstants.SCOPE_INDIVIDUAL, name,
 				String.valueOf(primKey));
@@ -871,8 +868,6 @@ public class ResourceBlockLocalServiceImpl
 		resourceBlockLocalService.updateResourceBlockId(
 			companyId, groupId, name, permissionedModel, permissionsHash,
 			resourceBlockPermissionsContainer);
-
-		PermissionCacheUtil.clearResourceBlockCache(companyId, groupId, name);
 	}
 
 	@Override
@@ -970,9 +965,11 @@ public class ResourceBlockLocalServiceImpl
 			catch (ORMException orme) {
 				if (_log.isWarnEnabled()) {
 					_log.warn(
-						"Unable to increment reference count for resource " +
-							"block " + resourceBlock.getResourceBlockId() +
-								". Retrying");
+						StringBundler.concat(
+							"Unable to increment reference count for resource ",
+							"block ",
+							String.valueOf(resourceBlock.getResourceBlockId()),
+							". Retrying"));
 				}
 			}
 			finally {
@@ -1023,8 +1020,10 @@ public class ResourceBlockLocalServiceImpl
 
 		if (_log.isWarnEnabled()) {
 			_log.warn(
-				"Resource block " + permissionedModel.getResourceBlockId() +
-					" missing for " + name + "#" + primKey);
+				StringBundler.concat(
+					"Resource block ",
+					String.valueOf(permissionedModel.getResourceBlockId()),
+					" missing for ", name, "#", String.valueOf(primKey)));
 		}
 
 		long groupId = 0;

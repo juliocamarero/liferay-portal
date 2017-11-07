@@ -19,7 +19,7 @@
 
 		<execute function="Uncheck" locator1="Checkbox#DISPLAY_IMMEDIATELY" />
 
-		<var attribute="value" locator="//input[contains(@id,'displayDateHour')]" name="displayDateHour" />
+		<var method="selenium#getAttribute('//input[contains(@id,\'displayDateHour\')]@value')" name="displayDateHour" />
 		<var name="displayDateHourLength" value="${displayDateHour?length()}" />
 
 		<if>
@@ -29,11 +29,11 @@
 			</then>
 		</if>
 
-		<var attribute="value" locator="//input[contains(@id,'displayDateAmPm')]" name="displayDateAMPM" />
+		<var method="selenium#getAttribute('//input[contains(@id,\'displayDateAmPm\')]@value')" name="displayDateAMPM" />
 		<var method="StringUtil#replace('${displayDateAMPM}', '0', 'AM')" name="displayDateAMPM" />
 		<var method="StringUtil#replace('${displayDateAMPM}', '1', 'PM')" name="displayDateAMPM" />
 
-		<var attribute="value" locator="//input[contains(@id,'displayDateMinute')]" name="displayDateMinute" />
+		<var method="selenium#getAttribute('//input[contains(@id,\'displayDateMinute\')]@value')" name="displayDateMinute" />
 		<var method="MathUtil#sum('${displayDateMinute}', '2')" name="displayDateMinuteFuture" />
 		<var name="displayDateMinuteFutureLength" value="${displayDateMinuteFuture?length()}" />
 
@@ -134,7 +134,9 @@
 			<var name="key_menuItem" value="Edit" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="AlloyEditor#TITLE_FIELD" value1="${entryTitle}" />
+		<execute function="AssertTextEquals" locator1="AlloyEditor#EDITOR" value1="${entryTitle}">
+			<var name="key_editor" value="title" />
+		</execute>
 
 		<execute macro="AlloyEditor#addTitleAndContent">
 			<var name="content" value="${entryContentEdit}" />

@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -96,7 +97,9 @@ public class ModulesStructureTest {
 
 					String dirName = String.valueOf(dirPath.getFileName());
 
-					if (dirName.charAt(0) == '.') {
+					if ((dirName.charAt(0) == '.') ||
+						dirName.equals("node_modules")) {
+
 						return FileVisitResult.SKIP_SUBTREE;
 					}
 
@@ -676,10 +679,6 @@ public class ModulesStructureTest {
 	}
 
 	private void _testAntPluginIgnoreFiles(Path dirPath) throws IOException {
-		if (_isInPrivateModulesDir(dirPath)) {
-			return;
-		}
-
 		if (_getGitRepoPath(dirPath) == null) {
 			Path parentDirPath = dirPath.getParent();
 
@@ -769,14 +768,11 @@ public class ModulesStructureTest {
 		Path gradlePropertiesPath = dirPath.resolve("gradle.properties");
 		Path settingsGradlePath = dirPath.resolve("settings.gradle");
 
-		if (!_isInGitRepoReadOnly(dirPath)) {
-			String buildGradle = ModulesStructureTestUtil.read(buildGradlePath);
+		String buildGradle = ModulesStructureTestUtil.read(buildGradlePath);
 
-			Assert.assertEquals(
-				"Incorrect " + buildGradlePath,
-				_getGitRepoBuildGradle(dirPath, buildGradleTemplate),
-				buildGradle);
-		}
+		Assert.assertEquals(
+			"Incorrect " + buildGradlePath,
+			_getGitRepoBuildGradle(dirPath, buildGradleTemplate), buildGradle);
 
 		String gradleProperties = ModulesStructureTestUtil.read(
 			gradlePropertiesPath);
@@ -953,7 +949,7 @@ public class ModulesStructureTest {
 			return;
 		}
 
-		if (_isInGitRepoReadOnly(dirPath) || _isInPrivateModulesDir(dirPath)) {
+		if (_isInGitRepoReadOnly(dirPath)) {
 			return;
 		}
 
@@ -1024,7 +1020,73 @@ public class ModulesStructureTest {
 			ModulesStructureTestUtil.getGradleDependencies(
 				content, path, _modulesDirPath);
 
+		Path dirPath = path.getParent();
+
+		Map<String, Boolean> allowedConfigurationsMap = new TreeMap<>();
+
+		boolean hasSrcMainDir = Files.exists(dirPath.resolve("src/main"));
+		boolean hasSrcTestDir = Files.exists(dirPath.resolve("src/test"));
+		boolean hasSrcTestIntegrationDir = Files.exists(
+			dirPath.resolve("src/testIntegration"));
+
+		boolean mainConfigurationsAllowed = false;
+
+		if (hasSrcMainDir ||
+			(!hasSrcMainDir && !hasSrcTestDir && !hasSrcTestIntegrationDir) ||
+			content.contains("copyLibs {\n\tenabled = true")) {
+
+			mainConfigurationsAllowed = true;
+		}
+
+		allowedConfigurationsMap.put("compile", mainConfigurationsAllowed);
+		allowedConfigurationsMap.put("compileOnly", mainConfigurationsAllowed);
+		allowedConfigurationsMap.put("provided", mainConfigurationsAllowed);
+
+		allowedConfigurationsMap.put("testCompile", hasSrcTestDir);
+		allowedConfigurationsMap.put("testRuntime", hasSrcTestDir);
+
+		allowedConfigurationsMap.put(
+			"testIntegrationCompile", hasSrcTestIntegrationDir);
+		allowedConfigurationsMap.put(
+			"testIntegrationRuntime", hasSrcTestIntegrationDir);
+
 		for (GradleDependency gradleDependency : gradleDependencies) {
+			Boolean allowed = allowedConfigurationsMap.get(
+				gradleDependency.getConfiguration());
+
+			if ((allowed != null) && !allowed.booleanValue()) {
+				StringBundler sb = new StringBundler(
+					allowedConfigurationsMap.size() * 4 + 4);
+
+				sb.append("Incorrect configuration of dependency {");
+				sb.append(gradleDependency);
+				sb.append("} in ");
+				sb.append(path);
+				sb.append(", use one of these instead: ");
+
+				boolean first = true;
+
+				for (Map.Entry<String, Boolean> entry :
+						allowedConfigurationsMap.entrySet()) {
+
+					if (!entry.getValue()) {
+						continue;
+					}
+
+					if (!first) {
+						sb.append(StringPool.COMMA_AND_SPACE);
+					}
+
+					first = false;
+
+					sb.append(CharPool.QUOTE);
+					sb.append(entry.getKey());
+					sb.append(CharPool.QUOTE);
+				}
+
+				Assert.fail(sb.toString());
+			}
+
 			GradleDependency activeGradleDependency =
 				_getActiveGradleDependency(
 					gradleDependencies, gradleDependency);

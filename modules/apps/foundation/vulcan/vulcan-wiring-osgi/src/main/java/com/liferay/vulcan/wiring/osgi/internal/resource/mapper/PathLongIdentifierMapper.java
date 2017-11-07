@@ -38,6 +38,7 @@ import org.osgi.service.component.annotations.Reference;
  * </p>
  *
  * @author Alejandro Hernández
+ * @review
  */
 @Component(immediate = true)
 public class PathLongIdentifierMapper
@@ -45,11 +46,13 @@ public class PathLongIdentifierMapper
 
 	@Override
 	public <U> Path map(LongIdentifier longIdentifier, Class<U> modelClass) {
+		String className = modelClass.getName();
+
 		Optional<String> optional = _collectionResourceManager.getNameOptional(
-			modelClass.getName());
+			className);
 
 		String name = optional.orElseThrow(
-			() -> new UnresolvableURI(modelClass));
+			() -> new UnresolvableURI(className));
 
 		return new Path(name, String.valueOf(longIdentifier.getId()));
 	}

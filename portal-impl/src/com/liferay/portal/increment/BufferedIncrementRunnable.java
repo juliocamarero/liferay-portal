@@ -14,6 +14,7 @@
 
 package com.liferay.portal.increment;
 
+import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.portal.kernel.cache.thread.local.Lifecycle;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.concurrent.BatchablePipe;
@@ -21,14 +22,13 @@ import com.liferay.portal.kernel.increment.Increment;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
-import com.liferay.portal.kernel.util.CentralizedThreadLocal;
 
 import java.io.Serializable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author Shuyang Zhou
+ * @author     Shuyang Zhou
  * @deprecated As of 7.0.0, with no direct replacement
  */
 @Deprecated

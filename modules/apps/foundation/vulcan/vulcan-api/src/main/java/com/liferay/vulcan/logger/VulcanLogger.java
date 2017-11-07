@@ -14,22 +14,23 @@
 
 package com.liferay.vulcan.logger;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.liferay.vulcan.result.APIError;
 
 /**
- * Instances of this class allow developers to use its own loggers for Vulcan
- * warnings.
+ * Defines loggers for Vulcan warnings.
  *
  * @author Alejandro Hernández
  */
+@ConsumerType
 public interface VulcanLogger {
 
 	/**
-	 * Logs a message in the form of a exception.
+	 * Logs a message in the form of an {@link APIError}.
 	 *
-	 * @param apiError the error.
+	 * @param apiError the error
 	 */
-	public default void error(APIError apiError) {
-	}
+	public void error(APIError apiError);
 
 }

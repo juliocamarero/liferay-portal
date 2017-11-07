@@ -14,6 +14,9 @@
 
 package com.liferay.frontend.js.loader.modules.extender.npm;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.util.Collection;
 
 /**
@@ -30,8 +33,7 @@ import java.util.Collection;
  * <code>p@1.0.0/m</code> (the module <code>m</code> residing in package
  * <code>p</code> with version 1.0.0) containing three OSGi bundles:
  * <code>b1.jar</code>, <code>b2.jar</code>, and <code>b3.jar</code>. In this
- * scenario, you would have three JS modules in the {@link
- * com.liferay.frontend.js.loader.modules.extender.internal.npm.NPMRegistry}
+ * scenario, you would have three JS modules in the {@link NPMRegistry}
  * (one per bundle) and one JS resolved module (depending on the algorithm used,
  * points to one of the three JS modules). The JS module is served to the
  * browser using its JS resolved module (i.e., a virtual entity passed to the
@@ -96,5 +98,14 @@ public interface JSModule extends JSResolvableBundleAsset {
 	 * @return the NPM package
 	 */
 	public JSPackage getJSPackage();
+
+	/**
+	 * Returns the module's source map.
+	 *
+	 * @return an {@link InputStream} that allows reading the bytes inside the
+	 *         source map
+	 * @throws IOException if an IO exception occurred
+	 */
+	public InputStream getSourceMapInputStream() throws IOException;
 
 }

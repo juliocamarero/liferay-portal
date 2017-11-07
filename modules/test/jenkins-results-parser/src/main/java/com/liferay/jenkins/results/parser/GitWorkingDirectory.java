@@ -420,10 +420,10 @@ public class GitWorkingDirectory {
 				return null;
 			}
 
-			return new Branch(branchName, null, getBranchSha(branchName));
+			return new Branch(branchName, null, getBranchSHA(branchName));
 		}
 
-		List<Branch> branches = getBranches(remote);
+		List<Branch> branches = getBranches(branchName, remote);
 
 		for (Branch branch : branches) {
 			if (branchName.equals(branch.getName())) {
@@ -434,23 +434,32 @@ public class GitWorkingDirectory {
 		return null;
 	}
 
-	public List<Branch> getBranches(Remote remote) {
+	public List<Branch> getBranches(String branchName, Remote remote) {
 		if (remote == null) {
 			List<String> localBranchNames = getLocalBranchNames();
 
 			List<Branch> localBranches = new ArrayList<>(
 				localBranchNames.size());
 
+			if (branchName != null) {
+				if (localBranchNames.contains(branchName)) {
+					localBranches.add(
+						new Branch(branchName, null, getBranchSHA(branchName)));
+				}
+
+				return localBranches;
+			}
+
 			for (String localBranchName : localBranchNames) {
 				localBranches.add(
 					new Branch(
-						localBranchName, null, getBranchSha(localBranchName)));
+						localBranchName, null, getBranchSHA(localBranchName)));
 			}
 
 			return localBranches;
 		}
 
-		return getRemoteBranches(remote);
+		return getRemoteBranches(branchName, remote);
 	}
 
 	public List<String> getBranchNames(Remote remote) {
@@ -461,7 +470,7 @@ public class GitWorkingDirectory {
 		return getRemoteBranchNames(remote);
 	}
 
-	public List<String> getBranchNamesContainingSha(String sha) {
+	public List<String> getBranchNamesContainingSHA(String sha) {
 		ExecutionResult executionResult = executeBashCommands(
 			1, 1000 * 60 * 2, "git branch --contains " + sha);
 
@@ -499,7 +508,7 @@ public class GitWorkingDirectory {
 		return branchNamesList;
 	}
 
-	public String getBranchSha(String localBranchName) {
+	public String getBranchSHA(String localBranchName) {
 		ExecutionResult executionResult = executeBashCommands(
 			1, 1000 * 60 * 2, "git rev-parse " + localBranchName);
 
@@ -567,7 +576,19 @@ public class GitWorkingDirectory {
 	public Remote getRemote(String name) {
 		Map<String, Remote> remotes = getRemotes();
 
-		return remotes.get(name);
+		name = name.trim();
+
+		Remote remote = remotes.get(name);
+
+		if ((remote == null) && name.equals("upstream")) {
+			JenkinsResultsParserUtil.sleep(1000);
+
+			remotes = getRemotes();
+
+			return remotes.get(name);
+		}
+
+		return remote;
 	}
 
 	public Set<String> getRemoteNames() {
@@ -638,12 +659,24 @@ public class GitWorkingDirectory {
 		lines = Arrays.copyOfRange(lines, x, lines.length);
 
 		try {
+			StringBuilder sb = new StringBuilder();
+
+			sb.append("Found remotes: ");
+
 			for (int i = 0; i < lines.length; i = i + 2) {
 				Remote remote = new Remote(
 					this, Arrays.copyOfRange(lines, i, i + 2));
 
+				if (i > 0) {
+					sb.append(", ");
+				}
+
+				sb.append(remote.getName());
+
 				remotes.put(remote.getName(), remote);
 			}
+
+			System.out.println(sb);
 		}
 		catch (Throwable t) {
 			System.out.println("Unable to parse remotes\n" + standardOut);
@@ -668,6 +701,38 @@ public class GitWorkingDirectory {
 
 	public File getWorkingDirectory() {
 		return _workingDirectory;
+	}
+
+	public String log(int num) {
+		return log(num, null);
+	}
+
+	public String log(int num, File file) {
+		for (int i = 0; i < 5; i++) {
+			try {
+				String gitLog = _log(num, file, "%H %s");
+
+				gitLog = gitLog.replaceAll(
+					"Finished executing Bash commands.", "");
+
+				String[] gitLogItems = gitLog.split("\n");
+
+				for (String gitLogItem : gitLogItems) {
+					if (!gitLogItem.matches("([0-9a-f]{40}) (.*)")) {
+						throw new RuntimeException("Unable to run: git log");
+					}
+				}
+
+				return gitLog;
+			}
+			catch (RuntimeException re) {
+				re.printStackTrace();
+
+				JenkinsResultsParserUtil.sleep(1000);
+			}
+		}
+
+		throw new RuntimeException("Unable to run: git log");
 	}
 
 	public boolean pushToRemote(boolean force, Branch remoteBranch) {
@@ -826,6 +891,30 @@ public class GitWorkingDirectory {
 		}
 	}
 
+	public String status() {
+		for (int i = 0; i < 5; i++) {
+			try {
+				String gitStatus = _status();
+
+				gitStatus = gitStatus.replaceAll(
+					"Finished executing Bash commands.", "");
+
+				if (!gitStatus.startsWith("On branch")) {
+					throw new RuntimeException("Unable to run: git status");
+				}
+
+				return gitStatus;
+			}
+			catch (RuntimeException re) {
+				re.printStackTrace();
+
+				JenkinsResultsParserUtil.sleep(1000);
+			}
+		}
+
+		throw new RuntimeException("Unable to run: git status");
+	}
+
 	public static class Branch {
 
 		public String getName() {
@@ -836,7 +925,7 @@ public class GitWorkingDirectory {
 			return _remote;
 		}
 
-		public String getSha() {
+		public String getSHA() {
 			return _sha;
 		}
 
@@ -1062,11 +1151,20 @@ public class GitWorkingDirectory {
 			"Real Git directory could not be found in " + gitFile.getPath());
 	}
 
-	protected List<Branch> getRemoteBranches(Remote remote) {
+	protected List<Branch> getRemoteBranches(String branchName, Remote remote) {
+		String command = null;
+
+		if (branchName != null) {
+			command = JenkinsResultsParserUtil.combine(
+				"git ls-remote -h ", remote.getName(), " ", branchName);
+		}
+		else {
+			command = JenkinsResultsParserUtil.combine(
+				"git ls-remote -h ", remote.getName());
+		}
+
 		ExecutionResult executionResult = executeBashCommands(
-			1, 1000 * 60,
-			JenkinsResultsParserUtil.combine(
-				"git ls-remote -h ", remote.getName()));
+			1, 1000 * 60 * 10, command);
 
 		if (executionResult.getExitValue() != 0) {
 			throw new RuntimeException(
@@ -1097,6 +1195,7 @@ public class GitWorkingDirectory {
 
 	protected List<String> getRemoteBranchNames(Remote remote) {
 		ExecutionResult executionResult = executeBashCommands(
+			1, 1000 * 60 * 10,
 			JenkinsResultsParserUtil.combine(
 				"git ls-remote -h ", remote.getName()));
 
@@ -1169,10 +1268,22 @@ public class GitWorkingDirectory {
 
 		String remoteURL = upstreamRemote.getRemoteURL();
 
-		if (!remoteURL.contains("-ee") && !remoteURL.contains("-private")) {
-			remoteURL = remoteURL.replace(".git", "-private.git");
+		String repositoryName = getRepositoryName();
 
-			addRemote(true, "upstream", remoteURL);
+		if (repositoryName.endsWith("-ee")) {
+			if (!remoteURL.contains("-ee")) {
+				remoteURL = remoteURL.replace(".git", "-ee.git");
+
+				addRemote(true, "upstream", remoteURL);
+			}
+		}
+
+		if (repositoryName.endsWith("-private")) {
+			if (!remoteURL.contains("-private")) {
+				remoteURL = remoteURL.replace(".git", "-private.git");
+
+				addRemote(true, "upstream", remoteURL);
+			}
 		}
 	}
 
@@ -1275,23 +1386,67 @@ public class GitWorkingDirectory {
 
 	};
 
+	private static List<String> _getBuildPropertyAsList(String key) {
+		try {
+			return JenkinsResultsParserUtil.getBuildPropertyAsList(key);
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(
+				"Unable to get build property " + key, ioe);
+		}
+	}
+
+	private String _log(int num, File file, String format) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("git log -n ");
+		sb.append(num);
+		sb.append(" --pretty=format:'");
+		sb.append(format);
+		sb.append("'");
+
+		if (file != null) {
+			sb.append(" ");
+
+			try {
+				sb.append(file.getCanonicalPath());
+			}
+			catch (IOException ioe) {
+				throw new RuntimeException(ioe);
+			}
+		}
+
+		ExecutionResult result = executeBashCommands(sb.toString());
+
+		if (result.getExitValue() != 0) {
+			throw new RuntimeException("Unable to run: git log");
+		}
+
+		return result.getStandardOut();
+	}
+
+	private String _status() {
+		String command = "git status";
+
+		ExecutionResult result = executeBashCommands(command);
+
+		if (result.getExitValue() != 0) {
+			throw new RuntimeException("Unable to run: git status");
+		}
+
+		return result.getStandardOut();
+	}
+
 	private static final Pattern _gitDirectoryPathPattern = Pattern.compile(
 		"gitdir\\: (.*\\.git)");
 	private static final Pattern _gitLsRemotePattern = Pattern.compile(
 		"(?<sha>[^\\s]{40}+)[\\s]+refs/heads/(?<name>[^\\s]+)");
 	private static final List<String> _privateOnlyRepositoryNames =
-		Arrays.asList(
-			new String[] {
-				"liferay-jenkins-ee", "liferay-jenkins-tools-private",
-				"liferay-plugins-ee", "liferay-portal-ee",
-				"liferay-qa-portal-legacy-ee", "liferay-release-tool-ee"
-			});
+		_getBuildPropertyAsList(
+			"git.working.directory.private.only.repository.names");
 	private static final List<String> _publicOnlyRepositoryNames =
-		Arrays.asList(
-			new String[] {
-				"liferay-binaries-cache-2017", "liferay-blade-samples",
-				"liferay-plugins", "liferay-portal", "portals-pluto"
-			});
+		_getBuildPropertyAsList(
+			"git.working.directory.public.only.repository.names");
 
 	private File _gitDirectory;
 	private final String _repositoryName;

@@ -17,23 +17,21 @@ package com.liferay.vulcan.consumer;
 import java.util.Objects;
 
 /**
- * Represents an operation that accepts seven input arguments and returns no
- * result. This is the seven-arity specialization of {@link
- * java.util.function.Consumer}. Unlike most other functional interfaces, {@code
- * TriConsumer} is expected to operate via side-effects.
+ * Defines a {@code java.util.function.Consumer} that takes seven input
+ * parameters. This consumer, like all consumers, doesn't return a result.
  *
- * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(Object, Object, Object, Object,
- * Object, Object, Object)}.
+ * <p>
+ * This interface can be implemented with a lambda function.
+ * </p>
  *
  * @author Alejandro Hernández
- * @see    java.util.function.Consumer
  */
 @FunctionalInterface
 public interface HeptaConsumer<A, B, C, D, E, F, G> {
 
 	/**
-	 * Performs this operation on the given arguments.
+	 * Operates with nine parameters and returns {@code void}. This function can
+	 * be implemented explicitly or with a lambda.
 	 *
 	 * @param a the first function argument
 	 * @param b the second function argument
@@ -46,15 +44,14 @@ public interface HeptaConsumer<A, B, C, D, E, F, G> {
 	public void accept(A a, B b, C c, D d, E e, F f, G g);
 
 	/**
-	 * Returns a composed {@code HeptaConsumer} that performs, in sequence, this
-	 * operation followed by the {@code after} operation. If performing either
-	 * operation throws an exception, it is relayed to the caller of the
-	 * composed operation. If performing this operation throws an exception, the
-	 * {@code after} operation will not be performed.
+	 * Returns the {@code HeptaConsumer} function that first executes the
+	 * current {@code HeptaConsumer} instance's {@code accept} method, then
+	 * executes the {@code after} parameter's {@code accept} method.
 	 *
-	 * @param  after the operation to perform after this operation
-	 * @return a composed {@code HeptaConsumer} that performs in sequence this
-	 *         operation followed by the {@code after} operation
+	 * @param  after the {@code HeptaConsumer} instance to execute after the
+	 *         current instance
+	 * @return the {@code HeptaConsumer} that executes the current instance's
+	 *         {@code accept} method, as well as that of {@code after}
 	 */
 	public default HeptaConsumer<A, B, C, D, E, F, G> andThen(
 		HeptaConsumer<? super A, ? super B, ? super C, ? super D, ? super E,

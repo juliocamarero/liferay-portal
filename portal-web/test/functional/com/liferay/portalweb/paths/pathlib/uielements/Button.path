@@ -55,7 +55,7 @@
 </tr>
 <tr>
 	<td>ADD_ENTRY</td>
-	<td>//button[contains(.,'Add Entry')]</td>
+	<td>//button[contains(.,'Add Entry')]|//a[@data-original-title='Add Entry']</td>
 	<td></td>
 </tr>
 <tr>
@@ -270,7 +270,7 @@
 </tr>
 <tr>
 	<td>COLOR_EFFECT</td>
-	<td>//a[@class='btn']//*[name()='svg'][@data-icon='effects']</td>
+	<td>//a[contains(@class, 'btn')]//*[name()='svg'][@data-icon='effects']</td>
 	<td></td>
 </tr>
 <tr>
@@ -301,6 +301,11 @@
 <tr>
 	<td>COPY_FROM_LIVE</td>
 	<td>//button[contains(.,'Copy from Live')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CREATE_CERTIFICATE</td>
+	<td>//button[contains(.,'Create Certificate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -341,6 +346,11 @@
 <tr>
 	<td>DOWNLOAD</td>
 	<td>//a[contains(@class,'btn') and contains(.,'Download')] | //button[contains(.,'Download')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DOWNLOAD_CERTIFICATE</td>
+	<td>//a[contains(.,'Download Certificate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -584,6 +594,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>REPLACE_CERTIFICATE</td>
+	<td>//button[contains(.,'Replace Certificate')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>REPLY</td>
 	<td>//button[contains(.,'Reply')]</td>
 	<td></td>
@@ -744,13 +759,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>TAB_SUBMIT_BTN</td>
+	<td>//button[contains(@type,'submit') and contains(.,'${key_tab}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SUBMIT_FOR_PUBLICATION</td>
 	<td>//button[contains(.,'Submit for Publication')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>TRANSFORM</td>
-	<td>//a[@class='btn']//*[name()='svg'][@data-icon='transform']</td>
+	<td>//a[contains(@class, 'btn')]//*[name()='svg'][@data-icon='transform']</td>
 	<td></td>
 </tr>
 <tr>
