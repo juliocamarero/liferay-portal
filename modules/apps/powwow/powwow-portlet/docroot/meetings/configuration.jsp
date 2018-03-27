@@ -43,9 +43,7 @@ String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBo
 			for (Locale currentLocale : locales) {
 				String style = StringPool.BLANK;
 
-				if (Validator.isNotNull(portletPreferences.getValue("emailSubject_" + LocaleUtil.toLanguageId(currentLocale), StringPool.BLANK)) ||
-					Validator.isNotNull(portletPreferences.getValue("emailBody_" + LocaleUtil.toLanguageId(currentLocale), StringPool.BLANK))) {
-
+				if (Validator.isNotNull(portletPreferences.getValue("emailSubject_" + LocaleUtil.toLanguageId(currentLocale), StringPool.BLANK)) || Validator.isNotNull(portletPreferences.getValue("emailBody_" + LocaleUtil.toLanguageId(currentLocale), StringPool.BLANK))) {
 					style = "font-weight: bold;";
 				}
 			%>
@@ -61,7 +59,9 @@ String emailBody = PrefsParamUtil.getString(portletPreferences, request, emailBo
 		<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= "preferences--" + emailSubjectParam + "--" %>' value="<%= emailSubject %>" />
 
 		<aui:field-wrapper label="body">
-			<liferay-ui:input-editor editorImpl="ckeditor" />
+			<liferay-ui:input-editor
+				editorImpl="ckeditor"
+			/>
 
 			<aui:input name='<%= "preferences--" + emailBodyParam + "--" %>' type="hidden" value="<%= emailBody %>" />
 		</aui:field-wrapper>

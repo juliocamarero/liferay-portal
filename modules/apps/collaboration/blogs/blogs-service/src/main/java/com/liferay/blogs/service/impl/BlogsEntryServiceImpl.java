@@ -14,20 +14,23 @@
 
 package com.liferay.blogs.service.impl;
 
+import com.liferay.blogs.constants.BlogsConstants;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.base.BlogsEntryServiceBaseImpl;
-import com.liferay.blogs.service.permission.BlogsEntryPermission;
-import com.liferay.blogs.service.permission.BlogsPermission;
 import com.liferay.blogs.util.comparator.EntryDisplayDateComparator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermissionFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.servlet.taglib.ui.ImageSelector;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -37,22 +40,18 @@ import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.rss.export.RSSExporter;
+import com.liferay.rss.model.SyndContent;
+import com.liferay.rss.model.SyndEntry;
+import com.liferay.rss.model.SyndFeed;
+import com.liferay.rss.model.SyndLink;
+import com.liferay.rss.model.SyndModelFactory;
 import com.liferay.rss.util.RSSUtil;
-
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.feed.synd.SyndLink;
-import com.sun.syndication.feed.synd.SyndLinkImpl;
-import com.sun.syndication.io.FeedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -88,7 +87,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			InputStream smallImageInputStream, ServiceContext serviceContext)
 		throws PortalException {
 
-		BlogsPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
 			ActionKeys.ADD_ENTRY);
 
@@ -133,7 +132,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		BlogsPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
 			ActionKeys.ADD_ENTRY);
 
@@ -157,7 +156,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		BlogsPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
 			ActionKeys.ADD_ENTRY);
 
@@ -171,7 +170,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 	@Override
 	public void deleteEntry(long entryId) throws PortalException {
-		BlogsEntryPermission.check(
+		_blogsEntryFolderModelResourcePermission.check(
 			getPermissionChecker(), entryId, ActionKeys.DELETE);
 
 		blogsEntryLocalService.deleteEntry(entryId);
@@ -209,7 +208,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 					break;
 				}
 
-				if (BlogsEntryPermission.contains(
+				if (_blogsEntryFolderModelResourcePermission.contains(
 						getPermissionChecker(), entry, ActionKeys.VIEW)) {
 
 					entries.add(entry);
@@ -243,7 +242,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 	public BlogsEntry getEntry(long entryId) throws PortalException {
 		BlogsEntry entry = blogsEntryLocalService.getEntry(entryId);
 
-		BlogsEntryPermission.check(
+		_blogsEntryFolderModelResourcePermission.check(
 			getPermissionChecker(), entry, ActionKeys.VIEW);
 
 		return entry;
@@ -255,7 +254,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 		BlogsEntry entry = blogsEntryLocalService.getEntry(groupId, urlTitle);
 
-		BlogsEntryPermission.check(
+		_blogsEntryFolderModelResourcePermission.check(
 			getPermissionChecker(), entry, ActionKeys.VIEW);
 
 		return entry;
@@ -393,7 +392,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 					break;
 				}
 
-				if (BlogsEntryPermission.contains(
+				if (_blogsEntryFolderModelResourcePermission.contains(
 						getPermissionChecker(), entry, ActionKeys.VIEW)) {
 
 					entries.add(entry);
@@ -480,7 +479,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 					break;
 				}
 
-				if (BlogsEntryPermission.contains(
+				if (_blogsEntryFolderModelResourcePermission.contains(
 						getPermissionChecker(), entry, ActionKeys.VIEW)) {
 
 					entries.add(entry);
@@ -513,7 +512,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 	@Override
 	public BlogsEntry moveEntryToTrash(long entryId) throws PortalException {
-		BlogsEntryPermission.check(
+		_blogsEntryFolderModelResourcePermission.check(
 			getPermissionChecker(), entryId, ActionKeys.DELETE);
 
 		return blogsEntryLocalService.moveEntryToTrash(getUserId(), entryId);
@@ -521,7 +520,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 	@Override
 	public void restoreEntryFromTrash(long entryId) throws PortalException {
-		BlogsEntryPermission.check(
+		_blogsEntryFolderModelResourcePermission.check(
 			getPermissionChecker(), entryId, ActionKeys.DELETE);
 
 		blogsEntryLocalService.restoreEntryFromTrash(getUserId(), entryId);
@@ -529,7 +528,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 	@Override
 	public void subscribe(long groupId) throws PortalException {
-		BlogsPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
 
 		blogsEntryLocalService.subscribe(getUserId(), groupId);
@@ -537,7 +536,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 	@Override
 	public void unsubscribe(long groupId) throws PortalException {
-		BlogsPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
 
 		blogsEntryLocalService.unsubscribe(getUserId(), groupId);
@@ -560,7 +559,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			InputStream smallImageInputStream, ServiceContext serviceContext)
 		throws PortalException {
 
-		BlogsPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
 			ActionKeys.UPDATE);
 
@@ -630,7 +629,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		BlogsEntryPermission.check(
+		_blogsEntryFolderModelResourcePermission.check(
 			getPermissionChecker(), entryId, ActionKeys.UPDATE);
 
 		return blogsEntryLocalService.updateEntry(
@@ -646,7 +645,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 		String displayStyle, String feedURL, String entryURL,
 		List<BlogsEntry> blogsEntries, ThemeDisplay themeDisplay) {
 
-		SyndFeed syndFeed = new SyndFeedImpl();
+		SyndFeed syndFeed = _syndModelFactory.createSyndFeed();
 
 		syndFeed.setDescription(description);
 
@@ -655,13 +654,13 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 		syndFeed.setEntries(syndEntries);
 
 		for (BlogsEntry entry : blogsEntries) {
-			SyndEntry syndEntry = new SyndEntryImpl();
+			SyndEntry syndEntry = _syndModelFactory.createSyndEntry();
 
 			String author = PortalUtil.getUserName(entry);
 
 			syndEntry.setAuthor(author);
 
-			SyndContent syndContent = new SyndContentImpl();
+			SyndContent syndContent = _syndModelFactory.createSyndContent();
 
 			syndContent.setType(RSSUtil.ENTRY_TYPE_DEFAULT);
 
@@ -723,7 +722,7 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 
 		syndFeed.setLinks(syndLinks);
 
-		SyndLink selfSyndLink = new SyndLinkImpl();
+		SyndLink selfSyndLink = _syndModelFactory.createSyndLink();
 
 		syndLinks.add(selfSyndLink);
 
@@ -734,15 +733,27 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 		syndFeed.setTitle(name);
 		syndFeed.setUri(feedURL);
 
-		try {
-			return RSSUtil.export(syndFeed);
-		}
-		catch (FeedException fe) {
-			throw new SystemException(fe);
-		}
+		return _rssExporter.export(syndFeed);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BlogsEntryServiceImpl.class);
+
+	private static volatile ModelResourcePermission<BlogsEntry>
+		_blogsEntryFolderModelResourcePermission =
+			ModelResourcePermissionFactory.getInstance(
+				BlogsEntryServiceImpl.class,
+				"_blogsEntryFolderModelResourcePermission", BlogsEntry.class);
+	private static volatile PortletResourcePermission
+		_portletResourcePermission =
+			PortletResourcePermissionFactory.getInstance(
+				BlogsEntryServiceImpl.class, "_portletResourcePermission",
+				BlogsConstants.RESOURCE_NAME);
+
+	@ServiceReference(type = RSSExporter.class)
+	private RSSExporter _rssExporter;
+
+	@ServiceReference(type = SyndModelFactory.class)
+	private SyndModelFactory _syndModelFactory;
 
 }

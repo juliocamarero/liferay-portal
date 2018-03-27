@@ -46,10 +46,10 @@ OrderByComparator<BackgroundTask> orderByComparator = BackgroundTaskComparatorFa
 		orderByCol="<%= orderByCol %>"
 		orderByComparator="<%= orderByComparator %>"
 		orderByType="<%= orderByType %>"
-		total="<%= BackgroundTaskManagerUtil.getBackgroundTasksCount(StagingUtil.getStagingAndLiveGroupIds(groupId), selPortlet.getPortletId(), BackgroundTaskExecutorNames.PORTLET_STAGING_BACKGROUND_TASK_EXECUTOR) %>"
+		total="<%= BackgroundTaskManagerUtil.getBackgroundTasksCount(StagingUtil.getStagingAndLiveGroupIds(groupId), selPortlet.getPortletId(), new String[] {BackgroundTaskExecutorNames.PORTLET_REMOTE_STAGING_BACKGROUND_TASK_EXECUTOR, BackgroundTaskExecutorNames.PORTLET_STAGING_BACKGROUND_TASK_EXECUTOR}) %>"
 	>
 		<liferay-ui:search-container-results
-			results="<%= BackgroundTaskManagerUtil.getBackgroundTasks(StagingUtil.getStagingAndLiveGroupIds(groupId), selPortlet.getPortletId(), BackgroundTaskExecutorNames.PORTLET_STAGING_BACKGROUND_TASK_EXECUTOR, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
+			results="<%= BackgroundTaskManagerUtil.getBackgroundTasks(StagingUtil.getStagingAndLiveGroupIds(groupId), selPortlet.getPortletId(), new String[] {BackgroundTaskExecutorNames.PORTLET_REMOTE_STAGING_BACKGROUND_TASK_EXECUTOR, BackgroundTaskExecutorNames.PORTLET_STAGING_BACKGROUND_TASK_EXECUTOR}, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
 		/>
 
 		<liferay-ui:search-container-row
@@ -91,7 +91,13 @@ OrderByComparator<BackgroundTask> orderByComparator = BackgroundTaskComparatorFa
 
 			<liferay-ui:search-container-column-text>
 				<c:if test="<%= !backgroundTask.isInProgress() %>">
-					<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+					<liferay-ui:icon-menu
+						direction="left-side"
+						icon="<%= StringPool.BLANK %>"
+						markupView="lexicon"
+						message="<%= StringPool.BLANK %>"
+						showWhenSingleIcon="<%= true %>"
+					>
 
 						<%
 						Date completionDate = backgroundTask.getCompletionDate();
@@ -112,7 +118,9 @@ OrderByComparator<BackgroundTask> orderByComparator = BackgroundTaskComparatorFa
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 
 	<%

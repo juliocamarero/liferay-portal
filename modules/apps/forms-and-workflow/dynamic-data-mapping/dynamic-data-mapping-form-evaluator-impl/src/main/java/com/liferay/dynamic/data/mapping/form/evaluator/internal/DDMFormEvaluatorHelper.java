@@ -29,6 +29,7 @@ import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.GetVal
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.JumpPageFunction;
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetEnabledFunction;
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetInvalidFunction;
+import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetOptionsFunction;
 import com.liferay.dynamic.data.mapping.form.evaluator.internal.functions.SetPropertyFunction;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueAccessor;
@@ -116,23 +117,14 @@ public class DDMFormEvaluatorHelper {
 			evaluateDDMFormRule(ddmFormRule);
 		}
 
-		DDMFormEvaluationResult ddmFormEvaluationResult =
-			new DDMFormEvaluationResult();
-
 		List<DDMFormFieldEvaluationResult> ddmFormFieldEvaluationResults =
 			getDDMFormFieldEvaluationResults();
 
 		setDDMFormFieldEvaluationResultsValidation(
 			ddmFormFieldEvaluationResults);
 
-		ddmFormEvaluationResult.setDDMFormFieldEvaluationResults(
-			ddmFormFieldEvaluationResults);
-
-		Set<Integer> disabledPagesIndexes = getDisabledPagesIndexes();
-
-		ddmFormEvaluationResult.setDisabledPagesIndexes(disabledPagesIndexes);
-
-		return ddmFormEvaluationResult;
+		return DDMFormEvaluationResultBuilder.build(
+			ddmFormFieldEvaluationResults, getDisabledPagesIndexes());
 	}
 
 	protected Object convertToTargetDataType(
@@ -439,11 +431,23 @@ public class DDMFormEvaluatorHelper {
 		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
 			"jumpPage", new JumpPageFunction(_pageFlow));
 		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
+			"setDataType",
+			new SetPropertyFunction(
+				_ddmFormFieldEvaluationResultsMap, "dataType"));
+		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
 			"setEnabled",
 			new SetEnabledFunction(_ddmFormFieldEvaluationResultsMap));
 		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
 			"setInvalid",
 			new SetInvalidFunction(_ddmFormFieldEvaluationResultsMap));
+		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
+			"setOptions",
+			new SetOptionsFunction(
+				_ddmFormFieldEvaluationResultsMap, _locale, _jsonFactory));
+		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
+			"setMultiple",
+			new SetPropertyFunction(
+				_ddmFormFieldEvaluationResultsMap, "multiple"));
 		_ddmExpressionFunctionRegistry.registerDDMExpressionFunction(
 			"setRequired",
 			new SetPropertyFunction(
@@ -463,11 +467,14 @@ public class DDMFormEvaluatorHelper {
 			DDMFormFieldValue ddmFormFieldValue)
 		throws DDMExpressionException {
 
-		for (String ddmFormFieldName : _ddmFormFieldValuesMap.keySet()) {
+		for (Map.Entry<String, List<DDMFormFieldValue>> entry :
+				_ddmFormFieldValuesMap.entrySet()) {
+
+			String ddmFormFieldName = entry.getKey();
+
 			DDMFormField ddmFormField = _ddmFormFieldsMap.get(ddmFormFieldName);
 
-			List<DDMFormFieldValue> ddmFormFieldValues =
-				_ddmFormFieldValuesMap.get(ddmFormFieldName);
+			List<DDMFormFieldValue> ddmFormFieldValues = entry.getValue();
 
 			DDMFormFieldValue selectedDDMFormFieldValue =
 				ddmFormFieldValues.get(0);

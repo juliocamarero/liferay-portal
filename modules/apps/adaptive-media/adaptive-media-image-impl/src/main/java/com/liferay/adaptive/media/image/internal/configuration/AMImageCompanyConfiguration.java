@@ -22,6 +22,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Adolfo Pérez
  */
 @ExtendedObjectClassDefinition(
+	category = "adaptive-media",
 	scope = ExtendedObjectClassDefinition.Scope.COMPANY
 )
 @Meta.OCD(
@@ -31,7 +32,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface AMImageCompanyConfiguration {
 
-	@Meta.AD(required = false)
+	@Meta.AD(name = "image-variants", required = false)
 	public String[] imageVariants();
 
 }

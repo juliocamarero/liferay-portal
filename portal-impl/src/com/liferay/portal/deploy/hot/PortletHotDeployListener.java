@@ -76,6 +76,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import javax.portlet.PortletURLGenerationListener;
+import javax.portlet.filter.ActionFilter;
+import javax.portlet.filter.EventFilter;
+import javax.portlet.filter.RenderFilter;
+import javax.portlet.filter.ResourceFilter;
 
 import javax.servlet.ServletContext;
 
@@ -391,7 +395,10 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 			CustomUserAttributes customUserAttributesInstance =
 				(CustomUserAttributes)clazz.newInstance();
 
-			portletContextBag.getCustomUserAttributes().put(
+			Map<String, CustomUserAttributes> customUserAttributesMap =
+				portletContextBag.getCustomUserAttributes();
+
+			customUserAttributesMap.put(
 				attrCustomClass, customUserAttributesInstance);
 		}
 
@@ -402,15 +409,16 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 				(javax.portlet.filter.PortletFilter)newInstance(
 					classLoader,
 					new Class<?>[] {
-						javax.portlet.filter.ActionFilter.class,
-						javax.portlet.filter.EventFilter.class,
+						ActionFilter.class, EventFilter.class,
 						javax.portlet.filter.PortletFilter.class,
-						javax.portlet.filter.RenderFilter.class,
-						javax.portlet.filter.ResourceFilter.class
+						RenderFilter.class, ResourceFilter.class
 					},
 					portletFilter.getFilterClass());
 
-			portletContextBag.getPortletFilters().put(
+			Map<String, javax.portlet.filter.PortletFilter> portletFiltersMap =
+				portletContextBag.getPortletFilters();
+
+			portletFiltersMap.put(
 				portletFilter.getFilterName(), portletFilterInstance);
 		}
 
@@ -428,7 +436,10 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 					classLoader, PortletURLGenerationListener.class,
 					portletURLListener.getListenerClass());
 
-			portletContextBag.getPortletURLListeners().put(
+			Map<String, PortletURLGenerationListener> portletURLListenersMap =
+				portletContextBag.getPortletURLListeners();
+
+			portletURLListenersMap.put(
 				portletURLListener.getListenerClass(),
 				portletURLListenerInstance);
 

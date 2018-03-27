@@ -26,7 +26,6 @@ import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.test.util.JournalTestUtil;
-import com.liferay.journal.util.impl.JournalUtil;
 import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -34,8 +33,6 @@ import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.CompanyTestUtil;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
@@ -47,6 +44,8 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.UnsecureSAXReaderUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+
+import java.lang.reflect.Method;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,21 +64,22 @@ import org.junit.runner.RunWith;
  * @author Manuel de la Peña
  */
 @RunWith(Arquillian.class)
-@Sync
 public class JournalTestUtilTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	public void setUp() throws Exception {
 		_ddmStructure = DDMStructureTestUtil.addStructure(
 			JournalArticle.class.getName());
 		_group = GroupTestUtil.addGroup();
+
+		_transformMethod = JournalTestUtil.getJournalUtilTransformMethod();
+
+		_getTokensMethod = JournalTestUtil.getJournalUtilGetTokensMethod();
 	}
 
 	@Test
@@ -204,8 +204,8 @@ public class JournalTestUtilTest {
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
 			contents, LanguageUtil.getLanguageId(LocaleUtil.US));
 
-		String content = JournalUtil.transform(
-			null, getTokens(), Constants.VIEW, "en_US",
+		String content = (String)_transformMethod.invoke(
+			null, null, getTokens(), Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null,
 			JournalTestUtil.getSampleTemplateXSL(),
 			TemplateConstants.LANG_TYPE_VM);
@@ -263,8 +263,8 @@ public class JournalTestUtilTest {
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
 			"name", "Joe Bloggs");
 
-		String content = JournalUtil.transform(
-			null, getTokens(), Constants.VIEW, "en_US",
+		String content = (String)_transformMethod.invoke(
+			null, null, getTokens(), Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null,
 			JournalTestUtil.getSampleTemplateXSL(),
 			TemplateConstants.LANG_TYPE_VM);
@@ -305,8 +305,9 @@ public class JournalTestUtilTest {
 	}
 
 	protected Map<String, String> getTokens() throws Exception {
-		Map<String, String> tokens = JournalUtil.getTokens(
-			TestPropsValues.getGroupId(), (PortletRequestModel)null, null);
+		Map<String, String> tokens = (Map)_getTokensMethod.invoke(
+			null, TestPropsValues.getGroupId(), (PortletRequestModel)null,
+			null);
 
 		tokens.put(
 			"article_group_id", String.valueOf(TestPropsValues.getGroupId()));
@@ -321,7 +322,11 @@ public class JournalTestUtilTest {
 	@DeleteAfterTestRun
 	private DDMStructure _ddmStructure;
 
+	private Method _getTokensMethod;
+
 	@DeleteAfterTestRun
 	private Group _group;
+
+	private Method _transformMethod;
 
 }

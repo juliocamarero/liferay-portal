@@ -37,7 +37,7 @@ MBMessage curParentMessage = null;
 
 if (threadId > 0) {
 	try {
-		curParentMessage = MBMessageLocalServiceUtil.getMessage(parentMessageId);
+		curParentMessage = MBMessageServiceUtil.getMessage(parentMessageId);
 
 		if (Validator.isNull(subject)) {
 			if (curParentMessage.getSubject().startsWith(MBMessageConstants.MESSAGE_SUBJECT_PREFIX_RE)) {
@@ -116,15 +116,7 @@ if (portletTitleBasedNavigation) {
 
 <div <%= portletTitleBasedNavigation ? "class=\"container-fluid-1280\"" : StringPool.BLANK %> id='<%= renderResponse.getNamespace() + "mbEditPageContainer" %>'>
 	<c:if test="<%= !portletTitleBasedNavigation %>">
-		<c:if test="<%= Validator.isNull(referringPortletResource) %>">
-			<liferay-util:include page="/message_boards/top_links.jsp" servletContext="<%= application %>" />
-		</c:if>
-
-		<liferay-ui:header
-			backURL="<%= redirect %>"
-			localizeTitle="<%= (message == null) %>"
-			title="<%= headerTitle %>"
-		/>
+		<h3><%= headerTitle %></h3>
 	</c:if>
 
 	<portlet:actionURL name="/message_boards/edit_message" var="editMessageURL">
@@ -193,7 +185,6 @@ if (portletTitleBasedNavigation) {
 						</span>
 
 						<%
-						request.setAttribute("edit-message.jsp-showDeletedAttachmentsFileEntries", Boolean.TRUE);
 						request.setAttribute("edit-message.jsp-showPermanentLink", Boolean.TRUE);
 						request.setAttribute("edit-message.jsp-showRecentPosts", Boolean.TRUE);
 						request.setAttribute("edit_message.jsp-category", null);
@@ -224,7 +215,9 @@ if (portletTitleBasedNavigation) {
 				</aui:field-wrapper>
 			</aui:fieldset>
 
-			<liferay-expando:custom-attributes-available className="<%= MBMessage.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= MBMessage.class.getName() %>"
+			>
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 					<liferay-expando:custom-attribute-list
 						className="<%= MBMessage.class.getName() %>"
@@ -237,94 +230,74 @@ if (portletTitleBasedNavigation) {
 
 			<c:if test="<%= MBCategoryPermission.contains(permissionChecker, scopeGroupId, categoryId, ActionKeys.ADD_FILE) %>">
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="attachments">
+					<liferay-util:include page="/message_boards/edit_message_attachment.jsp" servletContext="<%= application %>" />
+
 					<c:if test="<%= existingAttachmentsFileEntries.size() > 0 %>">
-						<ul>
+						<liferay-ui:search-container
+							emptyResultsMessage="this-message-does-not-have-file-attachments"
+							headerNames="file-name,size,action"
+							total="<%= existingAttachmentsFileEntries.size() %>"
+						>
+							<liferay-ui:search-container-results
+								results="<%= existingAttachmentsFileEntries %>"
+							/>
 
-							<%
-							for (int i = 0; i < existingAttachmentsFileEntries.size(); i++) {
-								FileEntry fileEntry = existingAttachmentsFileEntries.get(i);
+							<liferay-ui:search-container-row
+								className="com.liferay.portal.kernel.repository.model.FileEntry"
+								escapedModel="<%= true %>"
+								keyProperty="fileEntryId"
+								modelVar="fileEntry"
+							>
 
-								String taglibDeleteAttachment = "javascript:" + renderResponse.getNamespace() + "trashAttachment(" + (i + 1) + ", '" + Constants.MOVE_TO_TRASH + "');";
+								<%
+								String rowURL = PortletFileRepositoryUtil.getDownloadPortletFileEntryURL(themeDisplay, fileEntry, "status=" + WorkflowConstants.STATUS_APPROVED);
+								%>
 
-								if (!trashHelper.isTrashEnabled(scopeGroupId)) {
-									taglibDeleteAttachment = "javascript:" + renderResponse.getNamespace() + "deleteAttachment(" + (i + 1) + ");";
-								}
-							%>
+								<liferay-ui:search-container-column-text
+									href="<%= rowURL %>"
+									name="file-name"
+									value="<%= fileEntry.getTitle() %>"
+								/>
 
-								<li class="message-attachment">
-									<span id="<portlet:namespace />existingFile<%= i + 1 %>">
-										<aui:input id='<%= "existingPath" + (i + 1) %>' name='<%= "existingPath" + (i + 1) %>' type="hidden" value="<%= fileEntry.getFileEntryId() %>" />
+								<liferay-ui:search-container-column-text
+									name="size"
+									value="<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>"
+								/>
 
-										<%
-										AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(DLFileEntry.class.getName());
+								<liferay-ui:search-container-column-text
+									cssClass="entry-action"
+									name="action"
+								>
+									<liferay-portlet:actionURL name="/message_boards/edit_message_attachments" var="deleteURL">
+										<portlet:param name="<%= Constants.CMD %>" value="<%= trashHelper.isTrashEnabled(scopeGroupId) ? Constants.MOVE_TO_TRASH : Constants.DELETE %>" />
+										<portlet:param name="redirect" value="<%= currentURL %>" />
+										<portlet:param name="messageId" value="<%= String.valueOf(messageId) %>" />
+										<portlet:param name="fileName" value="<%= fileEntry.getTitle() %>" />
+									</liferay-portlet:actionURL>
 
-										AssetRenderer<?> assetRenderer = assetRendererFactory.getAssetRenderer(fileEntry.getFileEntryId());
-										%>
-
-										<liferay-ui:icon
-											icon="<%= assetRenderer.getIconCssClass() %>"
-											label="<%= true %>"
-											markupView="lexicon"
-											message="<%= fileEntry.getTitle() %>"
+									<liferay-ui:icon-menu
+										direction="left-side"
+										icon="<%= StringPool.BLANK %>"
+										markupView="lexicon"
+										message="<%= StringPool.BLANK %>"
+									>
+										<liferay-ui:icon-delete
+											trash="<%= trashHelper.isTrashEnabled(scopeGroupId) %>"
+											url="<%= deleteURL %>"
 										/>
-									</span>
+									</liferay-ui:icon-menu>
+								</liferay-ui:search-container-column-text>
+							</liferay-ui:search-container-row>
 
-									<aui:input cssClass="hide" label="" name='<%= "msgFile" + (i + 1) %>' size="70" title="message-attachment" type="file" />
-
-									<liferay-ui:icon-delete
-										id='<%= "removeExisting" + (i + 1) %>'
-										label="<%= true %>"
-										message='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "remove" : "delete" %>'
-										method="get"
-										trash="<%= trashHelper.isTrashEnabled(scopeGroupId) %>"
-										url="<%= taglibDeleteAttachment %>"
-									/>
-
-									<c:if test="<%= trashHelper.isTrashEnabled(scopeGroupId) %>">
-
-										<%
-										StringBundler sb = new StringBundler(7);
-
-										sb.append("javascript:");
-										sb.append(renderResponse.getNamespace());
-										sb.append("trashAttachment(");
-										sb.append(i + 1);
-										sb.append(", '");
-										sb.append(Constants.RESTORE);
-										sb.append("');");
-										%>
-
-										<span class="hide" id="<portlet:namespace />undoFile<%= i + 1 %>">
-											<aui:input id='<%= "undoPath" + (i + 1) %>' name='<%= "undoPath" + (i + 1) %>' type="hidden" value="<%= fileEntry.getFileEntryId() %>" />
-
-											<span class="undo">(<liferay-ui:message key="marked-as-removed" />)</span> <a class="trash-undo-link" href="<%= sb.toString() %>" id="<portlet:namespace />undo"><liferay-ui:message key="undo" /></a>
-										</span>
-									</c:if>
-								</li>
-
-							<%
-							}
-							%>
-
-						</ul>
+							<liferay-ui:search-iterator
+								markupView="lexicon"
+							/>
+						</liferay-ui:search-container>
 					</c:if>
-
-					<%
-					for (int i = existingAttachmentsFileEntries.size() + 1; i <= 5; i++) {
-					%>
-
-						<div>
-							<aui:input label="" name='<%= "msgFile" + i %>' size="70" title="message-attachment" type="file" />
-						</div>
-
-					<%
-					}
-					%>
-
 				</aui:fieldset>
 			</c:if>
 
-			<c:if test="<%= (curParentMessage == null) || childrenMessagesTaggable %>">
+			<c:if test="<%= (curParentMessage == null) %>">
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
 					<aui:input name="tags" type="assetTags" />
 				</aui:fieldset>
@@ -423,7 +396,9 @@ if (portletTitleBasedNavigation) {
 			<c:if test="<%= (message == null) && captchaConfiguration.messageBoardsEditMessageCaptchaEnabled() %>">
 				<portlet:resourceURL id="/message_boards/captcha" var="captchaURL" />
 
-				<liferay-captcha:captcha url="<%= captchaURL %>" />
+				<liferay-captcha:captcha
+					url="<%= captchaURL %>"
+				/>
 			</c:if>
 		</aui:fieldset-group>
 
@@ -463,13 +438,13 @@ if (portletTitleBasedNavigation) {
 				</div>
 			</c:if>
 
-			<aui:button cssClass="btn-lg" disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
+			<aui:button disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
 
 			<c:if test="<%= themeDisplay.isSignedIn() %>">
-				<aui:button cssClass="btn-lg" name="saveButton" value="<%= saveButtonLabel %>" />
+				<aui:button name="saveButton" value="<%= saveButtonLabel %>" />
 			</c:if>
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>
@@ -487,46 +462,4 @@ if (portletTitleBasedNavigation) {
 			rootNode: '#<portlet:namespace />mbEditPageContainer'
 		}
 	);
-</aui:script>
-
-<aui:script>
-	<c:choose>
-		<c:when test="<%= trashHelper.isTrashEnabled(scopeGroupId) %>">
-			function <portlet:namespace />trashAttachment(index, action) {
-				var $ = AUI.$;
-
-				var existingPath = $('#<portlet:namespace />existingPath' + index);
-				var removeExisting = $('#<portlet:namespace />removeExisting' + index);
-				var undoFile = $('#<portlet:namespace />undoFile' + index);
-
-				if (action == '<%= Constants.MOVE_TO_TRASH %>') {
-					removeExisting.addClass('hide');
-					undoFile.removeClass('hide');
-
-					existingPath.val('');
-				}
-				else {
-					removeExisting.removeClass('hide');
-					undoFile.addClass('hide');
-
-					var undoPath = $('#<portlet:namespace />undoPath' + index);
-
-					existingPath.val(undoPath.val());
-				}
-			}
-		</c:when>
-		<c:otherwise>
-			function <portlet:namespace />deleteAttachment(index) {
-				var $ = AUI.$;
-
-				$('#<portlet:namespace />removeExisting' + index).remove();
-				$('#<portlet:namespace />existingFile' + index).remove();
-
-				var file = $('#<portlet:namespace />msgFile' + index);
-
-				file.removeClass('hide');
-				file.closest('li').addClass('deleted-input');
-			}
-		</c:otherwise>
-	</c:choose>
 </aui:script>

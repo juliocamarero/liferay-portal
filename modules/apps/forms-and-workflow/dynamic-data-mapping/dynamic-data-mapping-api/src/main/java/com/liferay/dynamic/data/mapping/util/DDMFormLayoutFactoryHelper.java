@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.annotations.DDMFormLayoutColumn;
 import com.liferay.dynamic.data.mapping.annotations.DDMFormLayoutPage;
 import com.liferay.dynamic.data.mapping.annotations.DDMFormLayoutRow;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.AggregateResourceBundle;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -43,6 +43,7 @@ public class DDMFormLayoutFactoryHelper {
 
 	public DDMFormLayoutFactoryHelper(Class<?> clazz) {
 		_clazz = clazz;
+
 		_ddmFormLayout = clazz.getAnnotation(DDMFormLayout.class);
 
 		setDefaultLocale();

@@ -15,6 +15,8 @@
 package com.liferay.portal.util;
 
 import com.liferay.petra.content.ContentUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.petra.xml.XMLUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -33,14 +35,12 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.language.LanguageResources;
-import com.liferay.util.xml.XMLUtil;
 
 import java.util.Collection;
 import java.util.HashMap;

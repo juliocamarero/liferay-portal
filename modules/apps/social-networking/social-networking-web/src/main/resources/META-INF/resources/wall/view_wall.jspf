@@ -46,7 +46,7 @@
 			</aui:input>
 
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" type="submit" value="post" />
+				<aui:button type="submit" value="post" />
 			</aui:button-row>
 		</aui:form>
 
@@ -211,7 +211,9 @@
 			<div class="separator"><!-- --></div>
 
 			<div class="taglib-search-iterator-page-iterator-bottom">
-				<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" />
+				<liferay-ui:search-paginator
+					searchContainer="<%= searchContainer %>"
+				/>
 			</div>
 		</c:if>
 

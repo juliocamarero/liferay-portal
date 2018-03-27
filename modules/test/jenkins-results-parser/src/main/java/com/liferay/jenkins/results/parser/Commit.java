@@ -24,6 +24,8 @@ public interface Commit {
 
 	public String getAbbreviatedSHA();
 
+	public String getGitHubCommitURL();
+
 	public String getMessage();
 
 	public String getSHA();
@@ -33,6 +35,7 @@ public interface Commit {
 	public enum Type {
 
 		LEGACY_ARCHIVE, MANUAL
-	};
+
+	}
 
 }

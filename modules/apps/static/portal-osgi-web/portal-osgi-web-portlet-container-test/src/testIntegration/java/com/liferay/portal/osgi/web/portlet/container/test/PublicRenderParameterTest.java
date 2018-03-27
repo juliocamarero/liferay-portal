@@ -15,6 +15,7 @@
 package com.liferay.portal.osgi.web.portlet.container.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.application.type.ApplicationType;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Portlet;
@@ -29,7 +30,7 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.test.randomizerbumpers.FriendlyURLRandomizerBumper;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.PortletContainerTestUtil;
@@ -125,6 +126,14 @@ public class PublicRenderParameterTest extends BasePortletContainerTestCase {
 			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name),
 			ServiceContextTestUtil.getServiceContext());
 
+		UnicodeProperties typeSettingsProperties =
+			layout.getTypeSettingsProperties();
+
+		typeSettingsProperties.setProperty(
+			"fullPageApplicationPortlet", TEST_PORTLET_ID);
+
+		LayoutLocalServiceUtil.updateLayout(layout);
+
 		HttpServletRequest httpServletRequest =
 			PortletContainerTestUtil.getHttpServletRequest(group, layout);
 
@@ -137,6 +146,7 @@ public class PublicRenderParameterTest extends BasePortletContainerTestCase {
 		String portletURLString = portletURL.toString();
 
 		Assert.assertTrue(
+			portletURLString,
 			portletURLString.contains(
 				PortletQName.PUBLIC_RENDER_PARAMETER_NAMESPACE));
 
@@ -195,6 +205,7 @@ public class PublicRenderParameterTest extends BasePortletContainerTestCase {
 		String portletURLString = portletURL.toString();
 
 		Assert.assertTrue(
+			portletURLString,
 			portletURLString.contains(
 				PortletQName.PUBLIC_RENDER_PARAMETER_NAMESPACE));
 

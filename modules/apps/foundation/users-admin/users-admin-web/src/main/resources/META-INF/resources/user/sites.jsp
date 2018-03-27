@@ -17,18 +17,23 @@
 <%@ include file="/init.jsp" %>
 
 <%
-User selUser = (User)request.getAttribute("user.selUser");
-List<Group> groups = (List<Group>)request.getAttribute("user.groups");
-List<Group> inheritedSites = (List<Group>)request.getAttribute("user.inheritedSites");
+User selUser = userDisplayContext.getSelectedUser();
+List<Group> groups = userDisplayContext.getGroups();
+List<Group> inheritedSites = userDisplayContext.getInheritedSites();
 
 currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites");
 %>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="sites" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="sites"
+/>
 
 <liferay-ui:membership-policy-error />
 
-<liferay-util:buffer var="removeGroupIcon">
+<liferay-util:buffer
+	var="removeGroupIcon"
+>
 	<liferay-ui:icon
 		icon="times"
 		markupView="lexicon"
@@ -91,7 +96,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		</c:if>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>
 
 <c:if test="<%= !portletName.equals(myAccountPortletId) %>">
@@ -99,7 +106,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		cssClass="modify-link"
 		id="selectSiteLink"
 		label="<%= true %>"
-		linkCssClass="btn btn-default btn-lg"
+		linkCssClass="btn btn-primary"
 		message="select"
 		url="javascript:;"
 	/>
@@ -235,10 +242,10 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 	</aui:script>
 </c:if>
 
-<h3><liferay-ui:message key="inherited-sites" /></h3>
+<h4 class="sheet-tertiary-title"><liferay-ui:message key="inherited-sites" /></h4>
 
 <c:if test="<%= inheritedSites.isEmpty() %>">
-	<liferay-ui:message key="this-user-does-not-have-any-inherited-sites" />
+	<div class="sheet-text"><liferay-ui:message key="this-user-does-not-have-any-inherited-sites" /></div>
 </c:if>
 
 <liferay-ui:search-container
@@ -282,5 +289,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		/>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>

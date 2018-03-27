@@ -42,8 +42,14 @@ else {
 }
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
-	<c:if test="<%= BookmarksEntryPermissionChecker.contains(permissionChecker, entry, ActionKeys.UPDATE) %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
+	<c:if test="<%= BookmarksEntryPermission.contains(permissionChecker, entry, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcRenderCommandName" value="/bookmarks/edit_entry" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -68,7 +74,7 @@ else {
 		/>
 	</c:if>
 
-	<c:if test="<%= BookmarksEntryPermissionChecker.contains(permissionChecker, entry, ActionKeys.PERMISSIONS) %>">
+	<c:if test="<%= BookmarksEntryPermission.contains(permissionChecker, entry, ActionKeys.PERMISSIONS) %>">
 		<liferay-security:permissionsURL
 			modelResource="<%= BookmarksEntry.class.getName() %>"
 			modelResourceDescription="<%= entry.getName() %>"
@@ -85,7 +91,7 @@ else {
 		/>
 	</c:if>
 
-	<c:if test="<%= BookmarksEntryPermissionChecker.contains(permissionChecker, entry, ActionKeys.SUBSCRIBE) && (bookmarksGroupServiceOverriddenConfiguration.emailEntryAddedEnabled() || bookmarksGroupServiceOverriddenConfiguration.emailEntryUpdatedEnabled()) %>">
+	<c:if test="<%= BookmarksEntryPermission.contains(permissionChecker, entry, ActionKeys.SUBSCRIBE) && (bookmarksGroupServiceOverriddenConfiguration.emailEntryAddedEnabled() || bookmarksGroupServiceOverriddenConfiguration.emailEntryUpdatedEnabled()) %>">
 		<c:choose>
 			<c:when test="<%= SubscriptionLocalServiceUtil.isSubscribed(user.getCompanyId(), user.getUserId(), BookmarksEntry.class.getName(), entry.getEntryId()) %>">
 				<portlet:actionURL name="/bookmarks/edit_entry" var="unsubscribeURL">
@@ -114,7 +120,7 @@ else {
 		</c:choose>
 	</c:if>
 
-	<c:if test="<%= BookmarksEntryPermissionChecker.contains(permissionChecker, entry, ActionKeys.DELETE) %>">
+	<c:if test="<%= BookmarksEntryPermission.contains(permissionChecker, entry, ActionKeys.DELETE) %>">
 		<portlet:renderURL var="redirectURL">
 			<c:choose>
 				<c:when test="<%= entry.getFolderId() == BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID %>">
@@ -136,6 +142,14 @@ else {
 		<liferay-ui:icon-delete
 			trash="<%= trashHelper.isTrashEnabled(scopeGroupId) %>"
 			url="<%= deleteURL %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= portletName.equals(BookmarksPortletKeys.BOOKMARKS_ADMIN) %>">
+		<liferay-export-import-changeset:publish-entity-menu-item
+			className="<%= BookmarksEntry.class.getName() %>"
+			groupId="<%= entry.getGroupId() %>"
+			uuid="<%= entry.getUuid() %>"
 		/>
 	</c:if>
 </liferay-ui:icon-menu>

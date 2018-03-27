@@ -26,7 +26,13 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 DDMTemplate template = (DDMTemplate)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= DDMTemplatePermission.contains(permissionChecker, scopeGroupId, template, refererPortletName, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcPath" value="/edit_template.jsp" />
@@ -59,7 +65,7 @@ DDMTemplate template = (DDMTemplate)row.getObject();
 		/>
 	</c:if>
 
-	<c:if test="<%= DDMTemplatePermission.containsAddTemplatePermission(permissionChecker, scopeGroupId, template.getClassNameId(), template.getResourceClassNameId()) %>">
+	<c:if test="<%= ddmDisplay.isShowAddButton(themeDisplay.getScopeGroup()) && DDMTemplatePermission.containsAddTemplatePermission(permissionChecker, scopeGroupId, template.getClassNameId(), template.getResourceClassNameId()) %>">
 		<portlet:renderURL var="copyURL">
 			<portlet:param name="mvcPath" value="/copy_template.jsp" />
 			<portlet:param name="templateId" value="<%= String.valueOf(template.getTemplateId()) %>" />

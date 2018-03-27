@@ -14,32 +14,40 @@
 
 package com.liferay.fragment.model.impl;
 
-import aQute.bnd.annotation.ProviderType;
+import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.zip.ZipWriter;
+
+import java.util.List;
 
 /**
- * The extended model implementation for the FragmentCollection service.
- * Represents a row in the &quot;FragmentCollection&quot; database table, with
- * each column mapped to a property of this class.
- *
- * <p>
- * Helper methods and all application logic should be put in this class.
- * Whenever methods are added, rerun ServiceBuilder to copy their definitions
- * into the {@link com.liferay.fragment.model.FragmentCollection} interface.
- * </p>
- *
- * @author Brian Wing Shun Chan
+ * @author Eudaldo Alonso
  */
-@ProviderType
 public class FragmentCollectionImpl extends FragmentCollectionBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a fragment
-	 * collection model instance should use the {@link
-	 * com.liferay.fragment.model.FragmentCollection} interface instead.
-	 */
-	public FragmentCollectionImpl() {
+	@Override
+	public void populateZipWriter(ZipWriter zipWriter) throws Exception {
+		String path = StringPool.SLASH + getFragmentCollectionKey();
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("description", getDescription());
+		jsonObject.put("name", getName());
+
+		zipWriter.addEntry(path + "/collection.json", jsonObject.toString());
+
+		List<FragmentEntry> fragmentEntries =
+			FragmentEntryLocalServiceUtil.getFragmentEntries(
+				getFragmentCollectionId(), QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
+
+		for (FragmentEntry fragmentEntry : fragmentEntries) {
+			fragmentEntry.populateZipWriter(zipWriter, path);
+		}
 	}
 
 }

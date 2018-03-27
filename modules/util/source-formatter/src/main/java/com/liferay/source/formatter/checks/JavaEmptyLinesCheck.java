@@ -28,7 +28,9 @@ public class JavaEmptyLinesCheck extends EmptyLinesCheck {
 	protected String doProcess(
 		String fileName, String absolutePath, String content) {
 
-		content = fixMissingEmptyLines(content);
+		content = fixMissingEmptyLines(absolutePath, content);
+
+		content = fixMissingEmptyLinesAroundComments(content);
 
 		content = fixRedundantEmptyLines(content);
 

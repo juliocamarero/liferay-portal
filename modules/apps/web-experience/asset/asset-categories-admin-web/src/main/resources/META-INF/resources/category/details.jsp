@@ -56,12 +56,22 @@ renderResponse.setTitle(((category == null) ? LanguageUtil.get(request, "add-new
 
 			<c:if test="<%= assetCategoriesDisplayContext.isFlattenedNavigationAllowed() %>">
 				<aui:field-wrapper label="parent-category">
-					<liferay-asset:asset-categories-selector categoryIds="<%= String.valueOf(parentCategoryId) %>" hiddenInput="parentCategoryId" singleSelect="<%= true %>" />
+					<liferay-asset:asset-categories-selector
+						categoryIds="<%= String.valueOf(parentCategoryId) %>"
+						hiddenInput="parentCategoryId"
+						singleSelect="<%= true %>"
+					/>
 				</aui:field-wrapper>
 			</c:if>
 
 			<c:if test="<%= category == null %>">
-				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" markupView="lexicon" persistState="<%= true %>" title="permissions">
+				<liferay-ui:panel
+					collapsible="<%= true %>"
+					extended="<%= false %>"
+					markupView="lexicon"
+					persistState="<%= true %>"
+					title="permissions"
+				>
 					<liferay-ui:input-permissions
 						modelName="<%= AssetCategory.class.getName() %>"
 					/>
@@ -71,8 +81,8 @@ renderResponse.setTitle(((category == null) ? LanguageUtil.get(request, "add-new
 	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>

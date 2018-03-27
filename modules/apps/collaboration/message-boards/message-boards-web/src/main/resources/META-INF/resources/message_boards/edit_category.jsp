@@ -78,13 +78,7 @@ if (portletTitleBasedNavigation) {
 
 <div <%= portletTitleBasedNavigation ? "class=\"container-fluid-1280\"" : StringPool.BLANK %>>
 	<c:if test="<%= !portletTitleBasedNavigation %>">
-		<liferay-util:include page="/message_boards/top_links.jsp" servletContext="<%= application %>" />
-
-		<liferay-ui:header
-			backURL="<%= redirect %>"
-			localizeTitle="<%= (category == null) %>"
-			title="<%= mbHomeDisplayContext.getTitle() %>"
-		/>
+		<h3><%= LanguageUtil.get(request, mbHomeDisplayContext.getTitle()) %></h3>
 	</c:if>
 
 	<portlet:actionURL name="/message_boards/edit_category" var="editCategoryURL">
@@ -207,11 +201,15 @@ if (portletTitleBasedNavigation) {
 				<c:if test="<%= (category == null) && captchaConfiguration.messageBoardsEditCategoryCaptchaEnabled() %>">
 					<portlet:resourceURL id="/message_boards/captcha" var="captchaURL" />
 
-					<liferay-captcha:captcha url="<%= captchaURL %>" />
+					<liferay-captcha:captcha
+						url="<%= captchaURL %>"
+					/>
 				</c:if>
 			</aui:fieldset>
 
-			<liferay-expando:custom-attributes-available className="<%= MBCategory.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= MBCategory.class.getName() %>"
+			>
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 					<liferay-expando:custom-attribute-list
 						className="<%= MBCategory.class.getName() %>"
@@ -232,9 +230,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

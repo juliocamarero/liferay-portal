@@ -19,8 +19,9 @@ import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentCollectionServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
-import com.liferay.fragment.service.permission.FragmentPermission;
+import com.liferay.fragment.web.internal.security.permission.resource.FragmentPermission;
 import com.liferay.fragment.web.util.FragmentPortletUtil;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -30,9 +31,11 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletURL;
@@ -53,6 +56,32 @@ public class FragmentDisplayContext {
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_request = request;
+	}
+
+	public String getCssContent() throws PortalException {
+		if (Validator.isNotNull(_cssContent)) {
+			return _cssContent;
+		}
+
+		_cssContent = ParamUtil.getString(_request, "cssContent");
+
+		FragmentEntry fragmentEntry = getFragmentEntry();
+
+		if ((fragmentEntry != null) && Validator.isNull(_cssContent)) {
+			_cssContent = fragmentEntry.getCss();
+
+			if (Validator.isNull(_cssContent)) {
+				StringBundler sb = new StringBundler(3);
+
+				sb.append(".fragment_");
+				sb.append(fragmentEntry.getFragmentEntryId());
+				sb.append(" {\n}");
+
+				_cssContent = sb.toString();
+			}
+		}
+
+		return _cssContent;
 	}
 
 	public String getDisplayStyle() {
@@ -84,7 +113,8 @@ public class FragmentDisplayContext {
 	public String getEditFragmentEntryRedirect() throws PortalException {
 		PortletURL portletURL = _renderResponse.createRenderURL();
 
-		portletURL.setParameter("mvcPath", "/view_fragment_entries.jsp");
+		portletURL.setParameter(
+			"mvcRenderCommandName", "/fragment/view_fragment_entries");
 
 		if (getFragmentCollectionId() > 0) {
 			portletURL.setParameter(
@@ -118,18 +148,31 @@ public class FragmentDisplayContext {
 		return _fragmentCollectionId;
 	}
 
+	public List<NavigationItem> getFragmentCollectionNavigationItems() {
+		List<NavigationItem> navigationItems = new ArrayList<>();
+
+		NavigationItem entriesNavigationItem = new NavigationItem();
+
+		entriesNavigationItem.setActive(true);
+
+		PortletURL mainURL = _renderResponse.createRenderURL();
+
+		entriesNavigationItem.setHref(mainURL.toString());
+
+		entriesNavigationItem.setLabel(
+			LanguageUtil.get(_request, "collections"));
+
+		navigationItems.add(entriesNavigationItem);
+
+		return navigationItems;
+	}
+
 	public String getFragmentCollectionsRedirect() throws PortalException {
-		String redirect = ParamUtil.getString(_request, "redirect");
+		PortletURL backURL = _renderResponse.createRenderURL();
 
-		if (Validator.isNull(redirect)) {
-			PortletURL backURL = _renderResponse.createRenderURL();
+		backURL.setParameter("mvcRenderCommandName", "/fragment/view");
 
-			backURL.setParameter("mvcPath", "/view.jsp");
-
-			redirect = backURL.toString();
-		}
-
-		return redirect;
+		return backURL.toString();
 	}
 
 	public SearchContainer getFragmentCollectionsSearchContainer()
@@ -147,15 +190,7 @@ public class FragmentDisplayContext {
 				_renderRequest, _renderResponse.createRenderURL(), null,
 				"there-are-no-collections");
 
-		if (!isSearch()) {
-			fragmentCollectionsSearchContainer.setEmptyResultsMessage(
-				"there-are-no-collections.-you-can-add-a-collection-by-" +
-					"clicking-the-plus-button-on-the-bottom-right-corner");
-
-			fragmentCollectionsSearchContainer.setEmptyResultsMessageCssClass(
-				"taglib-empty-result-message-header-has-plus-btn");
-		}
-		else {
+		if (isSearch()) {
 			fragmentCollectionsSearchContainer.setSearch(true);
 		}
 
@@ -234,14 +269,7 @@ public class FragmentDisplayContext {
 			_renderRequest, _renderResponse.createRenderURL(), null,
 			"there-are-no-fragments");
 
-		if (!isSearch()) {
-			fragmentEntriesSearchContainer.setEmptyResultsMessage(
-				"there-are-no-fragments.-you-can-add-a-fragment-by-clicking-" +
-					"the-plus-button-on-the-bottom-right-corner");
-			fragmentEntriesSearchContainer.setEmptyResultsMessageCssClass(
-				"taglib-empty-result-message-header-has-plus-btn");
-		}
-		else {
+		if (isSearch()) {
 			fragmentEntriesSearchContainer.setSearch(true);
 		}
 
@@ -318,6 +346,48 @@ public class FragmentDisplayContext {
 		}
 
 		return fragmentEntry.getName();
+	}
+
+	public String getHtmlContent() throws PortalException {
+		if (Validator.isNotNull(_htmlContent)) {
+			return _htmlContent;
+		}
+
+		_htmlContent = ParamUtil.getString(_request, "htmlContent");
+
+		FragmentEntry fragmentEntry = getFragmentEntry();
+
+		if ((fragmentEntry != null) && Validator.isNull(_htmlContent)) {
+			_htmlContent = fragmentEntry.getHtml();
+
+			if (Validator.isNull(_htmlContent)) {
+				StringBundler sb = new StringBundler(3);
+
+				sb.append("<div class=\"fragment_");
+				sb.append(fragmentEntry.getFragmentEntryId());
+				sb.append("\">\n</div>");
+
+				_htmlContent = sb.toString();
+			}
+		}
+
+		return _htmlContent;
+	}
+
+	public String getJsContent() throws PortalException {
+		if (Validator.isNotNull(_jsContent)) {
+			return _jsContent;
+		}
+
+		_jsContent = ParamUtil.getString(_request, "jsContent");
+
+		FragmentEntry fragmentEntry = getFragmentEntry();
+
+		if ((fragmentEntry != null) && Validator.isNull(_jsContent)) {
+			_jsContent = fragmentEntry.getJs();
+		}
+
+		return _jsContent;
 	}
 
 	public String getKeywords() {
@@ -397,7 +467,6 @@ public class FragmentDisplayContext {
 
 		if (FragmentPermission.contains(
 				themeDisplay.getPermissionChecker(),
-				FragmentPermission.RESOURCE_NAME, FragmentPortletKeys.FRAGMENT,
 				themeDisplay.getSiteGroupId(), actionId)) {
 
 			return true;
@@ -451,6 +520,7 @@ public class FragmentDisplayContext {
 		return false;
 	}
 
+	private String _cssContent;
 	private String _displayStyle;
 	private FragmentCollection _fragmentCollection;
 	private Long _fragmentCollectionId;
@@ -458,6 +528,8 @@ public class FragmentDisplayContext {
 	private SearchContainer _fragmentEntriesSearchContainer;
 	private FragmentEntry _fragmentEntry;
 	private Long _fragmentEntryId;
+	private String _htmlContent;
+	private String _jsContent;
 	private String _keywords;
 	private String _orderByCol;
 	private String _orderByType;

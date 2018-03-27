@@ -17,7 +17,10 @@ package com.liferay.knowledge.base.web.internal.portlet;
 import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.asset.kernel.exception.AssetTagException;
 import com.liferay.document.library.display.context.DLMimeTypeDisplayContext;
+import com.liferay.document.library.kernel.antivirus.AntivirusScannerException;
+import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFileException;
+import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileNameException;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.document.library.kernel.exception.NoSuchFileException;
@@ -37,8 +40,9 @@ import com.liferay.knowledge.base.service.KBCommentLocalService;
 import com.liferay.knowledge.base.service.KBCommentService;
 import com.liferay.knowledge.base.service.KBFolderService;
 import com.liferay.knowledge.base.service.KBTemplateService;
-import com.liferay.knowledge.base.service.util.AdminUtil;
-import com.liferay.knowledge.base.service.util.KnowledgeBaseConstants;
+import com.liferay.knowledge.base.util.AdminHelper;
+import com.liferay.knowledge.base.web.internal.constants.KBWebKeys;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -62,10 +66,10 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.upload.UploadResponseHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -121,7 +125,24 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 
 			kbArticleService.addTempAttachment(
 				themeDisplay.getScopeGroupId(), resourcePrimKey, sourceFileName,
-				KnowledgeBaseConstants.TEMP_FOLDER_NAME, inputStream, mimeType);
+				KBWebKeys.TEMP_FOLDER_NAME, inputStream, mimeType);
+		}
+		catch (Exception e) {
+			if (e instanceof AntivirusScannerException ||
+				e instanceof DuplicateFileEntryException ||
+				e instanceof FileExtensionException ||
+				e instanceof FileNameException ||
+				e instanceof FileSizeException ||
+				e instanceof UploadRequestSizeException) {
+
+				JSONObject jsonObject = uploadResponseHandler.onFailure(
+					actionRequest, (PortalException)e);
+
+				writeJSON(actionRequest, actionResponse, jsonObject);
+			}
+			else {
+				throw e;
+			}
 		}
 	}
 
@@ -190,7 +211,7 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 		try {
 			kbArticleService.deleteTempAttachment(
 				themeDisplay.getScopeGroupId(), resourcePrimKey, fileName,
-				KnowledgeBaseConstants.TEMP_FOLDER_NAME);
+				KBWebKeys.TEMP_FOLDER_NAME);
 
 			jsonObject.put("deleted", Boolean.TRUE);
 		}
@@ -306,7 +327,7 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 				String diffHtmlResults = null;
 
 				try {
-					diffHtmlResults = AdminUtil.getKBArticleDiff(
+					diffHtmlResults = adminHelper.getKBArticleDiff(
 						resourcePrimKey, GetterUtil.getInteger(sourceVersion),
 						GetterUtil.getInteger(targetVersion), "content");
 				}
@@ -589,7 +610,7 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 		String diffHtmlResults = null;
 
 		try {
-			diffHtmlResults = AdminUtil.getKBArticleDiff(
+			diffHtmlResults = adminHelper.getKBArticleDiff(
 				resourcePrimKey, GetterUtil.getInteger(sourceVersion),
 				GetterUtil.getInteger(targetVersion), "content");
 		}
@@ -650,6 +671,11 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 		return false;
 	}
 
+	@Reference(unbind = "-")
+	protected void setAdminUtilHelper(AdminHelper adminHelper) {
+		this.adminHelper = adminHelper;
+	}
+
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
 		policy = ReferencePolicy.DYNAMIC,
@@ -698,12 +724,20 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 		this.portal = portal;
 	}
 
+	@Reference(unbind = "-")
+	protected void setUploadResponseHandler(
+		UploadResponseHandler uploadResponseHandler) {
+
+		this.uploadResponseHandler = uploadResponseHandler;
+	}
+
 	protected void unsetDLMimeTypeDisplayContext(
 		DLMimeTypeDisplayContext dlMimeTypeDisplayContext) {
 
 		this.dlMimeTypeDisplayContext = null;
 	}
 
+	protected AdminHelper adminHelper;
 	protected DLMimeTypeDisplayContext dlMimeTypeDisplayContext;
 	protected JSONFactory jsonFactory;
 	protected KBArticleService kbArticleService;
@@ -712,5 +746,6 @@ public abstract class BaseKBPortlet extends MVCPortlet {
 	protected KBFolderService kbFolderService;
 	protected KBTemplateService kbTemplateService;
 	protected Portal portal;
+	protected UploadResponseHandler uploadResponseHandler;
 
 }

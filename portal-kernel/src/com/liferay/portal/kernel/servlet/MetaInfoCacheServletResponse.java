@@ -15,8 +15,8 @@
 package com.liferay.portal.kernel.servlet;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -263,7 +264,9 @@ public class MetaInfoCacheServletResponse extends HttpServletResponseWrapper {
 			return null;
 		}
 
-		Header header = values.iterator().next();
+		Iterator<Header> iterator = values.iterator();
+
+		Header header = iterator.next();
 
 		return header.toString();
 	}
@@ -452,6 +455,12 @@ public class MetaInfoCacheServletResponse extends HttpServletResponseWrapper {
 		_metaData._contentLength = contentLength;
 
 		super.setContentLength(contentLength);
+	}
+
+	public void setContentLengthLong(long contentLengthLong) {
+		int contentLength = Math.toIntExact(contentLengthLong);
+
+		setContentLength(contentLength);
 	}
 
 	@Override

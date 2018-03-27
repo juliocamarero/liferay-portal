@@ -51,10 +51,10 @@ public class LayoutPageTemplateCollectionServiceWrapper
 	}
 
 	@Override
-	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> deleteLayoutPageTemplateCollections(
+	public void deleteLayoutPageTemplateCollections(
 		long[] layoutPageTemplateCollectionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _layoutPageTemplateCollectionService.deleteLayoutPageTemplateCollections(layoutPageTemplateCollectionIds);
+		_layoutPageTemplateCollectionService.deleteLayoutPageTemplateCollections(layoutPageTemplateCollectionIds);
 	}
 
 	@Override
@@ -62,6 +62,30 @@ public class LayoutPageTemplateCollectionServiceWrapper
 		long layoutPageTemplateCollectionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateCollectionService.fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getBasicLayoutPageTemplateCollections(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.getBasicLayoutPageTemplateCollections(groupId,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollections(groupId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollections(groupId,
+			type);
 	}
 
 	@Override

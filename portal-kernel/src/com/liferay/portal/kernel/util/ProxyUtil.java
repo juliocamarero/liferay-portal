@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.util;
 import com.liferay.petra.concurrent.ConcurrentReferenceKeyHashMap;
 import com.liferay.petra.concurrent.ConcurrentReferenceValueHashMap;
 import com.liferay.petra.memory.FinalizeManager;
+import com.liferay.petra.reflect.ReflectionUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -81,7 +82,7 @@ public class ProxyUtil {
 			Constructor<?> constructor = null;
 
 			try {
-				constructor = clazz.getConstructor(_argumentsClazz);
+				constructor = clazz.getConstructor(_ARGUMENTS_CLASS);
 
 				constructor.setAccessible(true);
 			}
@@ -118,7 +119,9 @@ public class ProxyUtil {
 		}
 	}
 
-	private static final Class<?>[] _argumentsClazz = {InvocationHandler.class};
+	private static final Class<?>[] _ARGUMENTS_CLASS =
+		{InvocationHandler.class};
+
 	private static final ConcurrentMap
 		<ClassLoader, ConcurrentMap<LookupKey, Class<?>>> _classReferences =
 			new ConcurrentReferenceKeyHashMap<>(

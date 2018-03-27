@@ -21,6 +21,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
+			<name>inline</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>maxItems</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -43,6 +49,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>A CSS class for styling the menu item's main container.</description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>An ID for the component instance.</description>
 			<name>id</name>
 			<required>false</required>
@@ -55,7 +67,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A type for the menu item</description>
+			<description>A type for the menu item.</description>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -78,6 +90,66 @@
 		</attribute>
 		<attribute>
 			<name>viewType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a contextual sidebar component.</description>
+		<name>contextual-sidebar</name>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.soy.ContextualSidebarTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The sidebar's body content.</description>
+			<name>body</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The CSS classes to add to the sidebar's body wrapper.</description>
+			<name>bodyClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>An ID for the component instance.</description>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The CSS classes to add to the sidebar's wrapper.</description>
+			<name>elementClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The sidebar's header content.</description>
+			<name>header</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The CSS classes to add to the sidebar's header wrapper.</description>
+			<name>headerClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>An ID for the component instance.</description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>A namespace for the component.</description>
+			<name>namespace</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Whether the sidebar is open or closed.</description>
+			<name>visible</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -115,7 +187,7 @@
 	</tag>
 	<tag>
 		<name>diff-version-comparator</name>
-		<tag-class>com.liferay.frontend.taglib.servlet.taglib.DiffVersionComparatorTag</tag-class>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.soy.DiffVersionComparatorTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>availableLocales</name>
@@ -240,7 +312,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The service context of the <![CDATA[<code>actionJsp</code>]]>.</description>
+			<description>The service context of the action JSP.</description>
 			<name>actionJspServletContext</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -305,7 +377,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>If you pass in a <![CDATA[<code>rowChecker</code>]]> value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
+			<description>If you pass in a row checker value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
 			<name>resultRow</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -361,7 +433,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The service context of the <![CDATA[<code>actionJsp</code>]]>.</description>
+			<description>The service context of the action JSP.</description>
 			<name>actionJspServletContext</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -431,7 +503,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>If you pass in a <![CDATA[<code>rowChecker</code>]]> value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
+			<description>If you pass in a row checker value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
 			<name>resultRow</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -938,6 +1010,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>key</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -975,26 +1052,26 @@
 		</attribute>
 	</tag>
 	<tag>
-		<description><![CDATA[Creates a UI component for managing translation of associated content.]]></description>
+		<description>Creates a UI component for managing translations of associated content.</description>
 		<name>translation-manager</name>
 		<tag-class>com.liferay.frontend.taglib.servlet.taglib.soy.TranslationManagerTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description><![CDATA[Available locales of translation languages from which to choose.]]></description>
+			<description>Available locales of translation languages from which to choose.</description>
 			<name>availableLocales</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.util.Locale[]</type>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Whether to make the translation manager default language changeable. The default value is <code>true</code>.]]></description>
+			<description>Whether to make the translation manager default language changeable. The default value is <![CDATA[<code>true</code>]]>.</description>
 			<name>changeableDefaultLanguage</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description><![CDATA[An ID for the component instance.]]></description>
+			<description>An ID for the component instance.</description>
 			<name>componentId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1006,7 +1083,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[The language ID to which the translation manager defaults when no other translations are available in the user's language.]]></description>
+			<description>The language ID to which the translation manager defaults when no other translations are available in the user's language.</description>
 			<name>defaultLanguageId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1017,20 +1094,20 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[An ID for the component instance.]]></description>
+			<description>An ID for the component instance.]</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Whether to activate the translation manager. The default value is <code>true</code>. If this is set to <code>false</code>, the translation manager will not work entirely.]]></description>
+			<description>Whether to activate the translation manager. The default value is <![CDATA[<code>true</code>]]>. If this is set to <![CDATA[<code>false</code>]]>, the translation manager will not work entirely.</description>
 			<name>initialize</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Whether to make the translation manager read-only for the user. The default value is <code>false</code>.]]></description>
+			<description>Whether to make the translation manager read-only for the user. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>readOnly</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1049,7 +1126,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The service context of the <![CDATA[<code>actionJsp</code>]]>.</description>
+			<description>The service context of the action JSP.</description>
 			<name>actionJspServletContext</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1115,7 +1192,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>If you pass in a <![CDATA[<code>rowChecker</code>]]> value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
+			<description>If you pass in a row checker value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
 			<name>resultRow</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1167,7 +1244,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The service context of the <![CDATA[<code>actionJsp</code>]]>.</description>
+			<description>The service context of the action JSP.</description>
 			<name>actionJspServletContext</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1250,7 +1327,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>If you pass in a <![CDATA[<code>rowChecker</code>]]> value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
+			<description>If you pass in a row checker value, a result row is mandatory. A result row is of type <![CDATA[<code>com.liferay.portal.kernel.dao.search.ResultRow</code>]]>.</description>
 			<name>resultRow</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

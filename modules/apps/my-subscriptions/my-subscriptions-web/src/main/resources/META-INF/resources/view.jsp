@@ -18,12 +18,6 @@
 
 <portlet:actionURL name="unsubscribe" var="unsubscribeURL" />
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item label="subscriptions" selected="<%= true %>" />
-	</aui:nav>
-</aui:nav-bar>
-
 <%
 int subscriptionsCount = SubscriptionLocalServiceUtil.getUserSubscriptionsCount(user.getUserId());
 
@@ -124,7 +118,10 @@ displayStyleURL.setParameter("mvcRenderCommandName", "/mysubscriptions/view");
 					/>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator markupView="lexicon" resultRowSplitter="<%= new MySubscriptionsResultRowSplitter(locale) %>" />
+				<liferay-ui:search-iterator
+					markupView="lexicon"
+					resultRowSplitter="<%= new MySubscriptionsResultRowSplitter(locale) %>"
+				/>
 
 				<c:if test="<%= !results.isEmpty() %>">
 					<aui:button-row cssName="unsubscribe-button-row">

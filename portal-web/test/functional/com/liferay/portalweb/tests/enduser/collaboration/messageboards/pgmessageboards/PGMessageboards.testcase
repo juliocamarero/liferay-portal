@@ -20,13 +20,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Message Boards Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
 			<var name="pageName" value="Message Boards Page" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -65,7 +66,7 @@
 	<command name="AddMBCategories" priority="5">
 		<property name="portal.acceptance" value="false" />
 
-		<for list="MB Category1 Name,MB Category2 Name,MB Category3 Name" param="categoryName" >
+		<for list="MB Category1 Name,MB Category2 Name,MB Category3 Name" param="categoryName">
 			<execute macro="Navigator#gotoPage">
 				<var name="pageName" value="Message Boards Page" />
 			</execute>
@@ -236,7 +237,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -279,7 +280,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -322,7 +323,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thrèad Mèssagè Body" />
 			<var name="threadSubject" value="MB Thrèad Mèssagè Subjèct" />
 		</execute>
@@ -349,7 +350,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -376,13 +377,13 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
 
 		<execute macro="MessageboardsThread#viewPG">
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -412,7 +413,7 @@
 		<execute macro="MessageboardsThread#viewReplyPG">
 			<var name="guestReply" value="true" />
 			<var name="loggedOut" value="true" />
-			<var name="postCount" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadReplyBody" value="MB Thread Reply Body As Guest" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
@@ -436,7 +437,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -472,7 +473,7 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#viewReplyPG">
-			<var name="postCount" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadReplyBody" value="MB Thread Reply Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
@@ -492,12 +493,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Foundation" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="Infrastructure" />
 			<var name="configurationName" value="Upload Servlet Request" />
+			<var name="configurationScope" value="System Scope" />
 		</execute>
 
 		<execute macro="ServerAdministration#configureFileUploadOverallMaximumFileSize">
@@ -533,7 +532,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="Message Boards Thread Body" />
 			<var name="threadSubject" value="Message Boards Thread Subject" />
 		</execute>
@@ -645,7 +644,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -676,7 +675,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -709,7 +708,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -778,7 +777,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -844,7 +843,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="threadBody" value="MB Thread Message Body" />
 			<var name="threadSubject" value="MB Thread Message Subject" />
 		</execute>
@@ -884,7 +883,9 @@
 
 		<execute macro="MessageboardsThread#downloadAttachmentPG" />
 
-		<execute function="Click" locator1="MessageBoardsThread#THREAD_CONTROLS_BACK" />
+		<execute function="Click" locator1="Breadcrumb#BREADCRUMB_ENTRY_LINK">
+			<var name="key_breadcrumbName" value="Home" />
+		</execute>
 
 		<execute macro="MessageboardsThread#replyPG">
 			<var name="threadReplyBody" value="MB Thread Reply Body" />
@@ -1055,7 +1056,7 @@
 
 		<execute macro="MessageboardsThread#gotoPG">
 			<var name="lastPostUserName" value="Test Test" />
-			<var name="postCount" value="8" />
+			<var name="replyCount" value="7" />
 			<var name="threadSubject" value="Message Boards Thread Subject" />
 		</execute>
 
@@ -1070,7 +1071,7 @@
 		<for list="5,6,7" param="replyNotVisible">
 			<var name="key_threadBody" value="Message Boards Thread Reply ${replyNotVisible}" />
 
-			<execute function="AssertElementNotPresent" locator1="MessageBoardsThread#THREAD_BODY" value1="Message Boards Thread Reply ${replyNotVisible}" />
+			<execute function="AssertElementNotPresent" locator1="MessageBoardsThread#THREAD_BODY" />
 		</for>
 
 		<execute function="AssertClick" locator1="Button#MORE_MESSAGES" value1="More Messages" />

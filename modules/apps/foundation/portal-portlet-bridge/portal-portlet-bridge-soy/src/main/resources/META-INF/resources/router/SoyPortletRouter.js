@@ -1,4 +1,4 @@
-import Alert from 'metal-alert';
+import Alert from 'frontend-js-web/liferay/compat/alert/Alert.es';
 import async from 'metal';
 import Component from 'metal-component';
 import dom from 'metal-dom';
@@ -34,7 +34,14 @@ class SoyPortletRouter extends State {
 		router.on('endNavigate', this.onEndNavigate_.bind(this));
 		router.dispatch();
 
-		Liferay.once('beforeScreenFlip', () => {
+		var handler = Liferay.once('beforeScreenFlip', () => {
+			router.dispose();
+			Router.routerInstance = null;
+			Router.activeRouter = null;
+		});
+
+		Liferay.once(`${this.portletId}:portletRefreshed`, () => {
+			handler.detach();
 			router.dispose();
 			Router.routerInstance = null;
 			Router.activeRouter = null;

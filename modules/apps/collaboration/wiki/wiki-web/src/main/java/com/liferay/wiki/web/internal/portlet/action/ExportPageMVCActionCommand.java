@@ -15,6 +15,7 @@
 package com.liferay.wiki.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -29,14 +30,13 @@ import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.wiki.constants.WikiPortletKeys;
-import com.liferay.wiki.engine.impl.WikiEngineRenderer;
+import com.liferay.wiki.engine.WikiEngineRenderer;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.service.WikiPageService;
-import com.liferay.wiki.util.WikiUtil;
+import com.liferay.wiki.web.internal.util.WikiUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -182,8 +182,10 @@ public class ExportPageMVCActionCommand extends BaseMVCActionCommand {
 		sb.append("</body>");
 		sb.append("</html>");
 
+		String s = sb.toString();
+
 		InputStream is = new UnsyncByteArrayInputStream(
-			sb.toString().getBytes(StringPool.UTF8));
+			s.getBytes(StringPool.UTF8));
 
 		String sourceExtension = "html";
 

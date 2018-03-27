@@ -93,6 +93,16 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 			orderColumns='<%= new String[] {"first-name", "last-name", "screen-name"} %>'
 			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
+
+		<li>
+			<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+				<aui:input name="navigation" type="hidden" value='<%= ParamUtil.getString(request, "navigation") %>' />
+
+				<liferay-ui:input-search
+					markupView="lexicon"
+				/>
+			</aui:form>
+		</li>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-buttons>
@@ -101,6 +111,27 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<c:if test="<%= hasAddUserPermission %>">
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<portlet:renderURL var="viewUsersURL">
+					<portlet:param name="toolbarItem" value="<%= toolbarItem %>" />
+					<portlet:param name="usersListView" value="<%= usersListView %>" />
+				</portlet:renderURL>
+
+				<portlet:renderURL var="addUserURL">
+					<portlet:param name="mvcRenderCommandName" value="/users_admin/edit_user" />
+					<portlet:param name="redirect" value="<%= viewUsersURL %>" />
+				</portlet:renderURL>
+
+				<liferay-frontend:add-menu-item
+					title='<%= LanguageUtil.get(request, "user") %>'
+					url="<%= addUserURL.toString() %>"
+				/>
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-action-buttons>
@@ -110,7 +141,12 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 			String taglibOnClick = "javascript:" + renderResponse.getNamespace() + "deleteUsers('" + Constants.RESTORE + "');";
 			%>
 
-			<liferay-frontend:management-bar-button href="<%= taglibOnClick %>" iconCssClass="icon-undo" id="restoreUsers" label="restore" />
+			<liferay-frontend:management-bar-button
+				href="<%= taglibOnClick %>"
+				iconCssClass="icon-undo"
+				id="restoreUsers"
+				label="restore"
+			/>
 		</c:if>
 
 		<c:if test="<%= showDeleteButton %>">
@@ -119,7 +155,12 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 			String taglibOnClick = "javascript:" + renderResponse.getNamespace() + "deleteUsers('" + (searchTerms.isActive() ? Constants.DEACTIVATE : Constants.DELETE) + "');";
 			%>
 
-			<liferay-frontend:management-bar-button href="<%= taglibOnClick %>" icon="trash" id="deleteUsers" label="<%= searchTerms.isActive() ? Constants.DEACTIVATE : Constants.DELETE %>" />
+			<liferay-frontend:management-bar-button
+				href="<%= taglibOnClick %>"
+				icon="trash"
+				id="deleteUsers"
+				label="<%= searchTerms.isActive() ? Constants.DEACTIVATE : Constants.DELETE %>"
+			/>
 		</c:if>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
@@ -223,7 +264,12 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 
 			<c:if test="<%= layout.isTypeControlPanel() %>">
 				<div id="breadcrumb">
-					<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+					<liferay-ui:breadcrumb
+						showCurrentGroup="<%= false %>"
+						showGuestGroup="<%= false %>"
+						showLayout="<%= false %>"
+						showPortletBreadcrumb="<%= true %>"
+					/>
 				</div>
 			</c:if>
 		</c:if>
@@ -298,7 +344,9 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 		}
 		%>
 
-		<liferay-ui:user-search-container-results userParams="<%= userParams %>" />
+		<liferay-ui:user-search-container-results
+			userParams="<%= userParams %>"
+		/>
 
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.kernel.model.User"
@@ -338,22 +386,9 @@ boolean showRestoreButton = (searchTerms.getStatus() != WorkflowConstants.STATUS
 		}
 		%>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
-
-<c:if test="<%= hasAddUserPermission %>">
-	<liferay-frontend:add-menu>
-		<portlet:renderURL var="viewUsersURL">
-			<portlet:param name="toolbarItem" value="<%= toolbarItem %>" />
-			<portlet:param name="usersListView" value="<%= usersListView %>" />
-		</portlet:renderURL>
-
-		<portlet:renderURL var="addUserURL">
-			<portlet:param name="mvcRenderCommandName" value="/users_admin/edit_user" />
-			<portlet:param name="redirect" value="<%= viewUsersURL %>" />
-		</portlet:renderURL>
-
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "user") %>' url="<%= addUserURL.toString() %>" />
-	</liferay-frontend:add-menu>
-</c:if>

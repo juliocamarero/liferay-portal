@@ -14,7 +14,7 @@
 
 package com.liferay.frontend.taglib.servlet.taglib;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 
 import java.util.Map;
 
@@ -31,6 +31,19 @@ public class MenuItem
 		_id = id;
 		_label = label;
 		_url = url;
+
+		_cssClass = StringPool.BLANK;
+	}
+
+	public MenuItem(
+		Map<String, Object> anchorData, String cssClass, String id,
+		String label, String url) {
+
+		_anchorData = anchorData;
+		_cssClass = cssClass;
+		_id = id;
+		_label = label;
+		_url = url;
 	}
 
 	public MenuItem(String label, String url) {
@@ -39,9 +52,20 @@ public class MenuItem
 		_url = url;
 
 		_anchorData = null;
+		_cssClass = null;
 	}
 
 	public MenuItem(String id, String label, String url) {
+		_id = id;
+		_label = label;
+		_url = url;
+
+		_anchorData = null;
+		_cssClass = null;
+	}
+
+	public MenuItem(String cssClass, String id, String label, String url) {
+		_cssClass = cssClass;
 		_id = id;
 		_label = label;
 		_url = url;
@@ -51,6 +75,10 @@ public class MenuItem
 
 	public Map<String, Object> getAnchorData() {
 		return _anchorData;
+	}
+
+	public String getCssClass() {
+		return _cssClass;
 	}
 
 	public String getId() {
@@ -84,6 +112,7 @@ public class MenuItem
 	}
 
 	private Map<String, Object> _anchorData;
+	private final String _cssClass;
 	private String _id;
 	private String _label;
 	private String _url;

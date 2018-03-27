@@ -69,11 +69,13 @@ boolean showSidebarHeader = ParamUtil.getBoolean(request, "showSidebarHeader", G
 			</h5>
 		</div>
 
-		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
-			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
-				<aui:nav-item label="details" selected="<%= true %>" />
-			</aui:nav>
-		</aui:nav-bar>
+		<%
+		KBAdminNavigationDisplayContext kbAdminNavigationDisplayContext = new KBAdminNavigationDisplayContext(request, liferayPortletResponse);
+		%>
+
+		<clay:navigation-bar
+			items="<%= kbAdminNavigationDisplayContext.getInfoPanelNavigationItems() %>"
+		/>
 
 		<div class="sidebar-body">
 			<dl class="sidebar-block">
@@ -131,7 +133,12 @@ boolean showSidebarHeader = ParamUtil.getBoolean(request, "showSidebarHeader", G
 			</h5>
 		</div>
 
-		<liferay-ui:tabs cssClass="navbar-no-collapse" names="details,versions" refresh="<%= false %>" type="dropdown">
+		<liferay-ui:tabs
+			cssClass="navbar-no-collapse"
+			names="details,versions"
+			refresh="<%= false %>"
+			type="dropdown"
+		>
 			<liferay-ui:section>
 				<div class="sidebar-body">
 					<dl class="sidebar-block">

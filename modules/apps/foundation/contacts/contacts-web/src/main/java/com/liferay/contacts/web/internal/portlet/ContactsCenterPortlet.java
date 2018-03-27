@@ -25,6 +25,7 @@ import com.liferay.contacts.service.EntryLocalService;
 import com.liferay.contacts.util.ContactsUtil;
 import com.liferay.contacts.web.internal.constants.ContactsPortletKeys;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -86,7 +87,6 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.UserLastNameComparator;
@@ -432,10 +432,16 @@ public class ContactsCenterPortlet extends MVCPortlet {
 
 			JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
 
-			String portletId = portal.getPortletId(actionRequest);
+			String portletId = PortletIdCodec.decodePortletName(
+				portal.getPortletId(actionRequest));
 
-			extraDataJSONObject.put(
-				"portletId", PortletIdCodec.decodePortletName(portletId));
+			if (portletId.equals(ContactsPortletKeys.MEMBERS) ||
+				portletId.equals(ContactsPortletKeys.PROFILE)) {
+
+				portletId = ContactsPortletKeys.CONTACTS_CENTER;
+			}
+
+			extraDataJSONObject.put("portletId", portletId);
 
 			SocialRequest socialRequest = socialRequestLocalService.addRequest(
 				themeDisplay.getUserId(), 0, User.class.getName(),

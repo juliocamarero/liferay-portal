@@ -8,7 +8,7 @@ AUI.add(
 		new A.TooltipDelegate(
 			{
 				position: 'left',
-				trigger: '.liferay-ddm-form-field-text .help-icon',
+				trigger: '.liferay-ddm-form-field-text .trigger-tooltip',
 				triggerHideEvent: ['blur', 'mouseleave'],
 				triggerShowEvent: ['focus', 'mouseover'],
 				visible: false
@@ -117,7 +117,7 @@ AUI.add(
 
 						var formGroup = container.one('.form-group');
 
-						formGroup.insert(container.one('.form-feedback-item'), 'after');
+						formGroup.append(container.one('.form-feedback-item'));
 					},
 
 					syncInputHeight: function() {

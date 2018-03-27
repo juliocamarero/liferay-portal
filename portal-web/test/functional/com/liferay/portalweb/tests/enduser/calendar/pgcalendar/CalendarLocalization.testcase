@@ -20,6 +20,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Calendar Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Calendar Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -76,7 +84,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="Spanish (Spain)" />
+			<var name="locale" value="es-es" />
 		</execute>
 
 		<execute macro="CalendarScheduler#addLocalizedEvent">
@@ -91,7 +99,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="English (United States)" />
+			<var name="locale" value="en-us" />
 		</execute>
 
 		<execute macro="CalendarScheduler#viewDay">

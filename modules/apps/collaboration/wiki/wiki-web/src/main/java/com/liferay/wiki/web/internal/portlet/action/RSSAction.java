@@ -14,22 +14,22 @@
 
 package com.liferay.wiki.web.internal.portlet.action;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.struts.StrutsAction;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.RSSUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.struts.BaseRSSStrutsAction;
+import com.liferay.rss.util.RSSUtil;
 import com.liferay.wiki.configuration.WikiGroupServiceOverriddenConfiguration;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.service.WikiPageService;
-import com.liferay.wiki.util.WikiUtil;
 import com.liferay.wiki.web.internal.display.context.util.WikiRequestHelper;
+import com.liferay.wiki.web.internal.util.WikiUtil;
 
 import java.util.Locale;
 

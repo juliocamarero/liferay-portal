@@ -21,7 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Lino Alves
  */
-@ExtendedObjectClassDefinition(category = "forms-and-workflow")
+@ExtendedObjectClassDefinition(category = "dynamic-data-mapping")
 @Meta.OCD(
 	id = "com.liferay.dynamic.data.mapping.web.configuration.DDMWebConfiguration",
 	localization = "content/Language", name = "ddmweb-configuration-name"
@@ -37,7 +37,7 @@ public interface DDMWebConfiguration {
 	 */
 	@Meta.AD(
 		deflt = "true", description = "autogenerate-structure-key-description",
-		required = false
+		name = "autogenerate-structure-key", required = false
 	)
 	public boolean autogenerateStructureKey();
 
@@ -50,7 +50,7 @@ public interface DDMWebConfiguration {
 	 */
 	@Meta.AD(
 		deflt = "true", description = "autogenerate-template-key-description",
-		required = false
+		name = "autogenerate-template-key", required = false
 	)
 	public boolean autogenerateTemplateKey();
 

@@ -60,7 +60,7 @@
 			<then>
 				<execute function="AssertTextEquals" locator1="Message#INFO" value1="Xuggler appears to be installed correctly. Enable to allow audio and video preview generation." />
 
-				<execute function="Check" locator1="ServerAdministrationExternalServices#XUGGLER_ENABLED_CHECKBOX"  />
+				<execute function="Check" locator1="ServerAdministrationExternalServices#XUGGLER_ENABLED_CHECKBOX" />
 			</then>
 		</if>
 
@@ -127,8 +127,6 @@
 
 		<execute function="AssertClick" locator1="ServerAdministrationResources#ACTIONS_TABLE_EXECUTE" value1="Execute" />
 
-		<execute macro="Alert#viewSuccessMessage" />
-
 		<var name="pauseCount" value="0" />
 
 		<if>
@@ -157,6 +155,9 @@
 					</then>
 				</if>
 			</then>
+			<else>
+				<execute macro="Alert#viewSuccessMessage" />
+			</else>
 		</if>
 	</command>
 

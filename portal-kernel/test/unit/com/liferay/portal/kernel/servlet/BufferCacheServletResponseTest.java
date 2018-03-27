@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.servlet;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.io.DummyOutputStream;
 import com.liferay.portal.kernel.io.DummyWriter;
@@ -25,7 +26,6 @@ import com.liferay.portal.kernel.test.rule.CodeCoverageAssertor;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -1045,6 +1045,17 @@ public class BufferCacheServletResponseTest {
 			new BufferCacheServletResponse(stubHttpServletResponse);
 
 		bufferCacheServletResponse.setContentLength(1024);
+	}
+
+	@Test
+	public void testSetContentLengthLong() {
+		StubHttpServletResponse stubHttpServletResponse =
+			new StubHttpServletResponse();
+
+		BufferCacheServletResponse bufferCacheServletResponse =
+			new BufferCacheServletResponse(stubHttpServletResponse);
+
+		bufferCacheServletResponse.setContentLengthLong(1024);
 	}
 
 	@Test

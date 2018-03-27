@@ -17,8 +17,13 @@ package com.liferay.frontend.taglib.clay.servlet.taglib.soy.base;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.soy.servlet.taglib.TemplateRendererTag;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.Map;
 
 /**
  * @author Chema Balsas
@@ -39,7 +44,28 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 
 	@Override
 	public int doStartTag() {
-		setHydrate(_hydrate);
+		Map<String, Object> context = getContext();
+
+		if (Validator.isNull(context.get("spritemap"))) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			putValue(
+				"spritemap",
+				themeDisplay.getPathThemeImages().concat("/clay/icons.svg"));
+		}
+
+		super.setComponentId(_componentId);
+
+		if (_hydrate || Validator.isNotNull(_componentId) ||
+			Validator.isNotNull(context.get("data"))) {
+
+			setHydrate(true);
+		}
+		else {
+			setHydrate(false);
+		}
+
 		setTemplateNamespace(_componentBaseName + ".render");
 
 		return super.doStartTag();
@@ -58,7 +84,29 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 				"clay-", _moduleBaseName, "/lib/", _componentBaseName));
 	}
 
+	@Override
+	public void setComponentId(String componentId) {
+		_componentId = componentId;
+	}
+
+	public void setData(Map<String, String> data) {
+		putValue("data", data);
+	}
+
+	public void setElementClasses(String elementClasses) {
+		putValue("elementClasses", elementClasses);
+	}
+
+	public void setId(String id) {
+		putValue("id", id);
+	}
+
+	public void setSpritemap(String spritemap) {
+		putValue("spritemap", spritemap);
+	}
+
 	private final String _componentBaseName;
+	private String _componentId;
 	private final boolean _hydrate;
 	private final String _moduleBaseName;
 

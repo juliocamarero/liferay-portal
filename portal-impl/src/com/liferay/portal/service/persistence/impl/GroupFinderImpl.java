@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -34,7 +35,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.comparator.GroupNameComparator;
@@ -427,7 +427,7 @@ public class GroupFinderImpl
 
 			findByCompanyIdSQL = replaceOrderBy(findByCompanyIdSQL, obc);
 
-			StringBundler sb = new StringBundler(9);
+			StringBundler sb = new StringBundler(11);
 
 			sb.append(StringPool.OPEN_PARENTHESIS);
 			sb.append(replaceJoinAndWhere(findByCompanyIdSQL, params1));
@@ -1268,9 +1268,7 @@ public class GroupFinderImpl
 			else if (key.equals("types")) {
 				List<Integer> values = (List<Integer>)entry.getValue();
 
-				for (int i = 0; i < values.size(); i++) {
-					Integer value = values.get(i);
-
+				for (Integer value : values) {
 					qPos.add(value);
 				}
 			}
@@ -1380,7 +1378,7 @@ public class GroupFinderImpl
 			int pos = join.indexOf("WHERE");
 
 			if (pos != -1) {
-				join = join.substring(pos + 5, join.length()).concat(" AND ");
+				join = join.substring(pos + 5).concat(" AND ");
 			}
 			else {
 				join = StringPool.BLANK;
@@ -1543,7 +1541,7 @@ public class GroupFinderImpl
 		if (classNameIds == null) {
 			params1.put("classNameIds", groupOrganizationClassNameIds);
 			params2.put("classNameIds", organizationClassNameId);
-			params3.put("classNameIds", groupClassNameId);
+			params3.put("classNameIds", groupOrganizationClassNameIds);
 			params4.put("classNameIds", groupOrganizationClassNameIds);
 		}
 		else {

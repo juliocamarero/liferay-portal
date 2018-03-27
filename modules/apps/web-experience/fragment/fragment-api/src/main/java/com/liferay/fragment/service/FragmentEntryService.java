@@ -57,18 +57,29 @@ public interface FragmentEntryService extends BaseService {
 	 * Never modify or reference this interface directly. Always use {@link FragmentEntryServiceUtil} to access the fragment entry remote service. Add custom service methods to {@link com.liferay.fragment.service.impl.FragmentEntryServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public FragmentEntry addFragmentEntry(long groupId,
-		long fragmentCollectionId, java.lang.String name, java.lang.String css,
-		java.lang.String html, java.lang.String js,
+		long fragmentCollectionId, java.lang.String name, int status,
 		ServiceContext serviceContext) throws PortalException;
 
-	public List<FragmentEntry> deleteFragmentEntries(long[] fragmentEntriesIds)
+	public FragmentEntry addFragmentEntry(long groupId,
+		long fragmentCollectionId, java.lang.String fragmentEntryKey,
+		java.lang.String name, int status, ServiceContext serviceContext)
+		throws PortalException;
+
+	public FragmentEntry addFragmentEntry(long groupId,
+		long fragmentCollectionId, java.lang.String name, java.lang.String css,
+		java.lang.String html, java.lang.String js, int status,
+		ServiceContext serviceContext) throws PortalException;
+
+	public FragmentEntry addFragmentEntry(long groupId,
+		long fragmentCollectionId, java.lang.String fragmentEntryKey,
+		java.lang.String name, java.lang.String css, java.lang.String html,
+		java.lang.String js, int status, ServiceContext serviceContext)
+		throws PortalException;
+
+	public void deleteFragmentEntries(long[] fragmentEntriesIds)
 		throws PortalException;
 
 	public FragmentEntry deleteFragmentEntry(long fragmentEntryId)
-		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<FragmentEntry> fetchFragmentEntries(long fragmentCollectionId)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -84,15 +95,20 @@ public interface FragmentEntryService extends BaseService {
 		long fragmentCollectionId, java.lang.String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long fragmentCollectionId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long fragmentCollectionId,
+		int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntries(long groupId,
-		long fragmentCollectionId, int start, int end)
-		throws PortalException;
+		long fragmentCollectionId, int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntries(long groupId,
 		long fragmentCollectionId, int start, int end,
-		OrderByComparator<FragmentEntry> orderByComparator)
-		throws PortalException;
+		OrderByComparator<FragmentEntry> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntries(long groupId,
@@ -106,10 +122,15 @@ public interface FragmentEntryService extends BaseService {
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getTempFileNames(long groupId,
+		java.lang.String folderName) throws PortalException;
+
 	public FragmentEntry updateFragmentEntry(long fragmentEntryId,
 		java.lang.String name) throws PortalException;
 
 	public FragmentEntry updateFragmentEntry(long fragmentEntryId,
 		java.lang.String name, java.lang.String css, java.lang.String html,
-		java.lang.String js) throws PortalException;
+		java.lang.String js, int status, ServiceContext serviceContext)
+		throws PortalException;
 }

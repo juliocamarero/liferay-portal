@@ -15,8 +15,8 @@
 package com.liferay.source.formatter.checkstyle.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.source.formatter.checks.util.JavaSourceUtil;
 import com.liferay.source.formatter.checkstyle.util.DetailASTUtil;
@@ -35,6 +35,7 @@ import com.thoughtworks.qdox.parser.ParseException;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -239,7 +240,9 @@ public class UnprocessedExceptionCheck extends BaseCheck {
 
 		Collection<JavaSource> sources = javaProjectBuilder.getSources();
 
-		JavaSource javaSource = sources.iterator().next();
+		Iterator<JavaSource> iterator = sources.iterator();
+
+		JavaSource javaSource = iterator.next();
 
 		for (String importClassName : javaSource.getImports()) {
 			if (importClassName.endsWith("Exception")) {

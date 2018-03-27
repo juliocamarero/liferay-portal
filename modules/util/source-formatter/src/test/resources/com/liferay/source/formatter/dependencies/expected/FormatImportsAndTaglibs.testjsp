@@ -22,8 +22,8 @@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.portal.kernel.util.StringBundler" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %>
+<%@ page import="com.liferay.petra.string.StringPool" %><%@
+page import="com.liferay.portal.kernel.util.StringBundler" %>
 
 <%@ page import="java.lang.String" %>
 
@@ -52,5 +52,9 @@ for (Entry<String, String> entry : map.entrySet()) {
 <liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL" />
 
 <aui:form useNamespace="<%= false %>">
-	<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" type="more" />
+	<liferay-ui:search-iterator
+		displayStyle="descriptive"
+		markupView="lexicon"
+		type="more"
+	/>
 </aui:form>

@@ -41,6 +41,33 @@ public class SiteNavigationMenuLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.site.navigation.service.impl.SiteNavigationMenuLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.site.navigation.model.SiteNavigationMenu addDefaultSiteNavigationMenu(
+		long userId, long groupId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addDefaultSiteNavigationMenu(userId, groupId, serviceContext);
+	}
+
+	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
+		long userId, long groupId, java.lang.String name, int type,
+		boolean auto,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addSiteNavigationMenu(userId, groupId, name, type, auto,
+			serviceContext);
+	}
+
+	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
+		long userId, long groupId, java.lang.String name, int type,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addSiteNavigationMenu(userId, groupId, name, type,
+			serviceContext);
+	}
+
 	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
 		long userId, long groupId, java.lang.String name,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -184,13 +211,28 @@ public class SiteNavigationMenuLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
+	public static com.liferay.site.navigation.model.SiteNavigationMenu fetchPrimarySiteNavigationMenu(
+		long groupId) {
+		return getService().fetchPrimarySiteNavigationMenu(groupId);
+	}
+
 	public static com.liferay.site.navigation.model.SiteNavigationMenu fetchSiteNavigationMenu(
 		long siteNavigationMenuId) {
 		return getService().fetchSiteNavigationMenu(siteNavigationMenuId);
 	}
 
+	public static com.liferay.site.navigation.model.SiteNavigationMenu fetchSiteNavigationMenu(
+		long groupId, int type) {
+		return getService().fetchSiteNavigationMenu(groupId, type);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return getService().getActionableDynamicQuery();
+	}
+
+	public static java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getAutoSiteNavigationMenus(
+		long groupId) {
+		return getService().getAutoSiteNavigationMenus(groupId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
@@ -278,6 +320,15 @@ public class SiteNavigationMenuLocalServiceUtil {
 	public static int getSiteNavigationMenusCount(long groupId,
 		java.lang.String keywords) {
 		return getService().getSiteNavigationMenusCount(groupId, keywords);
+	}
+
+	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
+		long userId, long siteNavigationMenuId, int type, boolean auto,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateSiteNavigationMenu(userId, siteNavigationMenuId,
+			type, auto, serviceContext);
 	}
 
 	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(

@@ -20,15 +20,10 @@
 	<aui:fieldset collapsible="<%= true %>" cssClass="options-group" label="content" markupView="lexicon">
 		<ul class="list-unstyled">
 			<li class="tree-item">
-				<aui:select disabled="<%= disableInputs %>" inlineField="<%= true %>" label="" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>">
-					<aui:option id="allContent" label="all-content" selected="<%= MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL, true) %>" value="<%= true %>" />
-					<aui:option id="chooseContent" label="choose-content" selected="<%= !MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PORTLET_DATA_ALL, true) %>" value="<%= false %>" />
-				</aui:select>
-
 				<aui:input disabled="<%= disableInputs %>" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="hidden" value="<%= MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PORTLET_DATA, true) %>" />
 				<aui:input disabled="<%= disableInputs %>" name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT, true) %>" />
 
-				<ul class="<%= disableInputs ? "" : "hide" %>" id="<portlet:namespace />selectContents">
+				<ul id="<portlet:namespace />selectContents">
 					<li>
 						<div id="<portlet:namespace />range">
 							<ul class="list-unstyled">
@@ -59,7 +54,10 @@
 											</div>
 
 											<div class="flex-item-center range-options <%= disableInputs ? "hide" : StringPool.BLANK %>">
-												<liferay-ui:icon icon="reload" markupView="lexicon" />
+												<liferay-ui:icon
+													icon="reload"
+													markupView="lexicon"
+												/>
 
 												<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" method="get">
 													<liferay-ui:message key="refresh-counts" />
@@ -100,7 +98,10 @@
 													yearValue="<%= startCalendar.get(Calendar.YEAR) %>"
 												/>
 
-												<liferay-ui:icon icon="calendar" markupView="lexicon" />
+												<liferay-ui:icon
+													icon="calendar"
+													markupView="lexicon"
+												/>
 
 												<liferay-ui:input-time
 													amPmParam='<%= "startDateAmPm" %>'
@@ -130,7 +131,10 @@
 													yearValue="<%= endCalendar.get(Calendar.YEAR) %>"
 												/>
 
-												<liferay-ui:icon icon="calendar" markupView="lexicon" />
+												<liferay-ui:icon
+													icon="calendar"
+													markupView="lexicon"
+												/>
 
 												<liferay-ui:input-time
 													amPmParam='<%= "endDateAmPm" %>'
@@ -169,14 +173,16 @@
 						</div>
 					</li>
 					<li class="options">
-						<liferay-staging:portlet-list disableInputs="<%= disableInputs %>" exportImportConfigurationId="<%= exportImportConfigurationId %>" portlets="<%= dataSiteLevelPortlets %>" showAllPortlets="<%= showAllPortlets %>" type="<%= type %>" />
+						<liferay-staging:portlet-list
+							disableInputs="<%= disableInputs %>"
+							exportImportConfigurationId="<%= exportImportConfigurationId %>"
+							portlets="<%= dataSiteLevelPortlets %>"
+							showAllPortlets="<%= showAllPortlets %>"
+							type="<%= type %>"
+						/>
 					</li>
 				</ul>
 			</li>
 		</ul>
 	</aui:fieldset>
 </c:if>
-
-<aui:script>
-	Liferay.Util.toggleSelectBox('<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>', 'false', '<portlet:namespace />selectContents');
-</aui:script>

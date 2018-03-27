@@ -26,7 +26,14 @@ if (row != null) {
 }
 %>
 
-<liferay-ui:icon-menu cssClass='<%= row == null ? "entry-options inline" : StringPool.BLANK %>' direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	cssClass='<%= row == null ? "entry-options inline" : StringPool.BLANK %>'
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= BlogsEntryPermission.contains(permissionChecker, entry, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editEntryURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
 			<portlet:param name="mvcRenderCommandName" value="/blogs/edit_entry" />
@@ -61,9 +68,11 @@ if (row != null) {
 	</c:if>
 
 	<c:if test="<%= BlogsEntryPermission.contains(permissionChecker, entry, ActionKeys.DELETE) %>">
+		<portlet:renderURL var="viewEntriesURL" />
+
 		<portlet:actionURL name="/blogs/edit_entry" var="deleteEntryURL">
 			<portlet:param name="<%= Constants.CMD %>" value="<%= trashHelper.isTrashEnabled(scopeGroupId) ? Constants.MOVE_TO_TRASH : Constants.DELETE %>" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="redirect" value="<%= viewEntriesURL %>" />
 			<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
 		</portlet:actionURL>
 

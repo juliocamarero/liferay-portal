@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -44,6 +45,8 @@ import com.liferay.site.navigation.model.impl.SiteNavigationMenuModelImpl;
 import com.liferay.site.navigation.service.persistence.SiteNavigationMenuPersistence;
 
 import java.io.Serializable;
+
+import java.lang.reflect.Field;
 
 import java.util.Collections;
 import java.util.Date;
@@ -1954,9 +1957,1880 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 	private static final String _FINDER_COLUMN_G_N_NAME_1 = "siteNavigationMenu.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "siteNavigationMenu.name LIKE ?";
 	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(siteNavigationMenu.name IS NULL OR siteNavigationMenu.name LIKE '')";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T = new FinderPath(SiteNavigationMenuModelImpl.ENTITY_CACHE_ENABLED,
+			SiteNavigationMenuModelImpl.FINDER_CACHE_ENABLED,
+			SiteNavigationMenuImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_T",
+			new String[] {
+				Long.class.getName(), Integer.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T = new FinderPath(SiteNavigationMenuModelImpl.ENTITY_CACHE_ENABLED,
+			SiteNavigationMenuModelImpl.FINDER_CACHE_ENABLED,
+			SiteNavigationMenuImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_T",
+			new String[] { Long.class.getName(), Integer.class.getName() },
+			SiteNavigationMenuModelImpl.GROUPID_COLUMN_BITMASK |
+			SiteNavigationMenuModelImpl.TYPE_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_T = new FinderPath(SiteNavigationMenuModelImpl.ENTITY_CACHE_ENABLED,
+			SiteNavigationMenuModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_T",
+			new String[] { Long.class.getName(), Integer.class.getName() });
+
+	/**
+	 * Returns all the site navigation menus where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @return the matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_T(long groupId, int type) {
+		return findByG_T(groupId, type, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the site navigation menus where groupId = &#63; and type = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @return the range of matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_T(long groupId, int type,
+		int start, int end) {
+		return findByG_T(groupId, type, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the site navigation menus where groupId = &#63; and type = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_T(long groupId, int type,
+		int start, int end,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		return findByG_T(groupId, type, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the site navigation menus where groupId = &#63; and type = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_T(long groupId, int type,
+		int start, int end,
+		OrderByComparator<SiteNavigationMenu> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T;
+			finderArgs = new Object[] { groupId, type };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T;
+			finderArgs = new Object[] {
+					groupId, type,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<SiteNavigationMenu> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<SiteNavigationMenu>)finderCache.getResult(finderPath,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (SiteNavigationMenu siteNavigationMenu : list) {
+					if ((groupId != siteNavigationMenu.getGroupId()) ||
+							(type != siteNavigationMenu.getType())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(4);
+			}
+
+			query.append(_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+
+			query.append(_FINDER_COLUMN_G_T_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_T_TYPE_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(type);
+
+				if (!pagination) {
+					list = (List<SiteNavigationMenu>)QueryUtil.list(q,
+							getDialect(), start, end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<SiteNavigationMenu>)QueryUtil.list(q,
+							getDialect(), start, end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first site navigation menu in the ordered set where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching site navigation menu
+	 * @throws NoSuchMenuException if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu findByG_T_First(long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		SiteNavigationMenu siteNavigationMenu = fetchByG_T_First(groupId, type,
+				orderByComparator);
+
+		if (siteNavigationMenu != null) {
+			return siteNavigationMenu;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", type=");
+		msg.append(type);
+
+		msg.append("}");
+
+		throw new NoSuchMenuException(msg.toString());
+	}
+
+	/**
+	 * Returns the first site navigation menu in the ordered set where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching site navigation menu, or <code>null</code> if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu fetchByG_T_First(long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		List<SiteNavigationMenu> list = findByG_T(groupId, type, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last site navigation menu in the ordered set where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching site navigation menu
+	 * @throws NoSuchMenuException if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu findByG_T_Last(long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		SiteNavigationMenu siteNavigationMenu = fetchByG_T_Last(groupId, type,
+				orderByComparator);
+
+		if (siteNavigationMenu != null) {
+			return siteNavigationMenu;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", type=");
+		msg.append(type);
+
+		msg.append("}");
+
+		throw new NoSuchMenuException(msg.toString());
+	}
+
+	/**
+	 * Returns the last site navigation menu in the ordered set where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching site navigation menu, or <code>null</code> if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu fetchByG_T_Last(long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		int count = countByG_T(groupId, type);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<SiteNavigationMenu> list = findByG_T(groupId, type, count - 1,
+				count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the site navigation menus before and after the current site navigation menu in the ordered set where groupId = &#63; and type = &#63;.
+	 *
+	 * @param siteNavigationMenuId the primary key of the current site navigation menu
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next site navigation menu
+	 * @throws NoSuchMenuException if a site navigation menu with the primary key could not be found
+	 */
+	@Override
+	public SiteNavigationMenu[] findByG_T_PrevAndNext(
+		long siteNavigationMenuId, long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		SiteNavigationMenu siteNavigationMenu = findByPrimaryKey(siteNavigationMenuId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SiteNavigationMenu[] array = new SiteNavigationMenuImpl[3];
+
+			array[0] = getByG_T_PrevAndNext(session, siteNavigationMenu,
+					groupId, type, orderByComparator, true);
+
+			array[1] = siteNavigationMenu;
+
+			array[2] = getByG_T_PrevAndNext(session, siteNavigationMenu,
+					groupId, type, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected SiteNavigationMenu getByG_T_PrevAndNext(Session session,
+		SiteNavigationMenu siteNavigationMenu, long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(4);
+		}
+
+		query.append(_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+
+		query.append(_FINDER_COLUMN_G_T_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_T_TYPE_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(type);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(siteNavigationMenu);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<SiteNavigationMenu> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the site navigation menus that the user has permission to view where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @return the matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public List<SiteNavigationMenu> filterFindByG_T(long groupId, int type) {
+		return filterFindByG_T(groupId, type, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the site navigation menus that the user has permission to view where groupId = &#63; and type = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @return the range of matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public List<SiteNavigationMenu> filterFindByG_T(long groupId, int type,
+		int start, int end) {
+		return filterFindByG_T(groupId, type, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the site navigation menus that the user has permissions to view where groupId = &#63; and type = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public List<SiteNavigationMenu> filterFindByG_T(long groupId, int type,
+		int start, int end,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_T(groupId, type, start, end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(4 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_T_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_T_TYPE_2_SQL);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				SiteNavigationMenu.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, SiteNavigationMenuImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, SiteNavigationMenuImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(type);
+
+			return (List<SiteNavigationMenu>)QueryUtil.list(q, getDialect(),
+				start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the site navigation menus before and after the current site navigation menu in the ordered set of site navigation menus that the user has permission to view where groupId = &#63; and type = &#63;.
+	 *
+	 * @param siteNavigationMenuId the primary key of the current site navigation menu
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next site navigation menu
+	 * @throws NoSuchMenuException if a site navigation menu with the primary key could not be found
+	 */
+	@Override
+	public SiteNavigationMenu[] filterFindByG_T_PrevAndNext(
+		long siteNavigationMenuId, long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_T_PrevAndNext(siteNavigationMenuId, groupId, type,
+				orderByComparator);
+		}
+
+		SiteNavigationMenu siteNavigationMenu = findByPrimaryKey(siteNavigationMenuId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SiteNavigationMenu[] array = new SiteNavigationMenuImpl[3];
+
+			array[0] = filterGetByG_T_PrevAndNext(session, siteNavigationMenu,
+					groupId, type, orderByComparator, true);
+
+			array[1] = siteNavigationMenu;
+
+			array[2] = filterGetByG_T_PrevAndNext(session, siteNavigationMenu,
+					groupId, type, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected SiteNavigationMenu filterGetByG_T_PrevAndNext(Session session,
+		SiteNavigationMenu siteNavigationMenu, long groupId, int type,
+		OrderByComparator<SiteNavigationMenu> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_T_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_T_TYPE_2_SQL);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				SiteNavigationMenu.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, SiteNavigationMenuImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, SiteNavigationMenuImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(type);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(siteNavigationMenu);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<SiteNavigationMenu> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the site navigation menus where groupId = &#63; and type = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 */
+	@Override
+	public void removeByG_T(long groupId, int type) {
+		for (SiteNavigationMenu siteNavigationMenu : findByG_T(groupId, type,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(siteNavigationMenu);
+		}
+	}
+
+	/**
+	 * Returns the number of site navigation menus where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @return the number of matching site navigation menus
+	 */
+	@Override
+	public int countByG_T(long groupId, int type) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T;
+
+		Object[] finderArgs = new Object[] { groupId, type };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_SITENAVIGATIONMENU_WHERE);
+
+			query.append(_FINDER_COLUMN_G_T_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_T_TYPE_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(type);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of site navigation menus that the user has permission to view where groupId = &#63; and type = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param type the type
+	 * @return the number of matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_T(long groupId, int type) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_T(groupId, type);
+		}
+
+		StringBundler query = new StringBundler(3);
+
+		query.append(_FILTER_SQL_COUNT_SITENAVIGATIONMENU_WHERE);
+
+		query.append(_FINDER_COLUMN_G_T_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_T_TYPE_2_SQL);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				SiteNavigationMenu.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(type);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_T_GROUPID_2 = "siteNavigationMenu.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_T_TYPE_2 = "siteNavigationMenu.type = ?";
+	private static final String _FINDER_COLUMN_G_T_TYPE_2_SQL = "siteNavigationMenu.type_ = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_A = new FinderPath(SiteNavigationMenuModelImpl.ENTITY_CACHE_ENABLED,
+			SiteNavigationMenuModelImpl.FINDER_CACHE_ENABLED,
+			SiteNavigationMenuImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_A",
+			new String[] {
+				Long.class.getName(), Boolean.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A = new FinderPath(SiteNavigationMenuModelImpl.ENTITY_CACHE_ENABLED,
+			SiteNavigationMenuModelImpl.FINDER_CACHE_ENABLED,
+			SiteNavigationMenuImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_A",
+			new String[] { Long.class.getName(), Boolean.class.getName() },
+			SiteNavigationMenuModelImpl.GROUPID_COLUMN_BITMASK |
+			SiteNavigationMenuModelImpl.AUTO_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_A = new FinderPath(SiteNavigationMenuModelImpl.ENTITY_CACHE_ENABLED,
+			SiteNavigationMenuModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_A",
+			new String[] { Long.class.getName(), Boolean.class.getName() });
+
+	/**
+	 * Returns all the site navigation menus where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @return the matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_A(long groupId, boolean auto) {
+		return findByG_A(groupId, auto, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the site navigation menus where groupId = &#63; and auto = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @return the range of matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_A(long groupId, boolean auto,
+		int start, int end) {
+		return findByG_A(groupId, auto, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the site navigation menus where groupId = &#63; and auto = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_A(long groupId, boolean auto,
+		int start, int end,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		return findByG_A(groupId, auto, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the site navigation menus where groupId = &#63; and auto = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching site navigation menus
+	 */
+	@Override
+	public List<SiteNavigationMenu> findByG_A(long groupId, boolean auto,
+		int start, int end,
+		OrderByComparator<SiteNavigationMenu> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A;
+			finderArgs = new Object[] { groupId, auto };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_A;
+			finderArgs = new Object[] {
+					groupId, auto,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<SiteNavigationMenu> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<SiteNavigationMenu>)finderCache.getResult(finderPath,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (SiteNavigationMenu siteNavigationMenu : list) {
+					if ((groupId != siteNavigationMenu.getGroupId()) ||
+							(auto != siteNavigationMenu.getAuto())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(4);
+			}
+
+			query.append(_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+
+			query.append(_FINDER_COLUMN_G_A_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_A_AUTO_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(auto);
+
+				if (!pagination) {
+					list = (List<SiteNavigationMenu>)QueryUtil.list(q,
+							getDialect(), start, end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<SiteNavigationMenu>)QueryUtil.list(q,
+							getDialect(), start, end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first site navigation menu in the ordered set where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching site navigation menu
+	 * @throws NoSuchMenuException if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu findByG_A_First(long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		SiteNavigationMenu siteNavigationMenu = fetchByG_A_First(groupId, auto,
+				orderByComparator);
+
+		if (siteNavigationMenu != null) {
+			return siteNavigationMenu;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", auto=");
+		msg.append(auto);
+
+		msg.append("}");
+
+		throw new NoSuchMenuException(msg.toString());
+	}
+
+	/**
+	 * Returns the first site navigation menu in the ordered set where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching site navigation menu, or <code>null</code> if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu fetchByG_A_First(long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		List<SiteNavigationMenu> list = findByG_A(groupId, auto, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last site navigation menu in the ordered set where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching site navigation menu
+	 * @throws NoSuchMenuException if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu findByG_A_Last(long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		SiteNavigationMenu siteNavigationMenu = fetchByG_A_Last(groupId, auto,
+				orderByComparator);
+
+		if (siteNavigationMenu != null) {
+			return siteNavigationMenu;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", auto=");
+		msg.append(auto);
+
+		msg.append("}");
+
+		throw new NoSuchMenuException(msg.toString());
+	}
+
+	/**
+	 * Returns the last site navigation menu in the ordered set where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching site navigation menu, or <code>null</code> if a matching site navigation menu could not be found
+	 */
+	@Override
+	public SiteNavigationMenu fetchByG_A_Last(long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		int count = countByG_A(groupId, auto);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<SiteNavigationMenu> list = findByG_A(groupId, auto, count - 1,
+				count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the site navigation menus before and after the current site navigation menu in the ordered set where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param siteNavigationMenuId the primary key of the current site navigation menu
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next site navigation menu
+	 * @throws NoSuchMenuException if a site navigation menu with the primary key could not be found
+	 */
+	@Override
+	public SiteNavigationMenu[] findByG_A_PrevAndNext(
+		long siteNavigationMenuId, long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		SiteNavigationMenu siteNavigationMenu = findByPrimaryKey(siteNavigationMenuId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SiteNavigationMenu[] array = new SiteNavigationMenuImpl[3];
+
+			array[0] = getByG_A_PrevAndNext(session, siteNavigationMenu,
+					groupId, auto, orderByComparator, true);
+
+			array[1] = siteNavigationMenu;
+
+			array[2] = getByG_A_PrevAndNext(session, siteNavigationMenu,
+					groupId, auto, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected SiteNavigationMenu getByG_A_PrevAndNext(Session session,
+		SiteNavigationMenu siteNavigationMenu, long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(4);
+		}
+
+		query.append(_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+
+		query.append(_FINDER_COLUMN_G_A_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_A_AUTO_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(auto);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(siteNavigationMenu);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<SiteNavigationMenu> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the site navigation menus that the user has permission to view where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @return the matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public List<SiteNavigationMenu> filterFindByG_A(long groupId, boolean auto) {
+		return filterFindByG_A(groupId, auto, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the site navigation menus that the user has permission to view where groupId = &#63; and auto = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @return the range of matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public List<SiteNavigationMenu> filterFindByG_A(long groupId, boolean auto,
+		int start, int end) {
+		return filterFindByG_A(groupId, auto, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the site navigation menus that the user has permissions to view where groupId = &#63; and auto = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SiteNavigationMenuModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param start the lower bound of the range of site navigation menus
+	 * @param end the upper bound of the range of site navigation menus (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public List<SiteNavigationMenu> filterFindByG_A(long groupId, boolean auto,
+		int start, int end,
+		OrderByComparator<SiteNavigationMenu> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_A(groupId, auto, start, end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(4 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_A_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_A_AUTO_2_SQL);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				SiteNavigationMenu.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, SiteNavigationMenuImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, SiteNavigationMenuImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(auto);
+
+			return (List<SiteNavigationMenu>)QueryUtil.list(q, getDialect(),
+				start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the site navigation menus before and after the current site navigation menu in the ordered set of site navigation menus that the user has permission to view where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param siteNavigationMenuId the primary key of the current site navigation menu
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next site navigation menu
+	 * @throws NoSuchMenuException if a site navigation menu with the primary key could not be found
+	 */
+	@Override
+	public SiteNavigationMenu[] filterFindByG_A_PrevAndNext(
+		long siteNavigationMenuId, long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator)
+		throws NoSuchMenuException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_A_PrevAndNext(siteNavigationMenuId, groupId, auto,
+				orderByComparator);
+		}
+
+		SiteNavigationMenu siteNavigationMenu = findByPrimaryKey(siteNavigationMenuId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SiteNavigationMenu[] array = new SiteNavigationMenuImpl[3];
+
+			array[0] = filterGetByG_A_PrevAndNext(session, siteNavigationMenu,
+					groupId, auto, orderByComparator, true);
+
+			array[1] = siteNavigationMenu;
+
+			array[2] = filterGetByG_A_PrevAndNext(session, siteNavigationMenu,
+					groupId, auto, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected SiteNavigationMenu filterGetByG_A_PrevAndNext(Session session,
+		SiteNavigationMenu siteNavigationMenu, long groupId, boolean auto,
+		OrderByComparator<SiteNavigationMenu> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_A_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_A_AUTO_2_SQL);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_SITENAVIGATIONMENU_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(SiteNavigationMenuModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				SiteNavigationMenu.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, SiteNavigationMenuImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, SiteNavigationMenuImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(auto);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(siteNavigationMenu);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<SiteNavigationMenu> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the site navigation menus where groupId = &#63; and auto = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 */
+	@Override
+	public void removeByG_A(long groupId, boolean auto) {
+		for (SiteNavigationMenu siteNavigationMenu : findByG_A(groupId, auto,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(siteNavigationMenu);
+		}
+	}
+
+	/**
+	 * Returns the number of site navigation menus where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @return the number of matching site navigation menus
+	 */
+	@Override
+	public int countByG_A(long groupId, boolean auto) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_A;
+
+		Object[] finderArgs = new Object[] { groupId, auto };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_SITENAVIGATIONMENU_WHERE);
+
+			query.append(_FINDER_COLUMN_G_A_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_A_AUTO_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(auto);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of site navigation menus that the user has permission to view where groupId = &#63; and auto = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param auto the auto
+	 * @return the number of matching site navigation menus that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_A(long groupId, boolean auto) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_A(groupId, auto);
+		}
+
+		StringBundler query = new StringBundler(3);
+
+		query.append(_FILTER_SQL_COUNT_SITENAVIGATIONMENU_WHERE);
+
+		query.append(_FINDER_COLUMN_G_A_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_A_AUTO_2_SQL);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				SiteNavigationMenu.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(auto);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	private static final String _FINDER_COLUMN_G_A_GROUPID_2 = "siteNavigationMenu.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_A_AUTO_2 = "siteNavigationMenu.auto = ?";
+	private static final String _FINDER_COLUMN_G_A_AUTO_2_SQL = "siteNavigationMenu.auto_ = ?";
 
 	public SiteNavigationMenuPersistenceImpl() {
 		setModelClass(SiteNavigationMenu.class);
+
+		try {
+			Field field = BasePersistenceImpl.class.getDeclaredField(
+					"_dbColumnNames");
+
+			field.setAccessible(true);
+
+			Map<String, String> dbColumnNames = new HashMap<String, String>();
+
+			dbColumnNames.put("type", "type_");
+			dbColumnNames.put("auto", "auto_");
+
+			field.set(this, dbColumnNames);
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(e, e);
+			}
+		}
 	}
 
 	/**
@@ -2208,6 +4082,24 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
 				args);
 
+			args = new Object[] {
+					siteNavigationMenuModelImpl.getGroupId(),
+					siteNavigationMenuModelImpl.getType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_T, args);
+			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T,
+				args);
+
+			args = new Object[] {
+					siteNavigationMenuModelImpl.getGroupId(),
+					siteNavigationMenuModelImpl.getAuto()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_A, args);
+			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A,
+				args);
+
 			finderCache.removeResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY);
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL,
 				FINDER_ARGS_EMPTY);
@@ -2228,6 +4120,48 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_GROUPID, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,
+					args);
+			}
+
+			if ((siteNavigationMenuModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						siteNavigationMenuModelImpl.getOriginalGroupId(),
+						siteNavigationMenuModelImpl.getOriginalType()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_T, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T,
+					args);
+
+				args = new Object[] {
+						siteNavigationMenuModelImpl.getGroupId(),
+						siteNavigationMenuModelImpl.getType()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_T, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T,
+					args);
+			}
+
+			if ((siteNavigationMenuModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						siteNavigationMenuModelImpl.getOriginalGroupId(),
+						siteNavigationMenuModelImpl.getOriginalAuto()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_A, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A,
+					args);
+
+				args = new Object[] {
+						siteNavigationMenuModelImpl.getGroupId(),
+						siteNavigationMenuModelImpl.getAuto()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_A, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A,
 					args);
 			}
 		}
@@ -2260,6 +4194,8 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 		siteNavigationMenuImpl.setCreateDate(siteNavigationMenu.getCreateDate());
 		siteNavigationMenuImpl.setModifiedDate(siteNavigationMenu.getModifiedDate());
 		siteNavigationMenuImpl.setName(siteNavigationMenu.getName());
+		siteNavigationMenuImpl.setType(siteNavigationMenu.getType());
+		siteNavigationMenuImpl.setAuto(siteNavigationMenu.isAuto());
 
 		return siteNavigationMenuImpl;
 	}
@@ -2647,6 +4583,11 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 	}
 
 	@Override
+	public Set<String> getBadColumnNames() {
+		return _badColumnNames;
+	}
+
+	@Override
 	protected Map<String, Integer> getTableColumnsMap() {
 		return SiteNavigationMenuModelImpl.TABLE_COLUMNS_MAP;
 	}
@@ -2689,4 +4630,7 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SiteNavigationMenu exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SiteNavigationMenu exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(SiteNavigationMenuPersistenceImpl.class);
+	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
+				"type", "auto"
+			});
 }

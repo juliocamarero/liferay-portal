@@ -42,6 +42,12 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 					portletURL="<%= siteItemSelectorViewDisplayContext.getPortletURL() %>"
 				/>
 			</c:if>
+
+			<c:if test="<%= siteItemSelectorViewDisplayContext.isShowSearch() %>">
+				<li>
+					<liferay-item-selector:search />
+				</li>
+			</c:if>
 		</liferay-frontend:management-bar-filters>
 
 		<liferay-frontend:management-bar-display-buttons
@@ -55,7 +61,12 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 <aui:form action="<%= siteItemSelectorViewDisplayContext.getPortletURL() %>" cssClass="container-fluid-1280" method="post" name="selectGroupFm">
 	<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
 		<div id="breadcrumb">
-			<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+			<liferay-ui:breadcrumb
+				showCurrentGroup="<%= false %>"
+				showGuestGroup="<%= false %>"
+				showLayout="<%= false %>"
+				showPortletBreadcrumb="<%= true %>"
+			/>
 		</div>
 	</c:if>
 
@@ -226,7 +237,10 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

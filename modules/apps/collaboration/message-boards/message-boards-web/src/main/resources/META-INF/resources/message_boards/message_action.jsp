@@ -29,7 +29,13 @@ MBCategory category = message.getCategory();
 MBThread thread = message.getThread();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= MBMessagePermission.contains(permissionChecker, message, ActionKeys.UPDATE) && !thread.isLocked() %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcRenderCommandName" value="/message_boards/edit_message" />
@@ -67,7 +73,7 @@ MBThread thread = message.getThread();
 				</portlet:actionURL>
 
 				<liferay-ui:icon
-					message="unlock-thread"
+					message="unlock"
 					url="<%= unlockThreadURL %>"
 				/>
 			</c:when>
@@ -80,7 +86,7 @@ MBThread thread = message.getThread();
 				</portlet:actionURL>
 
 				<liferay-ui:icon
-					message="lock-thread"
+					message="lock"
 					url="<%= lockThreadURL %>"
 				/>
 			</c:otherwise>
@@ -88,11 +94,11 @@ MBThread thread = message.getThread();
 	</c:if>
 
 	<c:if test="<%= portletName.equals(MBPortletKeys.MESSAGE_BOARDS) && enableRSS && MBMessagePermission.contains(permissionChecker, message, ActionKeys.VIEW) %>">
-		<liferay-ui:rss
+		<liferay-rss:rss
 			delta="<%= rssDelta %>"
 			displayStyle="<%= rssDisplayStyle %>"
 			feedType="<%= rssFeedType %>"
-			url="<%= MBUtil.getRSSURL(plid, 0, message.getThreadId(), 0, themeDisplay) %>"
+			url="<%= MBRSSUtil.getRSSURL(plid, 0, message.getThreadId(), 0, themeDisplay) %>"
 		/>
 	</c:if>
 

@@ -14,6 +14,7 @@
 
 package com.liferay.dynamic.data.mapping.internal.template;
 
+import com.liferay.dynamic.data.mapping.internal.util.ResourceBundleLoaderProvider;
 import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
 import com.liferay.dynamic.data.mapping.kernel.DDMTemplateManager;
 import com.liferay.dynamic.data.mapping.service.permission.DDMTemplatePermission;
@@ -31,7 +32,6 @@ import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -47,7 +47,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -212,6 +214,9 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 		_userLocalService = userLocalService;
 	}
 
+	@Reference
+	protected ResourceBundleLoaderProvider resourceBundleLoaderProvider;
+
 	private BundleContext _bundleContext;
 	private final Map<Long, TemplateHandler> _classNameIdTemplateHandlers =
 		new ConcurrentHashMap<>();
@@ -254,19 +259,30 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 				DDMTemplate ddmTemplate = _ddmTemplateManager.fetchTemplate(
 					group.getGroupId(), classNameId, templateKey);
 
-				if (ddmTemplate != null) {
+				if ((ddmTemplate != null) &&
+					((ddmTemplate.getUserId() != userId) ||
+					 (ddmTemplate.getVersionUserId() != userId))) {
+
 					continue;
 				}
 
+				ResourceBundleLoader resourceBundleLoader = null;
+
 				Class<?> clazz = _templateHandler.getClass();
 
-				ClassLoader classLoader = clazz.getClassLoader();
+				Bundle bundle = FrameworkUtil.getBundle(clazz);
 
-				ResourceBundleLoader resourceBundleLoader =
-					new AggregateResourceBundleLoader(
+				if (bundle != null) {
+					resourceBundleLoader =
+						resourceBundleLoaderProvider.getResourceBundleLoader(
+							bundle.getSymbolicName());
+				}
+				else {
+					resourceBundleLoader = new AggregateResourceBundleLoader(
 						ResourceBundleUtil.getResourceBundleLoader(
-							"content.Language", classLoader),
+							"content.Language", clazz.getClassLoader()),
 						LanguageResources.RESOURCE_BUNDLE_LOADER);
+				}
 
 				Map<Locale, String> nameMap = getLocalizationMap(
 					resourceBundleLoader, group.getGroupId(),
@@ -286,17 +302,27 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 				String scriptFileName = templateElement.elementText(
 					"script-file");
 
-				String script = StringUtil.read(classLoader, scriptFileName);
+				String script = StringUtil.read(
+					clazz.getClassLoader(), scriptFileName);
 
 				boolean cacheable = GetterUtil.getBoolean(
 					templateElement.elementText("cacheable"));
 
-				_ddmTemplateManager.addTemplate(
-					userId, group.getGroupId(), classNameId, 0,
-					_portal.getClassNameId(
-						_PORTLET_DISPLAY_TEMPLATE_CLASS_NAME),
-					templateKey, nameMap, descriptionMap, type, null, language,
-					script, cacheable, false, null, null, serviceContext);
+				if (ddmTemplate == null) {
+					_ddmTemplateManager.addTemplate(
+						userId, group.getGroupId(), classNameId, 0,
+						_portal.getClassNameId(
+							_PORTLET_DISPLAY_TEMPLATE_CLASS_NAME),
+						templateKey, nameMap, descriptionMap, type, null,
+						language, script, cacheable, false, null, null,
+						serviceContext);
+				}
+				else if (!StringUtil.equals(script, ddmTemplate.getScript())) {
+					_ddmTemplateManager.updateTemplate(
+						userId, ddmTemplate.getTemplateId(), 0, nameMap,
+						descriptionMap, type, null, language, script, cacheable,
+						false, null, null, serviceContext);
+				}
 			}
 		}
 
@@ -313,8 +339,7 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 
 			for (Locale locale : LanguageUtil.getAvailableLocales(groupId)) {
 				ResourceBundle resourceBundle =
-					resourceBundleLoader.loadResourceBundle(
-						LocaleUtil.toLanguageId(locale));
+					resourceBundleLoader.loadResourceBundle(locale);
 
 				map.put(locale, LanguageUtil.get(resourceBundle, key));
 			}

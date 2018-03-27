@@ -26,12 +26,15 @@ import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
 import com.liferay.journal.exception.ArticleContentException;
 import com.liferay.journal.util.JournalConverter;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.petra.xml.XMLUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -44,7 +47,6 @@ import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Attribute;
@@ -366,9 +368,7 @@ public class JournalConverterImpl implements JournalConverter {
 
 		int repetitions = 0;
 
-		for (int i = 0; i < fieldsDisplayValues.length; i++) {
-			String fieldDisplayName = fieldsDisplayValues[i];
-
+		for (String fieldDisplayName : fieldsDisplayValues) {
 			if (offset > parentOffset) {
 				break;
 			}
@@ -906,6 +906,10 @@ public class JournalConverterImpl implements JournalConverter {
 				jsonArray = JSONFactoryUtil.createJSONArray(fieldValue);
 			}
 			catch (JSONException jsone) {
+				if (_log.isDebugEnabled()) {
+					_log.debug("Unable to parse object", jsone);
+				}
+
 				return;
 			}
 
@@ -1086,6 +1090,9 @@ public class JournalConverterImpl implements JournalConverter {
 				dynamicElementElement, defaultLanguageId);
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		JournalConverterImpl.class);
 
 	private final Map<String, String> _ddmDataTypes;
 	private final Map<String, String> _ddmMetadataAttributes;

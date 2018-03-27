@@ -29,11 +29,12 @@ import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.service.DDMDataProviderInstanceService;
 import com.liferay.dynamic.data.mapping.service.permission.DDMDataProviderInstancePermission;
-import com.liferay.dynamic.data.mapping.service.permission.DDMDataProviderPermission;
+import com.liferay.dynamic.data.mapping.service.permission.DDMFormPermission;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormFactory;
 import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -43,7 +44,6 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.List;
 import java.util.Locale;
@@ -244,7 +244,7 @@ public class DDMDataProviderDisplayContext {
 	}
 
 	public boolean isShowAddDataProviderButton() {
-		return DDMDataProviderPermission.contains(
+		return DDMFormPermission.contains(
 			_ddmDataProviderRequestHelper.getPermissionChecker(),
 			_ddmDataProviderRequestHelper.getScopeGroupId(),
 			DDMActionKeys.ADD_DATA_PROVIDER_INSTANCE);

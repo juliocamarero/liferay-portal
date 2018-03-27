@@ -10,6 +10,10 @@ AUI.add(
 		var FormBuilderSettingsForm = A.Component.create(
 			{
 				ATTRS: {
+					builder: {
+						value: {}
+					},
+
 					editMode: {
 						value: false
 					},
@@ -35,6 +39,14 @@ AUI.add(
 						instance._fieldEventHandlers = [];
 					},
 
+					destructor: function() {
+						var instance = this;
+
+						(new A.EventHandle(instance._eventHandlers)).detach();
+
+						(new A.EventHandle(instance._fieldEventHandlers)).detach();
+					},
+
 					getEvaluationPayload: function() {
 						var instance = this;
 
@@ -43,6 +55,7 @@ AUI.add(
 						return A.merge(
 							FormBuilderSettingsForm.superclass.getEvaluationPayload.apply(instance, arguments),
 							{
+								newField: field.newField,
 								type: field.get('type')
 							}
 						);
@@ -73,13 +86,16 @@ AUI.add(
 					_afterFieldValueChange: function(event) {
 						var instance = this;
 
+						var builder = instance.get('builder');
+
 						var field = event.target;
+
 						var formBuilderField = instance.get('field');
 
 						var localizedValue = field.get('context.localizedValue');
 
 						if (localizedValue) {
-							var locale = formBuilderField.get('locale');
+							var locale = builder.get('editingLanguageId');
 
 							localizedValue[locale] = event.newVal;
 						}
@@ -109,7 +125,6 @@ AUI.add(
 						var instance = this;
 
 						instance._createSettingsFormEventHandlers();
-						instance._createAutocompleteElements();
 
 						instance._updateFormFieldProperties();
 
@@ -123,66 +138,6 @@ AUI.add(
 
 						if (instance.get('container').one('.tab-pane.active')) {
 							instance._showLastActivatedPage();
-							instance._hideAutoCompletePage();
-						}
-					},
-
-					_createAutocompleteButton: function() {
-						var instance = this;
-
-						var advancedSettingsNode = instance.getPageNode(2);
-
-						advancedSettingsNode.append(instance._getAutocompleteCardActionTemplate());
-
-						advancedSettingsNode.one('.autocomplete-action-panel').on('click', A.bind('_onClickAutocompleteButton', instance));
-					},
-
-					_createAutocompleteContainer: function() {
-						var instance = this;
-
-						var emptyPageRenderer = SoyTemplateUtil.getTemplateRenderer('ddm.tabbed_form_frame');
-
-						var container = document.createDocumentFragment();
-
-						new emptyPageRenderer({}, container);
-
-						var emptyPageNode = A.Node.create(container.firstChild.outerHTML);
-
-						var sidebarBody = A.one('.sidebar-body');
-
-						var dataSourceTypeContainer = instance.getField('dataSourceType').get('container');
-
-						var ddmDataProviderInstanceIdContainer = instance.getField('ddmDataProviderInstanceId').get('container');
-
-						var ddmDataProviderInstanceOutputContainer = instance.getField('ddmDataProviderInstanceOutput').get('container');
-
-						var optionsContainer = instance.getField('options').get('container');
-
-						var tabView = instance.getTabView();
-
-						emptyPageNode.setHTML(instance._getAutocompleteContainerTemplate());
-
-						tabView.get('panelNode').append(emptyPageNode);
-
-						var autocompleteBody = sidebarBody.one('.autocomplete-body');
-
-						autocompleteBody.append(dataSourceTypeContainer);
-						autocompleteBody.append(ddmDataProviderInstanceIdContainer);
-						autocompleteBody.append(ddmDataProviderInstanceOutputContainer);
-						autocompleteBody.append(optionsContainer);
-
-						sidebarBody.one('.autocomplete-header-back').on('click', A.bind('_onClickAutocompleteHeaderBack', instance));
-						tabView.after('selectionChange', A.bind('_afterTabViewSelectionChange', instance));
-					},
-
-					_createAutocompleteElements: function() {
-						var instance = this;
-
-						var formBuilderFieldType = instance._getFormBuilderFieldType();
-
-						if (formBuilderFieldType === 'text') {
-							instance._createAutocompleteButton();
-							instance._createAutocompleteContainer();
 						}
 					},
 
@@ -213,42 +168,6 @@ AUI.add(
 							labelField.on('keyChange', A.bind('_onLabelFieldChange', instance)),
 							labelField.after(A.bind('_afterLabelFieldNormalizeKey', instance), labelField, 'normalizeKey')
 						);
-					},
-
-					_getAutocompleteCardActionTemplate: function() {
-						var instance = this;
-
-						var actionPanelRenderer = SoyTemplateUtil.getTemplateRenderer('DDMAutoComplete.actionPanel');
-
-						var container = document.createDocumentFragment();
-
-						new actionPanelRenderer(
-							{
-								addAutoCompleteButton: Liferay.Util.getLexiconIconTpl('angle-right'),
-								label: Liferay.Language.get('autocomplete')
-							},
-							container
-						);
-
-						return container.firstChild.outerHTML;
-					},
-
-					_getAutocompleteContainerTemplate: function() {
-						var instance = this;
-
-						var autocompleteContainerRenderer = SoyTemplateUtil.getTemplateRenderer('DDMAutoComplete.container');
-
-						var container = document.createDocumentFragment();
-
-						new autocompleteContainerRenderer(
-							{
-								backButton: Liferay.Util.getLexiconIconTpl('angle-left', 'icon-monospaced'),
-								label: Liferay.Language.get('autocomplete')
-							},
-							container
-						);
-
-						return container.firstChild.outerHTML;
 					},
 
 					_getFormBuilderFieldType: function() {
@@ -285,28 +204,6 @@ AUI.add(
 						instance.get('container').one('.tab-pane.active').hide();
 					},
 
-					_hideAutoCompletePage: function() {
-						var instance = this;
-
-						A.one('.sidebar-body').one('.autocomplete-container').ancestor().removeClass('active');
-					},
-
-					_onClickAutocompleteButton: function() {
-						var instance = this;
-
-						instance._hideActivatedPage();
-
-						A.one('.sidebar-body').one('.autocomplete-container').ancestor().addClass('active');
-					},
-
-					_onClickAutocompleteHeaderBack: function() {
-						var instance = this;
-
-						instance._showLastActivatedPage();
-
-						instance._hideAutoCompletePage();
-					},
-
 					_onClickModeToggler: function(event) {
 						var instance = this;
 
@@ -324,9 +221,13 @@ AUI.add(
 
 						var formBuilderField = instance.get('field');
 
-						var locale = formBuilderField.get('locale');
+						var builder = instance.get('builder');
 
-						if (locale === themeDisplay.getDefaultLanguageId()) {
+						var defaultLocale = builder.get('defaultLanguageId');
+
+						var locale = builder.get('editingLanguageId');
+
+						if (defaultLocale === locale) {
 							nameField.set('value', event.newVal);
 							formBuilderField.set('context.fieldName', event.newVal);
 						}

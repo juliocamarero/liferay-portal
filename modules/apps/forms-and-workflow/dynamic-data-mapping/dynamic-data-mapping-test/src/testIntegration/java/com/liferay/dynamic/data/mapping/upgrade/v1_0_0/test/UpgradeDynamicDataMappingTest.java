@@ -39,6 +39,7 @@ import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoRowLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
@@ -57,7 +58,6 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -902,7 +902,8 @@ public class UpgradeDynamicDataMappingTest {
 			sb.append(dateFieldName);
 			sb.append(".getData()) />");
 
-			Assert.assertTrue(actualDefinition.contains(sb.toString()));
+			Assert.assertTrue(
+				actualDefinition, actualDefinition.contains(sb.toString()));
 
 			// If statement
 
@@ -912,7 +913,8 @@ public class UpgradeDynamicDataMappingTest {
 			sb.append(dateFieldName);
 			sb.append("_Data)>");
 
-			Assert.assertTrue(actualDefinition.contains(sb.toString()));
+			Assert.assertTrue(
+				actualDefinition, actualDefinition.contains(sb.toString()));
 
 			// Date parse statement
 
@@ -924,7 +926,8 @@ public class UpgradeDynamicDataMappingTest {
 			sb.append(dateFieldName);
 			sb.append("_Data, locale) />");
 
-			Assert.assertTrue(actualDefinition.contains(sb.toString()));
+			Assert.assertTrue(
+				actualDefinition, actualDefinition.contains(sb.toString()));
 		}
 	}
 
@@ -950,14 +953,14 @@ public class UpgradeDynamicDataMappingTest {
 
 		// Date getDate statement
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(3);
 
 		sb.append("dateUtil.getDate(");
 		sb.append(dateFieldName);
-		sb.append("_DateObj");
-		sb.append(", \"dd MMM yyyy - HH:mm:ss\", locale)");
+		sb.append("_DateObj, \"dd MMM yyyy - HH:mm:ss\", locale)");
 
-		Assert.assertTrue(actualDefinition.contains(sb.toString()));
+		Assert.assertTrue(
+			actualDefinition, actualDefinition.contains(sb.toString()));
 	}
 
 	@Test
@@ -1070,7 +1073,8 @@ public class UpgradeDynamicDataMappingTest {
 			sb.append(dateFieldName);
 			sb.append(".getData()))");
 
-			Assert.assertTrue(actualDefinition.contains(sb.toString()));
+			Assert.assertTrue(
+				actualDefinition, actualDefinition.contains(sb.toString()));
 
 			// If statement
 
@@ -1080,7 +1084,8 @@ public class UpgradeDynamicDataMappingTest {
 			sb.append(dateFieldName);
 			sb.append("_Data))");
 
-			Assert.assertTrue(actualDefinition.contains(sb.toString()));
+			Assert.assertTrue(
+				actualDefinition, actualDefinition.contains(sb.toString()));
 
 			// Date parse statement
 
@@ -1092,7 +1097,8 @@ public class UpgradeDynamicDataMappingTest {
 			sb.append(dateFieldName);
 			sb.append("_Data, $locale))");
 
-			Assert.assertTrue(actualDefinition.contains(sb.toString()));
+			Assert.assertTrue(
+				actualDefinition, actualDefinition.contains(sb.toString()));
 		}
 	}
 
@@ -1118,14 +1124,14 @@ public class UpgradeDynamicDataMappingTest {
 
 		// Date getDate statement
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(3);
 
 		sb.append("$dateUtil.getDate(");
 		sb.append(dateFieldName);
-		sb.append("_DateObj");
-		sb.append(", \"dd MMM yyyy - HH:mm:ss\", $locale)");
+		sb.append("_DateObj, \"dd MMM yyyy - HH:mm:ss\", $locale)");
 
-		Assert.assertTrue(actualDefinition.contains(sb.toString()));
+		Assert.assertTrue(
+			actualDefinition, actualDefinition.contains(sb.toString()));
 	}
 
 	@Test
@@ -1254,9 +1260,9 @@ public class UpgradeDynamicDataMappingTest {
 
 		sb.append("insert into DDLRecord (uuid_, recordId, groupId, ");
 		sb.append("companyId, userId, userName, versionUserId, ");
-		sb.append("versionUserName, createDate, modifiedDate, ");
-		sb.append("DDMStorageId, recordSetId, version, displayIndex) ");
-		sb.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("versionUserName, createDate, modifiedDate, DDMStorageId, ");
+		sb.append("recordSetId, version, displayIndex) values (?, ?, ?, ?, ");
+		sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
 		String sql = sb.toString();
 
@@ -1294,8 +1300,8 @@ public class UpgradeDynamicDataMappingTest {
 		sb.append("insert into DDLRecordSet (uuid_, recordSetId, groupId, ");
 		sb.append("companyId, userId, userName, createDate, modifiedDate, ");
 		sb.append("DDMStructureId, recordSetKey, name, description, ");
-		sb.append("minDisplayRows, scope) ");
-		sb.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("minDisplayRows, scope) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+		sb.append("?, ?, ?, ?, ?) ");
 
 		String sql = sb.toString();
 
@@ -1331,8 +1337,8 @@ public class UpgradeDynamicDataMappingTest {
 		sb.append("insert into DDLRecordVersion (recordVersionId, groupId, ");
 		sb.append("companyId, userId, userName, createDate, DDMStorageId, ");
 		sb.append("recordSetId, recordId, version, displayIndex, status, ");
-		sb.append("statusByUserId, statusByUserName, statusDate) ");
-		sb.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("statusByUserId, statusByUserName, statusDate) values (?, ");
+		sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
 		String sql = sb.toString();
 
@@ -1419,15 +1425,14 @@ public class UpgradeDynamicDataMappingTest {
 			String definition, String storageType)
 		throws Exception {
 
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(6);
 
 		sb.append("insert into DDMStructure (uuid_, structureId, groupId, ");
 		sb.append("companyId, userId, userName, versionUserId, ");
 		sb.append("versionUserName, createDate, modifiedDate, ");
 		sb.append("parentStructureId, classNameId, structureKey, version, ");
-		sb.append("name, description, definition, storageType, type_) ");
-		sb.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
-		sb.append("?, ?, ?)");
+		sb.append("name, description, definition, storageType, type_) values ");
+		sb.append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		String sql = sb.toString();
 

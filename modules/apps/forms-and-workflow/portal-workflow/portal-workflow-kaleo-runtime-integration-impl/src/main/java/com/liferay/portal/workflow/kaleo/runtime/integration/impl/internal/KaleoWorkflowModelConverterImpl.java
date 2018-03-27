@@ -14,11 +14,11 @@
 
 package com.liferay.portal.workflow.kaleo.runtime.integration.impl.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Role;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.DefaultWorkflowDefinition;
@@ -38,6 +38,8 @@ import com.liferay.portal.workflow.kaleo.model.KaleoDefinitionVersion;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoLog;
+import com.liferay.portal.workflow.kaleo.model.KaleoNode;
+import com.liferay.portal.workflow.kaleo.model.KaleoTask;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.integration.impl.internal.util.LazyWorkflowTaskAssigneeList;
 import com.liferay.portal.workflow.kaleo.runtime.integration.impl.internal.util.WorkflowTaskAssigneesSupplier;
@@ -121,10 +123,15 @@ public class KaleoWorkflowModelConverterImpl
 		DefaultWorkflowDefinition defaultWorkflowDefinition =
 			new DefaultWorkflowDefinition();
 
-		KaleoDefinition kaleoDefinition =
-			kaleoDefinitionVersion.getKaleoDefinition();
+		try {
+			KaleoDefinition kaleoDefinition =
+				kaleoDefinitionVersion.getKaleoDefinition();
 
-		defaultWorkflowDefinition.setActive(kaleoDefinition.getActive());
+			defaultWorkflowDefinition.setActive(kaleoDefinition.getActive());
+		}
+		catch (Exception e) {
+			defaultWorkflowDefinition.setActive(false);
+		}
 
 		String content = kaleoDefinitionVersion.getContent();
 
@@ -179,8 +186,10 @@ public class KaleoWorkflowModelConverterImpl
 
 		defaultWorkflowInstance.setEndDate(kaleoInstance.getCompletionDate());
 		defaultWorkflowInstance.setStartDate(kaleoInstance.getCreateDate());
-		defaultWorkflowInstance.setState(
-			kaleoInstanceToken.getCurrentKaleoNode().getName());
+
+		KaleoNode currentKaleoNode = kaleoInstanceToken.getCurrentKaleoNode();
+
+		defaultWorkflowInstance.setState(currentKaleoNode.getName());
 
 		if (workflowContext != null) {
 			defaultWorkflowInstance.setWorkflowContext(workflowContext);
@@ -260,11 +269,13 @@ public class KaleoWorkflowModelConverterImpl
 			kaleoTaskInstanceToken.getCreateDate());
 		defaultWorkflowTask.setCompletionDate(
 			kaleoTaskInstanceToken.getCompletionDate());
-		defaultWorkflowTask.setDescription(
-			kaleoTaskInstanceToken.getKaleoTask().getDescription());
+
+		KaleoTask kaleoTask = kaleoTaskInstanceToken.getKaleoTask();
+
+		defaultWorkflowTask.setDescription(kaleoTask.getDescription());
+
 		defaultWorkflowTask.setDueDate(kaleoTaskInstanceToken.getDueDate());
-		defaultWorkflowTask.setName(
-			kaleoTaskInstanceToken.getKaleoTask().getName());
+		defaultWorkflowTask.setName(kaleoTask.getName());
 
 		if (workflowContext != null) {
 			defaultWorkflowTask.setOptionalAttributes(workflowContext);

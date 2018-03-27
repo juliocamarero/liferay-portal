@@ -88,7 +88,7 @@
 		<execute function="Refresh" />
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="Spanish (Spain)" />
+			<var name="locale" value="es-es" />
 		</execute>
 
 		<execute function="Refresh" />
@@ -103,7 +103,7 @@
 		</execute>
 
 		<execute macro="WebContent#selectLocale">
-			<var name="locale" value="es-ES" />
+			<var name="language" value="español (España)" />
 		</execute>
 
 		<execute macro="WebContent#viewCP">
@@ -119,7 +119,7 @@
 		<execute function="Refresh" />
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="German (Germany)" />
+			<var name="locale" value="de-de" />
 		</execute>
 
 		<execute function="Refresh" />
@@ -134,7 +134,7 @@
 		</execute>
 
 		<execute macro="WebContent#selectLocale">
-			<var name="locale" value="de-DE" />
+			<var name="language" value="Deutsch (Deutschland)" />
 		</execute>
 
 		<execute macro="WebContent#viewCP">
@@ -150,7 +150,7 @@
 		<execute function="Refresh" />
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="Finnish (Finland)" />
+			<var name="locale" value="fi-fi" />
 		</execute>
 
 		<execute function="Refresh" />
@@ -165,7 +165,7 @@
 		</execute>
 
 		<execute macro="WebContent#selectLocale">
-			<var name="locale" value="fi-FI" />
+			<var name="language" value="suomi (Suomi)" />
 		</execute>
 
 		<execute macro="WebContent#viewCP">
@@ -198,7 +198,6 @@
 
 		<execute macro="WebContent#addLocale">
 			<var name="language" value="Spanish (Spain)" />
-			<var name="locale" value="es-ES" />
 		</execute>
 
 		<execute macro="WebContent#addCP">
@@ -222,7 +221,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="Spanish (Spain)" />
+			<var name="locale" value="es-es" />
 		</execute>
 
 		<execute macro="WebContent#viewPGViaWCD">
@@ -235,7 +234,7 @@
 		</execute>
 
 		<execute macro="WebContent#selectLocale">
-			<var name="locale" value="es-ES" />
+			<var name="language" value="español (España)" />
 		</execute>
 
 		<execute macro="WebContent#viewCP">
@@ -277,12 +276,16 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
+		<execute macro="LanguagePortlet#viewLanguageCurrent">
+			<var name="locale" value="en-us" />
+		</execute>
+
 		<execute macro="LanguagePortlet#viewLanguagesAbsent">
-			<var name="missingLanguages" value="ARABIC,CHINESE,FRENCH,HUNGARIAN,JAPANESE,PORTUGUESE" />
+			<var name="missingLocales" value="fr-fr,hu-hu,iw-il,ja-jp,pt-br,zh-cn" />
 		</execute>
 
 		<execute macro="LanguagePortlet#viewLanguagesPresent">
-			<var name="currentLanguages" value="ENGLISH,GERMAN,SPANISH" />
+			<var name="currentLocales" value="de-de,es-es" />
 		</execute>
 	</command>
 
@@ -312,7 +315,7 @@
 
 		<execute macro="WebContentNavigator#gotoAddCP" />
 
-		<execute macro="WebContent#viewDefaultLanguage">
+		<execute macro="PortletEntry#viewLocale">
 			<var name="locale" value="es-ES" />
 		</execute>
 	</command>
@@ -348,8 +351,8 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="LanguagePortlet#viewDisplayTemplateIconMenu">
-			<var name="language" value="Deutsch" />
+		<execute macro="LanguagePortlet#viewLanguageCurrent">
+			<var name="locale" value="nl-nl" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -437,12 +440,16 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
+		<execute macro="LanguagePortlet#viewLanguageCurrent">
+			<var name="locale" value="en-us" />
+		</execute>
+
 		<execute macro="LanguagePortlet#viewLanguagesAbsent">
-			<var name="missingLanguages" value="ARABIC,GERMAN,HUNGARIAN,JAPANESE,PORTUGUESE,SPANISH" />
+			<var name="missingLocales" value="de-de,es-es,hu-hu,iw-il,ja-jp,pt-br" />
 		</execute>
 
 		<execute macro="LanguagePortlet#viewLanguagesPresent">
-			<var name="currentLanguages" value="CHINESE,FRENCH,ENGLISH" />
+			<var name="currentLocales" value="fr-fr,zh-cn" />
 		</execute>
 
 		<execute macro="Portlet#gotoPortletOptions">
@@ -488,12 +495,16 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
+		<execute macro="LanguagePortlet#viewLanguageCurrent">
+			<var name="locale" value="en-us" />
+		</execute>
+
 		<execute macro="LanguagePortlet#viewLanguagesAbsent">
-			<var name="missingLanguages" value="CHINESE,FRENCH,HUNGARIAN,JAPANESE,PORTUGUESE" />
+			<var name="missingLocales" value="fr-fr,hu-hu,ja-jp,pt-br,zh-cn" />
 		</execute>
 
 		<execute macro="LanguagePortlet#viewLanguagesPresent">
-			<var name="currentLanguages" value="ENGLISH,GERMAN,SPANISH" />
+			<var name="currentLocales" value="de-de,es-es" />
 		</execute>
 
 		<execute macro="Portlet#gotoPortletOptions">

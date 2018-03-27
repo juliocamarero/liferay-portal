@@ -22,7 +22,7 @@ import org.dom4j.Element;
 /**
  * @author Kenji Heigel
  */
-public class IfPoshiElement extends BasePoshiElement {
+public class IfPoshiElement extends PoshiElement {
 
 	@Override
 	public PoshiElement clone(Element element) {
@@ -49,13 +49,13 @@ public class IfPoshiElement extends BasePoshiElement {
 		for (String readableBlock : getReadableBlocks(readableSyntax)) {
 			if (readableBlock.startsWith(getName() + " (")) {
 				add(
-					PoshiElementFactory.newPoshiElement(
+					PoshiNodeFactory.newPoshiNode(
 						this, getParentheticalContent(readableBlock)));
 
 				continue;
 			}
 
-			add(PoshiElementFactory.newPoshiElement(this, readableBlock));
+			add(PoshiNodeFactory.newPoshiNode(this, readableBlock));
 		}
 	}
 
@@ -109,7 +109,7 @@ public class IfPoshiElement extends BasePoshiElement {
 
 		sb.append(getReadableName());
 
-		for (String conditionName : _conditionNames) {
+		for (String conditionName : _CONDITION_NAMES) {
 			if (element(conditionName) != null) {
 				PoshiElement poshiElement = (PoshiElement)element(
 					conditionName);
@@ -186,9 +186,9 @@ public class IfPoshiElement extends BasePoshiElement {
 		return true;
 	}
 
-	private static final String _ELEMENT_NAME = "if";
-
-	private static final String[] _conditionNames =
+	private static final String[] _CONDITION_NAMES =
 		{"and", "condition", "equals", "isset", "not", "or"};
+
+	private static final String _ELEMENT_NAME = "if";
 
 }

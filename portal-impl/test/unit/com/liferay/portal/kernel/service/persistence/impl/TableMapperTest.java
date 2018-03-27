@@ -1481,7 +1481,7 @@ public class TableMapperTest {
 		Map<String, TableMapper<?, ?>> tableMappers =
 			TableMapperFactory.tableMappers;
 
-		Assert.assertTrue(tableMappers.isEmpty());
+		Assert.assertTrue(tableMappers.toString(), tableMappers.isEmpty());
 
 		// Create
 
@@ -1521,11 +1521,11 @@ public class TableMapperTest {
 
 		TableMapperFactory.removeTableMapper(_TABLE_NAME);
 
-		Assert.assertTrue(tableMappers.isEmpty());
+		Assert.assertTrue(tableMappers.toString(), tableMappers.isEmpty());
 
 		TableMapperFactory.removeTableMapper(_TABLE_NAME);
 
-		Assert.assertTrue(tableMappers.isEmpty());
+		Assert.assertTrue(tableMappers.toString(), tableMappers.isEmpty());
 	}
 
 	@Test
@@ -1600,7 +1600,7 @@ public class TableMapperTest {
 
 		tableMapper.destroy();
 
-		Assert.assertTrue(portalCaches.isEmpty());
+		Assert.assertTrue(portalCaches.toString(), portalCaches.isEmpty());
 	}
 
 	private static final String _COMPANY_COLUMN_NAME = "companyId";
@@ -1787,10 +1787,10 @@ public class TableMapperTest {
 	}
 
 	private interface Left extends LeftModel {
-	};
+	}
 
 	private interface LeftModel extends BaseModel<Left> {
-	};
+	}
 
 	private class MockAddMappingSqlUpdate implements SqlUpdate {
 
@@ -2216,8 +2216,10 @@ public class TableMapperTest {
 
 	}
 
-	private interface Right extends RightModel {};
+	private interface Right extends RightModel {
+	}
 
-	private interface RightModel extends BaseModel<Right> {};
+	private interface RightModel extends BaseModel<Right> {
+	}
 
 }

@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.exception.UserScreenNameException;
@@ -21,6 +22,7 @@ import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.PasswordPolicy;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.User;
@@ -33,6 +35,7 @@ import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUti
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -40,7 +43,6 @@ import com.liferay.portal.kernel.service.UserServiceUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.OrganizationTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -51,7 +53,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.security.auth.ScreenNameValidatorFactory;
 import com.liferay.portal.test.mail.MailServiceTestUtil;
@@ -60,6 +61,7 @@ import com.liferay.portal.test.rule.SynchronousMailTestRule;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.passwordpoliciesadmin.util.test.PasswordPolicyTestUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,9 +81,84 @@ import org.junit.runner.RunWith;
 /**
  * @author Brian Wing Shun Chan
  * @author José Manuel Navarro
+ * @author Drew Brokke
  */
 @RunWith(Enclosed.class)
 public class UserServiceTest {
+
+	public static class WhenAddingOrRemovingPasswordPolicyUsers {
+
+		@ClassRule
+		@Rule
+		public static final AggregateTestRule aggregateTestRule =
+			new LiferayIntegrationTestRule();
+
+		@Before
+		public void setUp() throws Exception {
+			ServiceContext serviceContext = new ServiceContext();
+
+			serviceContext.setUserId(TestPropsValues.getUserId());
+
+			_defaultPasswordPolicy = PasswordPolicyTestUtil.addPasswordPolicy(
+				serviceContext, true);
+
+			_defaultPasswordPolicy.setChangeable(true);
+			_defaultPasswordPolicy.setChangeRequired(true);
+
+			_defaultPasswordPolicy =
+				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(
+					_defaultPasswordPolicy);
+
+			_testPasswordPolicy = PasswordPolicyTestUtil.addPasswordPolicy(
+				serviceContext);
+
+			_testPasswordPolicy.setChangeable(false);
+			_testPasswordPolicy.setChangeRequired(false);
+
+			_testPasswordPolicy =
+				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(
+					_testPasswordPolicy);
+		}
+
+		@Test
+		public void shouldRemovePasswordResetIfPolicyDoesNotAllowChanging()
+			throws Exception {
+
+			_user = UserTestUtil.addUser();
+
+			Assert.assertEquals(
+				_defaultPasswordPolicy, _user.getPasswordPolicy());
+
+			Assert.assertTrue(_user.isPasswordReset());
+
+			long[] users = {_user.getUserId()};
+
+			UserLocalServiceUtil.addPasswordPolicyUsers(
+				_testPasswordPolicy.getPasswordPolicyId(), users);
+
+			_user = UserLocalServiceUtil.getUser(_user.getUserId());
+
+			Assert.assertFalse(_user.isPasswordReset());
+		}
+
+		@After
+		public void tearDown() throws Exception {
+			_defaultPasswordPolicy.setDefaultPolicy(false);
+
+			PasswordPolicyLocalServiceUtil.updatePasswordPolicy(
+				_defaultPasswordPolicy);
+		}
+
+		@DeleteAfterTestRun
+		private PasswordPolicy _defaultPasswordPolicy;
+
+		@DeleteAfterTestRun
+		private PasswordPolicy _testPasswordPolicy;
+
+		@DeleteAfterTestRun
+		private User _user;
+
+	}
 
 	public static class WhenAddingUserWithDefaultSitesEnabled {
 
@@ -868,7 +945,6 @@ public class UserServiceTest {
 
 	}
 
-	@Sync
 	public static class WhenPortalSendsPasswordEmail {
 
 		@ClassRule

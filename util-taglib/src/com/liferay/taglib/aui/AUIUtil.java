@@ -15,10 +15,10 @@
 package com.liferay.taglib.aui;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Map;
@@ -113,7 +113,7 @@ public class AUIUtil {
 		String baseType, boolean inlineField, boolean showForLabel,
 		String forLabel, boolean disabled) {
 
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(6);
 
 		if (baseType.equals("boolean")) {
 			baseType = "checkbox";

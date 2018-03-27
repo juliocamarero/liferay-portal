@@ -20,19 +20,10 @@
 	<liferay-portlet:param name="keywords" value="<%= assetDisplayTemplateDisplayContext.getKeywords() %>" />
 </liferay-portlet:renderURL>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<portlet:renderURL var="mainURL" />
-
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item href="<%= mainURL.toString() %>" label="asset-display-templates" selected="<%= true %>" />
-	</aui:nav>
-
-	<aui:nav-bar-search>
-		<aui:form action="<%= portletURL %>" name="searchFm">
-			<liferay-ui:input-search markupView="lexicon" />
-		</aui:form>
-	</aui:nav-bar-search>
-</aui:nav-bar>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= assetDisplayTemplateDisplayContext.getNavigationItems() %>"
+/>
 
 <liferay-frontend:management-bar
 	disabled="<%= assetDisplayTemplateDisplayContext.isDisabledManagementBar() %>"
@@ -51,6 +42,14 @@
 			orderColumns='<%= new String[] {"create-date", "asset-type"} %>'
 			portletURL="<%= portletURL %>"
 		/>
+
+		<li>
+			<aui:form action="<%= portletURL %>" name="searchFm">
+				<liferay-ui:input-search
+					markupView="lexicon"
+				/>
+			</aui:form>
+		</li>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-buttons>
@@ -63,10 +62,43 @@
 			portletURL="<%= changeDisplayStyleURL %>"
 			selectedDisplayStyle="<%= assetDisplayTemplateDisplayContext.getDisplayStyle() %>"
 		/>
+
+		<c:if test="<%= assetDisplayTemplateDisplayContext.isShowAddButton() %>">
+			<liferay-portlet:renderURL varImpl="editAssetDisplayTemplateURL">
+				<portlet:param name="mvcPath" value="/edit_asset_display_template.jsp" />
+			</liferay-portlet:renderURL>
+
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+
+				<%
+				for (long curClassNameId : assetDisplayTemplateDisplayContext.getAvailableClassNameIds()) {
+					ClassName className = ClassNameLocalServiceUtil.getClassName(curClassNameId);
+
+					editAssetDisplayTemplateURL.setParameter("classNameId", String.valueOf(curClassNameId));
+				%>
+
+					<liferay-frontend:add-menu-item
+						title="<%= ResourceActionsUtil.getModelResource(locale, className.getValue()) %>"
+						url="<%= editAssetDisplayTemplateURL.toString() %>"
+					/>
+
+				<%
+				}
+				%>
+
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedAssetDisplayTemplates" label="delete" />
+		<liferay-frontend:management-bar-button
+			href="javascript:;"
+			icon="trash"
+			id="deleteSelectedAssetDisplayTemplates"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -174,32 +206,12 @@
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= assetDisplayTemplateDisplayContext.getDisplayStyle() %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= assetDisplayTemplateDisplayContext.getDisplayStyle() %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
-
-<c:if test="<%= assetDisplayTemplateDisplayContext.isShowAddButton() %>">
-	<liferay-portlet:renderURL varImpl="editAssetDisplayTemplateURL">
-		<portlet:param name="mvcPath" value="/edit_asset_display_template.jsp" />
-	</liferay-portlet:renderURL>
-
-	<liferay-frontend:add-menu>
-
-		<%
-		for (long curClassNameId : assetDisplayTemplateDisplayContext.getAvailableClassNameIds()) {
-			ClassName className = ClassNameLocalServiceUtil.getClassName(curClassNameId);
-
-			editAssetDisplayTemplateURL.setParameter("classNameId", String.valueOf(curClassNameId));
-		%>
-
-			<liferay-frontend:add-menu-item title="<%= ResourceActionsUtil.getModelResource(locale, className.getValue()) %>" url="<%= editAssetDisplayTemplateURL.toString() %>" />
-
-		<%
-		}
-		%>
-
-	</liferay-frontend:add-menu>
-</c:if>
 
 <aui:script sandbox="<%= true %>">
 	$('#<portlet:namespace />deleteSelectedAssetDisplayTemplates').on(

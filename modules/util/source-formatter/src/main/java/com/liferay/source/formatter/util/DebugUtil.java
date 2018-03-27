@@ -111,7 +111,7 @@ public class DebugUtil {
 		_printProcessorInformation();
 
 		_printProcessingTimeInformation(CheckType.CHECKSTYLE);
-		_printProcessingTimeInformation(CheckType.SOURCECHECK);
+		_printProcessingTimeInformation(CheckType.SOURCE_CHECK);
 	}
 
 	public static void startTask() {
@@ -129,21 +129,17 @@ public class DebugUtil {
 
 			sb.append("line ");
 			sb.append(originalChunk.getPosition() + 1);
-			sb.append(" changed:");
-			sb.append("\n");
+			sb.append(" changed:\n");
 
-			sb.append("before: ");
-			sb.append("\n");
+			sb.append("before:\n");
 
 			for (String line : originalChunk.getLines()) {
 				sb.append("[");
 				sb.append(line);
-				sb.append("]");
-				sb.append("\n");
+				sb.append("]\n");
 			}
 
-			sb.append("after: ");
-			sb.append("\n");
+			sb.append("after:\n");
 
 			Chunk<String> revisedChunk = delta.getRevised();
 
@@ -223,8 +219,7 @@ public class DebugUtil {
 		sb.append("\n");
 		sb.append("==== Processing Time Information for '");
 		sb.append(checkType.getValue());
-		sb.append("' ====");
-		sb.append("\n\n");
+		sb.append("' ====\n\n");
 
 		System.out.println(sb.toString());
 

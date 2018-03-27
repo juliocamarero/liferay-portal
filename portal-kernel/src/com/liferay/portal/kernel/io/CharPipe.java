@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.io;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -363,7 +363,9 @@ public class CharPipe {
 				string = StringPool.NULL;
 			}
 			else {
-				string = charSequence.subSequence(start, end).toString();
+				charSequence = charSequence.subSequence(start, end);
+
+				string = charSequence.toString();
 			}
 
 			write(string, 0, string.length());

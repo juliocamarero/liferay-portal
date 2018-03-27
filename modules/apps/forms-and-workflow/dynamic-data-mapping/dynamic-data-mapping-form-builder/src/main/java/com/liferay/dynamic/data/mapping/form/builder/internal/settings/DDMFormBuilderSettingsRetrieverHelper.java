@@ -23,12 +23,13 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureNameComparator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONSerializer;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.List;
@@ -158,12 +159,14 @@ public class DDMFormBuilderSettingsRetrieverHelper {
 		return jsonSerializer.serializeDeep(ddmFormRules);
 	}
 
-	protected static String getServletContextPath(Servlet servlet) {
+	protected String getServletContextPath(Servlet servlet) {
+		String proxyPath = _portal.getPathProxy();
+
 		ServletConfig servletConfig = servlet.getServletConfig();
 
 		ServletContext servletContext = servletConfig.getServletContext();
 
-		return servletContext.getContextPath();
+		return proxyPath.concat(servletContext.getContextPath());
 	}
 
 	@Reference(
@@ -208,6 +211,9 @@ public class DDMFormBuilderSettingsRetrieverHelper {
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference(
 		target = "(osgi.http.whiteboard.servlet.name=com.liferay.dynamic.data.mapping.form.builder.internal.servlet.RolesServlet)"

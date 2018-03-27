@@ -24,6 +24,7 @@ AUI.add(
 
 					options: {
 						getter: '_getOptions',
+						state: true,
 						validator: Array.isArray,
 						value: []
 					},
@@ -95,12 +96,6 @@ AUI.add(
 						var instance = this;
 
 						CheckboxMultipleField.superclass.showErrorMessage.apply(instance, arguments);
-
-						var container = instance.get('container');
-
-						var formGroup = container.one('.form-group');
-
-						formGroup.insert(container.one('.form-feedback-indicator'), 'after');
 					},
 
 					_getOptions: function(options) {

@@ -1,10 +1,8 @@
+import 'frontend-js-web/liferay/compat/dropdown/Dropdown.es';
+import CompatibilityEventProxy from 'frontend-js-web/liferay/CompatibilityEventProxy.es'
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import { core } from 'metal';
-
-import 'metal-dropdown';
-
-import CompatibilityEventProxy from 'frontend-js-web/liferay/CompatibilityEventProxy.es'
 
 import templates from './TranslationManager.soy';
 
@@ -13,6 +11,7 @@ import templates from './TranslationManager.soy';
  *
  * This class adds functionallity to manage existing language options, and
  * create new ones.
+ * @review
  */
 class TranslationManager extends Component {
 	/**
@@ -29,8 +28,8 @@ class TranslationManager extends Component {
 	/**
 	 * Add a language to the available locales list and set it as the
 	 * current editing language.
-	 *
 	 * @param  {MouseEvent} event
+	 * @review
 	 */
 	addLocale(event) {
 		let localeId = event.delegateTarget.getAttribute('data-locale-id');
@@ -46,8 +45,8 @@ class TranslationManager extends Component {
 
 	/**
 	 * Registers another EventTarget as a bubble target.
-	 *
 	 * @param  {!Object} target YUI component where events will be emited to
+	 * @review
 	 */
 	addTarget(target) {
 		this.compatibilityEventProxy_.addTarget(target);
@@ -55,8 +54,8 @@ class TranslationManager extends Component {
 
 	/**
 	 * Change the default language.
-	 *
 	 * @param  {MouseEvent} event
+	 * @review
 	 */
 	changeDefaultLocale(event) {
 		let localeId = event.delegateTarget.getAttribute('data-locale-id');
@@ -68,8 +67,8 @@ class TranslationManager extends Component {
 
 	/**
 	 * Change current editing language.
-	 *
 	 * @param  {MouseEvent} event
+	 * @review
 	 */
 	changeLocale(event) {
 		let localeId = event.delegateTarget.getAttribute('data-locale-id');
@@ -79,8 +78,8 @@ class TranslationManager extends Component {
 
 	/**
 	 * Returns a property.
-	 *
 	 * @param  {String} attr Name of the attribute wanted to get
+	 * @review
 	 */
 	get(attr) {
 		return this[attr];
@@ -89,8 +88,8 @@ class TranslationManager extends Component {
 	/**
 	 * Remove a language from the available locales list and reset the current
 	 * editing language to default if removed one was selected.
-	 *
 	 * @param  {MouseEvent} event
+	 * @review
 	 */
 	removeAvailableLocale(event) {
 		let localeId = event.delegateTarget.getAttribute('data-locale-id');
@@ -115,8 +114,8 @@ class TranslationManager extends Component {
 
 	/**
 	 * Set the current editing locale to the default locale.
-	 *
 	 * @private
+	 * @review
 	 */
 	resetEditingLocale_() {
 		this.editingLocale = this.defaultLocale;
@@ -125,8 +124,8 @@ class TranslationManager extends Component {
 	/**
 	 * Configuration to emit yui-based events to maintain
 	 * backwards compatibility.
-	 *
 	 * @private
+	 * @review
 	 */
 	startCompatibility_() {
 		this.destroy = this.dispose;
@@ -144,12 +143,14 @@ class TranslationManager extends Component {
 /**
  * State definition.
  * @ignore
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
 TranslationManager.STATE = {
 	/**
 	 * Current editing language key.
+	 * @review
 	 * @type {String}
 	 */
 	editingLocale: {
@@ -158,6 +159,7 @@ TranslationManager.STATE = {
 
 	/**
 	 * List of available languages keys.
+	 * @review
 	 * @type {Array.<String>}
 	 */
 	availableLocales: {
@@ -166,6 +168,7 @@ TranslationManager.STATE = {
 
 	/**
 	 * Indicates if the default language is editable or not.
+	 * @review
 	 * @type {Boolean}
 	 */
 	changeableDefaultLanguage: {
@@ -174,6 +177,7 @@ TranslationManager.STATE = {
 
 	/**
 	 * Default language key.
+	 * @review
 	 * @type {String}
 	 */
 	defaultLocale: {
@@ -182,6 +186,7 @@ TranslationManager.STATE = {
 
 	/**
 	 * Map of all languages
+	 * @review
 	 * @type {Object}
 	 */
 	locales: {
@@ -189,7 +194,6 @@ TranslationManager.STATE = {
 	}
 };
 
-// Register component
 Soy.register(TranslationManager, templates);
 
 export default TranslationManager;

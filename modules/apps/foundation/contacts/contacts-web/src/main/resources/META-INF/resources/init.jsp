@@ -21,6 +21,7 @@
 <%@ taglib uri="http://liferay.com/tld/asset" prefix="liferay-asset" %><%@
 taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
+taglib uri="http://liferay.com/tld/social-activities" prefix="liferay-social-activities" %><%@
 taglib uri="http://liferay.com/tld/text-localizer" prefix="liferay-text-localizer" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
@@ -37,6 +38,7 @@ page import="com.liferay.contacts.util.ContactsExtensionsUtil" %><%@
 page import="com.liferay.contacts.util.ContactsUtil" %><%@
 page import="com.liferay.contacts.web.internal.constants.ContactsPortletKeys" %><%@
 page import="com.liferay.petra.string.CharPool" %><%@
+page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
@@ -74,7 +76,6 @@ page import="com.liferay.portal.kernel.util.PrefsParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PrefsPropsUtil" %><%@
 page import="com.liferay.portal.kernel.util.PropsKeys" %><%@
 page import="com.liferay.portal.kernel.util.StringBundler" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.TextFormatter" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@

@@ -88,7 +88,6 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 					<c:when test='<%= displayStyle.equals("descriptive") %>'>
 						<liferay-ui:search-container-column-text>
 							<liferay-ui:user-portrait
-								cssClass="user-icon-lg"
 								userId="<%= curArticle.getUserId() %>"
 							/>
 						</liferay-ui:search-container-column-text>
@@ -112,6 +111,12 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 									<%= HtmlUtil.escape(curArticle.getTitle(locale)) %>
 								</aui:a>
 							</h5>
+
+							<c:if test="<%= journalDisplayContext.isSearch() %>">
+								<h5>
+									<%= JournalHelperUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()) %>
+								</h5>
+							</c:if>
 
 							<h6 class="text-default">
 								<aui:workflow-status markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= curArticle.getStatus() %>" />
@@ -186,6 +191,14 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 							name="description"
 							value="<%= StringUtil.shorten(HtmlUtil.stripHtml(curArticle.getDescription(locale)), 200) %>"
 						/>
+
+						<c:if test="<%= journalDisplayContext.isSearch() %>">
+							<liferay-ui:search-container-column-text
+								cssClass="table-cell-content"
+								name="path"
+								value="<%= JournalHelperUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()) %>"
+							/>
+						</c:if>
 
 						<liferay-ui:search-container-column-text
 							name="author"
@@ -289,7 +302,9 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 						row.setCssClass("entry-card lfr-asset-folder " + row.getCssClass());
 						%>
 
-						<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+						<liferay-ui:search-container-column-text
+							colspan="<%= 2 %>"
+						>
 							<liferay-frontend:horizontal-card
 								actionJsp='<%= journalDisplayContext.isShowEditActions() ? "/folder_action.jsp" : null %>'
 								actionJspServletContext="<%= application %>"
@@ -363,5 +378,10 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 		</c:choose>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" resultRowSplitter="<%= journalDisplayContext.isSearch() ? null : new JournalResultRowSplitter() %>" searchContainer="<%= articleSearchContainer %>" />
+	<liferay-ui:search-iterator
+		displayStyle="<%= displayStyle %>"
+		markupView="lexicon"
+		resultRowSplitter="<%= journalDisplayContext.isSearch() ? null : new JournalResultRowSplitter() %>"
+		searchContainer="<%= articleSearchContainer %>"
+	/>
 </liferay-ui:search-container>

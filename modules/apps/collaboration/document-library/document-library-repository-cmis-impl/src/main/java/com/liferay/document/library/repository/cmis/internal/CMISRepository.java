@@ -33,6 +33,7 @@ import com.liferay.document.library.repository.cmis.internal.model.CMISFileEntry
 import com.liferay.document.library.repository.cmis.internal.model.CMISFileVersion;
 import com.liferay.document.library.repository.cmis.internal.model.CMISFolder;
 import com.liferay.document.library.repository.cmis.search.CMISSearchQueryBuilder;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchRepositoryEntryException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -64,7 +65,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
@@ -76,9 +76,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -86,6 +88,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.client.api.ObjectId;
+import org.apache.chemistry.opencmis.client.api.OperationContext;
 import org.apache.chemistry.opencmis.client.api.QueryResult;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.runtime.ObjectIdImpl;
@@ -1538,8 +1541,18 @@ public class CMISRepository extends BaseCmisRepository {
 
 			Folder parentFolder = toFolder(cmisParentFolder);
 
-			ItemIterable<CmisObject> cmisObjects =
-				cmisParentFolder.getChildren();
+			OperationContext operationContext =
+				session.createOperationContext();
+
+			operationContext.setFilter(
+				_toSet(
+					"cmis:isPrivateWorkingCopy",
+					"cmis:isVersionSeriesCheckedOut",
+					"cmis:lastModificationDate", "cmis:name",
+					"cmis:versionLabel", "cmis:versionSeriesId"));
+
+			ItemIterable<CmisObject> cmisObjects = cmisParentFolder.getChildren(
+				operationContext);
 
 			for (CmisObject cmisObject : cmisObjects) {
 				if (cmisObject instanceof
@@ -1557,10 +1570,22 @@ public class CMISRepository extends BaseCmisRepository {
 					_cmisModelCache.putFolder(cmisFolder);
 				}
 				else if (cmisObject instanceof Document) {
+					Document document = (Document)cmisObject;
+
 					CMISFileEntry cmisFileEntry = (CMISFileEntry)toFileEntry(
-						(Document)cmisObject);
+						document);
 
 					cmisFileEntry.setParentFolder(parentFolder);
+
+					Boolean privateWorkingCopy =
+						document.isPrivateWorkingCopy();
+
+					if (((privateWorkingCopy != null) && privateWorkingCopy) ||
+						Objects.equals(document.getVersionLabel(), "pwc")) {
+
+						foldersAndFileEntries.remove(cmisFileEntry);
+						fileEntries.remove(cmisFileEntry);
+					}
 
 					foldersAndFileEntries.add(cmisFileEntry);
 					fileEntries.add(cmisFileEntry);
@@ -2124,8 +2149,10 @@ public class CMISRepository extends BaseCmisRepository {
 	}
 
 	protected void processException(Exception e) throws PortalException {
+		String message = e.getMessage();
+
 		if ((e instanceof CmisRuntimeException &&
-			 e.getMessage().contains("authorized")) ||
+			 message.contains("authorized")) ||
 			(e instanceof CmisPermissionDeniedException)) {
 
 			String login = null;
@@ -2301,6 +2328,16 @@ public class CMISRepository extends BaseCmisRepository {
 		if (objectId != null) {
 			throw new DuplicateFolderNameException(title);
 		}
+	}
+
+	private final <T> Set<T> _toSet(T... items) {
+		HashSet<T> set = new HashSet<>();
+
+		for (T item : items) {
+			set.add(item);
+		}
+
+		return set;
 	}
 
 	private static final int _DELETE_DEEP = -1;

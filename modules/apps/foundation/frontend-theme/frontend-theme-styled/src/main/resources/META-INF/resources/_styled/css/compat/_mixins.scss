@@ -1,3 +1,21 @@
+// Flex mixin
+
+@mixin break-flex-item() {
+	-ms-flex-preferred-size: auto;
+	flex-basis: auto;
+	width: 100%;
+}
+
+@mixin stack-flex-container() {
+	-ms-flex-direction: column;
+	flex-direction: column;
+
+	.flex-item-full {
+		-ms-flex-preferred-size: auto;
+		flex-basis: auto;
+	}
+}
+
 // BS3 Button Size mixin
 
 @mixin button-size($padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius) {
@@ -10,7 +28,7 @@
 // Gradients
 
 // Horizontal gradient, from left to right
-//
+
 // Creates two color stops, start and end, by specifying a color and position for each color stop.
 // Color stops are not available in IE9 and below.
 
@@ -23,7 +41,7 @@
 }
 
 // Vertical gradient, from top to bottom
-//
+
 // Creates two color stops, start and end, by specifying a color and position for each color stop.
 // Color stops are not available in IE9 and below.
 
@@ -103,7 +121,7 @@
 }
 
 // Reset filters for IE
-//
+
 // When you need to remove a gradient background, do not forget to use this to reset
 // the IE filter for IE9 and below.
 
@@ -113,7 +131,6 @@
 
 // _responsive-visibility.scss
 
-//
 // More easily include all the states for responsive-utilities.less.
 // [converter] $parent hack
 
@@ -148,9 +165,13 @@
 // WebKit-style focus
 
 @mixin tab-focus() {
+
 	// Default
+
 	outline: thin dotted;
+
 	// WebKit
+
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 }
@@ -162,7 +183,7 @@
 }
 
 // Vendor Prefixes
-//
+
 // All vendor mixins are deprecated as of v3.2.0 due to the introduction of
 // Autoprefixer in our Gruntfile. They will be removed in v4.
 
@@ -263,6 +284,7 @@
 // Placeholder text
 
 @mixin placeholder($color: $input-color-placeholder) {
+
 	// Firefox
 
 	&::-moz-placeholder {

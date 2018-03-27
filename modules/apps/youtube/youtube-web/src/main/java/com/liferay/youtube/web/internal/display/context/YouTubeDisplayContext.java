@@ -14,10 +14,10 @@
 
 package com.liferay.youtube.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class YouTubeDisplayContext {
 	}
 
 	public String getEmbedURL() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(12);
 
 		sb.append(HttpUtil.getProtocol(_request));
 		sb.append("://www.youtube.com/embed/");

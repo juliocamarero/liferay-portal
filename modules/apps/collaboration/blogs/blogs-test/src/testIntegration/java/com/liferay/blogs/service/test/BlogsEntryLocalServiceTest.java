@@ -17,6 +17,7 @@ package com.liferay.blogs.service.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.blogs.attachments.test.BlogsEntryAttachmentFileEntryHelperTest;
 import com.liferay.blogs.constants.BlogsConstants;
 import com.liferay.blogs.exception.EntryContentException;
 import com.liferay.blogs.exception.EntryTitleException;
@@ -24,8 +25,8 @@ import com.liferay.blogs.exception.NoSuchEntryException;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.blogs.test.util.BlogsTestUtil;
-import com.liferay.blogs.util.BlogsUtil;
-import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
+import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -41,8 +42,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.servlet.taglib.ui.ImageSelector;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.OrganizationTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -53,7 +52,6 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -63,31 +61,59 @@ import com.liferay.subscription.service.SubscriptionLocalServiceUtil;
 
 import java.io.InputStream;
 
+import java.lang.reflect.Method;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Cristina González
  * @author Manuel de la Peña
  */
 @RunWith(Arquillian.class)
-@Sync
 public class BlogsEntryLocalServiceTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		Bundle bundle = FrameworkUtil.getBundle(
+			BlogsEntryAttachmentFileEntryHelperTest.class);
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		for (Bundle installedBundle : bundleContext.getBundles()) {
+			String symbolicName = installedBundle.getSymbolicName();
+
+			if (symbolicName.equals("com.liferay.blogs.web")) {
+				bundle = installedBundle;
+
+				break;
+			}
+		}
+
+		Class<?> clazz = bundle.loadClass(
+			"com.liferay.blogs.web.internal.util.BlogsUtil");
+
+		_getUrlTitleMethod = clazz.getMethod(
+			"getUrlTitle", Long.TYPE, String.class);
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -713,7 +739,7 @@ public class BlogsEntryLocalServiceTest {
 			serviceContext);
 
 		Assert.assertEquals(
-			BlogsUtil.getUrlTitle(entry.getEntryId(), title),
+			_getUrlTitleMethod.invoke(null, entry.getEntryId(), title),
 			entry.getUrlTitle());
 	}
 
@@ -730,7 +756,7 @@ public class BlogsEntryLocalServiceTest {
 			_user.getUserId(), title, true, serviceContext);
 
 		Assert.assertEquals(
-			BlogsUtil.getUrlTitle(entry.getEntryId(), title),
+			_getUrlTitleMethod.invoke(null, entry.getEntryId(), title),
 			entry.getUrlTitle());
 	}
 
@@ -1095,6 +1121,8 @@ public class BlogsEntryLocalServiceTest {
 
 		return sb.toString();
 	}
+
+	private static Method _getUrlTitleMethod;
 
 	@DeleteAfterTestRun
 	private Group _group;

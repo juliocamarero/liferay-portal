@@ -14,17 +14,18 @@
 
 package com.liferay.portal.kernel.test.rule;
 
+import com.liferay.petra.process.ClassPathUtil;
+import com.liferay.petra.process.ProcessCallable;
+import com.liferay.petra.process.ProcessChannel;
+import com.liferay.petra.process.ProcessConfig;
+import com.liferay.petra.process.ProcessConfig.Builder;
+import com.liferay.petra.process.ProcessException;
+import com.liferay.petra.process.ProcessExecutor;
+import com.liferay.petra.process.local.LocalProcessExecutor;
+import com.liferay.petra.process.local.LocalProcessLauncher.ProcessContext;
+import com.liferay.petra.process.local.LocalProcessLauncher.ShutdownHook;
 import com.liferay.petra.string.CharPool;
-import com.liferay.portal.kernel.process.ClassPathUtil;
-import com.liferay.portal.kernel.process.ProcessCallable;
-import com.liferay.portal.kernel.process.ProcessChannel;
-import com.liferay.portal.kernel.process.ProcessConfig;
-import com.liferay.portal.kernel.process.ProcessConfig.Builder;
-import com.liferay.portal.kernel.process.ProcessException;
-import com.liferay.portal.kernel.process.ProcessExecutor;
-import com.liferay.portal.kernel.process.local.LocalProcessExecutor;
-import com.liferay.portal.kernel.process.local.LocalProcessLauncher.ProcessContext;
-import com.liferay.portal.kernel.process.local.LocalProcessLauncher.ShutdownHook;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.test.rule.BaseTestRule.StatementWrapper;
 import com.liferay.portal.kernel.test.rule.NewEnv.Environment;
 import com.liferay.portal.kernel.test.rule.NewEnv.JVMArgsLine;
@@ -33,7 +34,6 @@ import com.liferay.portal.kernel.util.MethodCache;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -280,7 +280,9 @@ public class NewEnvTestRule implements TestRule {
 			String key = matcher.group(1);
 
 			matcher.appendReplacement(
-				sb, GetterUtil.getString(System.getProperty(key)));
+				sb,
+				Matcher.quoteReplacement(
+					GetterUtil.getString(System.getProperty(key))));
 		}
 
 		matcher.appendTail(sb);

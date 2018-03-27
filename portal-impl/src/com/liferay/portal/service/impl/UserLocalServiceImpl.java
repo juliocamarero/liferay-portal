@@ -20,9 +20,10 @@ import com.liferay.mail.kernel.template.MailTemplate;
 import com.liferay.mail.kernel.template.MailTemplateContext;
 import com.liferay.mail.kernel.template.MailTemplateContextBuilder;
 import com.liferay.mail.kernel.template.MailTemplateFactoryUtil;
-import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.petra.encryptor.Encryptor;
 import com.liferay.petra.encryptor.EncryptorException;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheMapSynchronizeUtil;
@@ -86,6 +87,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.security.auth.Authenticator;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.EmailAddressGenerator;
 import com.liferay.portal.kernel.security.auth.EmailAddressValidator;
 import com.liferay.portal.kernel.security.auth.FullNameDefinition;
@@ -122,11 +124,9 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PwdGenerator;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -568,6 +568,10 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 */
 	@Override
 	public void addPasswordPolicyUsers(long passwordPolicyId, long[] userIds) {
+		_checkPasswordReset(
+			passwordPolicyLocalService.fetchPasswordPolicy(passwordPolicyId),
+			userIds);
+
 		passwordPolicyRelLocalService.addPasswordPolicyRels(
 			passwordPolicyId, User.class.getName(), userIds);
 	}
@@ -2993,7 +2997,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				userLocalService.updateUser(user);
 			}
 
-			long timeModified = user.getPasswordModifiedDate().getTime();
+			Date passwordModifiedDate = user.getPasswordModifiedDate();
+
+			long timeModified = passwordModifiedDate.getTime();
 
 			long passwordExpiresOn =
 				(passwordPolicy.getMaxAge() * 1000) + timeModified;
@@ -4087,6 +4093,19 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	public void unsetPasswordPolicyUsers(
 		long passwordPolicyId, long[] userIds) {
 
+		long companyId = CompanyThreadLocal.getCompanyId();
+
+		try {
+			_checkPasswordReset(
+				passwordPolicyLocalService.getDefaultPasswordPolicy(companyId),
+				userIds);
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(pe, pe);
+			}
+		}
+
 		passwordPolicyRelLocalService.deletePasswordPolicyRels(
 			passwordPolicyId, User.class.getName(), userIds);
 	}
@@ -4907,7 +4926,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			user = userPersistence.update(user);
 		}
 		catch (ModelListenerException mle) {
-			String msg = GetterUtil.getString(mle.getCause().getMessage());
+			Throwable throwable = mle.getCause();
+
+			String msg = GetterUtil.getString(throwable.getMessage());
 
 			if (LDAPSettingsUtil.isPasswordPolicyEnabled(user.getCompanyId())) {
 				String[] errorPasswordHistoryKeywords =
@@ -5227,7 +5248,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		screenName = getLogin(screenName);
 		emailAddress = StringUtil.toLowerCase(StringUtil.trim(emailAddress));
 		openId = StringUtil.trim(openId);
-		String oldFullName = user.getFullName();
 		facebookSn = StringUtil.toLowerCase(StringUtil.trim(facebookSn));
 		jabberSn = StringUtil.toLowerCase(StringUtil.trim(jabberSn));
 		skypeSn = StringUtil.toLowerCase(StringUtil.trim(skypeSn));
@@ -5432,15 +5452,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				serviceContext.getAssetTagNames());
 		}
 
-		// Message boards
-
-		if (GetterUtil.getBoolean(
-				PropsKeys.USERS_UPDATE_USER_NAME + MBMessage.class.getName()) &&
-			!oldFullName.equals(user.getFullName())) {
-
-			mbMessageLocalService.updateUserName(userId, user.getFullName());
-		}
-
 		// Indexer
 
 		if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
@@ -5531,7 +5542,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		return updateUser(
+		return userLocalService.updateUser(
 			userId, oldPassword, newPassword1, newPassword2, passwordReset,
 			reminderQueryQuestion, reminderQueryAnswer, screenName,
 			emailAddress, facebookId, openId, true, null, languageId,
@@ -5936,7 +5947,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		int failedLoginAttempts = user.getFailedLoginAttempts();
 
 		if (failedLoginAttempts > 0) {
-			long failedLoginTime = user.getLastFailedLoginDate().getTime();
+			Date lastFailedLoginDate = user.getLastFailedLoginDate();
+
+			long failedLoginTime = lastFailedLoginDate.getTime();
 
 			long elapsedTime = now.getTime() - failedLoginTime;
 
@@ -5955,7 +5968,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		// Reset lockout
 
 		if (user.isLockout()) {
-			long lockoutTime = user.getLockoutDate().getTime();
+			Date lockoutDate = user.getLockoutDate();
+
+			long lockoutTime = lockoutDate.getTime();
 
 			long elapsedTime = now.getTime() - lockoutTime;
 
@@ -6974,6 +6989,29 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 
 		return user;
+	}
+
+	private void _checkPasswordReset(
+		PasswordPolicy passwordPolicy, long[] userIds) {
+
+		// Check password policy to see if changing the password is allowed. If
+		// it is not allowed, set the user's passwordReset field to false to
+		// prevent issues while logging in. See LPS-76504.
+
+		if ((passwordPolicy == null) || passwordPolicy.isChangeable()) {
+			return;
+		}
+
+		for (long userId : userIds) {
+			try {
+				updatePasswordReset(userId, false);
+			}
+			catch (PortalException pe) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(pe, pe);
+				}
+			}
+		}
 	}
 
 	private String _getLocalizedValue(

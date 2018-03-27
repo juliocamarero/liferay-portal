@@ -30,7 +30,14 @@ PortletURL redirectURL = renderResponse.createRenderURL();
 redirectURL.setParameter("mvcPath", "/view.jsp");
 %>
 
-<liferay-ui:icon-menu cssClass="lfr-asset-actions" direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showExpanded="<%= (row == null) %>">
+<liferay-ui:icon-menu
+	cssClass="lfr-asset-actions"
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showExpanded="<%= (row == null) %>"
+>
 	<c:if test="<%= !workflowTask.isCompleted() && workflowTaskDisplayContext.isAssignedToUser(workflowTask) %>">
 
 		<%
@@ -117,7 +124,7 @@ redirectURL.setParameter("mvcPath", "/view.jsp");
 </div>
 
 <div class="hide" id="<%= randomId %>updateComments">
-	<aui:input cols="55" name="comment" placeholder="comment" rows="1" type="textarea" />
+	<aui:input cols="55" cssClass="task-content-comment" name="comment" placeholder="comment" rows="1" type="textarea" />
 </div>
 
 <aui:script use="liferay-workflow-tasks">
@@ -150,7 +157,8 @@ redirectURL.setParameter("mvcPath", "/view.jsp");
 				{
 					dialog: {
 						destroyOnHide: true,
-						height: 340,
+						height: 380,
+						resizable: false,
 						width: 720
 					},
 					id: '<portlet:namespace />assignToDialog',
@@ -170,7 +178,8 @@ redirectURL.setParameter("mvcPath", "/view.jsp");
 				{
 					dialog: {
 						destroyOnHide: true,
-						height: 430,
+						height: 470,
+						resizable: false,
 						width: 720
 					},
 					id: '<portlet:namespace />assignToDialog',

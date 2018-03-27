@@ -14,8 +14,8 @@
 
 package com.liferay.shopping.model.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.shopping.exception.NoSuchCouponException;
@@ -63,7 +63,9 @@ public class ShoppingCartImpl extends ShoppingCartBaseImpl {
 
 	@Override
 	public int getItemsSize() {
-		return StringUtil.split(getItemIds()).length;
+		String[] itemIds = StringUtil.split(getItemIds());
+
+		return itemIds.length;
 	}
 
 }

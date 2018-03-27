@@ -20,13 +20,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Wiki Test Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
 			<var name="pageName" value="Wiki Test Page" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -76,13 +77,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Staging Test Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
 			<var name="pageName" value="Staging Test Page" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -197,7 +199,7 @@
 		</execute>
 
 		<execute macro="WikiPortlet#configureDisplaySettings">
-			<var name="uncheckSetting" value="ENABLE_COMMENTS,ENABLE_COMMENT_RATINGS,ENABLE_PAGE_RATINGS,ENABLE_RELATED_ASSETS" />
+			<var name="uncheckSetting" value="ENABLE_COMMENTS,ENABLE_COMMENT_RATINGS,ENABLE_PAGE_RATINGS,SHOW_RELATED_ASSETS" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -209,7 +211,7 @@
 		</execute>
 
 		<execute macro="WikiPortlet#viewDisplaySettings">
-			<var name="uncheckedSetting" value="ENABLE_COMMENTS,ENABLE_COMMENT_RATINGS,ENABLE_PAGE_RATINGS,ENABLE_RELATED_ASSETS" />
+			<var name="uncheckedSetting" value="ENABLE_COMMENTS,ENABLE_COMMENT_RATINGS,ENABLE_PAGE_RATINGS,SHOW_RELATED_ASSETS" />
 		</execute>
 	</command>
 
@@ -312,8 +314,16 @@
 			<var name="pageName" value="Research Projects" />
 		</execute>
 
-		<execute macro="Navigator#gotoPage">
+		<execute macro="Page#view">
 			<var name="pageName" value="Research Projects" />
+			<var name="privacy" value="Private" />
+		</execute>
+
+		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
+
+		<execute macro="Navigator#gotoSpecificURLPage">
+			<var name="pageName" value="Research Projects" />
+			<var name="url" value="${portalURL}/group/guest/research-projects" />
 		</execute>
 
 		<execute macro="Portlet#addPG">
@@ -331,10 +341,6 @@
 			<var name="mirrorWithOverwriting" value="true" />
 			<var name="uploadFrom" value="dependencies" />
 		</execute>
-
-		<execute macro="IFrame#closeFrame" />
-
-		<execute macro="IFrame#selectTopFrame" />
 
 		<execute macro="Portlet#changeDisplayStyle">
 			<var name="displayStyle" value="descriptive" />
@@ -617,12 +623,18 @@
 		</execute>
 
 		<execute macro="WikiPage#editFrontPagePG">
-			<var name="wikiPageContentEdit"><![CDATA[<script>alert("xss")</script>]]></var>
+			<var name="wikiPageContentEdit"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute function="AssertClick" locator1="Link#EDIT" value1="Edit" />
 
 		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewWikiDraftPagesViaBreadcrumb" priority="4">

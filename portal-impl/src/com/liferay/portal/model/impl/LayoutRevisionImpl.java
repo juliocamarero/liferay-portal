@@ -14,6 +14,7 @@
 
 package com.liferay.portal.model.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ColorScheme;
 import com.liferay.portal.kernel.model.Layout;
@@ -31,7 +32,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Brian Wing Shun Chan
@@ -128,8 +129,9 @@ public class LayoutRevisionImpl extends LayoutRevisionBaseImpl {
 		if (!CookieKeys.hasSessionId(request) &&
 			(url.startsWith(portalURL) || url.startsWith(StringPool.SLASH))) {
 
-			url = PortalUtil.getURLWithSessionId(
-				url, request.getSession().getId());
+			HttpSession session = request.getSession();
+
+			url = PortalUtil.getURLWithSessionId(url, session.getId());
 		}
 
 		return url;

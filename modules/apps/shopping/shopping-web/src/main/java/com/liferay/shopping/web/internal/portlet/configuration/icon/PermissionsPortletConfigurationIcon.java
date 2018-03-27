@@ -14,6 +14,7 @@
 
 package com.liferay.shopping.web.internal.portlet.configuration.icon;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
@@ -21,9 +22,8 @@ import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfiguration
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortletKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.shopping.service.permission.ShoppingPermission;
+import com.liferay.shopping.web.internal.security.permission.resource.ShoppingPermission;
 import com.liferay.taglib.security.PermissionsURLTag;
 
 import javax.portlet.PortletRequest;

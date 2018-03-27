@@ -17,20 +17,25 @@
 <%@ include file="/init.jsp" %>
 
 <%
-User selUser = (User)request.getAttribute("user.selUser");
+User selUser = userDisplayContext.getSelectedUser();
 
-List<Organization> organizations = (List<Organization>)request.getAttribute("user.organizations");
+List<Organization> organizations = userDisplayContext.getOrganizations();
 
 String organizationIdsString = ParamUtil.getString(request, "organizationsSearchContainerPrimaryKeys");
 
 currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "organizations");
 %>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="organizations" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="organizations"
+/>
 
 <liferay-ui:membership-policy-error />
 
-<liferay-util:buffer var="removeOrganizationIcon">
+<liferay-util:buffer
+	var="removeOrganizationIcon"
+>
 	<liferay-ui:icon
 		icon="times"
 		markupView="lexicon"
@@ -94,7 +99,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "organi
 		</c:if>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>
 
 <c:if test="<%= !portletName.equals(myAccountPortletId) %>">
@@ -102,7 +109,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "organi
 		cssClass="modify-link"
 		id="selectOrganizationLink"
 		label="<%= true %>"
-		linkCssClass="btn btn-default btn-lg"
+		linkCssClass="btn btn-primary"
 		message="select"
 		method="get"
 		url="javascript:;"

@@ -15,6 +15,7 @@
 package com.liferay.portal.service.impl;
 
 import com.liferay.exportimport.kernel.staging.StagingUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.LayoutSetBranchNameException;
 import com.liferay.portal.kernel.exception.NoSuchLayoutSetBranchException;
@@ -38,7 +39,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.comparator.LayoutSetBranchCreateDateComparator;
@@ -412,10 +412,12 @@ public class LayoutSetBranchLocalServiceImpl
 				mergeLayoutSetBranchId, true);
 
 		for (LayoutRevision layoutRevision : layoutRevisions) {
+			LayoutBranch layoutBranch = layoutRevision.getLayoutBranch();
+
 			String layoutBranchName = getLayoutBranchName(
 				layoutSetBranch.getLayoutSetBranchId(), locale,
-				layoutRevision.getLayoutBranch().getName(),
-				mergeLayoutSetBranch.getName(), layoutRevision.getPlid());
+				layoutBranch.getName(), mergeLayoutSetBranch.getName(),
+				layoutRevision.getPlid());
 
 			StringBundler sb = new StringBundler(3);
 
@@ -427,11 +429,10 @@ public class LayoutSetBranchLocalServiceImpl
 					new String[] {mergeLayoutSetBranch.getName(), nowString},
 					false));
 
-			LayoutBranch layoutBranch =
-				layoutBranchLocalService.addLayoutBranch(
-					layoutSetBranch.getLayoutSetBranchId(),
-					layoutRevision.getPlid(), layoutBranchName, sb.toString(),
-					false, serviceContext);
+			layoutBranch = layoutBranchLocalService.addLayoutBranch(
+				layoutSetBranch.getLayoutSetBranchId(),
+				layoutRevision.getPlid(), layoutBranchName, sb.toString(),
+				false, serviceContext);
 
 			layoutRevisionLocalService.addLayoutRevision(
 				layoutRevision.getUserId(),

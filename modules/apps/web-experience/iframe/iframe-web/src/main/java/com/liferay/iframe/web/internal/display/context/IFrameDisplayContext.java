@@ -18,13 +18,13 @@ import com.liferay.iframe.web.configuration.IFramePortletInstanceConfiguration;
 import com.liferay.iframe.web.internal.constants.IFrameWebKeys;
 import com.liferay.iframe.web.internal.util.IFrameUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -140,7 +140,9 @@ public class IFrameDisplayContext {
 		int index = 0;
 
 		if (_iFrameBaseSrc.length() > 6) {
-			index = _iFrameBaseSrc.substring(7).lastIndexOf(StringPool.SLASH);
+			String s = _iFrameBaseSrc.substring(7);
+
+			index = s.lastIndexOf(StringPool.SLASH);
 
 			if (index != -1) {
 				_iFrameBaseSrc = _iFrameBaseSrc.substring(0, index + 8);

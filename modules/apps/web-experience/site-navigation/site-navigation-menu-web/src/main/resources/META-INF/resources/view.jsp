@@ -18,13 +18,28 @@
 
 <liferay-ui:success key='<%= portletDisplay.getPortletName() + "layoutAdded" %>' message='<%= LanguageUtil.get(resourceBundle, "the-page-was-created-succesfully") %>' targetNode="#controlMenuAlertsContainer" />
 
-<liferay-site-navigation:navigation
-	ddmTemplateGroupId="<%= siteNavigationMenuDisplayContext.getDisplayStyleGroupId() %>"
-	ddmTemplateKey="<%= siteNavigationMenuDisplayContext.getDDMTemplateKey() %>"
-	displayDepth="<%= siteNavigationMenuDisplayContext.getDisplayDepth() %>"
-	includedLayouts="<%= siteNavigationMenuDisplayContext.getIncludedLayouts() %>"
-	preview="<%= siteNavigationMenuDisplayContext.isPreview() %>"
-	rootLayoutLevel="<%= siteNavigationMenuDisplayContext.getRootLayoutLevel() %>"
-	rootLayoutType="<%= siteNavigationMenuDisplayContext.getRootLayoutType() %>"
-	rootLayoutUuid="<%= siteNavigationMenuDisplayContext.getRootLayoutUuid() %>"
-/>
+<c:choose>
+	<c:when test="<%= (siteNavigationMenuDisplayContext.getSiteNavigationMenuType() > 0) && (siteNavigationMenuDisplayContext.getSiteNavigationMenuId() <= 0) %>">
+		<div class="alert alert-warning">
+			<liferay-ui:message arguments="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuTypeLabel() %>" key="there-is-no-x-available-for-the-current-site" />
+		</div>
+	</c:when>
+	<c:when test="<%= (siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1) && (siteNavigationMenuDisplayContext.getSiteNavigationMenuId() <= 0) %>">
+		<div class="alert alert-info text-center">
+			<aui:a href="javascript:;" onClick="<%= portletDisplay.getURLConfigurationJS() %>"><liferay-ui:message key="configure" /></aui:a>
+		</div>
+	</c:when>
+	<c:otherwise>
+		<liferay-site-navigation:navigation-menu
+			ddmTemplateGroupId="<%= siteNavigationMenuDisplayContext.getDisplayStyleGroupId() %>"
+			ddmTemplateKey="<%= siteNavigationMenuDisplayContext.getDDMTemplateKey() %>"
+			displayDepth="<%= siteNavigationMenuDisplayContext.getDisplayDepth() %>"
+			expandedLevels="<%= siteNavigationMenuDisplayContext.getExpandedLevels() %>"
+			preview="<%= siteNavigationMenuDisplayContext.isPreview() %>"
+			rootItemId="<%= siteNavigationMenuDisplayContext.getRootMenuItemId() %>"
+			rootItemLevel="<%= siteNavigationMenuDisplayContext.getRootMenuItemLevel() %>"
+			rootItemType="<%= siteNavigationMenuDisplayContext.getRootMenuItemType() %>"
+			siteNavigationMenuId="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>"
+		/>
+	</c:otherwise>
+</c:choose>

@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.search.suggest;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.BufferedReader;
@@ -27,7 +27,10 @@ import java.util.Iterator;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.portal.search.suggest.DictionaryReader}
  */
+@Deprecated
 public class DictionaryReader {
 
 	public DictionaryReader(InputStream inputStream)

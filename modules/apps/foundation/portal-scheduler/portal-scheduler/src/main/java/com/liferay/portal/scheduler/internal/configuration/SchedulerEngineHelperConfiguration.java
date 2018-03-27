@@ -21,9 +21,9 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Michael C. Han
  */
-@ExtendedObjectClassDefinition(category = "foundation")
+@ExtendedObjectClassDefinition(category = "infrastructure")
 @Meta.OCD(
-	id = "com.liferay.portal.scheduler.configuration.SchedulerEngineHelperConfiguration",
+	id = "com.liferay.portal.scheduler.internal.configuration.SchedulerEngineHelperConfiguration",
 	localization = "content/Language",
 	name = "scheduler-engine-helper-configuration-name"
 )
@@ -31,7 +31,7 @@ public interface SchedulerEngineHelperConfiguration {
 
 	@Meta.AD(
 		deflt = "false", description = "audit-scheduler-job-enabled-help",
-		required = false
+		name = "audit-scheduler-job-enabled", required = false
 	)
 	public boolean auditSchedulerJobEnabled();
 

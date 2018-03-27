@@ -1,22 +1,30 @@
 package ${package}.portlet;
 
 import ${package}.constants.${className}PortletKeys;
+#if (${liferayVersion} == "7.1")
 import ${package}.constants.${className}WebKeys;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
+#end
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+#if (${liferayVersion} == "7.1")
 
 import java.io.IOException;
+#end
 
 import javax.portlet.Portlet;
+#if (${liferayVersion} == "7.1")
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+#end
 
 import org.osgi.service.component.annotations.Component;
+#if (${liferayVersion} == "7.1")
 import org.osgi.service.component.annotations.Reference;
+#end
 
 /**
  * @author ${author}
@@ -36,11 +44,12 @@ import org.osgi.service.component.annotations.Reference;
 	service = Portlet.class
 )
 public class ${className}Portlet extends MVCPortlet {
+#if (${liferayVersion} == "7.1")
 
 	@Override
 	public void doView(
-		RenderRequest renderRequest, RenderResponse renderResponse)
-			throws IOException, PortletException {
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
 
 		JSPackage jsPackage = _npmResolver.getJSPackage();
 
@@ -54,4 +63,5 @@ public class ${className}Portlet extends MVCPortlet {
 	@Reference
 	private NPMResolver _npmResolver;
 
+#end
 }

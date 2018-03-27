@@ -74,7 +74,12 @@ $sidebar-z-index: 1000;
 
 	.lfr-ddm-form-tabs-content {
 		overflow: auto;
+
 		@include sidebarContentHeight(145px);
+
+		.help-icon:hover {
+			color: $sidebar-background-color;
+		}
 	}
 }
 
@@ -84,6 +89,7 @@ $sidebar-z-index: 1000;
 
 .form-builder-sidebar-list {
 	overflow: auto;
+
 	@include sidebarContentHeight(124px);
 
 	.list-group {
@@ -107,6 +113,10 @@ $sidebar-z-index: 1000;
 		@extend %no-border-side;
 		border-bottom-width: 0;
 
+		.flex-col:first-child {
+			margin: 0 16px 0 8px;
+		}
+
 		&:first-child,
 		&:last-child {
 			border-radius: 0;
@@ -115,6 +125,7 @@ $sidebar-z-index: 1000;
 
 	.list-group-subtitle {
 		font-size: $sidebar-list-subtitle-font-size;
+		margin-bottom: 2px;
 	}
 
 	.toggler-header-collapsed {
@@ -162,7 +173,13 @@ $sidebar-z-index: 1000;
 		display: none;
 	}
 
-	#field-type-menu-content span {
-		margin: 0 6px;
+	#field-type-menu-content {
+		span {
+			margin: 0 6px;
+		}
+
+		> div {
+			display: inline;
+		}
 	}
 }

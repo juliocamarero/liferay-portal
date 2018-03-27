@@ -19,24 +19,17 @@ import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceTracker;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.test.util.BaseTrashHandlerTestCase;
 import com.liferay.trash.test.util.WhenCanBeDuplicatedInTrash;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.WikiNodeLocalServiceUtil;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
@@ -45,44 +38,19 @@ import org.junit.runner.RunWith;
  * @author Eudaldo Alonso
  */
 @RunWith(Arquillian.class)
-@Sync
 public class WikiNodeTrashHandlerTest
 	extends BaseTrashHandlerTestCase implements WhenCanBeDuplicatedInTrash {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
-
-	@BeforeClass
-	public static void setUpClass() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(TrashHelper.class.getName());
-
-		_serviceTracker.open();
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-		_serviceTracker.close();
-	}
+		new LiferayIntegrationTestRule();
 
 	@Override
 	public String getBaseModelName(ClassedModel classedModel) {
 		WikiNode node = (WikiNode)classedModel;
 
 		return node.getName();
-	}
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-
-		_trashHelper = _serviceTracker.getService();
 	}
 
 	@Override
@@ -133,8 +101,7 @@ public class WikiNodeTrashHandlerTest
 
 	private static final String _NODE_NAME = RandomTestUtil.randomString(75);
 
-	private static ServiceTracker<TrashHelper, TrashHelper> _serviceTracker;
-
+	@Inject
 	private TrashHelper _trashHelper;
 
 }

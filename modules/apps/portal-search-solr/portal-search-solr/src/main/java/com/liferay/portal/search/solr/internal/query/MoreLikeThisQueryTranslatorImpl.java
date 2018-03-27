@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.search.Query;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -32,9 +33,7 @@ public class MoreLikeThisQueryTranslatorImpl
 	implements MoreLikeThisQueryTranslator {
 
 	@Override
-	public org.apache.lucene.search.Query translate(
-		MoreLikeThisQuery moreLikeThisQuery) {
-
+	public Query translate(MoreLikeThisQuery moreLikeThisQuery) {
 		List<String> fields = moreLikeThisQuery.getFields();
 
 		org.apache.lucene.queries.mlt.MoreLikeThisQuery
@@ -63,9 +62,9 @@ public class MoreLikeThisQueryTranslatorImpl
 			luceneMoreLikeThisQuery.setBoost(moreLikeThisQuery.getBoost());
 		}
 
-		if (!moreLikeThisQuery.getStopWords().isEmpty()) {
-			Set<String> stopWords = moreLikeThisQuery.getStopWords();
+		Set<String> stopWords = moreLikeThisQuery.getStopWords();
 
+		if (!stopWords.isEmpty()) {
 			luceneMoreLikeThisQuery.setStopWords(stopWords);
 		}
 

@@ -54,19 +54,21 @@ request.setAttribute("view.jsp-orderByType", orderByType);
 	<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.RESTORE %>" />
 </portlet:actionURL>
 
-<aui:nav-bar markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<portlet:renderURL var="viewNodesURL">
-			<portlet:param name="mvcRenderCommandName" value="/wiki_admin/view" />
-		</portlet:renderURL>
-
-		<aui:nav-item
-			href="<%= viewNodesURL %>"
-			label="wikis"
-			selected="<%= true %>"
-		/>
-	</aui:nav>
-</aui:nav-bar>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(renderResponse.createRenderURL(), "mvcRenderCommandName", "/wiki_admin/view");
+						navigationItem.setLabel(LanguageUtil.get(request, "wikis"));
+					});
+			}
+		}
+	%>"
+/>
 
 <%
 int nodesCount = WikiNodeServiceUtil.getNodesCount(scopeGroupId);
@@ -88,6 +90,30 @@ int nodesCount = WikiNodeServiceUtil.getNodesCount(scopeGroupId);
 			portletURL="<%= portletURL %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<%
+		boolean showAddNodeButton = WikiResourcePermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_NODE);
+		%>
+
+		<c:if test="<%= showAddNodeButton %>">
+			<portlet:renderURL var="viewNodesURL">
+				<portlet:param name="mvcRenderCommandName" value="/wiki_admin/view" />
+			</portlet:renderURL>
+
+			<portlet:renderURL var="addNodeURL">
+				<portlet:param name="mvcRenderCommandName" value="/wiki/edit_node" />
+				<portlet:param name="redirect" value="<%= viewNodesURL %>" />
+			</portlet:renderURL>
+
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					title='<%= LanguageUtil.get(request, "add-wiki") %>'
+					url="<%= addNodeURL %>"
+				/>
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
@@ -100,7 +126,11 @@ int nodesCount = WikiNodeServiceUtil.getNodesCount(scopeGroupId);
 			label="info"
 		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteNodes();" %>' icon='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>' label='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "deleteNodes();" %>'
+			icon='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>'
+			label='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>'
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -184,7 +214,9 @@ int nodesCount = WikiNodeServiceUtil.getNodesCount(scopeGroupId);
 								toggleRowChecker="<%= true %>"
 							/>
 
-							<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+							<liferay-ui:search-container-column-text
+								colspan="<%= 2 %>"
+							>
 
 								<%
 								Date lastPostDate = node.getLastPostDate();
@@ -236,30 +268,14 @@ int nodesCount = WikiNodeServiceUtil.getNodesCount(scopeGroupId);
 					</c:choose>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="<%= displayStyle %>"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
 </div>
-
-<%
-boolean showAddNodeButton = WikiResourcePermissionChecker.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_NODE);
-%>
-
-<c:if test="<%= showAddNodeButton %>">
-	<portlet:renderURL var="viewNodesURL">
-		<portlet:param name="mvcRenderCommandName" value="/wiki_admin/view" />
-	</portlet:renderURL>
-
-	<portlet:renderURL var="addNodeURL">
-		<portlet:param name="mvcRenderCommandName" value="/wiki/edit_node" />
-		<portlet:param name="redirect" value="<%= viewNodesURL %>" />
-	</portlet:renderURL>
-
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-wiki") %>' url="<%= addNodeURL %>" />
-	</liferay-frontend:add-menu>
-</c:if>
 
 <aui:script>
 	function <portlet:namespace />deleteNodes() {

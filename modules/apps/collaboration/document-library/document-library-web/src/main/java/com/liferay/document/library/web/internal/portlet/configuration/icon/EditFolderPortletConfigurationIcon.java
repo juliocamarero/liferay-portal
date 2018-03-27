@@ -14,21 +14,22 @@
 
 package com.liferay.document.library.web.internal.portlet.configuration.icon;
 
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
-import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.document.library.web.internal.portlet.action.ActionUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionHelper;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowEngineManagerUtil;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
-import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -137,7 +138,8 @@ public class EditFolderPortletConfigurationIcon
 				(ThemeDisplay)portletRequest.getAttribute(
 					WebKeys.THEME_DISPLAY);
 
-			return DLFolderPermission.contains(
+			return ModelResourcePermissionHelper.contains(
+				_folderModelResourcePermission,
 				themeDisplay.getPermissionChecker(),
 				themeDisplay.getScopeGroupId(), folderId, ActionKeys.UPDATE);
 		}
@@ -151,6 +153,11 @@ public class EditFolderPortletConfigurationIcon
 	public boolean isToolTip() {
 		return false;
 	}
+
+	@Reference(
+		target = "(model.class.name=com.liferay.portal.kernel.repository.model.Folder)"
+	)
+	private ModelResourcePermission<Folder> _folderModelResourcePermission;
 
 	@Reference
 	private Portal _portal;

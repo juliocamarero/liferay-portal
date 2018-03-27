@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.renderer.DDMFormRenderingContext;
 import com.liferay.dynamic.data.mapping.form.renderer.DDMFormTemplateContextFactory;
+import com.liferay.dynamic.data.mapping.form.renderer.internal.util.DDMFormTemplateContextFactoryUtil;
 import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesJSONSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormLayoutJSONSerializer;
@@ -34,12 +35,13 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.AggregateResourceBundle;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.template.soy.utils.SoyHTMLContextValue;
+import com.liferay.portal.template.soy.utils.SoyHTMLSanitizer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +57,7 @@ import java.util.stream.Stream;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -159,11 +162,12 @@ public class DDMFormTemplateContextFactoryImpl
 
 		ResourceBundle resourceBundle = getResourceBundle(locale);
 
-		SoyHTMLContextValue soyHTMLContextValue = new SoyHTMLContextValue(
-			getRequiredFieldsWarningMessageHTML(resourceBundle));
-
 		templateContext.put(
-			"requiredFieldsWarningMessageHTML", soyHTMLContextValue.getValue());
+			"requiredFieldsWarningMessageHTML",
+			_soyHTMLSanitizer.sanitize(
+				getRequiredFieldsWarningMessageHTML(
+					resourceBundle,
+					ddmFormRenderingContext.getHttpServletRequest())));
 
 		templateContext.put("rules", toObjectList(ddmForm.getDDMFormRules()));
 		templateContext.put(
@@ -228,7 +232,7 @@ public class DDMFormTemplateContextFactoryImpl
 	}
 
 	protected String getRequiredFieldsWarningMessageHTML(
-		ResourceBundle resourceBundle) {
+		ResourceBundle resourceBundle, HttpServletRequest httpServletRequest) {
 
 		StringBundler sb = new StringBundler(3);
 
@@ -236,8 +240,23 @@ public class DDMFormTemplateContextFactoryImpl
 		sb.append(
 			LanguageUtil.format(
 				resourceBundle, "all-fields-marked-with-x-are-required",
-				"<i class=\"icon-asterisk text-warning\"></i>", false));
+				getRequiredMarkTagHTML(httpServletRequest), false));
 		sb.append("</label>");
+
+		return sb.toString();
+	}
+
+	protected String getRequiredMarkTagHTML(
+		HttpServletRequest httpServletRequest) {
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("<svg aria-hidden=\"true\" class=\"lexicon-icon ");
+		sb.append("lexicon-icon-asterisk reference-mark\"><use xlink:href=\"");
+		sb.append(
+			DDMFormTemplateContextFactoryUtil.getPathThemeImages(
+				httpServletRequest));
+		sb.append("/lexicon/icons.svg#asterisk\" /></svg>");
 
 		return sb.toString();
 	}
@@ -259,12 +278,14 @@ public class DDMFormTemplateContextFactoryImpl
 	}
 
 	protected String getServletContextPath() {
+		String proxyPath = _portal.getPathProxy();
+
 		ServletConfig servletConfig =
 			_ddmFormContextProviderServlet.getServletConfig();
 
 		ServletContext servletContext = servletConfig.getServletContext();
 
-		return servletContext.getContextPath();
+		return proxyPath.concat(servletContext.getContextPath());
 	}
 
 	protected String getTemplateNamespace(DDMFormLayout ddmFormLayout) {
@@ -357,5 +378,11 @@ public class DDMFormTemplateContextFactoryImpl
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private Portal _portal;
+
+	@Reference
+	private SoyHTMLSanitizer _soyHTMLSanitizer;
 
 }

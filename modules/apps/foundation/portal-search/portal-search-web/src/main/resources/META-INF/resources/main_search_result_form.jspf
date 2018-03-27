@@ -19,7 +19,6 @@
 		<c:if test="<%= searchResultSummaryDisplayContext.isUserPortraitVisible() %>">
 			<liferay-ui:search-container-column-text>
 				<liferay-ui:user-portrait
-					cssClass="user-icon-lg"
 					userId="<%= searchResultSummaryDisplayContext.getAssetEntryUserId() %>"
 				/>
 			</liferay-ui:search-container-column-text>
@@ -44,7 +43,10 @@
 				<%= searchResultSummaryDisplayContext.getModelResource() %>
 
 				<c:if test="<%= searchResultSummaryDisplayContext.isLocaleReminderVisible() %>">
-					<liferay-ui:icon image='<%= "../language/" + searchResultSummaryDisplayContext.getLocaleLanguageId() %>' message="<%= searchResultSummaryDisplayContext.getLocaleReminder() %>" />
+					<liferay-ui:icon
+						image='<%= "../language/" + searchResultSummaryDisplayContext.getLocaleLanguageId() %>'
+						message="<%= searchResultSummaryDisplayContext.getLocaleReminder() %>"
+					/>
 				</c:if>
 			</h6>
 

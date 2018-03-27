@@ -14,8 +14,8 @@
 
 package com.liferay.portal.kernel.io.unsync;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.OutputStreamWriter;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -94,7 +94,9 @@ public class UnsyncPrintWriter extends PrintWriter {
 			charSequence = StringPool.NULL;
 		}
 
-		write(charSequence.subSequence(start, end).toString());
+		charSequence = charSequence.subSequence(start, end);
+
+		write(charSequence.toString());
 
 		return this;
 	}

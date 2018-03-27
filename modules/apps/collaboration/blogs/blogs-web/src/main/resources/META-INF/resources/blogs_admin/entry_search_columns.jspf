@@ -17,12 +17,13 @@
 <c:choose>
 	<c:when test='<%= displayStyle.equals("descriptive") %>'>
 		<liferay-ui:search-container-column-user
-			cssClass="user-icon-lg"
 			showDetails="<%= false %>"
 			userId="<%= entry.getUserId() %>"
 		/>
 
-		<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+		<liferay-ui:search-container-column-text
+			colspan="<%= 2 %>"
+		>
 
 			<%
 			Date modifiedDate = entry.getModifiedDate();

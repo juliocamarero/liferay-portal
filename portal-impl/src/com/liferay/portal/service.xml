@@ -636,6 +636,10 @@
 			<finder-column name="groupId" />
 			<finder-column name="privateLayout" />
 		</finder>
+		<finder name="G_T" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="type" />
+		</finder>
 		<finder name="C_L" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column name="layoutPrototypeUuid" />
@@ -2422,6 +2426,61 @@
 
 		<reference entity="Release" package-path="com.liferay.portal" />
 	</entity>
+	<entity deprecated="true" local-service="true" name="Subscription" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="subscriptionId" primary="true" type="long" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="classNameId" type="long" />
+		<column name="classPK" type="long" />
+		<column name="frequency" type="String" />
+
+		<!-- Finder methods -->
+
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId" />
+		</finder>
+		<finder name="G_U" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="userId" />
+		</finder>
+		<finder name="U_C" return-type="Collection">
+			<finder-column name="userId" />
+			<finder-column name="classNameId" />
+		</finder>
+		<finder name="C_C_C" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+		<finder name="C_U_C_C" return-type="Collection" unique="true">
+			<finder-column name="companyId" />
+			<finder-column name="userId" />
+			<finder-column name="classNameId" />
+			<finder-column arrayable-operator="OR" name="classPK" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="ClassName" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+	</entity>
 	<entity local-service="true" name="SystemEvent" remote-service="false">
 
 		<!-- PK fields -->
@@ -2739,7 +2798,6 @@
 		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 		<reference entity="DLFileEntry" package-path="com.liferay.portlet.documentlibrary" />
 		<reference entity="ExpandoRow" package-path="com.liferay.portlet.expando" />
-		<reference entity="MBMessage" package-path="com.liferay.portlet.messageboards" />
 		<reference entity="RatingsStats" package-path="com.liferay.portlet.ratings" />
 		<reference entity="SocialActivity" package-path="com.liferay.portlet.social" />
 		<reference entity="SocialRelation" package-path="com.liferay.portlet.social" />

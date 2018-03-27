@@ -30,35 +30,10 @@ if (Validator.isNotNull(title)) {
 	portletURL="<%= restoreTrashEntriesURL %>"
 />
 
-<%
-Map<String, Object> data = new HashMap<>();
-
-data.put("qa-id", "navigation");
-%>
-
-<aui:nav-bar cssClass="collapse-basic-search" data="<%= data %>" markupView="lexicon">
-	<portlet:renderURL var="mainURL" />
-
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item href="<%= mainURL.toString() %>" label="web-content" selected="<%= true %>" />
-	</aui:nav>
-
-	<c:if test="<%= journalDisplayContext.isShowSearch() %>">
-		<aui:nav-bar-search>
-
-			<%
-			PortletURL portletURL = liferayPortletResponse.createRenderURL();
-
-			portletURL.setParameter("folderId", String.valueOf(journalDisplayContext.getFolderId()));
-			portletURL.setParameter("showEditActions", String.valueOf(journalDisplayContext.isShowEditActions()));
-			%>
-
-			<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
-				<liferay-ui:input-search markupView="lexicon" />
-			</aui:form>
-		</aui:nav-bar-search>
-	</c:if>
-</aui:nav-bar>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items='<%= journalDisplayContext.getNavigationBarItems("web-content") %>'
+/>
 
 <liferay-util:include page="/toolbar.jsp" servletContext="<%= application %>">
 	<liferay-util:param name="searchContainerId" value="articles" />
@@ -79,7 +54,9 @@ data.put("qa-id", "navigation");
 
 		<div class="sidenav-content">
 			<div class="journal-breadcrumb" id="<portlet:namespace />breadcrumbContainer">
-				<liferay-util:include page="/breadcrumb.jsp" servletContext="<%= application %>" />
+				<c:if test="<%= !journalDisplayContext.isNavigationMine() && !journalDisplayContext.isNavigationRecent() %>">
+					<liferay-util:include page="/breadcrumb.jsp" servletContext="<%= application %>" />
+				</c:if>
 			</div>
 
 			<%
@@ -164,10 +141,6 @@ data.put("qa-id", "navigation");
 		</div>
 	</div>
 </div>
-
-<c:if test="<%= !journalDisplayContext.isSearch() %>">
-	<liferay-util:include page="/add_button.jsp" servletContext="<%= application %>" />
-</c:if>
 
 <aui:script use="liferay-journal-navigation">
 	var journalNavigation = new Liferay.Portlet.JournalNavigation(

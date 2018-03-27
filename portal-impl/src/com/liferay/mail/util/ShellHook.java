@@ -16,12 +16,12 @@ package com.liferay.mail.util;
 
 import com.liferay.mail.kernel.model.Filter;
 import com.liferay.mail.kernel.util.Hook;
+import com.liferay.petra.process.LoggingOutputProcessor;
+import com.liferay.petra.process.ProcessUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.process.LoggingOutputProcessor;
-import com.liferay.portal.kernel.process.ProcessUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsUtil;
 
@@ -121,7 +121,9 @@ public class ShellHook implements Hook {
 
 	protected void execute(String[] cmdLine) {
 		for (int i = 0; i < cmdLine.length; i++) {
-			if (cmdLine[i].trim().length() == 0) {
+			String trimmedLine = cmdLine[i].trim();
+
+			if (trimmedLine.length() == 0) {
 				cmdLine[i] = StringPool.UNDERLINE;
 			}
 		}

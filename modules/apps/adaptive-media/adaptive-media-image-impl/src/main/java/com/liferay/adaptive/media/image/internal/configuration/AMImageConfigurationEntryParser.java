@@ -15,10 +15,11 @@
 package com.liferay.adaptive.media.image.internal.configuration;
 
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -42,8 +43,7 @@ import org.osgi.service.component.annotations.Reference;
  * <code>
  * name:uuid:key0=val0;key1=val1;...;keyN=valN[:enable=flag]
  * </code>
- * </pre>
- * </p>
+ * </pre></p>
  *
  * <p>
  * Each part of the string is described below:
@@ -83,11 +83,12 @@ public class AMImageConfigurationEntryParser {
 	public String getConfigurationString(
 		AMImageConfigurationEntry amImageConfigurationEntry) {
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(14);
 
-		sb.append(_http.encodeURL(amImageConfigurationEntry.getName()));
+		sb.append(URLCodec.encodeURL(amImageConfigurationEntry.getName()));
 		sb.append(StringPool.COLON);
-		sb.append(_http.encodeURL(amImageConfigurationEntry.getDescription()));
+		sb.append(
+			URLCodec.encodeURL(amImageConfigurationEntry.getDescription()));
 		sb.append(StringPool.COLON);
 		sb.append(amImageConfigurationEntry.getUUID());
 		sb.append(StringPool.COLON);

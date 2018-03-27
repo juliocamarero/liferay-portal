@@ -15,6 +15,8 @@
 package com.liferay.portal.util;
 
 import com.liferay.petra.log4j.Log4JUtil;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.bean.BeanLocatorImpl;
 import com.liferay.portal.configuration.ConfigurationFactoryImpl;
 import com.liferay.portal.dao.db.DBManagerImpl;
@@ -37,9 +39,8 @@ import com.liferay.portal.kernel.util.OSDetector;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PortalLifecycle;
 import com.liferay.portal.kernel.util.PortalLifecycleUtil;
-import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReleaseInfo;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.log.Log4jLogFactoryImpl;
@@ -196,8 +197,7 @@ public class InitUtil {
 		boolean initModuleFramework, boolean registerContext) {
 
 		List<String> configLocations = ListUtil.fromArray(
-			PropsUtil.getArray(
-				com.liferay.portal.kernel.util.PropsKeys.SPRING_CONFIGS));
+			PropsUtil.getArray(PropsKeys.SPRING_CONFIGS));
 
 		initWithSpring(configLocations, initModuleFramework, registerContext);
 	}

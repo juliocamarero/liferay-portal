@@ -37,12 +37,11 @@ public class LayoutPageTemplateEntryServiceWrapper
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateEntry addLayoutPageTemplateEntry(
 		long groupId, long layoutPageTemplateCollectionId,
-		java.lang.String name,
-		java.util.List<com.liferay.fragment.model.FragmentEntry> fragmentEntries,
+		java.lang.String name, long[] fragmentEntryIds,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateEntryService.addLayoutPageTemplateEntry(groupId,
-			layoutPageTemplateCollectionId, name, fragmentEntries,
+			layoutPageTemplateCollectionId, name, fragmentEntryIds,
 			serviceContext);
 	}
 
@@ -58,6 +57,13 @@ public class LayoutPageTemplateEntryServiceWrapper
 		long layoutPageTemplateEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateEntryService.deleteLayoutPageTemplateEntry(layoutPageTemplateEntryId);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateEntry fetchDefaultLayoutPageTemplateEntry(
+		long groupId, long classNameId) {
+		return _layoutPageTemplateEntryService.fetchDefaultLayoutPageTemplateEntry(groupId,
+			classNameId);
 	}
 
 	@Override
@@ -134,20 +140,29 @@ public class LayoutPageTemplateEntryServiceWrapper
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
 		long layoutPageTemplateEntryId, long[] fragmentEntryIds,
+		java.lang.String editableValues,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateEntryService.updateLayoutPageTemplateEntry(layoutPageTemplateEntryId,
-			fragmentEntryIds, serviceContext);
+			fragmentEntryIds, editableValues, serviceContext);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
+		long layoutPageTemplateEntryId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateEntryService.updateLayoutPageTemplateEntry(layoutPageTemplateEntryId,
+			name);
 	}
 
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
 		long layoutPageTemplateEntryId, java.lang.String name,
-		java.util.List<com.liferay.fragment.model.FragmentEntry> fragmentEntries,
+		long[] fragmentEntryIds,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateEntryService.updateLayoutPageTemplateEntry(layoutPageTemplateEntryId,
-			name, fragmentEntries, serviceContext);
+			name, fragmentEntryIds, serviceContext);
 	}
 
 	@Override

@@ -47,12 +47,23 @@ renderResponse.setTitle((kbTemplate == null) ? LanguageUtil.get(request, "new-te
 		<aui:fieldset-group markupView="lexicon">
 			<aui:fieldset>
 				<h1 class="kb-title">
-					<liferay-ui:input-editor contents="<%= title %>" editorName="alloyeditor" name="titleEditor" placeholder="title" showSource="<%= false %>" />
+					<liferay-ui:input-editor
+						contents="<%= title %>"
+						editorName="alloyeditor"
+						name="titleEditor"
+						placeholder="title"
+						showSource="<%= false %>"
+					/>
 				</h1>
 
 				<aui:input name="title" type="hidden" />
 
-				<liferay-ui:input-editor contents="<%= content %>" editorName="alloyeditor" name="contentEditor" placeholder="content" />
+				<liferay-ui:input-editor
+					contents="<%= content %>"
+					editorName="alloyeditor"
+					name="contentEditor"
+					placeholder="content"
+				/>
 
 				<aui:input name="content" type="hidden" />
 			</aui:fieldset>
@@ -67,9 +78,9 @@ renderResponse.setTitle((kbTemplate == null) ? LanguageUtil.get(request, "new-te
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" value="publish" />
+			<aui:button type="submit" value="publish" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

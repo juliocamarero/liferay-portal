@@ -14,15 +14,15 @@
 
 package com.liferay.portal.image;
 
+import com.liferay.petra.process.LoggingOutputProcessor;
+import com.liferay.petra.process.ProcessUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.image.Ghostscript;
 import com.liferay.portal.kernel.image.ImageMagickUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.process.LoggingOutputProcessor;
-import com.liferay.portal.kernel.process.ProcessUtil;
 import com.liferay.portal.kernel.util.OSDetector;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,8 +45,8 @@ public class GhostscriptImpl implements Ghostscript {
 			sb.append("install ImageMagick and Ghostscript and enable ");
 			sb.append("ImageMagick in portal-ext.properties or in the Server ");
 			sb.append("Administration section of the Control Panel at: ");
-			sb.append("http://<server>/group/control_panel/manage/-/server/");
-			sb.append("external-services");
+			sb.append("http://<server>/group/control_panel/manage/-/server");
+			sb.append("/external-services");
 
 			throw new IllegalStateException(sb.toString());
 		}
@@ -119,8 +119,8 @@ public class GhostscriptImpl implements Ghostscript {
 
 			sb.append("Unable to find the Ghostscript command. Please verify ");
 			sb.append("the path specified in the Server Administration ");
-			sb.append("control panel at: http://<server>/group/control_panel/");
-			sb.append("manage/-/server/external-services");
+			sb.append("control panel at: http://<server>/group/control_panel");
+			sb.append("/manage/-/server/external-services");
 
 			throw new FileNotFoundException(sb.toString());
 		}

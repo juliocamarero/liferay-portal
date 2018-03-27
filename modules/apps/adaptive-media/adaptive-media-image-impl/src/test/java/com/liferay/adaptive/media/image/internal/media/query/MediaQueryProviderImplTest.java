@@ -29,10 +29,10 @@ import com.liferay.adaptive.media.image.media.query.MediaQuery;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.image.url.AMImageURLFactory;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.net.URI;
 
@@ -634,7 +634,7 @@ public class MediaQueryProviderImplTest {
 
 	private void _addAdaptiveMedias(
 			FileEntry fileEntry,
-			AdaptiveMedia<AMImageProcessor>...adaptiveMedias)
+			AdaptiveMedia<AMImageProcessor>... adaptiveMedias)
 		throws PortalException {
 
 		Mockito.when(

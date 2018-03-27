@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -44,14 +45,16 @@ import java.util.Set;
  */
 public class DDMFormTemplateContextProcessor {
 
-	public DDMFormTemplateContextProcessor(JSONObject jsonObject) {
+	public DDMFormTemplateContextProcessor(
+		JSONObject jsonObject, String languageId) {
+
 		_jsonObject = jsonObject;
 
 		_ddmForm = new DDMForm();
 		_ddmFormLayout = new DDMFormLayout();
 		_ddmFormValues = new DDMFormValues(_ddmForm);
 
-		_locale = Locale.US;
+		_locale = LocaleUtil.fromLanguageId(languageId);
 
 		initModels();
 
@@ -108,6 +111,8 @@ public class DDMFormTemplateContextProcessor {
 		setDDMFormFieldDataType(jsonObject.getString("dataType"), ddmFormField);
 		setDDMFormFieldLocalizable(
 			jsonObject.getBoolean("localizable", false), ddmFormField);
+		setDDMFormFieldMultiple(
+			jsonObject.getBoolean("multiple"), ddmFormField);
 		setDDMFormFieldOptions(
 			jsonObject.getJSONArray("options"), ddmFormField);
 		setDDMFormFieldOptionsProperty(jsonObject, ddmFormField, "columns");
@@ -229,6 +234,12 @@ public class DDMFormTemplateContextProcessor {
 		boolean localizable, DDMFormField ddmFormField) {
 
 		ddmFormField.setLocalizable(localizable);
+	}
+
+	protected void setDDMFormFieldMultiple(
+		boolean multiple, DDMFormField ddmFormField) {
+
+		ddmFormField.setMultiple(multiple);
 	}
 
 	protected void setDDMFormFieldNestedFields(

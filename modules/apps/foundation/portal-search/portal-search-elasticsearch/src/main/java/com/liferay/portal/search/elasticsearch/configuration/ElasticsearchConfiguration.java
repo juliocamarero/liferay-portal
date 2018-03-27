@@ -17,12 +17,11 @@ package com.liferay.portal.search.elasticsearch.configuration;
 import aQute.bnd.annotation.metatype.Meta;
 
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
-import com.liferay.portal.search.elasticsearch.connection.OperationMode;
 
 /**
  * @author Michael C. Han
  */
-@ExtendedObjectClassDefinition(category = "foundation")
+@ExtendedObjectClassDefinition(category = "search")
 @Meta.OCD(
 	id = "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration",
 	localization = "content/Language",

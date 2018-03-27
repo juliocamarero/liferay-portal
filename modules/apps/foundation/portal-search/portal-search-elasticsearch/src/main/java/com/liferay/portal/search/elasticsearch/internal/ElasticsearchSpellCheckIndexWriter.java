@@ -15,23 +15,25 @@
 package com.liferay.portal.search.elasticsearch.internal;
 
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.suggest.BaseGenericSpellCheckIndexWriter;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
-import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch.document.ElasticsearchUpdateDocumentCommand;
-import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
+import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
+import com.liferay.portal.kernel.util.Localization;
+import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.search.elasticsearch.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch.internal.document.ElasticsearchUpdateDocumentCommand;
+import com.liferay.portal.search.elasticsearch.internal.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
+import com.liferay.portal.search.suggest.BaseGenericSpellCheckIndexWriter;
 
 import java.util.Collection;
 
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import org.osgi.service.component.annotations.Component;
@@ -56,7 +58,8 @@ public class ElasticsearchSpellCheckIndexWriter
 		throws SearchException {
 
 		try {
-			deleteIndices(searchContext, DocumentTypes.KEYWORD_QUERY);
+			deleteDocuments(
+				searchContext, SuggestionConstants.TYPE_QUERY_SUGGESTION);
 		}
 		catch (Exception e) {
 			throw new SearchException("Unable to clear query suggestions", e);
@@ -68,7 +71,8 @@ public class ElasticsearchSpellCheckIndexWriter
 		throws SearchException {
 
 		try {
-			deleteIndices(searchContext, DocumentTypes.SPELL_CHECK);
+			deleteDocuments(
+				searchContext, SuggestionConstants.TYPE_SPELL_CHECKER);
 		}
 		catch (Exception e) {
 			throw new SearchException("Unable to to clear spell checks", e);
@@ -81,7 +85,7 @@ public class ElasticsearchSpellCheckIndexWriter
 		throws SearchException {
 
 		elasticsearchUpdateDocumentCommand.updateDocument(
-			documentType, searchContext, document, false);
+			DocumentTypes.LIFERAY, searchContext, document, false);
 	}
 
 	@Override
@@ -91,7 +95,7 @@ public class ElasticsearchSpellCheckIndexWriter
 		throws SearchException {
 
 		elasticsearchUpdateDocumentCommand.updateDocuments(
-			documentType, searchContext, documents, false);
+			DocumentTypes.LIFERAY, searchContext, documents, false);
 	}
 
 	@Override
@@ -102,22 +106,27 @@ public class ElasticsearchSpellCheckIndexWriter
 
 		Document document = createDocument();
 
-		document.addKeyword(Field.COMPANY_ID, companyId);
-		document.addKeyword(Field.GROUP_ID, groupId);
+		Localization localization = getLocalization();
 
-		String localizedName = DocumentImpl.getLocalizedName(
-			languageId, keywordFieldName);
+		String localizedName = localization.getLocalizedName(
+			keywordFieldName, languageId);
 
 		document.addKeyword(localizedName, keywords);
 
+		document.addKeyword(Field.COMPANY_ID, companyId);
+		document.addKeyword(Field.GROUP_ID, groupId);
+		document.addKeyword(Field.LANGUAGE_ID, languageId);
 		document.addKeyword(Field.PRIORITY, String.valueOf(weight));
-		document.addKeyword(Field.SPELL_CHECK_WORD, true);
-		document.addKeyword(Field.UID, getUID(companyId, languageId, keywords));
+		document.addKeyword(Field.TYPE, typeFieldValue);
+		document.addKeyword(
+			Field.UID,
+			getUID(companyId, keywordFieldName, languageId, keywords));
 
 		return document;
 	}
 
-	protected void deleteIndices(SearchContext searchContext, String indexType)
+	protected void deleteDocuments(
+			SearchContext searchContext, String typeFieldValue)
 		throws Exception {
 
 		if (_searchHitsProcessor == null) {
@@ -129,12 +138,12 @@ public class ElasticsearchSpellCheckIndexWriter
 		try {
 			Client client = elasticsearchConnectionManager.getClient();
 
-			MatchAllQueryBuilder matchAllQueryBuilder =
-				QueryBuilders.matchAllQuery();
+			MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(
+				Field.TYPE, typeFieldValue);
 
 			searchResponseScroller = new SearchResponseScroller(
-				client, searchContext, indexNameBuilder, matchAllQueryBuilder,
-				TimeValue.timeValueSeconds(30), indexType);
+				client, searchContext, indexNameBuilder, matchQueryBuilder,
+				TimeValue.timeValueSeconds(30), DocumentTypes.LIFERAY);
 
 			searchResponseScroller.prepare();
 
@@ -145,6 +154,17 @@ public class ElasticsearchSpellCheckIndexWriter
 				searchResponseScroller.close();
 			}
 		}
+	}
+
+	protected Localization getLocalization() {
+
+		// See LPS-72507 and LPS-76500
+
+		if (localization != null) {
+			return localization;
+		}
+
+		return LocalizationUtil.getLocalization();
 	}
 
 	@Reference(
@@ -171,6 +191,8 @@ public class ElasticsearchSpellCheckIndexWriter
 
 	@Reference(unbind = "-")
 	protected IndexNameBuilder indexNameBuilder;
+
+	protected Localization localization;
 
 	private volatile SearchHitsProcessor _searchHitsProcessor;
 

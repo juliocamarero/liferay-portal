@@ -1,4 +1,4 @@
-<definition component-name="portal-plugins-osgi">
+<definition component-name="portal-plugins-osgi" ignore="true">
 	<property name="osgi.app.includes" value="twitter" />
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
@@ -69,12 +69,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Other" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="Social Networks" />
 			<var name="configurationName" value="Twitter Service" />
+			<var name="configurationScope" value="Virtual Instance Scope" />
 		</execute>
 
 		<execute function="Type" locator1="TextInput#TWITTER" value1="1" />

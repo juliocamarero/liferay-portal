@@ -15,11 +15,12 @@
 package com.liferay.javadoc.formatter;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
+import com.liferay.petra.xml.Dom4jUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
@@ -28,7 +29,6 @@ import com.liferay.portal.tools.JavaImportsFormatter;
 import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.portal.xml.SAXReaderFactory;
 import com.liferay.util.xml.Dom4jDocUtil;
-import com.liferay.util.xml.Dom4jUtil;
 import com.liferay.util.xml.XMLSafeReader;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -44,6 +44,7 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaModel;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.JavaTypeVariable;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.io.BufferedReader;
@@ -204,9 +205,8 @@ public class JavadocFormatter {
 				sb.append(limit);
 
 				if (limit.contains(".")) {
-					sb.append(
-						" Specify limit filename without package path or ");
-					sb.append("file type suffix.");
+					sb.append(" Specify limit filename without package path ");
+					sb.append("or file type suffix.");
 				}
 
 				System.out.println(sb.toString());
@@ -315,6 +315,8 @@ public class JavadocFormatter {
 			_addDocletElements(parentElement, javaClass, "author");
 		}
 
+		_addParamElements(
+			parentElement, javaClass, javaClass.getTagsByName("param"));
 		_addDocletElements(parentElement, javaClass, "version");
 		_addDocletElements(parentElement, javaClass, "see");
 		_addDocletElements(parentElement, javaClass, "since");
@@ -820,18 +822,18 @@ public class JavadocFormatter {
 	}
 
 	private void _addParamElement(
-			Element executableElement, JavaParameter javaParameter,
-			List<DocletTag> paramDocletTags)
+			Element executableElement, String parameterName,
+			String parameterValue, List<DocletTag> paramDocletTags)
 		throws Exception {
-
-		String name = javaParameter.getName();
 
 		String value = null;
 
 		for (DocletTag paramDocletTag : paramDocletTags) {
 			String curValue = paramDocletTag.getValue();
 
-			if (curValue.equals(name) || curValue.startsWith(name + " ")) {
+			if (curValue.equals(parameterName) ||
+				curValue.startsWith(parameterName + " ")) {
+
 				value = curValue;
 
 				break;
@@ -840,11 +842,14 @@ public class JavadocFormatter {
 
 		Element paramElement = executableElement.addElement("param");
 
-		Dom4jDocUtil.add(paramElement, "name", name);
-		Dom4jDocUtil.add(paramElement, "type", _getTypeValue(javaParameter));
+		Dom4jDocUtil.add(paramElement, "name", parameterName);
+
+		if (parameterValue != null) {
+			Dom4jDocUtil.add(paramElement, "type", parameterValue);
+		}
 
 		if (value != null) {
-			value = value.substring(name.length());
+			value = value.substring(parameterName.length());
 
 			Dom4jDocUtil.add(paramElement, "required", true);
 		}
@@ -860,6 +865,20 @@ public class JavadocFormatter {
 	}
 
 	private void _addParamElements(
+			Element classElement, JavaClass javaClass,
+			List<DocletTag> paramDocletTags)
+		throws Exception {
+
+		for (JavaTypeVariable<?> typeParameter :
+				javaClass.getTypeParameters()) {
+
+			_addParamElement(
+				classElement, "<" + typeParameter.getName() + ">", null,
+				paramDocletTags);
+		}
+	}
+
+	private void _addParamElements(
 			Element executableElement, JavaExecutable javaExecutable,
 			List<DocletTag> paramDocletTags)
 		throws Exception {
@@ -867,7 +886,9 @@ public class JavadocFormatter {
 		List<JavaParameter> javaParameters = javaExecutable.getParameters();
 
 		for (JavaParameter javaParameter : javaParameters) {
-			_addParamElement(executableElement, javaParameter, paramDocletTags);
+			_addParamElement(
+				executableElement, javaParameter.getName(),
+				_getTypeValue(javaParameter), paramDocletTags);
 		}
 	}
 
@@ -1413,7 +1434,7 @@ public class JavadocFormatter {
 			Element rootElement, JavaClass javaClass, String indent)
 		throws Exception {
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(8);
 
 		sb.append(indent);
 		sb.append("/**\n");
@@ -1430,8 +1451,8 @@ public class JavadocFormatter {
 		String docletTags = _addDocletTags(
 			rootElement,
 			new String[] {
-				"author", "version", "see", "since", "serial", "deprecated",
-				"review"
+				"author", "version", "param", "see", "since", "serial",
+				"deprecated", "review"
 			},
 			indent + " * ", _hasPublicModifier(javaClass));
 
@@ -1589,7 +1610,7 @@ public class JavadocFormatter {
 			return null;
 		}
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(8);
 
 		sb.append(indent);
 		sb.append("/**\n");
@@ -1662,7 +1683,7 @@ public class JavadocFormatter {
 			return null;
 		}
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(8);
 
 		sb.append(indent);
 		sb.append("/**\n");
@@ -1715,6 +1736,11 @@ public class JavadocFormatter {
 			JavaClass javaClass = (JavaClass)javaModel;
 
 			List<String> modifiers = javaClass.getModifiers();
+
+			if (modifiers.isEmpty()) {
+				return _getAdjustedLineNumber(
+					javaModel.getLineNumber(), javaModel);
+			}
 
 			String modifier = modifiers.get(0);
 
@@ -1868,8 +1894,8 @@ public class JavadocFormatter {
 			return false;
 		}
 
-		for (int i = 0; i < annotations.size(); i++) {
-			JavaClass javaClass = annotations.get(i).getType();
+		for (JavaAnnotation javaAnnotation : annotations) {
+			JavaClass javaClass = javaAnnotation.getType();
 
 			if (annotationName.equals(javaClass.getName())) {
 				return true;

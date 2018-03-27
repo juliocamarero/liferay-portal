@@ -15,18 +15,16 @@
 package com.liferay.message.boards.trash.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.message.boards.kernel.model.MBCategory;
-import com.liferay.message.boards.kernel.model.MBCategoryConstants;
-import com.liferay.message.boards.kernel.service.MBCategoryLocalServiceUtil;
+import com.liferay.message.boards.constants.MBCategoryConstants;
+import com.liferay.message.boards.model.MBCategory;
+import com.liferay.message.boards.service.MBCategoryLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -48,7 +46,6 @@ import org.junit.runner.RunWith;
  * @author Eduardo Garcia
  */
 @RunWith(Arquillian.class)
-@Sync
 public class MBCategoryTrashHandlerTest
 	extends BaseTrashHandlerTestCase
 	implements WhenHasGrandParent, WhenIsMoveableFromTrashBaseModel,
@@ -57,9 +54,7 @@ public class MBCategoryTrashHandlerTest
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Override
 	public String getParentBaseModelClassName() {

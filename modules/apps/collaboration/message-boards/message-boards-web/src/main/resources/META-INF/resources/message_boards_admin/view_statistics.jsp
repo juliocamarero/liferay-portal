@@ -19,7 +19,7 @@
 <%
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("mvcRenderCommandName", "/message_boards/view_banned_users");
+portletURL.setParameter("mvcRenderCommandName", "/message_boards/view_statistics");
 %>
 
 <liferay-util:include page="/message_boards_admin/nav.jsp" servletContext="<%= application %>">
@@ -29,12 +29,26 @@ portletURL.setParameter("mvcRenderCommandName", "/message_boards/view_banned_use
 <%
 long categoryId = GetterUtil.getLong(request.getAttribute("view.jsp-categoryId"));
 
-MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, categoryId);
+MBCategoryDisplay categoryDisplay = new MBCategoryDisplay(scopeGroupId, categoryId);
 %>
 
 <div class="container-fluid-1280">
-	<liferay-ui:panel-container cssClass="statistics-panel" extended="<%= false %>" id="messageBoardsStatisticsPanelContainer" markupView="lexicon" persistState="<%= true %>">
-		<liferay-ui:panel collapsible="<%= true %>" cssClass="statistics-panel-content" extended="<%= true %>" id="messageBoardsGeneralStatisticsPanel" markupView="lexicon" persistState="<%= true %>" title="general">
+	<liferay-ui:panel-container
+		cssClass="statistics-panel"
+		extended="<%= false %>"
+		id="messageBoardsStatisticsPanelContainer"
+		markupView="lexicon"
+		persistState="<%= true %>"
+	>
+		<liferay-ui:panel
+			collapsible="<%= true %>"
+			cssClass="statistics-panel-content"
+			extended="<%= true %>"
+			id="messageBoardsGeneralStatisticsPanel"
+			markupView="lexicon"
+			persistState="<%= true %>"
+			title="general"
+		>
 			<dl>
 				<dt>
 					<liferay-ui:message key="num-of-categories" />:
@@ -57,7 +71,15 @@ MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, cate
 			</dl>
 		</liferay-ui:panel>
 
-		<liferay-ui:panel collapsible="<%= true %>" cssClass="statistics-panel-content" extended="<%= true %>" id="messageBoardsTopPostersPanel" markupView="lexicon" persistState="<%= true %>" title="top-posters">
+		<liferay-ui:panel
+			collapsible="<%= true %>"
+			cssClass="statistics-panel-content"
+			extended="<%= true %>"
+			id="messageBoardsTopPostersPanel"
+			markupView="lexicon"
+			persistState="<%= true %>"
+			title="top-posters"
+		>
 			<liferay-ui:search-container
 				emptyResultsMessage="there-are-no-top-posters"
 				iteratorURL="<%= portletURL %>"
@@ -75,7 +97,10 @@ MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, cate
 					<%@ include file="/message_boards/top_posters_user_display.jspf" %>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="descriptive"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</liferay-ui:panel>
 	</liferay-ui:panel-container>

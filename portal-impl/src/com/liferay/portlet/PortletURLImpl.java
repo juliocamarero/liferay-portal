@@ -17,6 +17,7 @@ package com.liferay.portlet;
 import com.liferay.petra.encryptor.Encryptor;
 import com.liferay.petra.encryptor.EncryptorException;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -48,7 +49,6 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -85,6 +85,7 @@ import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Brian Wing Shun Chan
@@ -938,14 +939,11 @@ public class PortletURLImpl
 				sb.append(StringPool.AMPERSAND);
 			}
 
-			String removeValue = processValue(key, "1");
-
 			for (String removedPublicParameter :
 					_removePublicRenderParameters) {
 
 				sb.append(URLCodec.encodeURL(removedPublicParameter));
 				sb.append(StringPool.EQUAL);
-				sb.append(removeValue);
 				sb.append(StringPool.AMPERSAND);
 			}
 		}
@@ -996,8 +994,9 @@ public class PortletURLImpl
 		String result = sb.toString();
 
 		if (!CookieKeys.hasSessionId(_request)) {
-			result = PortalUtil.getURLWithSessionId(
-				result, _request.getSession().getId());
+			HttpSession session = _request.getSession();
+
+			result = PortalUtil.getURLWithSessionId(result, session.getId());
 		}
 
 		if (!_escapeXml) {
@@ -1032,10 +1031,7 @@ public class PortletURLImpl
 	}
 
 	protected String generateWSRPToString() {
-		StringBundler sb = new StringBundler("wsrp_rewrite?");
-
-		sb.append("wsrp-urlType");
-		sb.append(StringPool.EQUAL);
+		StringBundler sb = new StringBundler("wsrp_rewrite?wsrp-urlType=");
 
 		if (_lifecycle.equals(PortletRequest.ACTION_PHASE)) {
 			sb.append(URLCodec.encodeURL("blockingAction"));
@@ -1108,7 +1104,7 @@ public class PortletURLImpl
 				continue;
 			}
 
-			if (_lifecycle.equals(PortletRequest.RESOURCE_PHASE)) {
+			if (!_lifecycle.equals(PortletRequest.RESOURCE_PHASE)) {
 				String publicRenderParameterName = getPublicRenderParameterName(
 					name);
 
@@ -1130,8 +1126,7 @@ public class PortletURLImpl
 			sb.setIndex(sb.index() - 1);
 		}
 
-		sb.append("wsrp-navigationalState");
-		sb.append(StringPool.EQUAL);
+		sb.append("wsrp-navigationalState=");
 
 		byte[] parameterBytes = null;
 

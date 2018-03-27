@@ -14,20 +14,20 @@
 
 package com.liferay.wiki.web.internal.portlet.configuration.icon;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.trash.TrashHelper;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.WikiNodeService;
-import com.liferay.wiki.service.permission.WikiNodePermissionChecker;
 import com.liferay.wiki.web.internal.portlet.action.ActionUtil;
 
 import javax.portlet.ActionRequest;
@@ -123,7 +123,7 @@ public class DeleteNodePortletConfigurationIcon
 		try {
 			WikiNode node = ActionUtil.getNode(portletRequest);
 
-			if (WikiNodePermissionChecker.contains(
+			if (_wikiNodeModelResourcePermission.contains(
 					themeDisplay.getPermissionChecker(), node,
 					ActionKeys.DELETE) &&
 				(_wikiNodeService.getNodesCount(
@@ -160,6 +160,9 @@ public class DeleteNodePortletConfigurationIcon
 
 	@Reference
 	private TrashHelper _trashHelper;
+
+	@Reference(target = "(model.class.name=com.liferay.wiki.model.WikiNode)")
+	private ModelResourcePermission<WikiNode> _wikiNodeModelResourcePermission;
 
 	private WikiNodeService _wikiNodeService;
 

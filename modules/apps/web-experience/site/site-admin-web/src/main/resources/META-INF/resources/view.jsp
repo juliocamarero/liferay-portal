@@ -50,8 +50,6 @@ if (group != null) {
 }
 %>
 
-<liferay-util:include page="/navigation.jsp" servletContext="<%= application %>" />
-
 <liferay-util:include page="/toolbar.jsp" servletContext="<%= application %>">
 	<liferay-util:param name="searchContainerId" value="sites" />
 </liferay-util:include>
@@ -77,7 +75,12 @@ if (group != null) {
 				<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
 
 				<div id="breadcrumb">
-					<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+					<liferay-ui:breadcrumb
+						showCurrentGroup="<%= false %>"
+						showGuestGroup="<%= false %>"
+						showLayout="<%= false %>"
+						showPortletBreadcrumb="<%= true %>"
+					/>
 				</div>
 
 				<liferay-ui:error exception="<%= NoSuchLayoutSetException.class %>">
@@ -117,8 +120,6 @@ if (group != null) {
 		</div>
 	</div>
 </div>
-
-<liferay-util:include page="/add_button.jsp" servletContext="<%= application %>" />
 
 <%!
 private static Log _log = LogFactoryUtil.getLog("com_liferay_site_admin_web.view_jsp");

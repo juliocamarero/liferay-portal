@@ -47,15 +47,42 @@ portletURL.setParameter("delta", String.valueOf(delta));
 				navigationKeys='<%= new String[] {"all"} %>'
 				portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
 			/>
+
+			<%
+			PortletURL searchURL = renderResponse.createRenderURL();
+
+			searchURL.setParameter("tabs1", tabs1);
+			%>
+
+			<li>
+				<aui:form action="<%= searchURL.toString() %>" name="searchFm">
+					<liferay-ui:input-search
+						markupView="lexicon"
+						placeholder='<%= LanguageUtil.get(request, "search") %>'
+					/>
+				</aui:form>
+			</li>
 		</liferay-frontend:management-bar-filters>
 	</c:if>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "enableSites();" %>' iconCssClass="icon-ok" label="enable-sync-sites" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "enableSites();" %>'
+			iconCssClass="icon-ok"
+			label="enable-sync-sites"
+		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "disableSites();" %>' iconCssClass="icon-remove" label="disable-sync-sites" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "disableSites();" %>'
+			iconCssClass="icon-remove"
+			label="disable-sync-sites"
+		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "editSitesDefaultFilePermissions();" %>' iconCssClass="icon-lock" label="default-file-permissions" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "editSitesDefaultFilePermissions();" %>'
+			iconCssClass="icon-lock"
+			label="default-file-permissions"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -171,7 +198,9 @@ portletURL.setParameter("delta", String.valueOf(delta));
 				/>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator markupView="lexicon" />
+			<liferay-ui:search-iterator
+				markupView="lexicon"
+			/>
 		</liferay-ui:search-container>
 	</aui:form>
 </div>

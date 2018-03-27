@@ -14,8 +14,6 @@
 
 package com.liferay.portal.messaging.internal.sender;
 
-import com.liferay.portal.kernel.dao.orm.EntityCache;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
@@ -27,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -36,11 +33,12 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of 4.0.0, with no direct replacement
  */
 @Component(
-	immediate = true, property = {"timeout=10000"},
-	service = SingleDestinationMessageSenderFactory.class
+	immediate = true, service = SingleDestinationMessageSenderFactory.class
 )
+@Deprecated
 public class DefaultSingleDestinationMessageSenderFactory
 	implements SingleDestinationMessageSenderFactory {
 
@@ -114,32 +112,6 @@ public class DefaultSingleDestinationMessageSenderFactory
 		return _synchronousMessageSenders.get(mode);
 	}
 
-	@Activate
-	protected void activate(Map<String, Object> properties) {
-		long timeout = GetterUtil.getLong(properties.get("timeout"), 10000);
-
-		DefaultSynchronousMessageSender defaultSynchronousMessageSender =
-			new DefaultSynchronousMessageSender();
-
-		defaultSynchronousMessageSender.setEntityCache(_entityCache);
-		defaultSynchronousMessageSender.setFinderCache(_finderCache);
-		defaultSynchronousMessageSender.setMessageBus(_messageBus);
-		defaultSynchronousMessageSender.setTimeout(timeout);
-
-		_synchronousMessageSenders.put(
-			SynchronousMessageSender.Mode.DEFAULT,
-			defaultSynchronousMessageSender);
-
-		DirectSynchronousMessageSender directSynchronousMessageSender =
-			new DirectSynchronousMessageSender();
-
-		directSynchronousMessageSender.setMessageBus(_messageBus);
-
-		_synchronousMessageSenders.put(
-			SynchronousMessageSender.Mode.DIRECT,
-			directSynchronousMessageSender);
-	}
-
 	protected SynchronousMessageSender.Mode getMode(
 		Map<String, Object> properties) {
 
@@ -149,22 +121,12 @@ public class DefaultSingleDestinationMessageSenderFactory
 	}
 
 	@Reference(unbind = "-")
-	protected void setEntityCache(EntityCache entityCache) {
-		_entityCache = entityCache;
-	}
-
-	@Reference(unbind = "-")
-	protected void setFinderCache(FinderCache finderCache) {
-		_finderCache = finderCache;
-	}
-
-	@Reference(unbind = "-")
 	protected void setMessageBus(MessageBus messageBus) {
 		_messageBus = messageBus;
 	}
 
 	@Reference(
-		cardinality = ReferenceCardinality.OPTIONAL,
+		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
 		policyOption = ReferencePolicyOption.GREEDY
 	)
@@ -188,8 +150,6 @@ public class DefaultSingleDestinationMessageSenderFactory
 	private final Map<String, DefaultSingleDestinationSynchronousMessageSender>
 		_defaultSingleDestinationSynchronousMessageSenders =
 			new ConcurrentHashMap<>();
-	private EntityCache _entityCache;
-	private FinderCache _finderCache;
 	private MessageBus _messageBus;
 	private final Map<SynchronousMessageSender.Mode, SynchronousMessageSender>
 		_synchronousMessageSenders = new HashMap<>();

@@ -24,7 +24,7 @@ long categoryId = MBUtil.getCategoryId(request, category);
 long excludedCategoryId = ParamUtil.getLong(request, "excludedMBCategoryId");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectCategory");
 
-MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, categoryId);
+MBCategoryDisplay categoryDisplay = new MBCategoryDisplay(scopeGroupId, categoryId);
 
 String categoryName = null;
 
@@ -34,16 +34,20 @@ if (category != null) {
 	categoryName = category.getName();
 }
 else {
-	categoryName = LanguageUtil.get(request, "message-boards-home");
+	categoryName = LanguageUtil.get(request, "home");
 }
 %>
 
 <aui:form method="post" name="selectCategoryFm">
 	<liferay-ui:header
-		title="message-boards-home"
+		title="home"
 	/>
 
-	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
+	<liferay-ui:breadcrumb
+		showGuestGroup="<%= false %>"
+		showLayout="<%= false %>"
+		showParentGroups="<%= false %>"
+	/>
 
 	<%
 	PortletURL portletURL = renderResponse.createRenderURL();
@@ -62,7 +66,7 @@ else {
 		/>
 
 		<liferay-ui:search-container-row
-			className="com.liferay.message.boards.kernel.model.MBCategory"
+			className="com.liferay.message.boards.model.MBCategory"
 			escapedModel="<%= true %>"
 			keyProperty="categoryId"
 			modelVar="curCategory"

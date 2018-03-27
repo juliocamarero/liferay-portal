@@ -86,7 +86,10 @@ import org.junit.Test;
 /**
  * @author Daniel Kocsis
  * @author Mate Thurzo
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.exportimport.test.util.lar.BaseStagedModelDataHandlerTestCase}
  */
+@Deprecated
 public abstract class BaseStagedModelDataHandlerTestCase {
 
 	@Before
@@ -159,12 +162,13 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		List<AssetTag> assetTags = importedAssetEntry.getTags();
 
-		Assert.assertFalse(assetTags.isEmpty());
+		Assert.assertFalse(assetTags.toString(), assetTags.isEmpty());
 
 		List<AssetCategory> assetCategories =
 			importedAssetEntry.getCategories();
 
-		Assert.assertFalse(assetCategories.isEmpty());
+		Assert.assertFalse(
+			assetCategories.toString(), assetCategories.isEmpty());
 
 		assetEntry = fetchAssetEntry(stagedModel, stagingGroup);
 
@@ -194,11 +198,12 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		assetTags = importedAssetEntry.getTags();
 
-		Assert.assertFalse(assetTags.isEmpty());
+		Assert.assertFalse(assetTags.toString(), assetTags.isEmpty());
 
 		assetCategories = importedAssetEntry.getCategories();
 
-		Assert.assertFalse(assetCategories.isEmpty());
+		Assert.assertFalse(
+			assetCategories.toString(), assetCategories.isEmpty());
 	}
 
 	@Test
@@ -1091,7 +1096,9 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 			}
 		}
 
-		Assert.assertTrue(importedRatingsEntries.isEmpty());
+		Assert.assertTrue(
+			importedRatingsEntries.toString(),
+			importedRatingsEntries.isEmpty());
 	}
 
 	@DeleteAfterTestRun

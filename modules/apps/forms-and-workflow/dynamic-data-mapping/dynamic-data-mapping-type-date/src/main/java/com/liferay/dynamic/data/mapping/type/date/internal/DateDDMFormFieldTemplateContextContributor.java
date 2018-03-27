@@ -16,13 +16,14 @@ package com.liferay.dynamic.data.mapping.type.date.internal;
 
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTemplateContextContributor;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
+import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Marcellus Tavares
@@ -44,16 +45,32 @@ public class DateDDMFormFieldTemplateContextContributor
 
 		Map<String, Object> parameters = new HashMap<>();
 
-		String displayValue = dateDDMFormFieldValueRenderer.render(
-			ddmFormFieldRenderingContext.getValue(),
-			ddmFormFieldRenderingContext.getLocale());
+		parameters.put(
+			"predefinedValue",
+			GetterUtil.getString(ddmFormField.getPredefinedValue(), ""));
 
-		parameters.put("displayValue", displayValue);
+		String predefinedValue = getPredefinedValue(
+			ddmFormField, ddmFormFieldRenderingContext);
+
+		if (predefinedValue != null) {
+			parameters.put("predefinedValue", predefinedValue);
+		}
 
 		return parameters;
 	}
 
-	@Reference
-	protected DateDDMFormFieldValueRenderer dateDDMFormFieldValueRenderer;
+	protected String getPredefinedValue(
+		DDMFormField ddmFormField,
+		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
+
+		LocalizedValue predefinedValue = ddmFormField.getPredefinedValue();
+
+		if (predefinedValue == null) {
+			return null;
+		}
+
+		return predefinedValue.getString(
+			ddmFormFieldRenderingContext.getLocale());
+	}
 
 }

@@ -20,15 +20,12 @@ import com.liferay.exportimport.kernel.lar.PortletDataException;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.portlet.preferences.processor.Capability;
 import com.liferay.exportimport.portlet.preferences.processor.ExportImportPortletPreferencesProcessor;
-import com.liferay.exportimport.portlet.preferences.processor.capability.ReferencedStagedModelImporterCapability;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portlet.display.template.exportimport.portlet.preferences.processor.PortletDisplayTemplateExportCapability;
-import com.liferay.portlet.display.template.exportimport.portlet.preferences.processor.PortletDisplayTemplateImportCapability;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.WikiNodeLocalService;
@@ -52,17 +49,13 @@ public class WikiExportImportPortletPreferencesProcessor
 
 	@Override
 	public List<Capability> getExportCapabilities() {
-		return ListUtil.toList(
-			new Capability[] {_portletDisplayTemplateExportCapability});
+		return ListUtil.toList(new Capability[] {_exportCapability});
 	}
 
 	@Override
 	public List<Capability> getImportCapabilities() {
 		return ListUtil.toList(
-			new Capability[] {
-				_portletDisplayTemplateImportCapability,
-				_referencedStagedModelImporterCapability
-			});
+			new Capability[] {_importCapability, _capability});
 	}
 
 	@Override
@@ -133,33 +126,6 @@ public class WikiExportImportPortletPreferencesProcessor
 	}
 
 	@Reference(unbind = "-")
-	protected void setPortletDisplayTemplateExportCapability(
-		PortletDisplayTemplateExportCapability
-			portletDisplayTemplateExportCapability) {
-
-		_portletDisplayTemplateExportCapability =
-			portletDisplayTemplateExportCapability;
-	}
-
-	@Reference(unbind = "-")
-	protected void setPortletDisplayTemplateImportCapability(
-		PortletDisplayTemplateImportCapability
-			portletDisplayTemplateImportCapability) {
-
-		_portletDisplayTemplateImportCapability =
-			portletDisplayTemplateImportCapability;
-	}
-
-	@Reference(unbind = "-")
-	protected void setReferencedStagedModelImporterCapability(
-		ReferencedStagedModelImporterCapability
-			referencedStagedModelImporterCapability) {
-
-		_referencedStagedModelImporterCapability =
-			referencedStagedModelImporterCapability;
-	}
-
-	@Reference(unbind = "-")
 	protected void setWikiNodeLocalService(
 		WikiNodeLocalService wikiNodeLocalService) {
 
@@ -169,13 +135,17 @@ public class WikiExportImportPortletPreferencesProcessor
 	private static final Log _log = LogFactoryUtil.getLog(
 		WikiExportImportPortletPreferencesProcessor.class);
 
+	@Reference(target = "(name=ReferencedStagedModelImporter)")
+	private Capability _capability;
+
+	@Reference(target = "(name=PortletDisplayTemplateExporter)")
+	private Capability _exportCapability;
+
 	private GroupLocalService _groupLocalService;
-	private PortletDisplayTemplateExportCapability
-		_portletDisplayTemplateExportCapability;
-	private PortletDisplayTemplateImportCapability
-		_portletDisplayTemplateImportCapability;
-	private ReferencedStagedModelImporterCapability
-		_referencedStagedModelImporterCapability;
+
+	@Reference(target = "(name=PortletDisplayTemplateImporter)")
+	private Capability _importCapability;
+
 	private WikiNodeLocalService _wikiNodeLocalService;
 
 }

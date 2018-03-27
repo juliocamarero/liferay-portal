@@ -14,7 +14,9 @@
 
 package com.liferay.message.boards.parser.bbcode.internal;
 
+import com.liferay.message.boards.util.MBUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ThemeConstants;
@@ -24,10 +26,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.messageboards.util.MBUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -220,7 +220,7 @@ public class HtmlBBCodeTranslatorImpl implements BBCodeTranslator {
 		}
 
 		if (index < quote.length()) {
-			sb.append(quote.substring(index, quote.length()));
+			sb.append(quote.substring(index));
 		}
 
 		return sb.toString();
@@ -386,11 +386,11 @@ public class HtmlBBCodeTranslatorImpl implements BBCodeTranslator {
 
 		int size = GetterUtil.getInteger(bbCodeItem.getAttribute());
 
-		if ((size >= 1) && (size <= _fontSizes.length)) {
-			sb.append(_fontSizes[size - 1]);
+		if ((size >= 1) && (size <= _FONT_SIZES.length)) {
+			sb.append(_FONT_SIZES[size - 1]);
 		}
 		else {
-			sb.append(_fontSizes[1]);
+			sb.append(_FONT_SIZES[1]);
 		}
 
 		sb.append("px;\">");
@@ -745,6 +745,8 @@ public class HtmlBBCodeTranslatorImpl implements BBCodeTranslator {
 		{"wub.gif", ":wub:", "wub"}
 	};
 
+	private static final int[] _FONT_SIZES = {10, 12, 14, 16, 18, 24, 32, 48};
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		HtmlBBCodeTranslatorImpl.class);
 
@@ -762,7 +764,6 @@ public class HtmlBBCodeTranslatorImpl implements BBCodeTranslator {
 	private final String[] _emoticonFiles = new String[_EMOTICONS.length];
 	private final String[] _emoticonSymbols = new String[_EMOTICONS.length];
 	private final Map<String, Integer> _excludeNewLineTypes;
-	private final int[] _fontSizes = {10, 12, 14, 16, 18, 24, 32, 48};
 	private final Set<String> _imageAttributes;
 	private final Pattern _imagePattern = Pattern.compile(
 		"^(?:https?://|/)[-;/?:@&=+$,_.!~*'()%0-9a-z]{1,2048}$",
@@ -770,6 +771,7 @@ public class HtmlBBCodeTranslatorImpl implements BBCodeTranslator {
 	private final Map<String, String> _orderedListStyles;
 	private final Map<String, String> _unorderedListStyles;
 	private final Pattern _urlPattern = Pattern.compile(
-		"^[-;/?:@&=+$,_.!~*'()%0-9a-z#]{1,2048}$", Pattern.CASE_INSENSITIVE);
+		"^[-;/?:@&=+$,_.!~*'()%\\p{Digit}\\p{L}#]{1,2048}$",
+		Pattern.CASE_INSENSITIVE);
 
 }

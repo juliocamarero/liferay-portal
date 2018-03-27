@@ -21,6 +21,11 @@ import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.document.library.kernel.util.VideoProcessor;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.petra.log4j.Log4JUtil;
+import com.liferay.petra.process.ProcessCallable;
+import com.liferay.petra.process.ProcessChannel;
+import com.liferay.petra.process.ProcessException;
+import com.liferay.petra.process.ProcessExecutor;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.fabric.InputResource;
 import com.liferay.portal.fabric.OutputResource;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -29,11 +34,6 @@ import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.DestinationNames;
-import com.liferay.portal.kernel.process.ClassPathUtil;
-import com.liferay.portal.kernel.process.ProcessCallable;
-import com.liferay.portal.kernel.process.ProcessChannel;
-import com.liferay.portal.kernel.process.ProcessException;
-import com.liferay.portal.kernel.process.ProcessExecutor;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.FileUtil;
@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemEnv;
 import com.liferay.portal.kernel.util.ThreadUtil;
@@ -50,6 +49,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xuggler.XugglerUtil;
 import com.liferay.portal.log.Log4jLogFactoryImpl;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileVersion;
+import com.liferay.portal.util.PortalClassPathUtil;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -317,16 +317,6 @@ public class VideoProcessorImpl
 		}
 	}
 
-	private static void _destroyHangingThread() {
-		for (Thread thread : ThreadUtil.getThreads()) {
-			if ((thread != null) && !thread.isDaemon() &&
-				!StringUtil.equalsIgnoreCase(thread.getName(), "main")) {
-
-				System.exit(-1);
-			}
-		}
-	}
-
 	private void _generateThumbnailXuggler(
 			FileVersion fileVersion, File file, int height, int width)
 		throws Exception {
@@ -354,7 +344,7 @@ public class VideoProcessorImpl
 
 					ProcessChannel<String> processChannel =
 						_processExecutor.execute(
-							ClassPathUtil.getPortalProcessConfig(),
+							PortalClassPathUtil.getPortalProcessConfig(),
 							processCallable);
 
 					Future<String> future =
@@ -388,7 +378,12 @@ public class VideoProcessorImpl
 				}
 			}
 			catch (Exception e) {
-				_log.error(e, e);
+				_log.error(
+					StringBundler.concat(
+						"Unable to process ",
+						String.valueOf(fileVersion.getFileVersionId()), " ",
+						fileVersion.getTitle(), "."),
+					e);
 			}
 
 			storeThumbnailImages(fileVersion, thumbnailTempFile);
@@ -533,7 +528,7 @@ public class VideoProcessorImpl
 
 				ProcessChannel<String> processChannel =
 					_processExecutor.execute(
-						ClassPathUtil.getPortalProcessConfig(),
+						PortalClassPathUtil.getPortalProcessConfig(),
 						processCallable);
 
 				Future<String> future =
@@ -558,7 +553,12 @@ public class VideoProcessorImpl
 			}
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			_log.error(
+				StringBundler.concat(
+					"Unable to process ",
+					String.valueOf(fileVersion.getFileVersionId()), " ",
+					fileVersion.getTitle(), "."),
+				e);
 		}
 
 		addFileToStore(
@@ -642,6 +642,20 @@ public class VideoProcessorImpl
 	private final Set<String> _videoMimeTypes = SetUtil.fromArray(
 		PropsValues.DL_FILE_ENTRY_PREVIEW_VIDEO_MIME_TYPES);
 
+	private static class DestroyHangingThreadHelper {
+
+		private static void _destroyHangingThread() {
+			for (Thread thread : ThreadUtil.getThreads()) {
+				if ((thread != null) && !thread.isDaemon() &&
+					!StringUtil.equalsIgnoreCase(thread.getName(), "main")) {
+
+					System.exit(-1);
+				}
+			}
+		}
+
+	}
+
 	private static class LiferayVideoProcessCallable
 		implements ProcessCallable<String> {
 
@@ -689,7 +703,7 @@ public class VideoProcessorImpl
 				throw new ProcessException(e);
 			}
 			finally {
-				_destroyHangingThread();
+				DestroyHangingThreadHelper._destroyHangingThread();
 			}
 
 			return StringPool.BLANK;
@@ -762,7 +776,7 @@ public class VideoProcessorImpl
 				throw new ProcessException(e);
 			}
 			finally {
-				_destroyHangingThread();
+				DestroyHangingThreadHelper._destroyHangingThread();
 			}
 
 			return StringPool.BLANK;

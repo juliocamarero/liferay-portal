@@ -1447,12 +1447,12 @@ public class VerifyProperties extends VerifyProcess {
 
 		new String[] {
 			"request.header.auth.hosts.allowed", "authHostsAllowed",
-			"com.liferay.portal.security.auto.login.request.header"
+			"com.liferay.portal.security.auto.login"
 		},
 
 		new String[] {
 			"request.header.auth.import.from.ldap", "importFromLDAP",
-			"com.liferay.portal.security.auto.login.request.header"
+			"com.liferay.portal.security.auto.login"
 		},
 
 		// RSS
@@ -1881,12 +1881,15 @@ public class VerifyProperties extends VerifyProcess {
 		"net.sf.ehcache.configurationResourceName.peerProviderProperties",
 		"openoffice.server.enabled", "openoffice.server.host",
 		"openoffice.server.port", "openoffice.cache.enabled",
+		"organizations.children.types", "organizations.country.enabled",
+		"organizations.country.required",
 		"organizations.form.add.identification", "organizations.form.add.main",
 		"organizations.form.add.miscellaneous",
 		"organizations.form.update.identification",
 		"organizations.form.update.main",
 		"organizations.form.update.miscellaneous",
-		"organizations.indexer.enabled", "portal.cache.manager.type.multi.vm",
+		"organizations.indexer.enabled", "organizations.rootable",
+		"organizations.types", "portal.cache.manager.type.multi.vm",
 		"portal.cache.manager.type.single.vm", "portal.ctx",
 		"portal.security.manager.enable", "permissions.list.filter",
 		"permissions.thread.local.cache.max.size",
@@ -1907,7 +1910,8 @@ public class VerifyProperties extends VerifyProcess {
 		"sites.form.add.seo", "sites.form.update.advanced",
 		"sites.form.update.main", "sites.form.update.miscellaneous",
 		"sites.form.update.seo", "staging.lock.enabled",
-		"social.activity.sets.bundling.enabled",
+		"social.activity.sets.bundling.enabled", "social.activity.sets.enabled",
+		"social.bookmark.display.styles",
 		"table.mapper.cache.mapping.table.names", "tck.url",
 		"user.groups.indexer.enabled", "users.form.add.identification",
 		"users.indexer.enabled", "users.form.add.main",

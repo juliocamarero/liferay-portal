@@ -19,6 +19,8 @@ import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
 import com.liferay.asset.tags.constants.AssetTagsAdminPortletKeys;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -33,7 +35,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -45,6 +46,7 @@ import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -99,8 +101,9 @@ public class AssetTagsDisplayContext {
 			WebKeys.THEME_DISPLAY);
 
 		return AssetEntryLocalServiceUtil.searchCount(
-			tag.getCompanyId(), null, themeDisplay.getUserId(), null, 0, null,
-			null, null, null, tag.getName(), true, true, statuses, false);
+			tag.getCompanyId(), new long[] {themeDisplay.getScopeGroupId()},
+			themeDisplay.getUserId(), null, 0, null, null, null, null,
+			tag.getName(), true, true, statuses, false);
 	}
 
 	public String getKeywords() {
@@ -136,6 +139,24 @@ public class AssetTagsDisplayContext {
 		_mergeTagNames = mergeTagNames;
 
 		return _mergeTagNames;
+	}
+
+	public List<NavigationItem> getNavigationItems() {
+		List<NavigationItem> navigationItems = new ArrayList<>();
+
+		NavigationItem entriesNavigationItem = new NavigationItem();
+
+		entriesNavigationItem.setActive(true);
+
+		PortletURL mainURL = _renderResponse.createRenderURL();
+
+		entriesNavigationItem.setHref(mainURL.toString());
+
+		entriesNavigationItem.setLabel(LanguageUtil.get(_request, "tags"));
+
+		navigationItems.add(entriesNavigationItem);
+
+		return navigationItems;
 	}
 
 	public String getOrderByCol() {
@@ -197,16 +218,7 @@ public class AssetTagsDisplayContext {
 
 		String keywords = getKeywords();
 
-		if (Validator.isNull(keywords)) {
-			if (isShowAddButton()) {
-				tagsSearchContainer.setEmptyResultsMessage(
-					"there-are-no-tags.-you-can-add-a-tag-by-clicking-the-" +
-						"plus-button-on-the-bottom-right-corner");
-				tagsSearchContainer.setEmptyResultsMessageCssClass(
-					"taglib-empty-result-message-header-has-plus-btn");
-			}
-		}
-		else {
+		if (Validator.isNotNull(keywords)) {
 			tagsSearchContainer.setSearch(true);
 		}
 

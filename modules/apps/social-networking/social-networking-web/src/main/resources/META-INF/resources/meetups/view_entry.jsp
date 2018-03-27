@@ -115,7 +115,7 @@ int yesTotal = MeetupsRegistrationLocalServiceUtil.getMeetupsRegistrationsCount(
 			<aui:input name="comments" />
 
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" type="submit" value="register" />
+				<aui:button type="submit" value="register" />
 			</aui:button-row>
 		</aui:form>
 
@@ -170,7 +170,9 @@ int yesTotal = MeetupsRegistrationLocalServiceUtil.getMeetupsRegistrationsCount(
 		%>
 
 		<div class="taglib-search-iterator-page-iterator-bottom">
-			<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" />
+			<liferay-ui:search-paginator
+				searchContainer="<%= searchContainer %>"
+			/>
 		</div>
 
 		<aui:script use="aui-base">

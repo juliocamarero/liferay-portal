@@ -18,10 +18,11 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.InstanceFactory;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import com.yahoo.platform.yui.compressor.CssCompressor;
 
@@ -48,24 +49,13 @@ public class MinifierUtil {
 		return _instance._minifyJavaScript(resourceName, content);
 	}
 
-	private static JavaScriptMinifier _getJavaScriptMinifier() {
-		try {
-			return (JavaScriptMinifier)InstanceFactory.newInstance(
-				PortalClassLoaderUtil.getClassLoader(),
-				PropsValues.MINIFIER_JAVASCRIPT_IMPL);
-		}
-		catch (Exception e) {
-			_log.error(
-				"Unable to instantiate " +
-					PropsValues.MINIFIER_JAVASCRIPT_IMPL,
-				e);
-
-			return new GoogleJavaScriptMinifier();
-		}
-	}
-
 	private MinifierUtil() {
-		_javaScriptMinifierInstance = _getJavaScriptMinifier();
+		Registry registry = RegistryUtil.getRegistry();
+
+		_javaScriptMinifierServiceTracker = registry.trackServices(
+			JavaScriptMinifier.class);
+
+		_javaScriptMinifierServiceTracker.open();
 	}
 
 	private String _minifyCss(String content) {
@@ -90,7 +80,14 @@ public class MinifierUtil {
 	}
 
 	private String _minifyJavaScript(String resourceName, String content) {
-		return _javaScriptMinifierInstance.compress(resourceName, content);
+		JavaScriptMinifier javaScriptMinifier =
+			_javaScriptMinifierServiceTracker.getService();
+
+		if (javaScriptMinifier == null) {
+			return content;
+		}
+
+		return javaScriptMinifier.compress(resourceName, content);
 	}
 
 	private String _processMinifiedCss(String minifiedCss) {
@@ -124,10 +121,17 @@ public class MinifierUtil {
 				String replacement = minifiedCss.substring(
 					startIndex, index - 1);
 
-				replacement = replacement.replaceAll("\\+", " + ");
-				replacement = replacement.replaceAll("-", " - ");
-				replacement = replacement.replaceAll("\\*", " * ");
-				replacement = replacement.replaceAll("/", " / ");
+				replacement = _separateOperatorsFromNegativeNumbers(
+					replacement);
+
+				replacement = _surroundDivisionOperatorsWithSpaces(replacement);
+				replacement = _surroundMultiplicationOperatorsWithSpaces(
+					replacement);
+				replacement = _surroundSubstractionOperatorsWithSpaces(
+					replacement);
+				replacement = _surroundSumOperatorsWithSpaces(replacement);
+
+				replacement = _removeSpacesInsideNegativeNumbers(replacement);
 
 				sb.append(replacement);
 
@@ -142,10 +146,63 @@ public class MinifierUtil {
 		return minifiedCss;
 	}
 
+	private String _removeSpacesInsideNegativeNumbers(String replacement) {
+		String anyMinusPrecededByAnOperator = "([+\\-*/])[ ]+-[ ]+(\\d)";
+		String leftmostMinus = "^- ";
+
+		replacement = replacement.replaceAll(
+			anyMinusPrecededByAnOperator, "$1 -$2");
+		replacement = replacement.replaceAll(leftmostMinus, "-");
+
+		return replacement;
+	}
+
+	private String _separateOperatorsFromNegativeNumbers(String replacement) {
+		replacement = replacement.replaceAll("\\+-", "+ -");
+		replacement = replacement.replaceAll("--", "- -");
+		replacement = replacement.replaceAll("\\*-", "* -");
+		replacement = replacement.replaceAll("/-", "/ -");
+
+		return replacement;
+	}
+
+	private String _surroundDivisionOperatorsWithSpaces(String replacement) {
+		replacement = replacement.replaceAll("([^ ])/", "$1 /");
+		replacement = replacement.replaceAll("/([^ ])", "/ $1");
+
+		return replacement;
+	}
+
+	private String _surroundMultiplicationOperatorsWithSpaces(
+		String replacement) {
+
+		replacement = replacement.replaceAll("([^ ])\\*", "$1 *");
+		replacement = replacement.replaceAll("\\*([^ ])", "* $1");
+
+		return replacement;
+	}
+
+	private String _surroundSubstractionOperatorsWithSpaces(
+		String replacement) {
+
+		replacement = replacement.replaceAll("([^ ])-", "$1 -");
+		replacement = replacement.replaceAll("-([^ ])", "- $1");
+
+		return replacement;
+	}
+
+	private String _surroundSumOperatorsWithSpaces(String replacement) {
+		replacement = replacement.replaceAll("([^ ])\\+", "$1 +");
+		replacement = replacement.replaceAll("\\+([^ ])", "+ $1");
+
+		return replacement;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(MinifierUtil.class);
 
 	private static final MinifierUtil _instance = new MinifierUtil();
 
-	private final JavaScriptMinifier _javaScriptMinifierInstance;
+	private final ServiceTracker<JavaScriptMinifier, JavaScriptMinifier>
+		_javaScriptMinifierServiceTracker;
 
 }

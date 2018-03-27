@@ -14,9 +14,9 @@
 
 package com.liferay.portal.upgrade.test;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,8 +75,8 @@ public class WabBuildAutoUpgradeTest extends BaseBuildAutoUpgradeTestCase {
 			sb.append(url.getPath());
 			sb.append("?");
 			sb.append(Constants.BUNDLE_SYMBOLICNAME);
-			sb.append("=BuildAutoUpgradeTest&Web-ContextPath=/");
-			sb.append("BuildAutoUpgradeTest&protocol=file");
+			sb.append("=BuildAutoUpgradeTest&Web-ContextPath=");
+			sb.append("/BuildAutoUpgradeTest&protocol=file");
 
 			_warURLs[i] = new URL("webbundle", null, sb.toString());
 		}

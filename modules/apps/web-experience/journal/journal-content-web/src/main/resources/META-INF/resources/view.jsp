@@ -25,6 +25,10 @@ JournalArticleDisplay articleDisplay = journalContentDisplayContext.getArticleDi
 journalContentDisplayContext.incrementViewCounter();
 
 AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClass(JournalArticle.class);
+
+if (journalContentDisplayContext.isShowArticle()) {
+	renderResponse.setTitle(articleDisplay.getTitle());
+}
 %>
 
 <c:choose>
@@ -60,19 +64,28 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 					</c:choose>
 
 					<c:if test="<%= journalContentDisplayContext.isShowSelectArticleLink() %>">
-						<liferay-util:buffer var="selectJournalArticleLink">
+						<liferay-util:buffer
+							var="selectJournalArticleLink"
+						>
 							<aui:a href="javascript:;" label="select-another" onClick="<%= portletDisplay.getURLConfigurationJS() %>" />
 						</liferay-util:buffer>
 
 						<div>
 							<c:choose>
 								<c:when test="<%= journalContentDisplayContext.hasRestorePermission() %>">
+
+									<%
+									AssetRenderer<JournalArticle> assetRenderer = assetRendererFactory.getAssetRenderer(selectedArticle, 0);
+									%>
+
 									<portlet:actionURL name="restoreJournalArticle" var="restoreJournalArticleURL">
-										<portlet:param name="classPK" value="<%= String.valueOf(JournalArticleAssetRenderer.getClassPK(selectedArticle)) %>" />
+										<portlet:param name="classPK" value="<%= String.valueOf(assetRenderer.getClassPK()) %>" />
 										<portlet:param name="redirect" value="<%= currentURL %>" />
 									</portlet:actionURL>
 
-									<liferay-util:buffer var="restoreJournalArticleLink">
+									<liferay-util:buffer
+										var="restoreJournalArticleLink"
+									>
 										<aui:a href="<%= restoreJournalArticleURL %>" label="undo" />
 									</liferay-util:buffer>
 
@@ -130,70 +143,9 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 					</c:when>
 					<c:when test="<%= articleDisplay != null %>">
 						<div class="text-right user-tool-asset-addon-entries">
-							<liferay-asset:asset-addon-entry-display assetAddonEntries="<%= journalContentDisplayContext.getSelectedUserToolAssetAddonEntries() %>" />
-						</div>
-
-						<div class="pull-right visible-interaction">
-							<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
-								<c:if test="<%= journalContentDisplayContext.isShowEditArticleIcon() %>">
-
-									<%
-									JournalArticle latestArticle = journalContentDisplayContext.getLatestArticle();
-
-									Map<String, Object> data = new HashMap<String, Object>();
-
-									data.put("destroyOnHide", true);
-									data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
-									data.put("title", HtmlUtil.escape(latestArticle.getTitle(locale)));
-									%>
-
-									<liferay-ui:icon
-										data="<%= data %>"
-										id="editWebContentIcon"
-										message="edit-web-content"
-										url="<%= journalContentDisplayContext.getURLEdit() %>"
-										useDialog="<%= true %>"
-									/>
-								</c:if>
-
-								<c:if test="<%= journalContentDisplayContext.isShowEditTemplateIcon() %>">
-
-									<%
-									DDMTemplate ddmTemplate = journalContentDisplayContext.getDDMTemplate();
-
-									Map<String, Object> data = new HashMap<String, Object>();
-
-									data.put("destroyOnHide", true);
-									data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
-									data.put("title", HtmlUtil.escape(ddmTemplate.getName(locale)));
-									%>
-
-									<liferay-ui:icon
-										data="<%= data %>"
-										id="editTemplateIcon"
-										message="edit-template"
-										url="<%= journalContentDisplayContext.getURLEditTemplate() %>"
-										useDialog="<%= true %>"
-									/>
-								</c:if>
-
-								<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.PERMISSIONS) %>">
-									<liferay-security:permissionsURL
-										modelResource="<%= JournalArticle.class.getName() %>"
-										modelResourceDescription="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
-										resourcePrimKey="<%= String.valueOf(article.getResourcePrimKey()) %>"
-										var="permissionsURL"
-										windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-									/>
-
-									<liferay-ui:icon
-										message="permissions"
-										method="get"
-										url="<%= permissionsURL %>"
-										useDialog="<%= true %>"
-									/>
-								</c:if>
-							</liferay-ui:icon-menu>
+							<liferay-asset:asset-addon-entry-display
+								assetAddonEntries="<%= journalContentDisplayContext.getSelectedUserToolAssetAddonEntries() %>"
+							/>
 						</div>
 
 						<div class="journal-content-article">
@@ -228,7 +180,9 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 
 <c:if test="<%= (articleDisplay != null) && journalContentDisplayContext.hasViewPermission() %>">
 	<div class="content-metadata-asset-addon-entries">
-		<liferay-asset:asset-addon-entry-display assetAddonEntries="<%= journalContentDisplayContext.getSelectedContentMetadataAssetAddonEntries() %>" />
+		<liferay-asset:asset-addon-entry-display
+			assetAddonEntries="<%= journalContentDisplayContext.getSelectedContentMetadataAssetAddonEntries() %>"
+		/>
 	</div>
 </c:if>
 

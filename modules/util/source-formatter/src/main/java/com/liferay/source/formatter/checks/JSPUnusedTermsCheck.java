@@ -15,10 +15,10 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.checks.util.JSPSourceUtil;
@@ -201,14 +201,12 @@ public class JSPUnusedTermsCheck extends BaseFileCheck {
 		String fileName, String portletDefineObjectProperty,
 		Set<String> checkedFileNames, Set<String> includeFileNames) {
 
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(4);
 
 		sb.append("((/)|(\\*)|(\\+(\\+)?)|(-(-)?)|\\(|=)?( )?");
 		sb.append(portletDefineObjectProperty);
-		sb.append("( )?(\\.");
-		sb.append("|(((\\+)|(-)|(\\*)|(/)|(%)|(\\|)|(&)|(\\^))?(=))");
-		sb.append("|(\\+(\\+)?)|(-(-)?)");
-		sb.append("|(\\)))?");
+		sb.append("( )?(\\.|(((\\+)|(-)|(\\*)|(/)|(%)|(\\|)|(&)|(\\^))?(=))");
+		sb.append("|(\\+(\\+)?)|(-(-)?)|(\\)))?");
 
 		return _hasUnusedJSPTerm(
 			fileName, sb.toString(), "portletDefineObjectProperty",
@@ -231,14 +229,12 @@ public class JSPUnusedTermsCheck extends BaseFileCheck {
 			return false;
 		}
 
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(4);
 
 		sb.append("((/)|(\\*)|(\\+(\\+)?)|(-(-)?)|\\(|=)?( )?");
 		sb.append(variableName);
-		sb.append("( )?(\\.");
-		sb.append("|(((\\+)|(-)|(\\*)|(/)|(%)|(\\|)|(&)|(\\^))?(=))");
-		sb.append("|(\\+(\\+)?)|(-(-)?)");
-		sb.append("|(\\)))?");
+		sb.append("( )?(\\.|(((\\+)|(-)|(\\*)|(/)|(%)|(\\|)|(&)|(\\^))?(=))");
+		sb.append("|(\\+(\\+)?)|(-(-)?)|(\\)))?");
 
 		return _hasUnusedJSPTerm(
 			fileName, sb.toString(), "variable", checkedFileNames,
@@ -435,8 +431,9 @@ public class JSPUnusedTermsCheck extends BaseFileCheck {
 		Matcher matcher = _taglibURIPattern.matcher(content);
 
 		while (matcher.find()) {
-			String regex =
-				StringPool.LESS_THAN + matcher.group(1) + StringPool.COLON;
+			String regex = StringBundler.concat(
+				StringPool.LESS_THAN, matcher.group(1), StringPool.COLON,
+				StringPool.PIPE, "\\$\\{" + matcher.group(1), StringPool.COLON);
 
 			if (_hasUnusedJSPTerm(
 					fileName, regex, "taglib", checkedFileNames,

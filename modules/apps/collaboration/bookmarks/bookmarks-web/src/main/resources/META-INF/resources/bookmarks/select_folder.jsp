@@ -34,7 +34,12 @@ if (folder != null) {
 
 <div class="container-fluid-1280">
 	<aui:form method="post" name="selectFolderFm">
-		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
+		<liferay-ui:breadcrumb
+			showCurrentGroup="<%= false %>"
+			showGuestGroup="<%= false %>"
+			showLayout="<%= false %>"
+			showParentGroups="<%= false %>"
+		/>
 
 		<%
 		PortletURL portletURL = renderResponse.createRenderURL();
@@ -109,7 +114,7 @@ if (folder != null) {
 			</liferay-ui:search-container-row>
 
 			<aui:button-row>
-				<c:if test="<%= BookmarksFolderPermissionChecker.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_FOLDER) %>">
+				<c:if test="<%= BookmarksFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_FOLDER) %>">
 					<portlet:renderURL var="editFolderURL">
 						<portlet:param name="mvcRenderCommandName" value="/bookmarks/edit_folder" />
 						<portlet:param name="redirect" value="<%= currentURL %>" />

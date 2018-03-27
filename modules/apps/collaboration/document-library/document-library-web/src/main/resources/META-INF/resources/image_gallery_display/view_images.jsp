@@ -69,9 +69,8 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 						playerHeight = 43;
 					}
 					else if (hasImages) {
+						imagePreviewURL = DLUtil.getThumbnailSrc(fileEntry, fileVersion, themeDisplay);
 						imageURL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imagePreview=1");
-
-						imagePreviewURL = imageURL;
 					}
 					else if (hasPDFImages) {
 						imagePreviewURL = DLUtil.getImagePreviewURL(fileEntry, fileVersion, themeDisplay);
@@ -153,7 +152,12 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 		</c:choose>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator displayStyle="icon" markupView="lexicon" resultRowSplitter="<%= new IGResultRowSplitter() %>" searchContainer="<%= igSearchContainer %>" />
+	<liferay-ui:search-iterator
+		displayStyle="icon"
+		markupView="lexicon"
+		resultRowSplitter="<%= new IGResultRowSplitter() %>"
+		searchContainer="<%= igSearchContainer %>"
+	/>
 </liferay-ui:search-container>
 
 <%

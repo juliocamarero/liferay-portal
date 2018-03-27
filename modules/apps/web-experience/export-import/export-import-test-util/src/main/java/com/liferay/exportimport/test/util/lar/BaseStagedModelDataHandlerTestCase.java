@@ -33,8 +33,8 @@ import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.UserIdStrategy;
-import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
+import com.liferay.message.boards.model.MBMessage;
+import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -159,12 +159,13 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		List<AssetTag> assetTags = importedAssetEntry.getTags();
 
-		Assert.assertFalse(assetTags.isEmpty());
+		Assert.assertFalse(assetTags.toString(), assetTags.isEmpty());
 
 		List<AssetCategory> assetCategories =
 			importedAssetEntry.getCategories();
 
-		Assert.assertFalse(assetCategories.isEmpty());
+		Assert.assertFalse(
+			assetCategories.toString(), assetCategories.isEmpty());
 
 		assetEntry = fetchAssetEntry(stagedModel, stagingGroup);
 
@@ -194,11 +195,12 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		assetTags = importedAssetEntry.getTags();
 
-		Assert.assertFalse(assetTags.isEmpty());
+		Assert.assertFalse(assetTags.toString(), assetTags.isEmpty());
 
 		assetCategories = importedAssetEntry.getCategories();
 
-		Assert.assertFalse(assetCategories.isEmpty());
+		Assert.assertFalse(
+			assetCategories.toString(), assetCategories.isEmpty());
 	}
 
 	@Test
@@ -619,6 +621,25 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 			portletDataContext, exportedStagedModel);
 	}
 
+	protected void exportImportStagedModelFromLiveToStaging(
+			StagedModel stagedModel)
+		throws Exception {
+
+		initExport(liveGroup);
+
+		StagedModelDataHandlerUtil.exportStagedModel(
+			portletDataContext, stagedModel);
+
+		initImport(liveGroup, stagingGroup);
+
+		StagedModel exportedStagedModel = readExportedStagedModel(stagedModel);
+
+		Assert.assertNotNull(exportedStagedModel);
+
+		StagedModelDataHandlerUtil.importStagedModel(
+			portletDataContext, exportedStagedModel);
+	}
+
 	protected AssetEntry fetchAssetEntry(StagedModel stagedModel, Group group)
 		throws Exception {
 
@@ -669,11 +690,15 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 	}
 
 	protected void initExport() throws Exception {
+		initExport(stagingGroup);
+	}
+
+	protected void initExport(Group exportGroup) throws Exception {
 		zipWriter = ZipWriterFactoryUtil.getZipWriter();
 
 		portletDataContext =
 			PortletDataContextFactoryUtil.createExportPortletDataContext(
-				stagingGroup.getCompanyId(), stagingGroup.getGroupId(),
+				exportGroup.getCompanyId(), exportGroup.getGroupId(),
 				getParameterMap(), getStartDate(), getEndDate(), zipWriter);
 
 		portletDataContext.setExportImportProcessId(
@@ -690,6 +715,12 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 	}
 
 	protected void initImport() throws Exception {
+		initImport(stagingGroup, liveGroup);
+	}
+
+	protected void initImport(Group exportGroup, Group importGroup)
+		throws Exception {
+
 		userIdStrategy = new TestUserIdStrategy();
 
 		zipReader = ZipReaderFactoryUtil.getZipReader(zipWriter.getFile());
@@ -710,7 +741,7 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		portletDataContext =
 			PortletDataContextFactoryUtil.createImportPortletDataContext(
-				liveGroup.getCompanyId(), liveGroup.getGroupId(),
+				importGroup.getCompanyId(), importGroup.getGroupId(),
 				getParameterMap(), userIdStrategy, zipReader);
 
 		portletDataContext.setExportImportProcessId(
@@ -729,13 +760,13 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 			missingReferencesElement);
 
 		Group sourceCompanyGroup = GroupLocalServiceUtil.getCompanyGroup(
-			stagingGroup.getCompanyId());
+			exportGroup.getCompanyId());
 
 		portletDataContext.setSourceCompanyGroupId(
 			sourceCompanyGroup.getGroupId());
 
-		portletDataContext.setSourceCompanyId(stagingGroup.getCompanyId());
-		portletDataContext.setSourceGroupId(stagingGroup.getGroupId());
+		portletDataContext.setSourceCompanyId(exportGroup.getCompanyId());
+		portletDataContext.setSourceGroupId(exportGroup.getGroupId());
 	}
 
 	protected boolean isAssetPrioritySupported() {
@@ -1091,7 +1122,9 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 			}
 		}
 
-		Assert.assertTrue(importedRatingsEntries.isEmpty());
+		Assert.assertTrue(
+			importedRatingsEntries.toString(),
+			importedRatingsEntries.isEmpty());
 	}
 
 	@DeleteAfterTestRun

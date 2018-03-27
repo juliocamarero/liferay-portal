@@ -17,6 +17,7 @@ package com.liferay.asset.taglib.servlet.taglib;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletProvider;
@@ -25,7 +26,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.util.IncludeTag;
@@ -95,6 +95,8 @@ public class AssetTagsSelectorTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
+		super.cleanUp();
+
 		_addCallback = null;
 		_allowAddEntry = true;
 		_autoFocus = false;
@@ -169,7 +171,7 @@ public class AssetTagsSelectorTag extends IncludeTag {
 			}
 
 			portletURL.setParameter("eventName", getEventName());
-			portletURL.setParameter("selectedTags", "{selectedTags}");
+			portletURL.setParameter("selectedTagNames", "{selectedTagNames}");
 
 			portletURL.setWindowState(LiferayWindowState.POP_UP);
 

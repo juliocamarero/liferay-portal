@@ -20,6 +20,7 @@ import com.liferay.petra.concurrent.ConcurrentReferenceValueHashMap;
 import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.petra.memory.EqualityWeakReference;
 import com.liferay.petra.memory.FinalizeManager;
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.bean.BeanLocatorImpl;
 import com.liferay.portal.dao.jdbc.DataSourceFactoryImpl;
 import com.liferay.portal.dao.orm.hibernate.DynamicQueryFactoryImpl;
@@ -48,10 +49,10 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.ReferenceEntry;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WeakValueConcurrentHashMap;
 import com.liferay.portal.security.lang.DoPrivilegedBean;
 import com.liferay.portal.security.lang.DoPrivilegedFactory;
 import com.liferay.portal.security.lang.DoPrivilegedHandler;
@@ -459,8 +460,7 @@ public class PortalSecurityManagerImpl
 		initClass(SchemeAwareContextWrapper.class);
 		initClass(TemplateContextHelper.class);
 		initClass(URLWrapper.class);
-		initClass(
-			com.liferay.portal.kernel.util.WeakValueConcurrentHashMap.class);
+		initClass(WeakValueConcurrentHashMap.class);
 	}
 
 	protected void initInitialContextFactoryBuilder() throws Exception {

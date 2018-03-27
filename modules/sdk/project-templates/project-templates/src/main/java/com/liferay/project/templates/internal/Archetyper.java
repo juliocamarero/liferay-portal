@@ -14,12 +14,13 @@
 
 package com.liferay.project.templates.internal;
 
+import com.liferay.project.templates.ProjectTemplateCustomizer;
 import com.liferay.project.templates.ProjectTemplates;
 import com.liferay.project.templates.ProjectTemplatesArgs;
+import com.liferay.project.templates.WorkspaceUtil;
 import com.liferay.project.templates.internal.util.FileUtil;
 import com.liferay.project.templates.internal.util.ReflectionUtil;
 import com.liferay.project.templates.internal.util.Validator;
-import com.liferay.project.templates.internal.util.WorkspaceUtil;
 
 import java.io.File;
 
@@ -35,8 +36,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -72,15 +76,17 @@ public class Archetyper {
 			ProjectTemplatesArgs projectTemplatesArgs, File destinationDir)
 		throws Exception {
 
-		File archetypesDir = projectTemplatesArgs.getArchetypesDir();
+		List<File> archetypesDirs = projectTemplatesArgs.getArchetypesDirs();
 		String artifactId = projectTemplatesArgs.getName();
 		String author = projectTemplatesArgs.getAuthor();
 		String className = projectTemplatesArgs.getClassName();
-		String contributorType = projectTemplatesArgs.getContributorType();
-		String hostBundleSymbolicName =
-			projectTemplatesArgs.getHostBundleSymbolicName();
-		String hostBundleVersion = projectTemplatesArgs.getHostBundleVersion();
+		String groupId = projectTemplatesArgs.getGroupId();
+		String liferayVersion = projectTemplatesArgs.getLiferayVersion();
 		String packageName = projectTemplatesArgs.getPackageName();
+
+		if (Objects.isNull(groupId)) {
+			groupId = packageName;
+		}
 
 		File workspaceDir = WorkspaceUtil.getWorkspaceDir(destinationDir);
 
@@ -90,7 +96,6 @@ public class Archetyper {
 			projectType = WorkspaceUtil.WORKSPACE;
 		}
 
-		String service = projectTemplatesArgs.getService();
 		String template = projectTemplatesArgs.getTemplate();
 
 		ArchetypeGenerationRequest archetypeGenerationRequest =
@@ -106,66 +111,68 @@ public class Archetyper {
 		archetypeGenerationRequest.setArchetypeVersion("0");
 
 		archetypeGenerationRequest.setArtifactId(artifactId);
-		archetypeGenerationRequest.setGroupId(packageName);
+		archetypeGenerationRequest.setGroupId(groupId);
 		archetypeGenerationRequest.setInteractiveMode(false);
 		archetypeGenerationRequest.setOutputDirectory(destinationDir.getPath());
 		archetypeGenerationRequest.setPackage(packageName);
 
 		Properties properties = new Properties();
 
-		if (template.equals("service-builder")) {
-			String apiPath = ":" + artifactId + "-api";
+		String buildType = "gradle";
 
-			if (workspaceDir != null) {
-				Path destinationDirPath = destinationDir.toPath();
-				Path workspaceDirPath = workspaceDir.toPath();
-
-				destinationDirPath = destinationDirPath.toAbsolutePath();
-				workspaceDirPath = workspaceDirPath.toAbsolutePath();
-
-				Path relativePath = workspaceDirPath.relativize(
-					destinationDirPath);
-
-				String path = relativePath.toString();
-
-				path = path.replace(File.separatorChar, ':');
-
-				apiPath = ":" + path + ":" + artifactId + apiPath;
-			}
-
-			_setProperty(properties, "apiPath", apiPath);
+		if (projectTemplatesArgs.isMaven()) {
+			buildType = "maven";
 		}
 
 		_setProperty(properties, "author", author);
-		_setProperty(properties, "buildType", "gradle");
+		_setProperty(properties, "buildType", buildType);
 		_setProperty(properties, "className", className);
-		_setProperty(properties, "contributorType", contributorType);
-		_setProperty(
-			properties, "hostBundleSymbolicName", hostBundleSymbolicName);
-		_setProperty(properties, "hostBundleVersion", hostBundleVersion);
+		_setProperty(properties, "liferayVersion", liferayVersion);
 		_setProperty(properties, "package", packageName);
-		_setProperty(properties, "packageJsonVersion", "1.0.0");
 		_setProperty(properties, "projectType", projectType);
-		_setProperty(properties, "serviceClass", service);
-		_setProperty(properties, "serviceWrapperClass", service);
 
 		archetypeGenerationRequest.setProperties(properties);
 
 		archetypeGenerationRequest.setVersion("1.0.0");
 
-		ArchetypeManager archetypeManager = _createArchetypeManager(
-			archetypesDir);
+		ArchetypeArtifactManager archetypeArtifactManager =
+			_createArchetypeArtifactManager(archetypesDirs);
 
-		return archetypeManager.generateProjectFromArchetype(
-			archetypeGenerationRequest);
+		ProjectTemplateCustomizer projectTemplateCustomizer =
+			_getProjectTemplateCustomizer(
+				archetypeArtifactManager.getArchetypeFile(
+					archetypeGenerationRequest.getArchetypeGroupId(),
+					archetypeGenerationRequest.getArchetypeArtifactId(),
+					archetypeGenerationRequest.getArchetypeVersion(), null,
+					null, null));
+
+		if (projectTemplateCustomizer != null) {
+			projectTemplateCustomizer.onBeforeGenerateProject(
+				projectTemplatesArgs, archetypeGenerationRequest);
+		}
+
+		ArchetypeManager archetypeManager = _createArchetypeManager(
+			archetypesDirs);
+
+		ArchetypeGenerationResult archetypeGenerationResult =
+			archetypeManager.generateProjectFromArchetype(
+				archetypeGenerationRequest);
+
+		if (projectTemplateCustomizer != null) {
+			projectTemplateCustomizer.onAfterGenerateProject(
+				projectTemplatesArgs, destinationDir,
+				archetypeGenerationResult);
+		}
+
+		return archetypeGenerationResult;
 	}
 
 	private ArchetypeArtifactManager _createArchetypeArtifactManager(
-			File archetypesDir)
+			List<File> archetypesDirs)
 		throws Exception {
 
 		ArchetypeArtifactManager archetypeArtifactManager =
-			new ArchetyperArchetypeArtifactManager(archetypesDir);
+			new ArchetyperArchetypeArtifactManager(archetypesDirs);
 
 		ReflectionUtil.setFieldValue(
 			_loggerField, archetypeArtifactManager, _logger);
@@ -173,13 +180,14 @@ public class Archetyper {
 		return archetypeArtifactManager;
 	}
 
-	private ArchetypeGenerator _createArchetypeGenerator(File archetypesDir)
+	private ArchetypeGenerator _createArchetypeGenerator(
+			List<File> archetypesDirs)
 		throws Exception {
 
 		ArchetypeGenerator archetypeGenerator = new DefaultArchetypeGenerator();
 
 		ArchetypeArtifactManager archetypeArtifactManager =
-			_createArchetypeArtifactManager(archetypesDir);
+			_createArchetypeArtifactManager(archetypesDirs);
 
 		ReflectionUtil.setFieldValue(
 			DefaultArchetypeGenerator.class, "archetypeArtifactManager",
@@ -192,7 +200,7 @@ public class Archetyper {
 		return archetypeGenerator;
 	}
 
-	private ArchetypeManager _createArchetypeManager(File archetypesDir)
+	private ArchetypeManager _createArchetypeManager(List<File> archetypesDirs)
 		throws Exception {
 
 		DefaultArchetypeManager archetypeManager =
@@ -201,7 +209,7 @@ public class Archetyper {
 		ReflectionUtil.setFieldValue(_loggerField, archetypeManager, _logger);
 		ReflectionUtil.setFieldValue(
 			DefaultArchetypeManager.class, "generator", archetypeManager,
-			_createArchetypeGenerator(archetypesDir));
+			_createArchetypeGenerator(archetypesDirs));
 
 		return archetypeManager;
 	}
@@ -254,6 +262,27 @@ public class Archetyper {
 		return defaultVelocityComponent;
 	}
 
+	private ProjectTemplateCustomizer _getProjectTemplateCustomizer(
+			File archetypeFile)
+		throws MalformedURLException {
+
+		URI uri = archetypeFile.toURI();
+
+		URLClassLoader urlClassLoader = new URLClassLoader(
+			new URL[] {uri.toURL()});
+
+		ServiceLoader<ProjectTemplateCustomizer> serviceLoader =
+			ServiceLoader.load(ProjectTemplateCustomizer.class, urlClassLoader);
+
+		Iterator<ProjectTemplateCustomizer> iterator = serviceLoader.iterator();
+
+		if (iterator.hasNext()) {
+			return iterator.next();
+		}
+
+		return null;
+	}
+
 	private void _setProperty(
 		Properties properties, String name, String value) {
 
@@ -279,8 +308,16 @@ public class Archetyper {
 	private static class ArchetyperArchetypeArtifactManager
 		extends DefaultArchetypeArtifactManager {
 
-		public ArchetyperArchetypeArtifactManager(File archetypesDir) {
-			_archetypesDir = archetypesDir;
+		public ArchetyperArchetypeArtifactManager(List<File> archetypesDirs) {
+			_archetypesDirs = archetypesDirs;
+
+			if (_archetypesDirs.isEmpty()) {
+				try {
+					_archetypesDirs.add(FileUtil.getJarFile(Archetyper.class));
+				}
+				catch (Exception e) {
+				}
+			}
 		}
 
 		@Override
@@ -303,56 +340,54 @@ public class Archetyper {
 
 			File archetypeFile = null;
 
-			try {
-				File file = _archetypesDir;
+			for (File archetypesFile : _archetypesDirs) {
+				try {
+					if (archetypesFile.isDirectory()) {
+						Path archetypePath = FileUtil.getFile(
+							archetypesFile.toPath(), artifactId + "-*.jar");
 
-				if (file == null) {
-					file = FileUtil.getJarFile(Archetyper.class);
-				}
-
-				if (file.isDirectory()) {
-					Path archetypePath = FileUtil.getFile(
-						file.toPath(), artifactId + "-*.jar");
-
-					if (archetypePath != null) {
-						archetypeFile = archetypePath.toFile();
-					}
-				}
-				else {
-					try (JarFile jarFile = new JarFile(file)) {
-						Enumeration<JarEntry> enumeration = jarFile.entries();
-
-						while (enumeration.hasMoreElements()) {
-							JarEntry jarEntry = enumeration.nextElement();
-
-							if (jarEntry.isDirectory()) {
-								continue;
-							}
-
-							String name = jarEntry.getName();
-
-							if (!name.startsWith(artifactId + "-")) {
-								continue;
-							}
-
-							Path archetypePath = Files.createTempFile(
-								"temp-archetype", null);
-
-							Files.copy(
-								jarFile.getInputStream(jarEntry), archetypePath,
-								StandardCopyOption.REPLACE_EXISTING);
-
+						if (archetypePath != null) {
 							archetypeFile = archetypePath.toFile();
+						}
+					}
+					else {
+						try (JarFile jarFile = new JarFile(archetypesFile)) {
+							Enumeration<JarEntry> enumeration =
+								jarFile.entries();
 
-							archetypeFile.deleteOnExit();
+							while (enumeration.hasMoreElements()) {
+								JarEntry jarEntry = enumeration.nextElement();
 
-							break;
+								if (jarEntry.isDirectory()) {
+									continue;
+								}
+
+								String name = jarEntry.getName();
+
+								if (!name.startsWith(artifactId + "-")) {
+									continue;
+								}
+
+								Path archetypePath = Files.createTempFile(
+									"temp-archetype", null);
+
+								Files.copy(
+									jarFile.getInputStream(jarEntry),
+									archetypePath,
+									StandardCopyOption.REPLACE_EXISTING);
+
+								archetypeFile = archetypePath.toFile();
+
+								archetypeFile.deleteOnExit();
+
+								break;
+							}
 						}
 					}
 				}
-			}
-			catch (Exception e) {
-				throw new UnknownArchetype(e);
+				catch (Exception e) {
+					continue;
+				}
 			}
 
 			if (archetypeFile == null) {
@@ -376,7 +411,7 @@ public class Archetyper {
 			}
 		}
 
-		private final File _archetypesDir;
+		private final List<File> _archetypesDirs;
 
 	}
 

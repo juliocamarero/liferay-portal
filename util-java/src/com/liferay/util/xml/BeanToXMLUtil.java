@@ -15,9 +15,10 @@
 package com.liferay.util.xml;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.xml.Element;
@@ -47,14 +48,14 @@ public class BeanToXMLUtil {
 
 		Method[] methods = clazz.getMethods();
 
-		for (int i = 0; i < methods.length; i++) {
-			Method method = methods[i];
+		for (Method method : methods) {
+			String methodName = method.getName();
 
-			if (method.getName().startsWith("get") &&
-				!method.getName().equals("getClass")) {
+			if (methodName.startsWith("get") &&
+				!methodName.equals("getClass")) {
 
 				String memberName = StringUtil.replace(
-					method.getName(), "get", StringPool.BLANK);
+					methodName, "get", StringPool.BLANK);
 
 				memberName = TextFormatter.format(memberName, TextFormatter.I);
 				memberName = TextFormatter.format(memberName, TextFormatter.K);
@@ -72,8 +73,7 @@ public class BeanToXMLUtil {
 						}
 					}
 					else {
-						DocUtil.add(
-							parentEl, memberName, returnValue.toString());
+						_add(parentEl, memberName, returnValue.toString());
 					}
 				}
 				catch (Exception e) {
@@ -97,6 +97,14 @@ public class BeanToXMLUtil {
 			classNameWithoutPackage, TextFormatter.K);
 
 		return classNameWithoutPackage;
+	}
+
+	private static Element _add(Element element, String name, String text) {
+		Element childElement = element.addElement(name);
+
+		childElement.addText(GetterUtil.getString(text));
+
+		return childElement;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(BeanToXMLUtil.class);

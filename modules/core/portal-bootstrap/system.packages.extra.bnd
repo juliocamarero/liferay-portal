@@ -29,7 +29,6 @@ Export-Package:\
 	!com.liferay.portal.license.*,\
 	!com.liferay.portal.messaging,\
 	!com.liferay.portal.microsofttranslator,\
-	!com.liferay.portal.minifier,\
 	!com.liferay.portal.monitoring.statistics,\
 	!com.liferay.portal.nio.intraband.proxy,\
 	!com.liferay.portal.scripting.beanshell,\
@@ -274,6 +273,7 @@ Export-Package:\
 	\
 	*
 Import-Package: !*
+Liferay-Service: true
 -includeresource:\
 	-@lib/com.liferay.portal.app.license.api.jar,\
 	@../../../lib/development/jms.jar,\
@@ -361,6 +361,7 @@ Import-Package: !*
 	@lib/com.liferay.petra.process.jar,\
 	@lib/com.liferay.petra.reflect.jar,\
 	@lib/com.liferay.petra.string.jar,\
+	@lib/com.liferay.petra.xml.jar,\
 	@lib/com.liferay.registry.api.jar
 -removeheaders:\
 	Private-Package,\

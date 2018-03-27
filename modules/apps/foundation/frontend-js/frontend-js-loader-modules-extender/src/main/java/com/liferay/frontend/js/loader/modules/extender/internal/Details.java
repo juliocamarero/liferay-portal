@@ -21,7 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Raymond Augé
  */
-@ExtendedObjectClassDefinition(category = "foundation")
+@ExtendedObjectClassDefinition(category = "frontend-infrastructure")
 @Meta.OCD(
 	id = "com.liferay.frontend.js.loader.modules.extender.internal.Details",
 	localization = "content/Language", name = "details-configuration-name"
@@ -38,6 +38,9 @@ public @interface Details {
 
 	@Meta.AD(deflt = "true", name = "apply-versioning", required = false)
 	public boolean applyVersioning();
+
+	@Meta.AD(deflt = "false", name = "explain-resolutions", required = false)
+	public boolean explainResolutions();
 
 	@Meta.AD(deflt = "false", name = "expose-global", required = false)
 	public boolean exposeGlobal();

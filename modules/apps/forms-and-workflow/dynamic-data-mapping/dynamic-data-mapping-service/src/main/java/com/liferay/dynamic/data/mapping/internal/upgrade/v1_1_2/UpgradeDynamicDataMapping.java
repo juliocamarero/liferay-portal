@@ -26,6 +26,7 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormFieldValueTransformer;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesTransformer;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
@@ -35,7 +36,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.upgrade.AutoBatchPreparedStatementUtil;
 
@@ -215,8 +215,8 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 		StringBundler sb = new StringBundler(7);
 
 		sb.append("select DDMContent.contentId, DDMContent.data_, ");
-		sb.append("DDMStructure.structureId from DDLRecordVersion inner ");
-		sb.append("join DDLRecordSet on DDLRecordVersion.recordSetId = ");
+		sb.append("DDMStructure.structureId from DDLRecordVersion inner join ");
+		sb.append("DDLRecordSet on DDLRecordVersion.recordSetId = ");
 		sb.append("DDLRecordSet.recordSetId inner join DDMContent on  ");
 		sb.append("DDLRecordVersion.DDMStorageId = DDMContent.contentId ");
 		sb.append("inner join DDMStructure on DDLRecordSet.DDMStructureId = ");
@@ -286,7 +286,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 	}
 
 	protected void upgradeDLDDMContentReferences() throws Exception {
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("select DDMContent.contentId, DDMContent.data_,");
 		sb.append("DDMStructure.structureId from DLFileEntryMetadata inner ");

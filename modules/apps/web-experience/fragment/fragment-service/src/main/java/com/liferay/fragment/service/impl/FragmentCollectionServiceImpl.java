@@ -15,18 +15,20 @@
 package com.liferay.fragment.service.impl;
 
 import com.liferay.fragment.constants.FragmentActionKeys;
+import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.service.base.FragmentCollectionServiceBaseImpl;
-import com.liferay.fragment.service.permission.FragmentCollectionPermission;
-import com.liferay.fragment.service.permission.FragmentPermission;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
+import com.liferay.portal.kernel.dao.orm.WildcardMode;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermissionFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +43,7 @@ public class FragmentCollectionServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		FragmentPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId,
 			FragmentActionKeys.ADD_FRAGMENT_COLLECTION);
 
@@ -50,11 +52,26 @@ public class FragmentCollectionServiceImpl
 	}
 
 	@Override
+	public FragmentCollection addFragmentCollection(
+			long groupId, String fragmentCollectionKey, String name,
+			String description, ServiceContext serviceContext)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId,
+			FragmentActionKeys.ADD_FRAGMENT_COLLECTION);
+
+		return fragmentCollectionLocalService.addFragmentCollection(
+			getUserId(), groupId, fragmentCollectionKey, name, description,
+			serviceContext);
+	}
+
+	@Override
 	public FragmentCollection deleteFragmentCollection(
 			long fragmentCollectionId)
 		throws PortalException {
 
-		FragmentCollectionPermission.check(
+		_fragmentCollectionModelResourcePermission.check(
 			getPermissionChecker(), fragmentCollectionId, ActionKeys.DELETE);
 
 		return fragmentCollectionLocalService.deleteFragmentCollection(
@@ -62,36 +79,17 @@ public class FragmentCollectionServiceImpl
 	}
 
 	@Override
-	public List<FragmentCollection> deleteFragmentCollections(
-			long[] fragmentCollectionIds)
+	public void deleteFragmentCollections(long[] fragmentCollectionIds)
 		throws PortalException {
 
-		List<FragmentCollection> undeletableFragmentCollections =
-			new ArrayList<>();
-
 		for (long fragmentCollectionId : fragmentCollectionIds) {
-			try {
-				FragmentCollectionPermission.check(
-					getPermissionChecker(), fragmentCollectionId,
-					ActionKeys.DELETE);
+			_fragmentCollectionModelResourcePermission.check(
+				getPermissionChecker(), fragmentCollectionId,
+				ActionKeys.DELETE);
 
-				fragmentCollectionLocalService.deleteFragmentCollection(
-					fragmentCollectionId);
-			}
-			catch (PortalException pe) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(pe, pe);
-				}
-
-				FragmentCollection fragmentCollection =
-					fragmentCollectionPersistence.fetchByPrimaryKey(
-						fragmentCollectionId);
-
-				undeletableFragmentCollections.add(fragmentCollection);
-			}
+			fragmentCollectionLocalService.deleteFragmentCollection(
+				fragmentCollectionId);
 		}
-
-		return undeletableFragmentCollections;
 	}
 
 	@Override
@@ -103,7 +101,7 @@ public class FragmentCollectionServiceImpl
 				fragmentCollectionId);
 
 		if (fragmentCollection != null) {
-			FragmentCollectionPermission.check(
+			_fragmentCollectionModelResourcePermission.check(
 				getPermissionChecker(), fragmentCollection, ActionKeys.VIEW);
 		}
 
@@ -111,16 +109,13 @@ public class FragmentCollectionServiceImpl
 	}
 
 	@Override
-	public List<FragmentCollection> getFragmentCollections(long groupId)
-		throws PortalException {
-
+	public List<FragmentCollection> getFragmentCollections(long groupId) {
 		return fragmentCollectionPersistence.filterFindByGroupId(groupId);
 	}
 
 	@Override
 	public List<FragmentCollection> getFragmentCollections(
-			long groupId, int start, int end)
-		throws PortalException {
+		long groupId, int start, int end) {
 
 		return fragmentCollectionPersistence.filterFindByGroupId(
 			groupId, start, end);
@@ -128,9 +123,8 @@ public class FragmentCollectionServiceImpl
 
 	@Override
 	public List<FragmentCollection> getFragmentCollections(
-			long groupId, int start, int end,
-			OrderByComparator<FragmentCollection> orderByComparator)
-		throws PortalException {
+		long groupId, int start, int end,
+		OrderByComparator<FragmentCollection> orderByComparator) {
 
 		return fragmentCollectionPersistence.filterFindByGroupId(
 			groupId, start, end, orderByComparator);
@@ -138,12 +132,12 @@ public class FragmentCollectionServiceImpl
 
 	@Override
 	public List<FragmentCollection> getFragmentCollections(
-			long groupId, String name, int start, int end,
-			OrderByComparator<FragmentCollection> orderByComparator)
-		throws PortalException {
+		long groupId, String name, int start, int end,
+		OrderByComparator<FragmentCollection> orderByComparator) {
 
 		return fragmentCollectionPersistence.filterFindByG_LikeN(
-			groupId, name, start, end, orderByComparator);
+			groupId, CustomSQLUtil.keywords(name, WildcardMode.SURROUND)[0],
+			start, end, orderByComparator);
 	}
 
 	@Override
@@ -154,7 +148,19 @@ public class FragmentCollectionServiceImpl
 	@Override
 	public int getFragmentCollectionsCount(long groupId, String name) {
 		return fragmentCollectionPersistence.filterCountByG_LikeN(
-			groupId, name);
+			groupId, CustomSQLUtil.keywords(name, WildcardMode.SURROUND)[0]);
+	}
+
+	@Override
+	public String[] getTempFileNames(long groupId, String folderName)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId,
+			FragmentActionKeys.ADD_FRAGMENT_COLLECTION);
+
+		return fragmentEntryLocalService.getTempFileNames(
+			getUserId(), groupId, folderName);
 	}
 
 	@Override
@@ -162,14 +168,23 @@ public class FragmentCollectionServiceImpl
 			long fragmentCollectionId, String name, String description)
 		throws PortalException {
 
-		FragmentCollectionPermission.check(
+		_fragmentCollectionModelResourcePermission.check(
 			getPermissionChecker(), fragmentCollectionId, ActionKeys.UPDATE);
 
 		return fragmentCollectionLocalService.updateFragmentCollection(
 			fragmentCollectionId, name, description);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		FragmentCollectionServiceImpl.class);
+	private static volatile ModelResourcePermission<FragmentCollection>
+		_fragmentCollectionModelResourcePermission =
+			ModelResourcePermissionFactory.getInstance(
+				FragmentCollectionServiceImpl.class,
+				"_fragmentCollectionModelResourcePermission",
+				FragmentCollection.class);
+	private static volatile PortletResourcePermission
+		_portletResourcePermission =
+			PortletResourcePermissionFactory.getInstance(
+				FragmentCollectionServiceImpl.class,
+				"_portletResourcePermission", FragmentConstants.RESOURCE_NAME);
 
 }

@@ -33,18 +33,6 @@ public class RadioTag extends BaseClayTag {
 		putValue("disabled", disabled);
 	}
 
-	public void setElementClasses(String elementClasses) {
-		putValue("elementClasses", elementClasses);
-	}
-
-	public void setHideLabel(Boolean hideLabel) {
-		putValue("hideLabel", hideLabel);
-	}
-
-	public void setId(String id) {
-		putValue("id", id);
-	}
-
 	public void setInline(Boolean inline) {
 		putValue("inline", inline);
 	}
@@ -55,6 +43,10 @@ public class RadioTag extends BaseClayTag {
 
 	public void setName(String name) {
 		putValue("name", name);
+	}
+
+	public void setShowLabel(Boolean showLabel) {
+		putValue("showLabel", showLabel);
 	}
 
 	public void setValue(String value) {

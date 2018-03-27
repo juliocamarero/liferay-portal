@@ -108,10 +108,10 @@ fi
 #
 
 SUBREPO_SEARCH_PARAMETERS=(
-	"7.0.x:../..:modules/apps"
-	"7.0.x-private:../../../liferay-portal-ee:modules/private/apps"
-	"master-private:../../../liferay-portal-ee:modules/private/apps"
-	"master:../..:modules/apps"
+	"7.0.x:../..:modules"
+	"7.0.x-private:../../../liferay-portal-ee:modules/private"
+	"master-private:../../../liferay-portal-ee:modules/private"
+	"master:../..:modules"
 )
 
 for SUBREPO_SEARCH_PARAMETER in "${SUBREPO_SEARCH_PARAMETERS[@]}"
@@ -213,6 +213,9 @@ do
 
 		let BRANCH_COUNTER++
 
+		continue
+	elif [[ "${SUBREPO_COMMIT}" == "0000000000000000000000000000000000000000" ]]
+	then
 		continue
 	fi
 

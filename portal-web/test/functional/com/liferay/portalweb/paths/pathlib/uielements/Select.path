@@ -29,18 +29,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>BLOGS_RATING</td>
+	<td>//select[contains(@id,'blogs')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>BULLET_STYLE</td>
 	<td>//div[label[contains(.,'Bullet Style')]]/select</td>
-	<td></td>
-</tr>
-<tr>
-	<td>CONTENT_ALL_CONTENT</td>
-	<td>//option[contains(@id,'allContent')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>CONTENT_CHOOSE_CONTENT</td>
-	<td>//option[contains(@id,'chooseContent')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -206,6 +201,11 @@
 <tr>
 	<td>SCOPE</td>
 	<td>//div[label[contains(.,'Scope')]]/select | //div/select[@title='Scope']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SCOPE_CONFIGURATION</td>
+	<td>//div[label[contains(.,'Scope')]]/select</td>
 	<td></td>
 </tr>
 <tr>

@@ -322,6 +322,10 @@ public class AssetLinkLocalServiceUtil {
 				   .getDirectLinks(entryId, typeId, excludeInvisibleLinks);
 	}
 
+	/**
+	* @deprecated As of 7.0.0, with no direct replacement
+	*/
+	@Deprecated
 	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery getExportActionbleDynamicQuery(
 		com.liferay.exportimport.kernel.lar.PortletDataContext portletDataContext) {
 		return getService().getExportActionbleDynamicQuery(portletDataContext);
@@ -344,6 +348,12 @@ public class AssetLinkLocalServiceUtil {
 		return getService().getLinks(entryId);
 	}
 
+	public static java.util.List<com.liferay.asset.kernel.model.AssetLink> getLinks(
+		long groupId, java.util.Date startDate, java.util.Date endDate,
+		int start, int end) {
+		return getService().getLinks(groupId, startDate, endDate, start, end);
+	}
+
 	/**
 	* Returns all the asset links of the given link type whose first or second
 	* entry ID is the given entry ID.
@@ -360,6 +370,18 @@ public class AssetLinkLocalServiceUtil {
 	public static java.util.List<com.liferay.asset.kernel.model.AssetLink> getLinks(
 		long entryId, int typeId) {
 		return getService().getLinks(entryId, typeId);
+	}
+
+	/**
+	* Returns all the asset links of an AssetEntry.
+	*
+	* @param classNameId AssetEntry's classNameId
+	* @param classPK AssetEntry's classPK
+	* @return the asset links of the given entry params
+	*/
+	public static java.util.List<com.liferay.asset.kernel.model.AssetLink> getLinks(
+		long classNameId, long classPK) {
+		return getService().getLinks(classNameId, classPK);
 	}
 
 	/**

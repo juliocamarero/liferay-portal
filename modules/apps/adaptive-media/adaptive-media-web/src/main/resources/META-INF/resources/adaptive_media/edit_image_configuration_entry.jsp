@@ -84,6 +84,7 @@ if (amImageConfigurationEntry != null) {
 						<p>
 							<label class="control-label form-group">
 								<liferay-ui:message key="please-enter-at-least-one-of-the-following-fields" />
+
 								<liferay-ui:icon-help message="leave-a-size-field-empty-to-get-images-scaled-proportionally" />
 							</label>
 						</p>
@@ -169,9 +170,9 @@ if (amImageConfigurationEntry != null) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

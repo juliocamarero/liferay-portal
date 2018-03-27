@@ -471,9 +471,13 @@
 				<then>
 					<execute function="AddSelection" locator1="APConfigurationDisplaysettings#SHOW_METADATA_AVAILABLE_FIELD_SELECT" value1="${metadataField}" />
 
-					<execute function="AssertElementPresent" locator1="Button#MOVE_AVAILABLE_TO_CURRENT" />
+					<execute function="AssertElementPresent" locator1="Configuration#MOVE_AVAILABLE_TO_CURRENT">
+						<var name="key_configuration" value="metadataContent" />
+					</execute>
 
-					<execute function="Click" locator1="Button#MOVE_AVAILABLE_TO_CURRENT" />
+					<execute function="Click" locator1="Configuration#MOVE_AVAILABLE_TO_CURRENT">
+						<var name="key_configuration" value="metadataContent" />
+					</execute>
 
 					<execute function="AssertTextEquals" locator1="APConfigurationDisplaysettings#SHOW_METADATA_CURRENT_FIELD_SELECT" value1="${metadataField}" />
 				</then>
@@ -486,9 +490,13 @@
 				<then>
 					<execute function="AddSelection" locator1="APConfigurationDisplaysettings#SHOW_METADATA_CURRENT_FIELD_SELECT" value1="${metadataField}" />
 
-					<execute function="AssertElementPresent" locator1="Button#MOVE_CURRENT_TO_AVAILABLE" />
+					<execute function="AssertElementPresent" locator1="Configuration#MOVE_CURRENT_TO_AVAILABLE">
+						<var name="key_configuration" value="metadataContent" />
+					</execute>
 
-					<execute function="Click" locator1="Button#MOVE_CURRENT_TO_AVAILABLE" />
+					<execute function="Click" locator1="Configuration#MOVE_CURRENT_TO_AVAILABLE">
+						<var name="key_configuration" value="metadataContent" />
+					</execute>
 
 					<execute function="AssertTextEquals" locator1="APConfigurationDisplaysettings#SHOW_METADATA_AVAILABLE_FIELD_SELECT" value1="${metadataField}" />
 				</then>
@@ -541,9 +549,7 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="APConfiguration#SOURCE_SCOPE_NAME" value1="${siteName}" />
 		<execute function="AssertTextEquals" locator1="APConfiguration#SOURCE_SCOPE_TYPE" value1="${siteScopeType}" />
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="APConfiguration#SOURCE_SCOPE_NAME" value1="${siteName}" />
 		<execute function="AssertTextEquals" locator1="APConfiguration#SOURCE_SCOPE_TYPE" value1="${siteScopeType}" />
@@ -601,19 +607,18 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<var name="key_rowEntry" value="${configurationName}" />
-
-		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClickNoError" locator1="MenuItem#ANY_MENU_ITEM" value1="Delete">
-			<var name="key_menuItem" value="Delete" />
+		<execute macro="LexiconEntry#gotoEntryMenuItemNoError">
+			<var name="menuItem" value="Delete" />
+			<var name="rowEntry" value="${configurationName}" />
 		</execute>
 
 		<execute function="Confirm#waitForConfirmation" value1="Are you sure you want to delete this? It will be deleted immediately." />
 
 		<execute macro="Alert#viewSuccessMessage" />
 
-		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no configuration templates." />
+		<execute macro="PortletEntry#viewEmptyMessage">
+			<var name="entity" value="Configuration Templates" />
+		</execute>
 	</command>
 
 	<command name="enableRSSSubscription">
@@ -696,12 +701,9 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<var name="key_rowEntry" value="${configurationName}" />
-
-		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Apply">
-			<var name="key_menuItem" value="Apply" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Apply" />
+			<var name="rowEntry" value="${configurationName}" />
 		</execute>
 
 		<execute macro="Alert#viewSuccessMessage" />
@@ -715,7 +717,9 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no configuration templates." />
+		<execute macro="PortletEntry#viewEmptyMessage">
+			<var name="entity" value="Configuration Templates" />
+		</execute>
 
 		<execute function="AssertClick" locator1="Configuration#SAVE_CONFIGURATION_TEMPLATE" value1="Save Current Configuration as Template" />
 
@@ -1008,7 +1012,7 @@
 							</execute>
 						</then>
 						<else>
-							<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="OTHER_SITE">
+							<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM">
 								<var name="key_menuItem" value="OTHER_SITE" />
 							</execute>
 						</else>
@@ -1121,9 +1125,9 @@
 		<execute function="Click" locator1="APConfiguration#ASSET_SELECTION_DYNAMIC" />
 
 		<for list="Source,Filter,Custom User Attributes,Ordering and Grouping" param="panelHeading">
-			<var name="key_panelHeading" value="${panelHeading}" />
-
-			<execute function="AssertElementPresent" locator1="Panel#PANEL_HEADING_COLLAPSED" value1="${panelHeading}" />
+			<execute function="AssertElementPresent" locator1="Panel#PANEL_HEADING_COLLAPSED">
+				<var name="key_panelHeading" value="${panelHeading}" />
+			</execute>
 		</for>
 
 		<execute function="SelectFrameTop" />
@@ -1154,7 +1158,7 @@
 			<equals arg1="${noneIndexable}" arg2="true" />
 			<then>
 				<execute function="AssertNotVisible" locator1="APConfiguration#SOURCE_SCOPE_FILTER_BY_FIELD_CHECKBOX" />
-				<execute function="AssertElementNotPresent" locator1="APConfiguration#SOURCE_SCOPE_FILTER_BY_FIELD_SELECT_BUTTON" value1="Select" />
+				<execute function="AssertElementNotPresent" locator1="APConfiguration#SOURCE_SCOPE_FILTER_BY_FIELD_SELECT_BUTTON" />
 			</then>
 			<else>
 				<execute function="Check#checkToggleSwitch" locator1="APConfiguration#SOURCE_SCOPE_FILTER_BY_FIELD_CHECKBOX" />
@@ -1345,15 +1349,15 @@
 	</command>
 
 	<command name="viewSelectedPG">
-		<var name="key_selectedAsset" value="${selectedAsset}" />
-
-		<execute function="MouseOver#mouseOverNotVisible" locator1="AP#ADD_ASSET_PLUS_ICON" />
-
-		<execute function="Click" locator1="AP#ADD_ASSET_PLUS_ICON" />
+		<execute macro="Portlet#clickPortletPlusIconPG">
+			<var name="portletName" value="Asset Publisher" />
+		</execute>
 
 		<execute function="AssertTextEquals" locator1="MenuItem#ANY_MENU_ITEM" value1="${selectedAsset}">
 			<var name="key_menuItem" value="${selectedAsset}" />
 		</execute>
+
+		<execute function="Click" locator1="//body" />
 
 		<execute macro="AssetPublisherPortlet#gotoConfigurationPG" />
 

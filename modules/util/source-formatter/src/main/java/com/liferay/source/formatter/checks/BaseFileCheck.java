@@ -15,8 +15,8 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.BNDSettings;
@@ -85,19 +85,22 @@ public abstract class BaseFileCheck
 					(elementComparator.compare(previousElement, curElement) >
 						0)) {
 
-					StringBundler sb = new StringBundler(7);
+					StringBundler sb = new StringBundler(9);
 
 					sb.append("Incorrect order '");
-					sb.append(elementName);
-					sb.append("':");
 
 					if (Validator.isNotNull(parentElementName)) {
-						sb.append(StringPool.SPACE);
 						sb.append(parentElementName);
+						sb.append(StringPool.POUND);
 					}
 
-					sb.append(StringPool.SPACE);
+					sb.append(elementName);
+					sb.append("': '");
+					sb.append(
+						elementComparator.getElementName(previousElement));
+					sb.append("' should come after '");
 					sb.append(elementComparator.getElementName(curElement));
+					sb.append("'");
 
 					addMessage(fileName, sb.toString());
 				}

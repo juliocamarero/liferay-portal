@@ -107,6 +107,7 @@ DDMNavigationHelper ddmNavigationHelper = ddmDisplay.getDDMNavigationHelper();
 		<div class="lfr-form-content">
 			<liferay-ui:error exception="<%= TemplateNameException.class %>" message="please-enter-a-valid-name" />
 			<liferay-ui:error exception="<%= TemplateScriptException.class %>" message="please-enter-a-valid-script" />
+			<liferay-ui:error exception="<%= TemplateSmallImageContentException.class %>" message="the-small-image-file-could-not-be-saved" />
 
 			<liferay-ui:error exception="<%= TemplateSmallImageNameException.class %>">
 
@@ -200,10 +201,31 @@ DDMNavigationHelper ddmNavigationHelper = ddmDisplay.getDDMNavigationHelper();
 
 			<aui:fieldset-group markupView="lexicon">
 				<aui:fieldset>
+					<c:if test="<%= (template != null) && (groupId != PortalUtil.getScopeGroupId(request, refererPortletName)) %>">
+						<aui:field-wrapper>
+							<div class="alert alert-warning">
+								<liferay-ui:message key="this-template-does-not-belong-to-this-site.-you-may-affect-other-sites-if-you-edit-this-template" />
+							</div>
+						</aui:field-wrapper>
+					</c:if>
+
 					<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) || windowState.equals(LiferayWindowState.POP_UP) %>" name="name" />
 
-					<liferay-ui:panel-container cssClass="lfr-structure-entry-details-container" extended="<%= false %>" id="templateDetailsPanelContainer" persistState="<%= true %>">
-						<liferay-ui:panel collapsible="<%= true %>" defaultState="closed" extended="<%= false %>" id="templateDetailsSectionPanel" markupView="lexicon" persistState="<%= true %>" title="details">
+					<liferay-ui:panel-container
+						cssClass="lfr-structure-entry-details-container"
+						extended="<%= false %>"
+						id="templateDetailsPanelContainer"
+						persistState="<%= true %>"
+					>
+						<liferay-ui:panel
+							collapsible="<%= true %>"
+							defaultState="closed"
+							extended="<%= false %>"
+							id="templateDetailsSectionPanel"
+							markupView="lexicon"
+							persistState="<%= true %>"
+							title="details"
+						>
 							<c:if test="<%= ddmDisplay.isShowStructureSelector() %>">
 								<div class="form-group">
 									<aui:input helpMessage="structure-help" name="structure" type="resource" value="<%= (structure != null) ? structure.getName(locale) : StringPool.BLANK %>" />
@@ -440,14 +462,14 @@ DDMNavigationHelper ddmNavigationHelper = ddmDisplay.getDDMNavigationHelper();
 		String taglibOnClick = "Liferay.fire('" + liferayPortletResponse.getNamespace() + "saveTemplate');";
 		%>
 
-		<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" primary="<%= true %>" value='<%= LanguageUtil.get(request, "save") %>' />
+		<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value='<%= LanguageUtil.get(request, "save") %>' />
 
-		<aui:button cssClass="btn-lg" onClick='<%= renderResponse.getNamespace() + "saveAndContinueTemplate();" %>' value='<%= LanguageUtil.get(resourceBundle, "save-and-continue") %>' />
+		<aui:button onClick='<%= renderResponse.getNamespace() + "saveAndContinueTemplate();" %>' value='<%= LanguageUtil.get(resourceBundle, "save-and-continue") %>' />
 
 		<c:if test="<%= ddmDisplay.isVersioningEnabled() %>">
-			<aui:button cssClass="btn-lg" onClick='<%= renderResponse.getNamespace() + "saveDraftTemplate();" %>' value='<%= LanguageUtil.get(request, "save-draft") %>' />
+			<aui:button onClick='<%= renderResponse.getNamespace() + "saveDraftTemplate();" %>' value='<%= LanguageUtil.get(request, "save-draft") %>' />
 		</c:if>
 
-		<aui:button cssClass="btn-lg" href="<%= ddmDisplay.getEditTemplateBackURL(liferayPortletRequest, liferayPortletResponse, classNameId, classPK, resourceClassNameId, portletResource) %>" type="cancel" />
+		<aui:button href="<%= ddmDisplay.getEditTemplateBackURL(liferayPortletRequest, liferayPortletResponse, classNameId, classPK, resourceClassNameId, portletResource) %>" type="cancel" />
 	</aui:button-row>
 </div>

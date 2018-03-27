@@ -14,6 +14,7 @@
 
 package com.liferay.portal.servlet.taglib.ui;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -36,6 +36,7 @@ import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
 /**
@@ -81,9 +82,7 @@ public class InputPermissionsParamsTagUtil {
 
 			StringBundler sb = new StringBundler();
 
-			for (int i = 0; i < supportedActions.size(); i++) {
-				String action = supportedActions.get(i);
-
+			for (String action : supportedActions) {
 				boolean groupChecked = groupDefaultActions.contains(action);
 
 				boolean guestChecked = false;
@@ -133,7 +132,9 @@ public class InputPermissionsParamsTagUtil {
 			sb.append("inputPermissionsViewRole=");
 			sb.append(URLCodec.encodeURL(inputPermissionsViewRole));
 
-			pageContext.getOut().print(sb.toString());
+			JspWriter jspWriter = pageContext.getOut();
+
+			jspWriter.print(sb.toString());
 		}
 		catch (Exception e) {
 			throw new JspException(e);

@@ -18,6 +18,7 @@ import com.liferay.petra.concurrent.ThreadPoolHandler;
 import com.liferay.petra.concurrent.ThreadPoolHandlerAdapter;
 import com.liferay.petra.executor.PortalExecutorManager;
 import com.liferay.petra.lang.CentralizedThreadLocal;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.layoutconfiguration.util.RuntimePage;
 import com.liferay.portal.kernel.layoutconfiguration.util.xml.RuntimeLogic;
@@ -41,7 +42,6 @@ import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -243,14 +243,17 @@ public class RuntimePageImpl implements RuntimePage {
 			while (y != -1) {
 				sb.append(content.substring(x, y));
 
-				int close1 = content.indexOf(runtimeLogic.getClose1Tag(), y);
-				int close2 = content.indexOf(runtimeLogic.getClose2Tag(), y);
+				String close1Tag = runtimeLogic.getClose1Tag();
+				String close2Tag = runtimeLogic.getClose2Tag();
+
+				int close1 = content.indexOf(close1Tag, y);
+				int close2 = content.indexOf(close2Tag, y);
 
 				if ((close2 == -1) || ((close1 != -1) && (close1 < close2))) {
-					x = close1 + runtimeLogic.getClose1Tag().length();
+					x = close1 + close1Tag.length();
 				}
 				else {
-					x = close2 + runtimeLogic.getClose2Tag().length();
+					x = close2 + close2Tag.length();
 				}
 
 				String runtimePortletTag = content.substring(y, x);

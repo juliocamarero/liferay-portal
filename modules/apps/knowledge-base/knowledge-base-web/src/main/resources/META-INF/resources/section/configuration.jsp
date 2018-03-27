@@ -96,9 +96,9 @@ kbSectionPortletInstanceConfiguration = ParameterMapUtil.setParameterMap(KBSecti
 								<liferay-ui:message key="social-bookmarks" />
 							</h4>
 
-							<liferay-ui:social-bookmarks-settings
+							<liferay-social-bookmarks:bookmarks-settings
 								displayStyle="<%= kbSectionPortletInstanceConfiguration.socialBookmarksDisplayStyle() %>"
-								types="<%= kbSectionPortletInstanceConfiguration.socialBookmarksTypes() %>"
+								types="<%= SocialBookmarksUtil.getSocialBookmarksTypes(kbSectionPortletInstanceConfiguration.socialBookmarksTypes()) %>"
 							/>
 						</aui:fieldset>
 					</aui:fieldset-group>
@@ -108,6 +108,6 @@ kbSectionPortletInstanceConfiguration = ParameterMapUtil.setParameterMap(KBSecti
 	</div>
 
 	<aui:button-row>
-		<aui:button cssClass="btn btn-lg btn-primary" type="submit" />
+		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>

@@ -13,6 +13,8 @@ AUI.add(
 
 		var CSS_FORM_GROUP = A.getClassName('form', 'group');
 
+		var FIELD_ACTIONS = A.getClassName('lfr', 'ddm', 'field', 'actions', 'container');
+
 		var FormBuilderSettingsSupport = function() {
 		};
 
@@ -77,6 +79,7 @@ AUI.add(
 
 				return new Liferay.DDM.FormBuilderSettingsForm(
 					{
+						builder: builder,
 						context: context,
 						editMode: builder.isEditMode() || instance.isPersisted(),
 						evaluatorURL: Liferay.DDM.Settings.evaluatorURL,
@@ -120,13 +123,15 @@ AUI.add(
 			getSettings: function() {
 				var instance = this;
 
-				var settings = {};
+				var builder = instance.get('builder');
 
 				var context = instance.get('context.settingsContext');
 
-				var defaultLocale = themeDisplay.getDefaultLanguageId();
+				var defaultLocale = builder.get('defaultLanguageId');
 
-				var locale = instance.get('locale');
+				var locale = builder.get('editingLanguageId');
+
+				var settings = {};
 
 				FormBuilderUtil.visitLayout(
 					context.pages,
@@ -228,6 +233,10 @@ AUI.add(
 				var wrapper = container.one('.' + CSS_FORM_GROUP);
 
 				wrapper.append('<div class="' + CSS_FIELD_CONTENT_TARGET + '"></div>');
+
+				if (!container.one('.' + FIELD_ACTIONS)) {
+					container.append(instance.get('builder')._getFieldActionsLayout());
+				}
 			},
 
 			_valueSettingsRetriever: function() {

@@ -94,13 +94,18 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 				portletURL="<%= displayStyleURL %>"
 				selectedDisplayStyle="descriptive"
 			/>
+
+			<liferay-util:include page="/admin/add_button.jsp" servletContext="<%= application %>" />
 		</liferay-frontend:management-bar-buttons>
+	</c:if>
 
-		<%
-		PortletURL navigationPortletURL = PortletURLUtil.clone(currentURLObj, liferayPortletResponse);
-		%>
+	<liferay-frontend:management-bar-filters>
+		<c:if test="<%= Validator.isNull(keywords) %>">
 
-		<liferay-frontend:management-bar-filters>
+			<%
+			PortletURL navigationPortletURL = PortletURLUtil.clone(currentURLObj, liferayPortletResponse);
+			%>
+
 			<liferay-frontend:management-bar-navigation
 				navigationKeys='<%= new String[] {"all"} %>'
 				portletURL="<%= navigationPortletURL %>"
@@ -112,8 +117,25 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 				orderColumns='<%= new String[] {"priority", "modified-date", "title", "view-count"} %>'
 				portletURL="<%= PortletURLUtil.clone(currentURLObj, liferayPortletResponse) %>"
 			/>
-		</liferay-frontend:management-bar-filters>
-	</c:if>
+		</c:if>
+
+		<li>
+			<liferay-portlet:renderURL varImpl="searchURL">
+				<portlet:param name="mvcPath" value="/admin/search.jsp" />
+			</liferay-portlet:renderURL>
+
+			<aui:form action="<%= searchURL %>" method="get" name="searchFm">
+				<liferay-portlet:renderURLParams varImpl="searchURL" />
+				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+
+				<liferay-ui:input-search
+					id="keywords"
+					markupView="lexicon"
+					placeholder='<%= LanguageUtil.get(request, "search") %>'
+				/>
+			</aui:form>
+		</li>
+	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
 		<liferay-frontend:management-bar-sidenav-toggler-button
@@ -121,7 +143,11 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 			label="info"
 		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>' icon="times" label="delete" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>'
+			icon="times"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -182,10 +208,7 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 					</c:when>
 					<c:otherwise>
 						<div class="alert alert-warning">
-							<liferay-ui:message
-								arguments="<%= HtmlUtil.escape(StringUtil.merge(kbGroupServiceConfiguration.markdownImporterArticleExtensions(), StringPool.COMMA_AND_SPACE)) %>"
-								key="nothing-was-imported-no-articles-were-found-with-one-of-the-supported-extensions-x"
-							/>
+							<liferay-ui:message arguments="<%= HtmlUtil.escape(StringUtil.merge(kbGroupServiceConfiguration.markdownImporterArticleExtensions(), StringPool.COMMA_AND_SPACE)) %>" key="nothing-was-imported-no-articles-were-found-with-one-of-the-supported-extensions-x" />
 						</div>
 					</c:otherwise>
 				</c:choose>
@@ -224,7 +247,9 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 								<portlet:param name="redirect" value="<%= currentURL %>" />
 							</liferay-portlet:renderURL>
 
-							<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+							<liferay-ui:search-container-column-text
+								colspan="<%= 2 %>"
+							>
 								<h5 class="text-default">
 									<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(kbFolder.getUserName()), modifiedDateDescription} %>" key="x-modified-x-ago" />
 								</h5>
@@ -262,7 +287,6 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 							%>
 
 							<liferay-ui:search-container-column-user
-								cssClass="user-icon-lg"
 								showDetails="<%= false %>"
 								userId="<%= kbArticle.getUserId() %>"
 							/>
@@ -271,7 +295,9 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 							PortletURL viewURL = kbArticleURLHelper.createViewWithRedirectURL(kbArticle, currentURL);
 							%>
 
-							<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+							<liferay-ui:search-container-column-text
+								colspan="<%= 2 %>"
+							>
 								<h5 class="text-default">
 									<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(kbArticle.getUserName()), modifiedDateDescription} %>" key="x-modified-x-ago" />
 								</h5>
@@ -322,13 +348,15 @@ if (parentResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 					</c:choose>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" resultRowSplitter="<%= kbFolderView ? new KBResultRowSplitter() : null %>" />
+				<liferay-ui:search-iterator
+					displayStyle="descriptive"
+					markupView="lexicon"
+					resultRowSplitter="<%= kbFolderView ? new KBResultRowSplitter() : null %>"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
 </div>
-
-<liferay-util:include page="/admin/add_button.jsp" servletContext="<%= application %>" />
 
 <aui:script>
 	function <portlet:namespace />deleteEntries() {

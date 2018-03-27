@@ -136,9 +136,9 @@ if (portletTitleBasedNavigation) {
 										function(event) {
 											var folderData = {
 												idString: 'parentFolderId',
-												idValue: event.folderid,
+												idValue: event.entityid,
 												nameString: 'parentFolderName',
-												nameValue: event.name
+												nameValue: event.entityname
 											};
 
 											Liferay.Util.selectFolder(folderData, '<portlet:namespace />');
@@ -159,7 +159,9 @@ if (portletTitleBasedNavigation) {
 				</aui:fieldset>
 			</c:if>
 
-			<liferay-expando:custom-attributes-available className="<%= BookmarksFolder.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= BookmarksFolder.class.getName() %>"
+			>
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 					<liferay-expando:custom-attribute-list
 						className="<%= BookmarksFolder.class.getName() %>"
@@ -182,9 +184,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

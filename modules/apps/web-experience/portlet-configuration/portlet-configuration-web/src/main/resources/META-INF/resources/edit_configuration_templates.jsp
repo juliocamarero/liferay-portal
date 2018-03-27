@@ -71,11 +71,22 @@ archivedSettingsSearch.setResults(archivedSettingsList);
 
 	<aui:form action="<%= deleteArchivedSetupsURL %>" name="fm">
 		<div class="portlet-configuration-body-content">
-			<aui:nav-bar markupView="lexicon">
-				<aui:nav cssClass="navbar-nav">
-					<aui:nav-item label="configuration-templates" selected="<%= true %>" />
-				</aui:nav>
-			</aui:nav-bar>
+
+			<%
+			List<NavigationItem> navigationItems = new ArrayList<>();
+
+			NavigationItem navigationItem = new NavigationItem();
+
+			navigationItem.setActive(true);
+			navigationItem.setHref(portletURL.toString());
+			navigationItem.setLabel(LanguageUtil.get(request, "configuration-templates"));
+
+			navigationItems.add(navigationItem);
+			%>
+
+			<clay:navigation-bar
+				items="<%= navigationItems %>"
+			/>
 
 			<liferay-frontend:management-bar
 				disabled="<%= archivedSettingsCount <= 0 %>"
@@ -105,7 +116,12 @@ archivedSettingsSearch.setResults(archivedSettingsList);
 				</liferay-frontend:management-bar-buttons>
 
 				<liferay-frontend:management-bar-action-buttons>
-					<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteArchivedSettings" label="delete" />
+					<liferay-frontend:management-bar-button
+						href="javascript:;"
+						icon="trash"
+						id="deleteArchivedSettings"
+						label="delete"
+					/>
 				</liferay-frontend:management-bar-action-buttons>
 			</liferay-frontend:management-bar>
 
@@ -201,7 +217,10 @@ archivedSettingsSearch.setResults(archivedSettingsList);
 						</c:choose>
 					</liferay-ui:search-container-row>
 
-					<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+					<liferay-ui:search-iterator
+						displayStyle="<%= displayStyle %>"
+						markupView="lexicon"
+					/>
 				</liferay-ui:search-container>
 			</div>
 		</div>

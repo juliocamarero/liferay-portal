@@ -17,6 +17,7 @@ package com.liferay.fragment.service.base;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryService;
 import com.liferay.fragment.service.persistence.FragmentCollectionPersistence;
+import com.liferay.fragment.service.persistence.FragmentEntryLinkPersistence;
 import com.liferay.fragment.service.persistence.FragmentEntryPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -27,6 +28,7 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiService;
 import com.liferay.portal.kernel.service.BaseServiceImpl;
+import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -187,6 +189,63 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.kernel.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.kernel.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.kernel.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.kernel.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -261,6 +320,44 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 		this.userPersistence = userPersistence;
 	}
 
+	/**
+	 * Returns the fragment entry link local service.
+	 *
+	 * @return the fragment entry link local service
+	 */
+	public com.liferay.fragment.service.FragmentEntryLinkLocalService getFragmentEntryLinkLocalService() {
+		return fragmentEntryLinkLocalService;
+	}
+
+	/**
+	 * Sets the fragment entry link local service.
+	 *
+	 * @param fragmentEntryLinkLocalService the fragment entry link local service
+	 */
+	public void setFragmentEntryLinkLocalService(
+		com.liferay.fragment.service.FragmentEntryLinkLocalService fragmentEntryLinkLocalService) {
+		this.fragmentEntryLinkLocalService = fragmentEntryLinkLocalService;
+	}
+
+	/**
+	 * Returns the fragment entry link persistence.
+	 *
+	 * @return the fragment entry link persistence
+	 */
+	public FragmentEntryLinkPersistence getFragmentEntryLinkPersistence() {
+		return fragmentEntryLinkPersistence;
+	}
+
+	/**
+	 * Sets the fragment entry link persistence.
+	 *
+	 * @param fragmentEntryLinkPersistence the fragment entry link persistence
+	 */
+	public void setFragmentEntryLinkPersistence(
+		FragmentEntryLinkPersistence fragmentEntryLinkPersistence) {
+		this.fragmentEntryLinkPersistence = fragmentEntryLinkPersistence;
+	}
+
 	public void afterPropertiesSet() {
 	}
 
@@ -323,6 +420,12 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.fragment.service.FragmentCollectionService fragmentCollectionService;
 	@BeanReference(type = FragmentCollectionPersistence.class)
 	protected FragmentCollectionPersistence fragmentCollectionPersistence;
+	@ServiceReference(type = com.liferay.portal.kernel.service.ClassNameLocalService.class)
+	protected com.liferay.portal.kernel.service.ClassNameLocalService classNameLocalService;
+	@ServiceReference(type = com.liferay.portal.kernel.service.ClassNameService.class)
+	protected com.liferay.portal.kernel.service.ClassNameService classNameService;
+	@ServiceReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@ServiceReference(type = com.liferay.portal.kernel.service.ResourceLocalService.class)
 	protected com.liferay.portal.kernel.service.ResourceLocalService resourceLocalService;
 	@ServiceReference(type = com.liferay.portal.kernel.service.UserLocalService.class)
@@ -331,4 +434,8 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.portal.kernel.service.UserService userService;
 	@ServiceReference(type = UserPersistence.class)
 	protected UserPersistence userPersistence;
+	@BeanReference(type = com.liferay.fragment.service.FragmentEntryLinkLocalService.class)
+	protected com.liferay.fragment.service.FragmentEntryLinkLocalService fragmentEntryLinkLocalService;
+	@BeanReference(type = FragmentEntryLinkPersistence.class)
+	protected FragmentEntryLinkPersistence fragmentEntryLinkPersistence;
 }

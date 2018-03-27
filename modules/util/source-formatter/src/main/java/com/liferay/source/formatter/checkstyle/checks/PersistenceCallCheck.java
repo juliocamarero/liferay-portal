@@ -14,7 +14,7 @@
 
 package com.liferay.source.formatter.checkstyle.checks;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.source.formatter.checks.util.JavaSourceUtil;
 import com.liferay.source.formatter.checkstyle.util.DetailASTUtil;
@@ -44,7 +44,9 @@ public class PersistenceCallCheck extends BaseCheck {
 
 	@Override
 	public int[] getDefaultTokens() {
-		return new int[] {TokenTypes.CLASS_DEF};
+		return new int[] {
+			TokenTypes.CLASS_DEF, TokenTypes.ENUM_DEF, TokenTypes.INTERFACE_DEF
+		};
 	}
 
 	@Override

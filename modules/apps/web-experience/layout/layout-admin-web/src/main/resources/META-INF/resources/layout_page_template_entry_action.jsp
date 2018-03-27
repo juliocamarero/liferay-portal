@@ -22,7 +22,13 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 LayoutPageTemplateEntry layoutPageTemplateEntry = (LayoutPageTemplateEntry)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= LayoutPageTemplateEntryPermission.contains(permissionChecker, layoutPageTemplateEntry, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editLayoutPageTemplateEntryURL">
 			<portlet:param name="mvcPath" value="/edit_layout_page_template_entry.jsp" />
@@ -33,6 +39,28 @@ LayoutPageTemplateEntry layoutPageTemplateEntry = (LayoutPageTemplateEntry)row.g
 		<liferay-ui:icon
 			message="edit"
 			url="<%= editLayoutPageTemplateEntryURL %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= LayoutPageTemplateEntryPermission.contains(permissionChecker, layoutPageTemplateEntry, ActionKeys.UPDATE) %>">
+		<portlet:actionURL name="/layout/update_layout_page_template_entry" var="updateLayoutPageTemplateEntryURL">
+			<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateCollectionId()) %>" />
+			<portlet:param name="layoutPageTemplateEntryId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateEntryId()) %>" />
+		</portlet:actionURL>
+
+		<%
+		Map<String, Object> updateLayoutPageTemplateEntryData = new HashMap<String, Object>();
+
+		updateLayoutPageTemplateEntryData.put("form-submit-url", updateLayoutPageTemplateEntryURL.toString());
+		updateLayoutPageTemplateEntryData.put("id-field-value", layoutPageTemplateEntry.getLayoutPageTemplateEntryId());
+		updateLayoutPageTemplateEntryData.put("main-field-value", layoutPageTemplateEntry.getName());
+		%>
+
+		<liferay-ui:icon
+			cssClass='<%= renderResponse.getNamespace() + "update-layout-page-template-action-option" %>'
+			data="<%= updateLayoutPageTemplateEntryData %>"
+			message="rename"
+			url="javascript:;"
 		/>
 	</c:if>
 

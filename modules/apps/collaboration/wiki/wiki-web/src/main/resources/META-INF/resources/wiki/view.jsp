@@ -184,7 +184,7 @@ if (portletTitleBasedNavigation) {
 				WikiEngineRenderer wikiEngineRenderer = (WikiEngineRenderer)request.getAttribute(WikiWebKeys.WIKI_ENGINE_RENDERER);
 
 				try {
-					formattedContent = wikiEngineRenderer.getFormattedContent(renderRequest, renderResponse, wikiPage, viewPageURL, editPageURL, title, preview);
+					formattedContent = WikiUtil.getFormattedContent(wikiEngineRenderer, renderRequest, renderResponse, wikiPage, viewPageURL, editPageURL, title, preview);
 				}
 				catch (Exception e) {
 					formattedContent = wikiPage.getContent();
@@ -205,7 +205,13 @@ if (portletTitleBasedNavigation) {
 					<div class="lfr-alert-container"></div>
 				</c:if>
 
-				<liferay-ddm:template-renderer className="<%= WikiPage.class.getName() %>" contextObjects="<%= contextObjects %>" displayStyle="<%= wikiPortletInstanceSettingsHelper.getDisplayStyle() %>" displayStyleGroupId="<%= wikiPortletInstanceSettingsHelper.getDisplayStyleGroupId() %>" entries="<%= entries %>">
+				<liferay-ddm:template-renderer
+					className="<%= WikiPage.class.getName() %>"
+					contextObjects="<%= contextObjects %>"
+					displayStyle="<%= wikiPortletInstanceSettingsHelper.getDisplayStyle() %>"
+					displayStyleGroupId="<%= wikiPortletInstanceSettingsHelper.getDisplayStyleGroupId() %>"
+					entries="<%= entries %>"
+				>
 					<div class="main-content-body">
 						<c:choose>
 							<c:when test="<%= !portletTitleBasedNavigation %>">
@@ -224,7 +230,7 @@ if (portletTitleBasedNavigation) {
 						<c:if test="<%= !print && !portletTitleBasedNavigation %>">
 							<div class="page-actions top-actions">
 								<c:if test="<%= followRedirect || (redirectPage == null) %>">
-									<c:if test="<%= Validator.isNotNull(formattedContent) && WikiNodePermissionChecker.contains(permissionChecker, node, ActionKeys.ADD_PAGE) %>">
+									<c:if test="<%= Validator.isNotNull(formattedContent) && WikiNodePermission.contains(permissionChecker, node, ActionKeys.ADD_PAGE) %>">
 										<liferay-ui:icon
 											iconCssClass="icon-plus"
 											label="<%= true %>"
@@ -234,7 +240,7 @@ if (portletTitleBasedNavigation) {
 										/>
 									</c:if>
 
-									<c:if test="<%= WikiPagePermissionChecker.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) %>">
+									<c:if test="<%= WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) %>">
 										<liferay-ui:icon
 											iconCssClass="icon-edit"
 											label="<%= true %>"
@@ -292,7 +298,9 @@ if (portletTitleBasedNavigation) {
 
 						<%@ include file="/wiki/view_page_content.jspf" %>
 
-						<liferay-expando:custom-attributes-available className="<%= WikiPage.class.getName() %>">
+						<liferay-expando:custom-attributes-available
+							className="<%= WikiPage.class.getName() %>"
+						>
 							<liferay-expando:custom-attribute-list
 								className="<%= WikiPage.class.getName() %>"
 								classPK="<%= wikiPage.getPrimaryKey() %>"
@@ -398,8 +406,19 @@ if (portletTitleBasedNavigation) {
 							</div>
 
 							<c:if test="<%= wikiPortletInstanceSettingsHelper.isEnableComments() %>">
-								<liferay-ui:panel-container extended="<%= false %>" markupView="lexicon" persistState="<%= true %>">
-									<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id='<%= liferayPortletResponse.getNamespace() + "wikiCommentsPanel" %>' markupView="lexicon" persistState="<%= true %>" title="comments">
+								<liferay-ui:panel-container
+									extended="<%= false %>"
+									markupView="lexicon"
+									persistState="<%= true %>"
+								>
+									<liferay-ui:panel
+										collapsible="<%= true %>"
+										extended="<%= true %>"
+										id='<%= liferayPortletResponse.getNamespace() + "wikiCommentsPanel" %>'
+										markupView="lexicon"
+										persistState="<%= true %>"
+										title="comments"
+									>
 										<liferay-comment:discussion
 											className="<%= WikiPage.class.getName() %>"
 											classPK="<%= wikiPage.getResourcePrimKey() %>"
@@ -491,7 +510,7 @@ if (portletTitleBasedNavigation) {
 							String childPageFormattedContent = null;
 
 							try {
-								childPageFormattedContent = wikiEngineRenderer.getFormattedContent(renderRequest, renderResponse, childPage, viewPageURL, editPageURL, childPage.getTitle(), false);
+								childPageFormattedContent = WikiUtil.getFormattedContent(wikiEngineRenderer, renderRequest, renderResponse, childPage, viewPageURL, editPageURL, childPage.getTitle(), false);
 							}
 							catch (Exception e) {
 								childPageFormattedContent = childPage.getContent();

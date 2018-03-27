@@ -18,6 +18,7 @@ import com.liferay.blogs.model.BlogsStatsUser;
 import com.liferay.blogs.model.impl.BlogsStatsUserImpl;
 import com.liferay.blogs.service.persistence.BlogsStatsUserFinder;
 import com.liferay.blogs.service.persistence.BlogsStatsUserUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -27,7 +28,6 @@ import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.ArrayList;
@@ -79,9 +79,7 @@ public class BlogsStatsUserFinderImpl
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			for (int i = 0; i < organizationIds.size(); i++) {
-				Long organizationId = organizationIds.get(i);
-
+			for (Long organizationId : organizationIds) {
 				qPos.add(organizationId);
 			}
 
@@ -195,9 +193,7 @@ public class BlogsStatsUserFinderImpl
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			for (int i = 0; i < organizationIds.size(); i++) {
-				Long organizationId = organizationIds.get(i);
-
+			for (Long organizationId : organizationIds) {
 				qPos.add(organizationId);
 			}
 

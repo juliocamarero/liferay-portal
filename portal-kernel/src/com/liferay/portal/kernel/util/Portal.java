@@ -1122,6 +1122,8 @@ public interface Portal {
 	public long[] getSiteAndCompanyGroupIds(ThemeDisplay themeDisplay)
 		throws PortalException;
 
+	public Locale getSiteDefaultLocale(Group group) throws PortalException;
+
 	public Locale getSiteDefaultLocale(long groupId) throws PortalException;
 
 	public long getSiteGroupId(long groupId);
@@ -1282,6 +1284,8 @@ public interface Portal {
 
 	public boolean isControlPanelPortlet(
 		String portletId, ThemeDisplay themeDisplay);
+
+	public boolean isCustomPortletMode(PortletMode portletMode);
 
 	public boolean isForwardedSecure(HttpServletRequest request);
 

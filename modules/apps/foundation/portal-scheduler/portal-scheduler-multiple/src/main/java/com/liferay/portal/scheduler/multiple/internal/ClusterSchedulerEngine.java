@@ -14,6 +14,7 @@
 
 package com.liferay.portal.scheduler.multiple.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cluster.BaseClusterMasterTokenTransitionListener;
 import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
@@ -43,7 +44,6 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -308,6 +308,9 @@ public class ClusterSchedulerEngine
 
 		try {
 			if (storageType == StorageType.MEMORY_CLUSTERED) {
+				String groupName = trigger.getGroupName();
+				String jobName = trigger.getJobName();
+
 				if (_clusterMasterExecutor.isMaster()) {
 					_schedulerEngine.schedule(
 						trigger, description, destinationName, message,
@@ -319,8 +322,8 @@ public class ClusterSchedulerEngine
 
 						schedulerResponse.setDescription(description);
 						schedulerResponse.setDestinationName(destinationName);
-						schedulerResponse.setGroupName(trigger.getGroupName());
-						schedulerResponse.setJobName(trigger.getJobName());
+						schedulerResponse.setGroupName(groupName);
+						schedulerResponse.setJobName(jobName);
 						schedulerResponse.setMessage(message);
 						schedulerResponse.setStorageType(storageType);
 						schedulerResponse.setTrigger(trigger);
@@ -328,6 +331,43 @@ public class ClusterSchedulerEngine
 						_notifySlave(
 							_addMemoryClusteredJobMethodKey, schedulerResponse,
 							getOSGiServiceIdentifier());
+					}
+				}
+				else {
+					ObjectValuePair<SchedulerResponse, TriggerState>
+						objectValuePair = _memoryClusteredJobs.get(
+							getFullName(jobName, groupName));
+
+					if (objectValuePair == null) {
+						MethodHandler methodHandler = new MethodHandler(
+							_getScheduledJobMethodKey, jobName, groupName,
+							StorageType.MEMORY_CLUSTERED);
+
+						Future<SchedulerResponse> future =
+							_clusterMasterExecutor.executeOnMaster(
+								methodHandler);
+
+						try {
+							SchedulerResponse schedulerResponse = future.get(
+								_callMasterTimeout, TimeUnit.SECONDS);
+
+							if ((schedulerResponse == null) ||
+								(schedulerResponse.getTrigger() == null)) {
+
+								if (_log.isInfoEnabled()) {
+									_log.info(
+										"Memory clustered job is not yet " +
+											"deployed on master");
+								}
+							}
+							else {
+								addMemoryClusteredJob(schedulerResponse);
+							}
+						}
+						catch (Exception e) {
+							_log.error(
+								"Unable to get a response from master", e);
+						}
 					}
 				}
 			}
@@ -565,8 +605,8 @@ public class ClusterSchedulerEngine
 					"Unable to load memory clustered jobs from master in ");
 				sb.append(_callMasterTimeout);
 				sb.append(" seconds, you might need to increase value set to ");
-				sb.append("\"clusterable.advice.call.master.timeout\", ");
-				sb.append("will retry again");
+				sb.append("\"clusterable.advice.call.master.timeout\", will ");
+				sb.append("retry again");
 
 				_log.error(sb.toString(), e);
 			}

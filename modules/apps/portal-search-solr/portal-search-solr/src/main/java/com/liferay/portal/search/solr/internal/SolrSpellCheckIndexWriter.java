@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.solr.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
@@ -21,15 +22,14 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.suggest.BaseGenericSpellCheckIndexWriter;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.solr.connection.SolrClientManager;
 import com.liferay.portal.search.solr.document.SolrUpdateDocumentCommand;
 import com.liferay.portal.search.solr.internal.util.LogUtil;
+import com.liferay.portal.search.suggest.BaseGenericSpellCheckIndexWriter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -118,12 +118,6 @@ public class SolrSpellCheckIndexWriter
 		sb.append(Field.COMPANY_ID);
 		sb.append(StringPool.COLON);
 		sb.append(searchContext.getCompanyId());
-
-		addQuerySeparator(sb);
-
-		sb.append(Field.SPELL_CHECK_WORD);
-		sb.append(StringPool.COLON);
-		sb.append(Boolean.TRUE.toString());
 
 		addQuerySeparator(sb);
 

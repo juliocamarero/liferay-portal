@@ -14,6 +14,7 @@
 
 package com.liferay.polls.internal.search;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.polls.model.PollsQuestion;
 import com.liferay.polls.service.PollsQuestionLocalService;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -29,7 +30,6 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Locale;
 
@@ -120,27 +120,27 @@ public class PollsQuestionIndexer extends BaseIndexer<PollsQuestion> {
 	protected String getDescriptionField(PollsQuestion pollsQuestion) {
 		String[] availableLanguageIds = pollsQuestion.getAvailableLanguageIds();
 
-		StringBundler description = new StringBundler();
+		StringBundler sb = new StringBundler();
 
 		for (String languageId : availableLanguageIds) {
-			description.append(pollsQuestion.getDescription(languageId));
-			description.append(StringPool.SPACE);
+			sb.append(pollsQuestion.getDescription(languageId));
+			sb.append(StringPool.SPACE);
 		}
 
-		return description.toString();
+		return sb.toString();
 	}
 
 	protected String getTitleField(PollsQuestion pollsQuestion) {
 		String[] availableLanguageIds = pollsQuestion.getAvailableLanguageIds();
 
-		StringBundler title = new StringBundler();
+		StringBundler sb = new StringBundler();
 
 		for (String languageId : availableLanguageIds) {
-			title.append(pollsQuestion.getTitle(languageId));
-			title.append(StringPool.SPACE);
+			sb.append(pollsQuestion.getTitle(languageId));
+			sb.append(StringPool.SPACE);
 		}
 
-		return title.toString();
+		return sb.toString();
 	}
 
 	protected void reindexEntries(long companyId) throws PortalException {

@@ -14,6 +14,7 @@
 
 package com.liferay.taglib.theme;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -21,9 +22,9 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListMergeable;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.taglib.util.IncludeTag;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ import javax.servlet.jsp.JspWriter;
 /**
  * @author Brian Wing Shun Chan
  */
-public class MetaTagsTag extends com.liferay.taglib.util.IncludeTag {
+public class MetaTagsTag extends IncludeTag {
 
 	public static void doTag(
 			ServletContext servletContext, HttpServletRequest request,

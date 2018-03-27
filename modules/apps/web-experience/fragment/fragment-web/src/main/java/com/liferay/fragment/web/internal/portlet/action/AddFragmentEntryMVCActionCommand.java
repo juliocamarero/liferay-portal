@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -44,7 +45,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + FragmentPortletKeys.FRAGMENT,
-		"mvc.command.name=addFragmentEntry"
+		"mvc.command.name=/fragment/add_fragment_entry"
 	},
 	service = MVCActionCommand.class
 )
@@ -59,9 +60,6 @@ public class AddFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "fragmentCollectionId");
 
 		String name = ParamUtil.getString(actionRequest, "name");
-		String css = ParamUtil.getString(actionRequest, "cssContent");
-		String js = ParamUtil.getString(actionRequest, "jsContent");
-		String html = ParamUtil.getString(actionRequest, "htmlContent");
 
 		try {
 			ServiceContext serviceContext = ServiceContextFactory.getInstance(
@@ -70,7 +68,7 @@ public class AddFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 			FragmentEntry fragmentEntry =
 				_fragmentEntryService.addFragmentEntry(
 					serviceContext.getScopeGroupId(), fragmentCollectionId,
-					name, css, html, js, serviceContext);
+					name, WorkflowConstants.STATUS_DRAFT, serviceContext);
 
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -96,7 +94,8 @@ public class AddFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
-		portletURL.setParameter("mvcPath", "/edit_fragment_entry.jsp");
+		portletURL.setParameter(
+			"mvcRenderCommandName", "/fragment/edit_fragment_entry");
 		portletURL.setParameter(
 			"fragmentCollectionId",
 			String.valueOf(fragmentEntry.getFragmentCollectionId()));

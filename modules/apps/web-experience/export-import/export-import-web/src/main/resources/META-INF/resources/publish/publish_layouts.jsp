@@ -228,10 +228,10 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 						<aui:fieldset>
 							<c:choose>
 								<c:when test="<%= exportImportConfiguration == null %>">
-									<aui:input name="name" placeholder="process-name-placeholder" />
+									<aui:input maxlength='<%= ModelHintsUtil.getMaxLength(ExportImportConfiguration.class.getName(), "name") %>' name="name" placeholder="process-name-placeholder" />
 								</c:when>
 								<c:otherwise>
-									<aui:input name="name" value="<%= exportImportConfiguration.getName() %>" />
+									<aui:input maxlength='<%= ModelHintsUtil.getMaxLength(ExportImportConfiguration.class.getName(), "name") %>' name="name" value="<%= exportImportConfiguration.getName() %>" />
 								</c:otherwise>
 							</c:choose>
 						</aui:fieldset>
@@ -241,18 +241,45 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 						</aui:fieldset>
 
 						<c:if test="<%= !group.isCompany() %>">
-							<liferay-staging:select-pages action="<%= Constants.PUBLISH %>" disableInputs="<%= configuredPublish %>" exportImportConfigurationId="<%= exportImportConfigurationId %>" groupId="<%= groupId %>" privateLayout="<%= privateLayout %>" treeId="<%= treeId %>" />
+							<liferay-staging:select-pages
+								action="<%= Constants.PUBLISH %>"
+								disableInputs="<%= configuredPublish %>"
+								exportImportConfigurationId="<%= exportImportConfigurationId %>"
+								groupId="<%= groupId %>"
+								privateLayout="<%= privateLayout %>"
+								treeId="<%= treeId %>"
+							/>
 						</c:if>
 
-						<liferay-staging:content cmd="<%= cmd %>" disableInputs="<%= configuredPublish %>" exportImportConfigurationId="<%= exportImportConfigurationId %>" type="<%= localPublishing ? Constants.PUBLISH_TO_LIVE : Constants.PUBLISH_TO_REMOTE %>" />
+						<liferay-staging:content
+							cmd="<%= cmd %>"
+							disableInputs="<%= configuredPublish %>"
+							exportImportConfigurationId="<%= exportImportConfigurationId %>"
+							type="<%= localPublishing ? Constants.PUBLISH_TO_LIVE : Constants.PUBLISH_TO_REMOTE %>"
+						/>
 
-						<liferay-staging:deletions cmd="<%= Constants.PUBLISH %>" disableInputs="<%= configuredPublish %>" exportImportConfigurationId="<%= exportImportConfigurationId %>" />
+						<liferay-staging:deletions
+							cmd="<%= Constants.PUBLISH %>"
+							disableInputs="<%= configuredPublish %>"
+							exportImportConfigurationId="<%= exportImportConfigurationId %>"
+						/>
 
-						<liferay-staging:permissions action="<%= Constants.PUBLISH %>" descriptionCSSClass="permissions-description" disableInputs="<%= configuredPublish %>" exportImportConfigurationId="<%= exportImportConfigurationId %>" global="<%= group.isCompany() %>" labelCSSClass="permissions-label" />
+						<liferay-staging:permissions
+							action="<%= Constants.PUBLISH %>"
+							descriptionCSSClass="permissions-description"
+							disableInputs="<%= configuredPublish %>"
+							exportImportConfigurationId="<%= exportImportConfigurationId %>"
+							global="<%= group.isCompany() %>"
+							labelCSSClass="permissions-label"
+						/>
 
 						<c:if test="<%= !localPublishing %>">
 							<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" cssClass="options-group" label="remote-live-connection-settings">
-								<liferay-staging:remote-options disableInputs="<%= configuredPublish %>" exportImportConfigurationId="<%= exportImportConfigurationId %>" privateLayout="<%= privateLayout %>" />
+								<liferay-staging:remote-options
+									disableInputs="<%= configuredPublish %>"
+									exportImportConfigurationId="<%= exportImportConfigurationId %>"
+									privateLayout="<%= privateLayout %>"
+								/>
 							</aui:fieldset>
 						</c:if>
 					</aui:fieldset-group>
@@ -260,9 +287,9 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 			</div>
 
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" id="addButton" onClick='<%= renderResponse.getNamespace() + "schedulePublishEvent();" %>' value="add-event" />
+				<aui:button id="addButton" onClick='<%= renderResponse.getNamespace() + "schedulePublishEvent();" %>' value="add-event" />
 
-				<aui:button cssClass="btn-lg" id="publishButton" type="submit" value="<%= LanguageUtil.get(request, publishMessageKey) %>" />
+				<aui:button id="publishButton" type="submit" value="<%= LanguageUtil.get(request, publishMessageKey) %>" />
 
 				<c:if test="<%= configuredPublish %>">
 					<aui:button cssClass="btn btn-link" href="<%= redirectURL.toString() %>" id="cancelButton" value="cancel" />
@@ -280,12 +307,6 @@ response.setHeader("Ajax-ID", request.getHeader("Ajax-ID"));
 
 		if (dateChecker.validRange) {
 			var form = AUI.$(document.<portlet:namespace />publishPagesFm);
-
-			var allContentSelected = AUI.$('#<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>').val();
-
-			if (allContentSelected === 'true') {
-				form.fm('<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>').val(true);
-			}
 
 			submitForm(form);
 		}

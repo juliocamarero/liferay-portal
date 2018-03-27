@@ -12,6 +12,7 @@
  */
 {template .render}
 	{@param name: string}
+	{@param pathThemeImages: string}
 	{@param placeholder: string}
 	{@param value: ?}
 	{@param visible: bool}
@@ -31,10 +32,12 @@
 		data-fieldname="{$name}">
 		{if $showLabel}
 			<label for="{$name}">
-				{$label}
+				{$label}{sp}
 
 				{if $required}
-					<span class="icon-asterisk text-warning"></span>
+					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+						<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#asterisk" />
+					</svg>
 				{/if}
 			</label>
 
@@ -44,7 +47,6 @@
 		{/if}
 
 		<div class="input-group">
-
 			{if $displayStyle == 'multiline'}
 				<textarea class="field form-control"
 					{if $dir}dir="{$dir}"{/if} id="{$name}"
@@ -55,24 +57,32 @@
 					{$displayValue}
 				</textarea>
 			{else}
-				<input class="field form-control"
-					{if $dir}dir="{$dir}"{/if}
-					{if $readOnly}disabled{/if}
-					id="{$name}"
-					name="{$name}"
-					placeholder="{$placeholder}"
-					type="text"
-					value="{$displayValue}">
+				<div class="input-group-item">
+					<input class="field form-control"
+						{if $dir}dir="{$dir}"{/if}
+						{if $readOnly}disabled{/if}
+						id="{$name}"
+						name="{$name}"
+						placeholder="{$placeholder}"
+						type="text"
+						value="{$displayValue}">
+				</div>
 			{/if}
 
 			{if $tooltip}
-				<a class="input-group-addon help-icon"
-					data-original-title="{$tooltip}"
-					data-toggle="popover"
-					href="javascript:;"
-					title="{$tooltip}">
-					<span class="icon-question"></span>
-				</a>
+				<div class="input-group-item input-group-item-shrink">
+					<button
+						class="btn btn-monospaced btn-unstyled trigger-tooltip"
+						data-original-title="{$tooltip}"
+						data-toggle="popover"
+						title="{$tooltip}"
+						type="button"
+					>
+						<span class="help-icon rounded-circle sticker sticker-secondary">
+							<span class="icon-question"></span>
+						</span>
+					</button>
+				</div>
 			{/if}
 		</div>
 	</div>

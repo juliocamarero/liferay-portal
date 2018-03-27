@@ -14,8 +14,10 @@
 
 package com.liferay.source.formatter;
 
+import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.source.formatter.util.CheckType;
 
 /**
  * @author Hugo Huijser
@@ -28,6 +30,18 @@ public class SourceFormatterMessage
 	}
 
 	public SourceFormatterMessage(
+		String fileName, String message, CheckType checkType, String checkName,
+		String markdownFileName, int lineCount) {
+
+		_fileName = fileName;
+		_message = message;
+		_checkType = checkType;
+		_checkName = checkName;
+		_markdownFileName = markdownFileName;
+		_lineCount = lineCount;
+	}
+
+	public SourceFormatterMessage(
 		String fileName, String message, int lineCount) {
 
 		this(fileName, message, null, lineCount);
@@ -37,10 +51,7 @@ public class SourceFormatterMessage
 		String fileName, String message, String markdownFileName,
 		int lineCount) {
 
-		_fileName = fileName;
-		_message = message;
-		_markdownFileName = markdownFileName;
-		_lineCount = lineCount;
+		this(fileName, message, null, null, markdownFileName, -1);
 	}
 
 	@Override
@@ -54,6 +65,14 @@ public class SourceFormatterMessage
 		}
 
 		return _message.compareTo(sourceFormatterMessage.getMessage());
+	}
+
+	public String getCheckName() {
+		return _checkName;
+	}
+
+	public CheckType getCheckType() {
+		return _checkType;
 	}
 
 	public String getFileName() {
@@ -78,7 +97,7 @@ public class SourceFormatterMessage
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(14);
 
 		sb.append(_message);
 
@@ -96,6 +115,19 @@ public class SourceFormatterMessage
 			sb.append(_lineCount);
 		}
 
+		if (_checkName != null) {
+			sb.append(CharPool.SPACE);
+			sb.append(CharPool.OPEN_PARENTHESIS);
+
+			if (_checkType != null) {
+				sb.append(_checkType.getValue());
+				sb.append(CharPool.COLON);
+			}
+
+			sb.append(_checkName);
+			sb.append(CharPool.CLOSE_PARENTHESIS);
+		}
+
 		return sb.toString();
 	}
 
@@ -103,6 +135,8 @@ public class SourceFormatterMessage
 		"https://github.com/liferay/liferay-portal/blob/master/modules/util" +
 			"/source-formatter/documentation/";
 
+	private final String _checkName;
+	private final CheckType _checkType;
 	private final String _fileName;
 	private final int _lineCount;
 	private final String _markdownFileName;

@@ -20,6 +20,7 @@ import com.liferay.calendar.model.CalendarResource;
 import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -41,7 +42,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.powwow.model.PowwowMeeting;
@@ -63,6 +63,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -612,7 +613,7 @@ public class MeetingsPortlet extends MVCPortlet {
 
 		int amPm = ParamUtil.getInteger(portletRequest, name + "AmPm");
 
-		if (amPm == java.util.Calendar.PM) {
+		if (amPm == Calendar.PM) {
 			hour += 12;
 		}
 

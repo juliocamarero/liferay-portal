@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -100,13 +101,15 @@ public class MediaQueryProviderImpl implements MediaQueryProvider {
 		AMImageConfigurationEntry amImageConfigurationEntry) {
 
 		try {
-			return _amImageFinder.getAdaptiveMediaStream(
-				amImageQueryBuilder -> amImageQueryBuilder.forFileEntry(
-					fileEntry
-				).forConfiguration(
-					amImageConfigurationEntry.getUUID()
-				).done()
-			).findFirst();
+			Stream<AdaptiveMedia<AMImageProcessor>> adaptiveMediaStream =
+				_amImageFinder.getAdaptiveMediaStream(
+					amImageQueryBuilder -> amImageQueryBuilder.forFileEntry(
+						fileEntry
+					).forConfiguration(
+						amImageConfigurationEntry.getUUID()
+					).done());
+
+			return adaptiveMediaStream.findFirst();
 		}
 		catch (PortalException pe) {
 			if (_log.isWarnEnabled()) {
@@ -148,8 +151,8 @@ public class MediaQueryProviderImpl implements MediaQueryProvider {
 			_getFileEntryURL(fileEntry, amImageConfigurationEntry));
 	}
 
-	private Collection<AdaptiveMedia<AMImageProcessor>>
-			_getAdaptiveMedias(FileEntry fileEntry)
+	private Collection<AdaptiveMedia<AMImageProcessor>> _getAdaptiveMedias(
+			FileEntry fileEntry)
 		throws PortalException {
 
 		Collection<AMImageConfigurationEntry> amImageConfigurationEntries =
@@ -255,21 +258,21 @@ public class MediaQueryProviderImpl implements MediaQueryProvider {
 			Optional<AdaptiveMedia<AMImageProcessor>> hdAdaptiveMediaOptional)
 		throws PortalException {
 
-		StringBundler src = new StringBundler(3);
+		StringBundler sb = new StringBundler(4);
 
 		List<Condition> conditions = _getConditions(
 			adaptiveMedia, previousAdaptiveMedia);
 
-		src.append(adaptiveMedia.getURI());
+		sb.append(adaptiveMedia.getURI());
 
 		hdAdaptiveMediaOptional.ifPresent(
 			hdAdaptiveMedia -> {
-				src.append(", ");
-				src.append(hdAdaptiveMedia.getURI());
-				src.append(" 2x");
+				sb.append(", ");
+				sb.append(hdAdaptiveMedia.getURI());
+				sb.append(" 2x");
 			});
 
-		return new MediaQuery(conditions, src.toString());
+		return new MediaQuery(conditions, sb.toString());
 	}
 
 	private Optional<Integer> _getPropertiesValue(

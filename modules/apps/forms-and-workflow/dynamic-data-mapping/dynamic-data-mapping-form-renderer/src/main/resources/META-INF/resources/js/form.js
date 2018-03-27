@@ -81,11 +81,32 @@ AUI.add(
 					getEvaluationPayload: function() {
 						var instance = this;
 
+						var portletNamespace = instance.get('portletNamespace');
+
+						var languageId = instance._getURLParameter(portletNamespace, 'languageId');
+
+						if (!languageId) {
+							languageId = themeDisplay.getDefaultLanguageId();
+						}
+
 						return {
+							languageId: languageId,
 							p_auth: Liferay.authToken,
-							portletNamespace: instance.get('portletNamespace'),
+							portletNamespace: portletNamespace,
 							serializedFormContext: JSON.stringify(instance.get('context'))
 						};
+					},
+
+					getFormId: function() {
+						var instance = this;
+
+						var formNode = instance.getFormNode();
+
+						if (!formNode) {
+							return 0;
+						}
+
+						return formNode.getData('DDMFormInstanceId');
 					},
 
 					getFormNode: function() {
@@ -169,6 +190,14 @@ AUI.add(
 								containerId: container.get('id')
 							}
 						);
+					},
+
+					_getURLParameter: function(portletNamespace, parameterName) {
+						var currentUrl = window.location.href;
+
+						var url = new A.Url(currentUrl);
+
+						return url.getParameter(portletNamespace + parameterName);
 					},
 
 					_onLiferaySubmitForm: function(event) {

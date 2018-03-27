@@ -83,7 +83,7 @@ public class ColorUtil {
 
 	public static int[] getRGB(String hex) {
 		if (hex.startsWith("#")) {
-			hex = StringUtil.toUpperCase(hex.substring(1, hex.length()));
+			hex = StringUtil.toUpperCase(hex.substring(1));
 		}
 		else {
 			hex = StringUtil.toUpperCase(hex);
@@ -114,8 +114,10 @@ public class ColorUtil {
 					hexArray[i] = 15;
 				}
 				else {
+					Character characterValue = Character.valueOf(c[i]);
+
 					hexArray[i] = GetterUtil.getInteger(
-						Character.valueOf(c[i]).toString());
+						characterValue.toString());
 				}
 			}
 		}

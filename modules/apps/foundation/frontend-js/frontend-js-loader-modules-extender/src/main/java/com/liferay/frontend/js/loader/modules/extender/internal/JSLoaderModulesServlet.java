@@ -15,16 +15,19 @@
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSModuleAlias;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -211,37 +214,68 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			for (String dependencyPackageName :
 					resolvedJSModule.getDependencyPackageNames()) {
 
-				JSPackageDependency jsPackageDependency =
-					jsPackage.getJSPackageDependency(dependencyPackageName);
+				if (dependencyPackageName == null) {
+					continue;
+				}
 
-				if (jsPackageDependency != null) {
-					JSPackage jsDependencyPackage =
-						_npmRegistry.resolveJSPackageDependency(
-							jsPackageDependency);
+				if (_legacyPackageNames.contains(dependencyPackageName)) {
+					continue;
+				}
 
-					printWriter.write(delimiter2);
+				printWriter.write(delimiter2);
 
-					if (jsDependencyPackage == null) {
-						printWriter.write("\"");
-						printWriter.write(dependencyPackageName);
-						printWriter.write("\": \"[NOT-DEPLOYED:");
-						printWriter.write(dependencyPackageName);
-						printWriter.write("]\"");
+				StringBundler aliasSB = new StringBundler(1);
+				StringBundler aliasValueSB = new StringBundler();
+
+				if (dependencyPackageName.equals(jsPackage.getName())) {
+					aliasSB.append(dependencyPackageName);
+
+					aliasValueSB.append(jsPackage.getResolvedId());
+				}
+				else {
+					JSPackageDependency jsPackageDependency =
+						jsPackage.getJSPackageDependency(dependencyPackageName);
+
+					if (jsPackageDependency == null) {
+						aliasSB.append(dependencyPackageName);
+
+						aliasValueSB.append(
+							":ERROR:Missing version constraints for ");
+						aliasValueSB.append(dependencyPackageName);
+						aliasValueSB.append(" in package.json of ");
+						aliasValueSB.append(jsPackage.getResolvedId());
 					}
 					else {
-						printWriter.write("\"");
-						printWriter.write(jsDependencyPackage.getName());
-						printWriter.write("\": ");
+						JSPackage jsDependencyPackage =
+							_npmRegistry.resolveJSPackageDependency(
+								jsPackageDependency);
 
-						printWriter.write("\"");
-						printWriter.write(jsDependencyPackage.getName());
-						printWriter.write(StringPool.AT);
-						printWriter.write(jsDependencyPackage.getVersion());
-						printWriter.write("\"");
+						if (jsDependencyPackage == null) {
+							aliasSB.append(dependencyPackageName);
+
+							aliasValueSB.append(":ERROR:Package ");
+							aliasValueSB.append(dependencyPackageName);
+							aliasValueSB.append(" which is a dependency of ");
+							aliasValueSB.append(jsPackage.getResolvedId());
+							aliasValueSB.append(
+								" is not deployed in the server");
+						}
+						else {
+							aliasSB.append(jsDependencyPackage.getName());
+
+							aliasValueSB.append(
+								jsDependencyPackage.getResolvedId());
+						}
 					}
-
-					delimiter2 = ", ";
 				}
+
+				printWriter.write("\"");
+				printWriter.write(aliasSB.toString());
+				printWriter.write("\": \"");
+				printWriter.write(aliasValueSB.toString());
+				printWriter.write("\"");
+
+				delimiter2 = ", ";
 			}
 
 			printWriter.write("}\n");
@@ -284,24 +318,37 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			}
 		}
 
-		for (JSPackage jsPackage : _npmRegistry.getJSPackages()) {
+		for (JSPackage jsPackage : _npmRegistry.getResolvedJSPackages()) {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
-			printWriter.write(jsPackage.getName());
-			printWriter.write(StringPool.AT);
-			printWriter.write(jsPackage.getVersion());
+			printWriter.write(jsPackage.getResolvedId());
 			printWriter.write("\": {exactMatch: true, value: \"");
-			printWriter.write(jsPackage.getName());
-			printWriter.write(StringPool.AT);
-			printWriter.write(jsPackage.getVersion());
+			printWriter.write(jsPackage.getResolvedId());
 			printWriter.write(StringPool.SLASH);
 			printWriter.write(jsPackage.getMainModuleName());
 			printWriter.write("\"}");
 
 			delimiter = ",\n";
+
+			for (JSModuleAlias jsModuleAlias : jsPackage.getJSModuleAliases()) {
+				printWriter.write(delimiter);
+				printWriter.write("\"");
+				printWriter.write(jsPackage.getResolvedId());
+				printWriter.write(StringPool.SLASH);
+				printWriter.write(jsModuleAlias.getAlias());
+				printWriter.write("\": {exactMatch: true, value: \"");
+				printWriter.write(jsPackage.getResolvedId());
+				printWriter.write(StringPool.SLASH);
+				printWriter.write(jsModuleAlias.getModuleName());
+				printWriter.write("\"}");
+			}
 		}
 
 		printWriter.println("\n};");
+
+		printWriter.println(
+			"Liferay.EXPLAIN_RESOLUTIONS = " + _details.explainResolutions() +
+				";\n");
 
 		printWriter.println(
 			"Liferay.EXPOSE_GLOBAL = " + _details.exposeGlobal() + ";\n");
@@ -326,6 +373,9 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	protected void setNPMRegistry(NPMRegistry npmRegistry) {
 		_npmRegistry = npmRegistry;
 	}
+
+	private static final Set<String> _legacyPackageNames = new HashSet<>(
+		Arrays.asList("map-common"));
 
 	private ComponentContext _componentContext;
 	private volatile Details _details;

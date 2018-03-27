@@ -47,6 +47,20 @@ public class XMLEmptyLinesCheck extends EmptyLinesCheck {
 
 		content = _fixMissingEmptyLinesAroundComments(content);
 
+		Matcher matcher = _missingEmptyLinePattern.matcher(content);
+
+		if (matcher.find()) {
+			return StringUtil.replaceFirst(
+				content, "\n", "\n\n", matcher.start());
+		}
+
+		matcher = _redundantEmptyLinePattern.matcher(content);
+
+		if (matcher.find()) {
+			return StringUtil.replaceFirst(
+				content, "\n\n", "\n", matcher.start());
+		}
+
 		return content;
 	}
 
@@ -101,5 +115,9 @@ public class XMLEmptyLinesCheck extends EmptyLinesCheck {
 		Pattern.compile("[\t ]-->\n[\t<]");
 	private final Pattern _missingEmptyLineBeforeCommentPattern =
 		Pattern.compile(">\n\t+<!--[\n ]");
+	private final Pattern _missingEmptyLinePattern = Pattern.compile(
+		"<\\?xml .*\\?>\n<\\w");
+	private final Pattern _redundantEmptyLinePattern = Pattern.compile(
+		"<\\?xml .*\\?>\n\n<\\!DOCTYPE");
 
 }

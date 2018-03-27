@@ -18,6 +18,7 @@ import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.journal.constants.JournalConstants;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -34,7 +35,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -199,6 +199,12 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 			return folder.getFolderId();
 		}
 		catch (NoSuchFolderException nsfe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Unable to get folder for " +
+						String.valueOf(resourcePrimKey),
+					nsfe);
+			}
 		}
 
 		ServiceContext serviceContext = new ServiceContext();

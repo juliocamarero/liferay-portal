@@ -15,8 +15,10 @@
 package com.liferay.users.admin.demo.data.creator.internal;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -30,7 +32,6 @@ import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.users.admin.demo.data.creator.UserDemoDataCreator;
@@ -79,8 +80,9 @@ public abstract class BaseUserDemoDataCreator implements UserDemoDataCreator {
 
 			JSONObject rootJSONObject = JSONFactoryUtil.createJSONObject(json);
 
-			JSONObject userJSONObject = rootJSONObject.getJSONArray(
-				"results").getJSONObject(0);
+			JSONArray jsonArray = rootJSONObject.getJSONArray("results");
+
+			JSONObject userJSONObject = jsonArray.getJSONObject(0);
 
 			emailAddress = _getEmailAddress(emailAddress, userJSONObject);
 			male = StringUtil.equalsIgnoreCase(

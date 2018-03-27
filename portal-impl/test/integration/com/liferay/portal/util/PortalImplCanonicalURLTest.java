@@ -15,6 +15,7 @@
 package com.liferay.portal.util;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -25,14 +26,15 @@ import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.LayoutTestUtil;
@@ -64,6 +66,7 @@ public class PortalImplCanonicalURLTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_defaultLocale = LocaleUtil.getDefault();
+		_defaultPrependStyle = PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE;
 
 		LocaleUtil.setDefault(
 			LocaleUtil.US.getLanguage(), LocaleUtil.US.getCountry(),
@@ -75,6 +78,10 @@ public class PortalImplCanonicalURLTest {
 		LocaleUtil.setDefault(
 			_defaultLocale.getLanguage(), _defaultLocale.getCountry(),
 			_defaultLocale.getVariant());
+
+		TestPropsUtil.set(
+			PropsKeys.LOCALE_PREPEND_FRIENDLY_URL_STYLE,
+			GetterUtil.getString(_defaultPrependStyle));
 	}
 
 	@Before
@@ -353,7 +360,7 @@ public class PortalImplCanonicalURLTest {
 		String portalDomain, String port, String i18nPath,
 		String groupFriendlyURL, String layoutFriendlyURL, boolean secure) {
 
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(8);
 
 		if (secure) {
 			sb.append(Http.HTTPS_WITH_SLASH);
@@ -446,9 +453,6 @@ public class PortalImplCanonicalURLTest {
 		themeDisplay.setServerPort(serverPort);
 		themeDisplay.setSiteGroupId(group.getGroupId());
 
-		String actualCanonicalURL = PortalUtil.getCanonicalURL(
-			completeURL, themeDisplay, layout, forceLayoutFriendlyURL);
-
 		String expectedGroupFriendlyURL = StringPool.BLANK;
 
 		if (!group.isGuest()) {
@@ -467,10 +471,16 @@ public class PortalImplCanonicalURLTest {
 			expectedPortalDomain, port, StringPool.BLANK,
 			expectedGroupFriendlyURL, expectedLayoutFriendlyURL, secure);
 
-		Assert.assertEquals(expectedCanonicalURL, actualCanonicalURL);
+		TestPropsUtil.set(PropsKeys.LOCALE_PREPEND_FRIENDLY_URL_STYLE, "2");
+
+		String actualCanonicalURL2 = PortalUtil.getCanonicalURL(
+			completeURL, themeDisplay, layout, forceLayoutFriendlyURL);
+
+		Assert.assertEquals(expectedCanonicalURL, actualCanonicalURL2);
 	}
 
 	private static Locale _defaultLocale;
+	private static int _defaultPrependStyle;
 
 	private Group _defaultGroup;
 	private Layout _defaultGrouplayout1;

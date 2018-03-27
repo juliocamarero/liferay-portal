@@ -21,19 +21,15 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandler;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
-import com.liferay.exportimport.kernel.xstream.XStreamAliasRegistryUtil;
+import com.liferay.knowledge.base.constants.KBConstants;
 import com.liferay.knowledge.base.constants.KBPortletKeys;
 import com.liferay.knowledge.base.model.KBArticle;
 import com.liferay.knowledge.base.model.KBComment;
 import com.liferay.knowledge.base.model.KBTemplate;
-import com.liferay.knowledge.base.model.impl.KBArticleImpl;
-import com.liferay.knowledge.base.model.impl.KBCommentImpl;
-import com.liferay.knowledge.base.model.impl.KBTemplateImpl;
 import com.liferay.knowledge.base.service.KBArticleLocalService;
 import com.liferay.knowledge.base.service.KBCommentLocalService;
 import com.liferay.knowledge.base.service.KBFolderLocalService;
 import com.liferay.knowledge.base.service.KBTemplateLocalService;
-import com.liferay.knowledge.base.service.permission.AdminPermission;
 import com.liferay.knowledge.base.util.comparator.KBArticleVersionComparator;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -79,15 +75,16 @@ public class AdminPortletDataHandler extends BasePortletDataHandler {
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "kb-comments", true, true, null,
 				KBComment.class.getName()));
-
-		XStreamAliasRegistryUtil.register(KBArticleImpl.class, "KBArticle");
-		XStreamAliasRegistryUtil.register(KBCommentImpl.class, "KBComment");
-		XStreamAliasRegistryUtil.register(KBTemplateImpl.class, "KBTemplate");
 	}
 
 	@Override
 	public String getSchemaVersion() {
 		return SCHEMA_VERSION;
+	}
+
+	@Override
+	public String getServiceName() {
+		return KBConstants.SERVICE_NAME;
 	}
 
 	@Override
@@ -118,7 +115,8 @@ public class AdminPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		portletDataContext.addPortletPermissions(AdminPermission.RESOURCE_NAME);
+		portletDataContext.addPortletPermissions(
+			KBConstants.RESOURCE_NAME_ADMIN);
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -151,7 +149,7 @@ public class AdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPortletPermissions(
-			AdminPermission.RESOURCE_NAME);
+			KBConstants.RESOURCE_NAME_ADMIN);
 
 		Element kbArticlesElement =
 			portletDataContext.getImportDataGroupElement(KBArticle.class);

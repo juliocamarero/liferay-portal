@@ -39,7 +39,7 @@
 	</command>
 
 	<command name="AddSitePageTemplate" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -78,7 +78,7 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#viewPageTemplate" >
+		<execute macro="Page#viewPageTemplate">
 			<var name="page" value="Site Page" />
 			<var name="pageTemplateName" value="Page Template Name" />
 		</execute>
@@ -123,9 +123,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="Site Page" />
+			<var name="pageName" value="Site Page" />
 		</execute>
 
 		<execute macro="Page#togglePageTemplateInheritChanges">
@@ -217,6 +217,10 @@
 
 		<execute macro="LexiconEntry#gotoAdd" />
 
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Global Templates" />
+		</execute>
+
 		<execute macro="Page#viewPageTemplateTypeNotPresent">
 			<var name="pageTemplateName" value="Page Template Name" />
 		</execute>
@@ -255,13 +259,17 @@
 
 		<execute macro="LexiconEntry#gotoAdd" />
 
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Global Templates" />
+		</execute>
+
 		<execute macro="Page#viewPageTemplateTypePresent">
 			<var name="pageTemplateName" value="Page Template Name" />
 		</execute>
 	</command>
 
 	<command name="DeletePageTemplate" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Sites" />
@@ -296,7 +304,7 @@
 	</command>
 
 	<command name="EditPageTemplate" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Sites" />

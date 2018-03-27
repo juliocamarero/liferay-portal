@@ -26,6 +26,7 @@ import com.liferay.document.library.kernel.service.DLFileEntryServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLTrashServiceUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.Group;
@@ -34,23 +35,18 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceTracker;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
@@ -70,10 +66,7 @@ import com.liferay.trash.test.util.WhenIsMoveableFromTrashBaseModel;
 import com.liferay.trash.test.util.WhenIsRestorableBaseModel;
 import com.liferay.trash.test.util.WhenIsUpdatableBaseModel;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -85,7 +78,6 @@ import org.junit.runner.RunWith;
  * @author Eudaldo Alonso
  */
 @RunWith(Arquillian.class)
-@Sync
 public class DLFileEntryTrashHandlerTest
 	extends BaseTrashHandlerTestCase
 	implements WhenCanBeDuplicatedInTrash, WhenHasDraftStatus,
@@ -100,22 +92,7 @@ public class DLFileEntryTrashHandlerTest
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
-			SynchronousDestinationTestRule.INSTANCE);
-
-	@BeforeClass
-	public static void setUpClass() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(TrashHelper.class.getName());
-
-		_serviceTracker.open();
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-		_serviceTracker.close();
-	}
+			PermissionCheckerTestRule.INSTANCE);
 
 	@Override
 	public BaseModel<?> addDraftBaseModelWithWorkflow(
@@ -212,14 +189,6 @@ public class DLFileEntryTrashHandlerTest
 
 		return _whenIsIndexableBaseModel.searchTrashEntriesCount(
 			keywords, serviceContext);
-	}
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-
-		_trashHelper = _serviceTracker.getService();
 	}
 
 	@Test
@@ -413,9 +382,9 @@ public class DLFileEntryTrashHandlerTest
 
 	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 
-	private static ServiceTracker<TrashHelper, TrashHelper> _serviceTracker;
-
+	@Inject
 	private TrashHelper _trashHelper;
+
 	private final WhenIsAssetable _whenIsAssetable =
 		new DefaultWhenIsAssetable();
 	private final WhenIsIndexableBaseModel _whenIsIndexableBaseModel =

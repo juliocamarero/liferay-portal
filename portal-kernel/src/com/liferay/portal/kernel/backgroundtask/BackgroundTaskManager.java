@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.backgroundtask;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -28,6 +30,7 @@ import java.util.Map;
 /**
  * @author Michael C. Han
  */
+@ProviderType
 public interface BackgroundTaskManager {
 
 	public BackgroundTask addBackgroundTask(
@@ -139,6 +142,11 @@ public interface BackgroundTaskManager {
 		int end, OrderByComparator<BackgroundTask> orderByComparator);
 
 	public List<BackgroundTask> getBackgroundTasks(
+		long[] groupIds, String name, String[] taskExecutorClassNames,
+		int start, int end,
+		OrderByComparator<BackgroundTask> orderByComparator);
+
+	public List<BackgroundTask> getBackgroundTasks(
 		String taskExecutorClassName, int status);
 
 	public List<BackgroundTask> getBackgroundTasks(
@@ -151,6 +159,14 @@ public interface BackgroundTaskManager {
 	public List<BackgroundTask> getBackgroundTasks(
 		String[] taskExecutorClassNames, int status, int start, int end,
 		OrderByComparator<BackgroundTask> orderByComparator);
+
+	public List<BackgroundTask> getBackgroundTasksByDuration(
+		long[] groupIds, String[] taskExecutorClassName, boolean completed,
+		int start, int end, boolean orderByType);
+
+	public List<BackgroundTask> getBackgroundTasksByDuration(
+		long[] groupIds, String[] taskExecutorClassName, int start, int end,
+		boolean orderByType);
 
 	public int getBackgroundTasksCount(
 		long groupId, String taskExecutorClassName);
@@ -183,6 +199,9 @@ public interface BackgroundTaskManager {
 	public int getBackgroundTasksCount(
 		long[] groupIds, String name, String taskExecutorClassName,
 		boolean completed);
+
+	public int getBackgroundTasksCount(
+		long[] groupIds, String name, String[] taskExecutorClassNames);
 
 	public String getBackgroundTaskStatusJSON(long backgroundTaskId);
 

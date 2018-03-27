@@ -19,6 +19,7 @@ import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationSe
 import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
 import com.liferay.exportimport.kernel.lar.MissingReferences;
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -29,6 +30,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutReference;
+import com.liferay.portal.kernel.model.LayoutSoap;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Plugin;
 import com.liferay.portal.kernel.model.User;
@@ -49,7 +51,6 @@ import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
@@ -65,6 +66,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.portlet.PortletPreferences;
 
 /**
  * Provides the remote service for accessing, adding, deleting, exporting,
@@ -710,13 +713,13 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 			scopeGroupLayoutUuid = scopeGroupLayout.getUuid();
 		}
 
-		Map<Long, javax.portlet.PortletPreferences> jxPortletPreferencesMap =
+		Map<Long, PortletPreferences> jxPortletPreferencesMap =
 			PortletPreferencesFactoryUtil.getPortletSetupMap(
 				scopeGroup.getCompanyId(), groupId,
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, portletId, privateLayout);
 
-		for (Map.Entry<Long, javax.portlet.PortletPreferences> entry :
+		for (Map.Entry<Long, PortletPreferences> entry :
 				jxPortletPreferencesMap.entrySet()) {
 
 			long plid = entry.getKey();
@@ -754,8 +757,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 				continue;
 			}
 
-			javax.portlet.PortletPreferences jxPortletPreferences =
-				entry.getValue();
+			PortletPreferences jxPortletPreferences = entry.getValue();
 
 			String scopeType = GetterUtil.getString(
 				jxPortletPreferences.getValue("lfrScopeType", null));
@@ -875,9 +877,10 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		for (LayoutReference layoutReference : layoutReferences) {
 			try {
+				LayoutSoap layoutSoap = layoutReference.getLayoutSoap();
+
 				if (LayoutPermissionUtil.contains(
-						getPermissionChecker(),
-						layoutReference.getLayoutSoap().getPlid(),
+						getPermissionChecker(), layoutSoap.getPlid(),
 						ActionKeys.VIEW)) {
 
 					filteredLayoutReferences.add(layoutReference);
@@ -926,6 +929,18 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	}
 
 	@Override
+	public List<Layout> getLayouts(long groupId, String type) {
+		return layoutPersistence.filterFindByG_T(groupId, type);
+	}
+
+	@Override
+	public List<Layout> getLayouts(
+		long groupId, String type, int start, int end) {
+
+		return layoutPersistence.filterFindByG_T(groupId, type, start, end);
+	}
+
+	@Override
 	public int getLayoutsCount(long groupId, boolean privateLayout) {
 		return layoutPersistence.filterCountByG_P(groupId, privateLayout);
 	}
@@ -945,6 +960,11 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		return layoutPersistence.filterCountByG_P_P_LtP(
 			groupId, privateLayout, parentLayoutId, priority);
+	}
+
+	@Override
+	public int getLayoutsCount(long groupId, String type) {
+		return layoutPersistence.filterCountByG_T(groupId, type);
 	}
 
 	@Override

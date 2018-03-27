@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.NoSuchResourceException;
 import com.liferay.portal.kernel.log.Log;
@@ -47,7 +48,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.configuration.SearchPermissionCheckerConfiguration;
 
@@ -368,7 +368,9 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		SearchPermissionContext searchPermissionContext = null;
 
 		if (searchPermissionContextObject != null) {
-			if (searchPermissionContextObject == _nullSearchPermissionContext) {
+			if (searchPermissionContextObject ==
+					_NULL_SEARCH_PERMISSION_CONTEXT) {
+
 				return booleanFilter;
 			}
 
@@ -382,7 +384,7 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 		if (searchPermissionContext == null) {
 			searchContext.setAttribute(
-				"searchPermissionContext", _nullSearchPermissionContext);
+				"searchPermissionContext", _NULL_SEARCH_PERMISSION_CONTEXT);
 
 			return booleanFilter;
 		}
@@ -492,10 +494,11 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		return permissionBooleanFilter;
 	}
 
+	private static final String _NULL_SEARCH_PERMISSION_CONTEXT =
+		StringPool.BLANK;
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		SearchPermissionCheckerImpl.class);
-
-	private static final String _nullSearchPermissionContext = StringPool.BLANK;
 
 	@Reference
 	private GroupLocalService _groupLocalService;

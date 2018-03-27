@@ -23,6 +23,7 @@ import com.liferay.configuration.admin.web.internal.util.ResourceBundleLoaderPro
 import com.liferay.dynamic.data.mapping.form.values.factory.DDMFormValuesFactory;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListenerException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
@@ -33,12 +34,17 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
+
+import java.net.URI;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -136,6 +142,12 @@ public class BindConfigurationMVCActionCommand implements MVCActionCommand {
 		try {
 			configureTargetService(
 				configurationModel, configuration, properties);
+
+			String redirect = ParamUtil.getString(actionRequest, "redirect");
+
+			if (Validator.isNotNull(redirect)) {
+				actionResponse.sendRedirect(redirect);
+			}
 		}
 		catch (ConfigurationModelListenerException cmle) {
 			SessionErrors.add(
@@ -143,6 +155,9 @@ public class BindConfigurationMVCActionCommand implements MVCActionCommand {
 
 			actionResponse.setRenderParameter(
 				"mvcRenderCommandName", "/edit_configuration");
+		}
+		catch (IOException ioe) {
+			throw new PortletException(ioe);
 		}
 
 		return true;
@@ -229,8 +244,32 @@ public class BindConfigurationMVCActionCommand implements MVCActionCommand {
 				sb.append(factoryPid);
 				sb.append(".config");
 
-				configuredProperties.put(
-					"felix.fileinstall.filename", sb.toString());
+				String fileName = sb.toString();
+
+				String oldFileName = (String)configuredProperties.put(
+					"felix.fileinstall.filename", fileName);
+
+				if ((oldFileName != null) && !oldFileName.equals(fileName)) {
+					try {
+						Path oldFilePath = Paths.get(new URI(oldFileName));
+
+						Files.deleteIfExists(oldFilePath);
+
+						if (_log.isInfoEnabled()) {
+							_log.info(
+								"Delete inconsistent factory configuration " +
+									oldFileName);
+						}
+					}
+					catch (Exception e) {
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"Unable to delete inconsistent factory " +
+									"configuration " + oldFileName,
+								e);
+						}
+					}
+				}
 			}
 
 			configuration.update(configuredProperties);

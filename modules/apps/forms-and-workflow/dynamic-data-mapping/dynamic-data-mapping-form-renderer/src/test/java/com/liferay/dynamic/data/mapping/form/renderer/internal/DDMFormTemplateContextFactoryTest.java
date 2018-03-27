@@ -15,6 +15,7 @@
 package com.liferay.dynamic.data.mapping.form.renderer.internal;
 
 import com.google.template.soy.data.SanitizedContent;
+import com.google.template.soy.data.UnsafeSanitizedContentOrdainer;
 
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluationResult;
 import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluator;
@@ -31,16 +32,20 @@ import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.service.DDMDataProviderInstanceService;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormTestUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.template.soy.utils.SoyHTMLSanitizer;
 import com.liferay.portal.util.PortalImpl;
 
 import java.lang.reflect.Field;
@@ -53,6 +58,7 @@ import java.util.ResourceBundle;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -61,6 +67,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Matchers;
+import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -86,7 +93,10 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		setUpJSONFactory();
 		setUpLanguageUtil();
 		setUpLocaleThreadLocal();
+		setUpPortal();
 		setUpPortalClassLoaderUtil();
+
+		setUpDDMFormTemplateContextFactoryUtil();
 	}
 
 	@After
@@ -104,6 +114,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		String containerId = StringUtil.randomString();
 
 		ddmFormRenderingContext.setContainerId(containerId);
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 
 		Map<String, Object> templateContext =
 			_ddmFormTemplateContextFactory.create(
@@ -116,9 +127,14 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 	public void testContainerIdGeneration() throws Exception {
 		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
 
+		DDMFormRenderingContext ddmFormRenderingContext =
+			new DDMFormRenderingContext();
+
+		ddmFormRenderingContext.setHttpServletRequest(_request);
+
 		Map<String, Object> templateContext =
 			_ddmFormTemplateContextFactory.create(
-				ddmForm, new DDMFormRenderingContext());
+				ddmForm, ddmFormRenderingContext);
 
 		Assert.assertNotNull(templateContext.get("containerId"));
 	}
@@ -129,6 +145,8 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
+
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 
 		Map<String, Object> templateContext =
 			_ddmFormTemplateContextFactory.create(
@@ -148,6 +166,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setPortletNamespace("_PORTLET_NAMESPACE_");
 
 		Map<String, Object> templateContext =
@@ -165,6 +184,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setReadOnly(true);
 
 		Map<String, Object> templateContext =
@@ -193,6 +213,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setReadOnly(true);
 
 		Map<String, Object> templateContext =
@@ -218,6 +239,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setShowRequiredFieldsWarning(false);
 
 		Map<String, Object> templateContext =
@@ -235,6 +257,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setShowSubmitButton(true);
 
 		Map<String, Object> templateContext =
@@ -251,6 +274,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		DDMFormRenderingContext ddmFormRenderingContext =
 			new DDMFormRenderingContext();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setShowSubmitButton(true);
 		ddmFormRenderingContext.setReadOnly(true);
 
@@ -277,9 +301,14 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 			"Previous"
 		);
 
+		DDMFormRenderingContext ddmFormRenderingContext =
+			new DDMFormRenderingContext();
+
+		ddmFormRenderingContext.setHttpServletRequest(_request);
+
 		Map<String, Object> templateContext =
 			_ddmFormTemplateContextFactory.create(
-				DDMFormTestUtil.createDDMForm(), new DDMFormRenderingContext());
+				DDMFormTestUtil.createDDMForm(), ddmFormRenderingContext);
 
 		Map<String, String> expectedStringsMap = new HashMap<>();
 
@@ -296,6 +325,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 		String submitLabel = StringUtil.randomString();
 
+		ddmFormRenderingContext.setHttpServletRequest(_request);
 		ddmFormRenderingContext.setSubmitLabel(submitLabel);
 
 		Map<String, Object> templateContext =
@@ -312,8 +342,12 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 			"Submit"
 		);
 
+		ddmFormRenderingContext = new DDMFormRenderingContext();
+
+		ddmFormRenderingContext.setHttpServletRequest(_request);
+
 		templateContext = _ddmFormTemplateContextFactory.create(
-			DDMFormTestUtil.createDDMForm(), new DDMFormRenderingContext());
+			DDMFormTestUtil.createDDMForm(), ddmFormRenderingContext);
 
 		Assert.assertEquals("Submit", templateContext.get("submitLabel"));
 	}
@@ -327,10 +361,15 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 		ddmFormLayout.setPaginationMode(DDMFormLayout.SETTINGS_MODE);
 
+		DDMFormRenderingContext ddmFormRenderingContext =
+			new DDMFormRenderingContext();
+
+		ddmFormRenderingContext.setHttpServletRequest(_request);
+
 		Map<String, Object> templateContext =
 			_ddmFormTemplateContextFactory.create(
 				DDMFormTestUtil.createDDMForm(), ddmFormLayout,
-				new DDMFormRenderingContext());
+				ddmFormRenderingContext);
 
 		Assert.assertEquals(
 			"ddm.settings_form", templateContext.get("templateNamespace"));
@@ -338,7 +377,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		// Simple form
 
 		templateContext = _ddmFormTemplateContextFactory.create(
-			DDMFormTestUtil.createDDMForm(), new DDMFormRenderingContext());
+			DDMFormTestUtil.createDDMForm(), ddmFormRenderingContext);
 
 		Assert.assertEquals(
 			"ddm.simple_form", templateContext.get("templateNamespace"));
@@ -349,7 +388,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 		templateContext = _ddmFormTemplateContextFactory.create(
 			DDMFormTestUtil.createDDMForm(), ddmFormLayout,
-			new DDMFormRenderingContext());
+			ddmFormRenderingContext);
 
 		Assert.assertEquals(
 			"ddm.tabbed_form", templateContext.get("templateNamespace"));
@@ -360,7 +399,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 		templateContext = _ddmFormTemplateContextFactory.create(
 			DDMFormTestUtil.createDDMForm(), ddmFormLayout,
-			new DDMFormRenderingContext());
+			ddmFormRenderingContext);
 
 		Assert.assertEquals(
 			"ddm.paginated_form", templateContext.get("templateNamespace"));
@@ -371,7 +410,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 		templateContext = _ddmFormTemplateContextFactory.create(
 			DDMFormTestUtil.createDDMForm(), ddmFormLayout,
-			new DDMFormRenderingContext());
+			ddmFormRenderingContext);
 
 		Assert.assertEquals(
 			"ddm.wizard_form", templateContext.get("templateNamespace"));
@@ -501,6 +540,35 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 			new DDMFormTemplateContextFactoryHelper(
 				ddmDataProviderInstanceService)
 		);
+
+		field(
+			DDMFormTemplateContextFactoryImpl.class, "_soyHTMLSanitizer"
+		).set(
+			_ddmFormTemplateContextFactory,
+			new SoyHTMLSanitizer() {
+
+				@Override
+				public Object sanitize(String value) {
+					return UnsafeSanitizedContentOrdainer.ordainAsSafe(
+						value, SanitizedContent.ContentKind.HTML);
+				}
+
+			}
+		);
+	}
+
+	protected void setUpDDMFormTemplateContextFactoryUtil() {
+		_request = Mockito.mock(HttpServletRequest.class);
+
+		ThemeDisplay themeDisplay = new ThemeDisplay();
+
+		themeDisplay.setPathThemeImages(StringPool.BLANK);
+
+		Mockito.when(
+			(ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY)
+		).thenReturn(
+			themeDisplay
+		);
 	}
 
 	protected void setUpJSONFactory() throws Exception {
@@ -522,6 +590,10 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		LocaleThreadLocal.setSiteDefaultLocale(LocaleUtil.US);
 	}
 
+	protected void setUpPortal() throws Exception {
+		setDeclaredField(_ddmFormTemplateContextFactory, "_portal", _portal);
+	}
+
 	protected void setUpPortalClassLoaderUtil() {
 		PortalClassLoaderUtil.setClassLoader(PortalImpl.class.getClassLoader());
 	}
@@ -530,5 +602,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 	private final JSONFactory _jsonFactory = new JSONFactoryImpl();
 	private Language _language;
 	private Locale _originalSiteDefaultLocale;
+	private final Portal _portal = new PortalImpl();
+	private HttpServletRequest _request;
 
 }

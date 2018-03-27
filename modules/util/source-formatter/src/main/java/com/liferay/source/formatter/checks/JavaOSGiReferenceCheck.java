@@ -15,8 +15,8 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ToolsUtil;
@@ -52,10 +52,12 @@ public class JavaOSGiReferenceCheck extends BaseFileCheck {
 		return true;
 	}
 
-	public void setServiceReferenceUtilClassName(
-		String serviceReferenceUtilClassName) {
+	public void setServiceReferenceUtilClassNames(
+		String serviceReferenceUtilClassNames) {
 
-		_serviceReferenceUtilClassNames.add(serviceReferenceUtilClassName);
+		Collections.addAll(
+			_serviceReferenceUtilClassNames,
+			StringUtil.split(serviceReferenceUtilClassNames));
 	}
 
 	@Override

@@ -15,10 +15,10 @@
 package com.liferay.util.bridges.common;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import javax.portlet.PortletURL;
 
@@ -73,8 +73,8 @@ public class ScriptPostProcess {
 		}
 	}
 
-	public void setInitalPage(StringBundler initialPage) {
-		_sb = initialPage;
+	public void setInitalPage(StringBundler sb) {
+		_sb = sb;
 	}
 
 	protected void doProcessPage(
@@ -137,7 +137,7 @@ public class ScriptPostProcess {
 
 					endRefPos = 0;
 
-					StringBundler unquotedURL = new StringBundler();
+					StringBundler unquotedURLSB = new StringBundler();
 
 					while (true) {
 						char c = content.charAt(endRefPos);
@@ -147,7 +147,7 @@ public class ScriptPostProcess {
 
 							endRefPos++;
 
-							unquotedURL.append(c);
+							unquotedURLSB.append(c);
 						}
 						else {
 							endRefPos--;
@@ -156,7 +156,7 @@ public class ScriptPostProcess {
 						}
 					}
 
-					url = unquotedURL.toString();
+					url = unquotedURLSB.toString();
 				}
 
 				if ((url.charAt(0) == CharPool.POUND) ||

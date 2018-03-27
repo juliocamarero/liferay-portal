@@ -18,7 +18,7 @@ import com.liferay.asset.kernel.exception.AssetCategoryNameException;
 import com.liferay.asset.kernel.exception.DuplicateCategoryException;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -38,18 +38,22 @@ import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.service.base.AssetCategoryLocalServiceBaseImpl;
+import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portlet.asset.util.comparator.AssetCategoryLeftCategoryIdComparator;
 
 import java.io.Serializable;
@@ -269,11 +273,6 @@ public class AssetCategoryLocalServiceImpl
 				});
 		}
 
-		// Entries
-
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			category.getCategoryId());
-
 		// Category
 
 		assetCategoryPersistence.remove(category);
@@ -283,10 +282,6 @@ public class AssetCategoryLocalServiceImpl
 		resourceLocalService.deleteResource(
 			category.getCompanyId(), AssetCategory.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, category.getCategoryId());
-
-		// Indexer
-
-		assetEntryLocalService.reindex(entries);
 
 		return category;
 	}
@@ -365,21 +360,14 @@ public class AssetCategoryLocalServiceImpl
 	@Override
 	@ThreadLocalCachable
 	public List<AssetCategory> getCategories(long classNameId, long classPK) {
-		AssetEntry entry = assetEntryPersistence.fetchByC_C(
-			classNameId, classPK);
-
-		if (entry == null) {
-			return Collections.emptyList();
-		}
-
-		return assetEntryPersistence.getAssetCategories(entry.getEntryId());
+		return Collections.emptyList();
 	}
 
 	@Override
 	public List<AssetCategory> getCategories(String className, long classPK) {
 		long classNameId = classNameLocalService.getClassNameId(className);
 
-		return getCategories(classNameId, classPK);
+		return assetCategoryLocalService.getCategories(classNameId, classPK);
 	}
 
 	@Override
@@ -442,7 +430,7 @@ public class AssetCategoryLocalServiceImpl
 
 	@Override
 	public List<AssetCategory> getEntryCategories(long entryId) {
-		return assetEntryPersistence.getAssetCategories(entryId);
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -457,6 +445,34 @@ public class AssetCategoryLocalServiceImpl
 		return ListUtil.toList(
 			assetCategoryPersistence.getDescendants(parentAssetCategory),
 			AssetCategory.CATEGORY_ID_ACCESSOR);
+	}
+
+	@Override
+	public long[] getViewableCategoryIds(
+			String className, long classPK, long[] categoryIds)
+		throws PortalException {
+
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		if (permissionChecker == null) {
+			return categoryIds;
+		}
+
+		List<AssetCategory> oldCategories =
+			assetCategoryLocalService.getCategories(className, classPK);
+
+		for (AssetCategory category : oldCategories) {
+			if (!ArrayUtil.contains(categoryIds, category.getCategoryId()) &&
+				!AssetCategoryPermission.contains(
+					permissionChecker, category, ActionKeys.VIEW)) {
+
+				categoryIds = ArrayUtil.append(
+					categoryIds, category.getCategoryId());
+			}
+		}
+
+		return categoryIds;
 	}
 
 	@Override
@@ -502,11 +518,6 @@ public class AssetCategoryLocalServiceImpl
 	@Override
 	public AssetCategory mergeCategories(long fromCategoryId, long toCategoryId)
 		throws PortalException {
-
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			fromCategoryId);
-
-		assetCategoryPersistence.addAssetEntries(toCategoryId, entries);
 
 		assetCategoryLocalService.deleteCategory(fromCategoryId);
 
@@ -638,8 +649,6 @@ public class AssetCategoryLocalServiceImpl
 		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
 			categoryId);
 
-		String oldName = category.getName();
-
 		if (vocabularyId != category.getVocabularyId()) {
 			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
 
@@ -657,15 +666,6 @@ public class AssetCategoryLocalServiceImpl
 		category.setDescriptionMap(descriptionMap);
 
 		assetCategoryPersistence.update(category);
-
-		// Indexer
-
-		if (!oldName.equals(name)) {
-			List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-				category.getCategoryId());
-
-			assetEntryLocalService.reindex(entries);
-		}
 
 		return category;
 	}

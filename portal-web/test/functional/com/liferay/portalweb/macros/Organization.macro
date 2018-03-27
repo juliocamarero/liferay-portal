@@ -50,7 +50,7 @@
 
 		<execute function="AssertClick" locator1="UsersAndOrganizationsEditOrganization#CATEGORIZATION_TAGS_ADD_BUTTON" value1="Add" />
 
-		<execute function="AssertElementPresent" locator1="UsersAndOrganizationsEditOrganization#CATEGORIZATION_TAG" value1="${tagName}" />
+		<execute function="AssertElementPresent" locator1="UsersAndOrganizationsEditOrganization#CATEGORIZATION_TAG" />
 
 		<execute macro="PortletEntry#save" />
 
@@ -80,7 +80,7 @@
 
 		<execute function="AssertElementPresent" locator1="NavBar#ACTIVE_NAV_ITEM_LINK" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<if>
 			<equals arg1="${orgType}" arg2="Location" />
@@ -129,7 +129,7 @@
 			<var name="searchToken" value="${orgName}" />
 		</execute>
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Assign Users">
 			<var name="key_menuItem" value="Assign Users" />
@@ -312,7 +312,9 @@
 		<if>
 			<equals arg1="${orgAdvancedSearch}" arg2="Name" />
 			<then>
-				<execute function="Type" locator1="AdvancedSearch#NAME_FIELD" value1="${orgName}" />
+				<execute macro="PortletEntry#inputName">
+					<var name="name" value="${orgName}" />
+				</execute>
 
 				<execute function="AssertClick" locator1="Button#SEARCH" value1="Search" />
 
@@ -389,9 +391,9 @@
 			<var name="navItem" value="Available" />
 		</execute>
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${userScreenName}" />
-
-		<execute function="Click" locator1="NavBar#SEARCH_BUTTON" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${userScreenName}" />
+		</execute>
 
 		<var name="key_userScreenName" value="${userScreenName}" />
 
@@ -508,9 +510,9 @@
 	<command name="gotoActionsCmd">
 		<execute function="Pause" locator1="1000" />
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${orgName}" />
-
-		<execute function="Click" locator1="Button#SUBMIT" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${orgName}" />
+		</execute>
 
 		<execute function="AssertVisible" locator1="UsersAndOrganizations#ORGANIZATION_TABLE_NAME_GENERIC" />
 
@@ -522,9 +524,9 @@
 	</command>
 
 	<command name="gotoCP">
-		<execute function="Type" locator1="TextInput#SEARCH" value1="${searchToken}" />
-
-		<execute function="Click" locator1="Button#SUBMIT" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${searchToken}" />
+		</execute>
 
 		<var name="key_orgName" value="${orgName}" />
 
@@ -612,9 +614,9 @@
 			<var name="searchToken" value="${orgName}" />
 		</execute>
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${userFullName}" />
-
-		<execute function="Click" locator1="Button#SUBMIT" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${userFullName}" />
+		</execute>
 
 		<execute function="AssertVisible" locator1="UsersAndOrganizations#USERS_AND_SUBORGANIZATIONS_TABLE_NAME_GENERIC" />
 
@@ -634,9 +636,9 @@
 	</command>
 
 	<command name="searchCP">
-		<execute function="Type" locator1="TextInput#SEARCH" value1="${searchTerm}" />
-
-		<execute function="Click" locator1="Button#SUBMIT" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${searchTerm}" />
+		</execute>
 
 		<var name="key_orgName" value="${orgName}" />
 
@@ -827,9 +829,9 @@
 	</command>
 
 	<command name="viewRemoveMemberCP">
-		<execute function="Type" locator1="TextInput#SEARCH" value1="${orgName}" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${orgName}" />
+		</execute>
 
 		<var name="key_orgName" value="${orgName}" />
 

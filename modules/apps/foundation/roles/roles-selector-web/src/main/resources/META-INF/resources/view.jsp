@@ -115,7 +115,11 @@ request.setAttribute("edit_roles.jsp-portletURL", portletURL);
 
 	<aui:nav-bar-search>
 		<aui:form action="<%= portletURL.toString() %>" name="searchFm">
-			<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" markupView="lexicon" placeholder='<%= LanguageUtil.get(request, "keywords") %>' />
+			<liferay-ui:input-search
+				autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
+				markupView="lexicon"
+				placeholder='<%= LanguageUtil.get(request, "keywords") %>'
+			/>
 		</aui:form>
 	</aui:nav-bar-search>
 </aui:nav-bar>
@@ -169,10 +173,10 @@ request.setAttribute("edit_roles.jsp-portletURL", portletURL);
 			String taglibOnClick = renderResponse.getNamespace() + methodName + "('" + portletURL.toString() + "');";
 			%>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" primary="<%= true %>" value="update-associations" />
+			<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="update-associations" />
 		</c:if>
 
-		<aui:button cssClass="btn-lg" type="cancel" />
+		<aui:button type="cancel" />
 	</aui:button-row>
 </aui:form>
 

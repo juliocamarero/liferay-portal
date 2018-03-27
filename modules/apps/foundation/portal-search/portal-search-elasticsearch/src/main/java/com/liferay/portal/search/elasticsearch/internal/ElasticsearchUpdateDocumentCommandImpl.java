@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -22,12 +23,11 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.PortalRunMode;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
-import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch.document.ElasticsearchDocumentFactory;
-import com.liferay.portal.search.elasticsearch.document.ElasticsearchUpdateDocumentCommand;
-import com.liferay.portal.search.elasticsearch.index.IndexNameBuilder;
+import com.liferay.portal.search.elasticsearch.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch.internal.document.ElasticsearchDocumentFactory;
+import com.liferay.portal.search.elasticsearch.internal.document.ElasticsearchUpdateDocumentCommand;
+import com.liferay.portal.search.elasticsearch.internal.index.IndexNameBuilder;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
 import com.liferay.portal.search.elasticsearch.internal.util.LogUtil;
 

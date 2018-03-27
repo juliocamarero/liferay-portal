@@ -41,8 +41,7 @@ public class WikiAttachmentItemSelectorViewDisplayContext {
 
 	public WikiAttachmentItemSelectorViewDisplayContext(
 		WikiAttachmentItemSelectorCriterion wikiAttachmentItemSelectorCriterion,
-		WikiAttachmentItemSelectorView
-			wikiAttachmentItemSelectorView,
+		WikiAttachmentItemSelectorView wikiAttachmentItemSelectorView,
 		ItemSelectorReturnTypeResolverHandler
 			itemSelectorReturnTypeResolverHandler,
 		String itemSelectedEventName, boolean search, PortletURL portletURL) {
@@ -98,6 +97,8 @@ public class WikiAttachmentItemSelectorViewDisplayContext {
 
 		portletURL.setParameter(
 			ActionRequest.ACTION_NAME, "/wiki/upload_page_attachment");
+		portletURL.setParameter(
+			"mimeTypes", _wikiAttachmentItemSelectorCriterion.getMimeTypes());
 		portletURL.setParameter(
 			"resourcePrimKey",
 			String.valueOf(

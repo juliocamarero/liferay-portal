@@ -14,9 +14,9 @@
 
 package com.liferay.wiki.engine.creole;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.HtmlImpl;
 import com.liferay.wiki.engine.creole.internal.parser.visitor.XhtmlTranslationVisitor;
@@ -52,7 +52,7 @@ public class XhtmlTranslationVisitorTest {
 	@Test
 	public void testEscapedEscapedCharacter() {
 		Assert.assertEquals(
-			"<p>~&#034;~ is escaped&#034; </p>", translate("escape-2.creole"));
+			"<p>~&#34;~ is escaped&#34; </p>", translate("escape-2.creole"));
 	}
 
 	@Test

@@ -15,7 +15,7 @@
 package com.liferay.frontend.taglib.servlet.taglib;
 
 import com.liferay.frontend.taglib.internal.servlet.ServletContextUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.util.HashMap;
@@ -91,6 +91,8 @@ public class ManagementBarButtonTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
+		super.cleanUp();
+
 		_active = false;
 		_cssClass = StringPool.BLANK;
 		_data = null;

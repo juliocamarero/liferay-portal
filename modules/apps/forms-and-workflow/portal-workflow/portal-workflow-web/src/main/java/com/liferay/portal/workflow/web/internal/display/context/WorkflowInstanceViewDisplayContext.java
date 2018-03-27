@@ -14,6 +14,7 @@
 
 package com.liferay.portal.workflow.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -24,10 +25,11 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowDefinition;
+import com.liferay.portal.kernel.workflow.WorkflowDefinitionManagerUtil;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowInstance;
@@ -105,10 +107,19 @@ public class WorkflowInstanceViewDisplayContext
 			workflowInstanceRequestHelper.getLocale());
 	}
 
-	public String getDefinition(WorkflowInstance workflowInstance) {
-		return LanguageUtil.get(
-			workflowInstanceRequestHelper.getRequest(),
-			HtmlUtil.escape(workflowInstance.getWorkflowDefinitionName()));
+	public String getDefinition(WorkflowInstance workflowInstance)
+		throws PortalException {
+
+		WorkflowDefinition workflowDefinition =
+			WorkflowDefinitionManagerUtil.getWorkflowDefinition(
+				workflowInstanceRequestHelper.getCompanyId(),
+				workflowInstance.getWorkflowDefinitionName(),
+				workflowInstance.getWorkflowDefinitionVersion());
+
+		return HtmlUtil.escape(
+			workflowDefinition.getTitle(
+				LanguageUtil.getLanguageId(
+					workflowInstanceRequestHelper.getRequest())));
 	}
 
 	public String getDisplayStyle() {

@@ -22,11 +22,12 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Michael C. Han
  */
 @ExtendedObjectClassDefinition(
-	category = "foundation", factoryInstanceLabelAttribute = "destinationName"
+	category = "infrastructure",
+	factoryInstanceLabelAttribute = "destinationName"
 )
 @Meta.OCD(
 	factory = true,
-	id = "com.liferay.portal.messaging.configuration.DestinationWorkerConfiguration",
+	id = "com.liferay.portal.messaging.internal.configuration.DestinationWorkerConfiguration",
 	localization = "content/Language",
 	name = "destination-workfer-configuration-name"
 )

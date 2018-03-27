@@ -319,6 +319,12 @@ public class AssetEntryLocalServiceWrapper implements AssetEntryLocalService,
 	}
 
 	@Override
+	public com.liferay.asset.kernel.model.AssetEntry fetchEntry(
+		long classNameId, long classPK) {
+		return _assetEntryLocalService.fetchEntry(classNameId, classPK);
+	}
+
+	@Override
 	public com.liferay.asset.kernel.model.AssetEntry fetchEntry(long groupId,
 		java.lang.String classUuid) {
 		return _assetEntryLocalService.fetchEntry(groupId, classUuid);
@@ -527,6 +533,16 @@ public class AssetEntryLocalServiceWrapper implements AssetEntryLocalService,
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _assetEntryLocalService.getEntry(className, classPK);
+	}
+
+	@Override
+	public double getEntryPriority(long classNameId, long classPK) {
+		return _assetEntryLocalService.getEntryPriority(classNameId, classPK);
+	}
+
+	@Override
+	public double getEntryPriority(java.lang.String className, long classPK) {
+		return _assetEntryLocalService.getEntryPriority(className, classPK);
 	}
 
 	@Override

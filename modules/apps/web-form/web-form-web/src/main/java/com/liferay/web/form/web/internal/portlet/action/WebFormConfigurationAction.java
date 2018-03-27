@@ -16,6 +16,7 @@ package com.liferay.web.form.web.internal.portlet.action;
 
 import com.liferay.expando.kernel.exception.ColumnNameException;
 import com.liferay.expando.kernel.exception.DuplicateColumnNameException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -24,7 +25,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.web.form.web.internal.constants.WebFormPortletKeys;
@@ -294,8 +294,9 @@ public class WebFormConfigurationAction extends DefaultConfigurationAction {
 				LocalizationUtil.getLocalizationMap(
 					actionRequest, "fieldLabel" + formFieldsIndex);
 
-			for (Locale locale : fieldLabelMap.keySet()) {
-				String fieldLabelValue = fieldLabelMap.get(locale);
+			for (Map.Entry<Locale, String> entry : fieldLabelMap.entrySet()) {
+				String fieldLabelValue = entry.getValue();
+				Locale locale = entry.getKey();
 
 				if (locale.equals(defaultLocale) &&
 					Validator.isNull(fieldLabelValue)) {
@@ -363,14 +364,14 @@ public class WebFormConfigurationAction extends DefaultConfigurationAction {
 				continue;
 			}
 
-			for (Locale locale : fieldLabelMap.keySet()) {
-				String fieldLabelValue = fieldLabelMap.get(locale);
+			for (Map.Entry<Locale, String> entry : fieldLabelMap.entrySet()) {
+				String fieldLabelValue = entry.getValue();
 
 				if (Validator.isNull(fieldLabelValue)) {
 					continue;
 				}
 
-				String languageId = LocaleUtil.toLanguageId(locale);
+				String languageId = LocaleUtil.toLanguageId(entry.getKey());
 
 				if (!localizedUniqueFieldNames.add(
 						languageId + "_" + fieldLabelValue)) {

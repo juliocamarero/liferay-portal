@@ -15,9 +15,11 @@
 package com.liferay.knowledge.base.internal.importer;
 
 import com.liferay.knowledge.base.configuration.KBGroupServiceConfiguration;
+import com.liferay.knowledge.base.constants.KBConstants;
 import com.liferay.knowledge.base.exception.KBArticleImportException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.settings.GroupServiceSettingsLocator;
 import com.liferay.portal.kernel.zip.ZipReader;
 
 import java.util.Arrays;
@@ -28,21 +30,44 @@ import java.util.Iterator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Adolfo Pérez
  */
+@PrepareForTest({GroupServiceSettingsLocator.class, KBArchiveFactory.class})
+@RunWith(PowerMockRunner.class)
 public class KBArchiveFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
 		_kbArchiveFactory.setConfigurationProvider(_configurationProvider);
 
+		ConstructorExpectationSetup<GroupServiceSettingsLocator>
+			groupServiceSettingsLocatorConstructorExpectationSetup =
+				PowerMockito.whenNew(GroupServiceSettingsLocator.class);
+
+		OngoingStubbing<GroupServiceSettingsLocator>
+			groupServiceSettingsLocatorOngoingStubbing =
+				groupServiceSettingsLocatorConstructorExpectationSetup.
+					withArguments(
+						Mockito.anyLong(),
+						Mockito.eq(KBConstants.SERVICE_NAME));
+
+		groupServiceSettingsLocatorOngoingStubbing.thenReturn(
+			_groupServiceSettingsLocator);
+
 		Mockito.when(
-			_configurationProvider.getGroupConfiguration(
-				Mockito.any(Class.class), Mockito.any(long.class))
+			_configurationProvider.getConfiguration(
+				KBGroupServiceConfiguration.class, _groupServiceSettingsLocator)
 		).thenReturn(
 			_kbGroupServiceConfiguration
 		);
@@ -73,7 +98,7 @@ public class KBArchiveFactoryTest {
 
 		Collection<KBArchive.Folder> folders = kbArchive.getFolders();
 
-		Assert.assertTrue(folders.isEmpty());
+		Assert.assertTrue(folders.toString(), folders.isEmpty());
 	}
 
 	@Test
@@ -201,11 +226,13 @@ public class KBArchiveFactoryTest {
 
 		Collection<KBArchive.Folder> folders = kbArchive.getFolders();
 
-		Assert.assertTrue(folders.isEmpty());
+		Assert.assertTrue(folders.toString(), folders.isEmpty());
 	}
 
 	private final ConfigurationProvider _configurationProvider = Mockito.mock(
 		ConfigurationProvider.class);
+	private final GroupServiceSettingsLocator _groupServiceSettingsLocator =
+		Mockito.mock(GroupServiceSettingsLocator.class);
 	private final KBArchiveFactory _kbArchiveFactory = new KBArchiveFactory();
 	private final KBGroupServiceConfiguration _kbGroupServiceConfiguration =
 		Mockito.mock(KBGroupServiceConfiguration.class);

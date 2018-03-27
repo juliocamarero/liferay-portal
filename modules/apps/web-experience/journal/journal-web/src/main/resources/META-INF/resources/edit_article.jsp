@@ -192,6 +192,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 	<div class="lfr-form-content">
 		<liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
+		<liferay-ui:error exception="<%= ArticleFriendlyURLException.class %>" message="you-must-define-a-friendly-url-for-default-language" />
 		<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
 
 		<liferay-ui:error exception="<%= FileSizeException.class %>">
@@ -213,21 +214,25 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			</liferay-frontend:info-bar>
 		</c:if>
 
-		<liferay-frontend:translation-manager
-			availableLocales="<%= availableLocales %>"
-			changeableDefaultLanguage="<%= changeableDefaultLanguage %>"
-			componentId='<%= renderResponse.getNamespace() + "translationManager" %>'
-			defaultLanguageId="<%= defaultLanguageId %>"
-			id="translationManager"
-		/>
-
 		<%
 		boolean approved = false;
 		boolean pending = false;
 
 		long inheritedWorkflowDDMStructuresFolderId = JournalFolderLocalServiceUtil.getInheritedWorkflowFolderId(folderId);
 
-		boolean workflowEnabled = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
+		boolean hasInheritedWorkflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalArticle.class.getName());
+
+		if (inheritedWorkflowDDMStructuresFolderId > 0) {
+			JournalFolder inheritedWorkflowDDMStructuresFolder = JournalFolderLocalServiceUtil.getFolder(inheritedWorkflowDDMStructuresFolderId);
+
+			hasInheritedWorkflowDefinitionLink = false;
+
+			if (inheritedWorkflowDDMStructuresFolder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_INHERIT) {
+				hasInheritedWorkflowDefinitionLink = true;
+			}
+		}
+
+		boolean workflowEnabled = hasInheritedWorkflowDefinitionLink || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
 
 		if ((article != null) && (version > 0)) {
 			approved = article.isApproved();
@@ -291,14 +296,14 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 		%>
 
 		<c:if test="<%= hasSavePermission %>">
-			<aui:button cssClass="btn-lg" data-actionname="<%= Constants.PUBLISH %>" disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
+			<aui:button data-actionname="<%= Constants.PUBLISH %>" disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
 
 			<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
-				<aui:button cssClass="btn-lg" data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
+				<aui:button data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
 			</c:if>
 		</c:if>
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
 

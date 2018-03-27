@@ -25,6 +25,7 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileShortcutLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLTrashServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.Group;
@@ -33,13 +34,10 @@ import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
@@ -66,7 +64,6 @@ import org.junit.runner.RunWith;
  * @author Eudaldo Alonso
  */
 @RunWith(Arquillian.class)
-@Sync
 public class DLFileShortcutTrashHandlerTest
 	extends BaseTrashHandlerTestCase
 	implements WhenHasGrandParent, WhenIsAssetableParentModel,
@@ -78,8 +75,7 @@ public class DLFileShortcutTrashHandlerTest
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
-			SynchronousDestinationTestRule.INSTANCE);
+			PermissionCheckerTestRule.INSTANCE);
 
 	@Override
 	public AssetEntry fetchAssetEntry(ClassedModel classedModel)

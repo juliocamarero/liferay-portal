@@ -20,8 +20,6 @@ import com.liferay.dynamic.data.lists.constants.DDLWebKeys;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
-import com.liferay.dynamic.data.lists.service.permission.DDLPermission;
-import com.liferay.dynamic.data.lists.service.permission.DDLRecordSetPermission;
 import com.liferay.dynamic.data.lists.util.DDL;
 import com.liferay.dynamic.data.lists.util.comparator.DDLRecordSetCreateDateComparator;
 import com.liferay.dynamic.data.lists.util.comparator.DDLRecordSetModifiedDateComparator;
@@ -29,6 +27,8 @@ import com.liferay.dynamic.data.lists.util.comparator.DDLRecordSetNameComparator
 import com.liferay.dynamic.data.lists.web.configuration.DDLWebConfiguration;
 import com.liferay.dynamic.data.lists.web.internal.display.context.util.DDLRequestHelper;
 import com.liferay.dynamic.data.lists.web.internal.search.RecordSetSearch;
+import com.liferay.dynamic.data.lists.web.internal.security.permission.resource.DDLPermission;
+import com.liferay.dynamic.data.lists.web.internal.security.permission.resource.DDLRecordSetPermission;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
@@ -37,6 +37,9 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.StorageEngine;
 import com.liferay.dynamic.data.mapping.util.DDMDisplay;
 import com.liferay.dynamic.data.mapping.util.DDMDisplayRegistry;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -53,7 +56,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -71,12 +73,13 @@ import javax.servlet.http.HttpServletRequest;
 public class DDLDisplayContext {
 
 	public DDLDisplayContext(
-		HttpServletRequest request, DDL ddl,
-		DDLRecordSetLocalService ddlRecordSetLocalService,
-		DDLWebConfiguration ddlWebConfiguration,
-		DDMDisplayRegistry ddmDisplayRegistry,
-		DDMTemplateLocalService ddmTemplateLocalService,
-		StorageEngine storageEngine) {
+			HttpServletRequest request, DDL ddl,
+			DDLRecordSetLocalService ddlRecordSetLocalService,
+			DDLWebConfiguration ddlWebConfiguration,
+			DDMDisplayRegistry ddmDisplayRegistry,
+			DDMTemplateLocalService ddmTemplateLocalService,
+			StorageEngine storageEngine)
+		throws PortalException {
 
 		_ddl = ddl;
 		_ddlRecordSetLocalService = ddlRecordSetLocalService;
@@ -234,6 +237,23 @@ public class DDLDisplayContext {
 			_ddlRequestHelper.getRenderRequest(), "formDDMTemplateId");
 	}
 
+	public List<NavigationItem> getNavigationItems() {
+		HttpServletRequest request = _ddlRequestHelper.getRequest();
+
+		return new NavigationItemList() {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(StringPool.BLANK);
+						navigationItem.setLabel(
+							HtmlUtil.escape(
+								LanguageUtil.get(request, "lists")));
+					});
+			}
+		};
+	}
+
 	public String getOrderByCol() {
 		String orderByCol = ParamUtil.getString(
 			_ddlRequestHelper.getRenderRequest(), "orderByCol",
@@ -344,7 +364,7 @@ public class DDLDisplayContext {
 		return isShowAddDDMTemplateIcon();
 	}
 
-	public boolean isShowAddRecordButton() {
+	public boolean isShowAddRecordButton() throws PortalException {
 		if (isFormView() || isSpreadsheet()) {
 			return false;
 		}
@@ -356,13 +376,13 @@ public class DDLDisplayContext {
 		return false;
 	}
 
-	public boolean isShowAddRecordSetIcon() {
+	public boolean isShowAddRecordSetIcon() throws PortalException {
 		if (_hasAddRecordSetPermission != null) {
 			return _hasAddRecordSetPermission;
 		}
 
 		_hasAddRecordSetPermission = DDLPermission.contains(
-			getPermissionChecker(), getScopeGroupId(), getPortletId(),
+			getPermissionChecker(), getScopeGroupId(),
 			DDLActionKeys.ADD_RECORD_SET);
 
 		return _hasAddRecordSetPermission;
@@ -427,7 +447,7 @@ public class DDLDisplayContext {
 		return _hasEditFormDDMTemplatePermission;
 	}
 
-	public boolean isShowEditRecordSetIcon() {
+	public boolean isShowEditRecordSetIcon() throws PortalException {
 		DDLRecordSet recordSet = getRecordSet();
 
 		if (recordSet == null) {
@@ -472,7 +492,7 @@ public class DDLDisplayContext {
 		return _hasShowIconsActionPermission;
 	}
 
-	public boolean isShowPublishRecordButton() {
+	public boolean isShowPublishRecordButton() throws PortalException {
 		if (isEditable() && hasAddRecordPermission()) {
 			return true;
 		}
@@ -480,7 +500,7 @@ public class DDLDisplayContext {
 		return false;
 	}
 
-	public boolean isShowSaveRecordButton() {
+	public boolean isShowSaveRecordButton() throws PortalException {
 		if (isFormView()) {
 			return false;
 		}
@@ -563,7 +583,7 @@ public class DDLDisplayContext {
 		return _ddlRequestHelper.getThemeDisplay();
 	}
 
-	protected boolean hasAddRecordPermission() {
+	protected boolean hasAddRecordPermission() throws PortalException {
 		if (_hasAddRecordPermission != null) {
 			return _hasAddRecordPermission;
 		}
@@ -578,7 +598,7 @@ public class DDLDisplayContext {
 		return _hasAddRecordPermission;
 	}
 
-	protected boolean hasViewPermission() {
+	protected boolean hasViewPermission() throws PortalException {
 		if (_hasViewPermission != null) {
 			return _hasViewPermission;
 		}

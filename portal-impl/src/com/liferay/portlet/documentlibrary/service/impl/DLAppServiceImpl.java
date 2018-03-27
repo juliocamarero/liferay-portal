@@ -21,6 +21,7 @@ import com.liferay.document.library.kernel.util.DLProcessorRegistryUtil;
 import com.liferay.document.library.kernel.util.comparator.FolderNameComparator;
 import com.liferay.document.library.kernel.util.comparator.RepositoryModelModifiedDateComparator;
 import com.liferay.document.library.kernel.util.comparator.RepositoryModelTitleComparator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
@@ -47,6 +48,11 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionHelper;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermissionFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -56,13 +62,11 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portlet.documentlibrary.constants.DLConstants;
 import com.liferay.portlet.documentlibrary.service.base.DLAppServiceBaseImpl;
-import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
-import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
 import com.liferay.portlet.documentlibrary.util.DLAppUtil;
 
 import java.io.File;
@@ -373,8 +377,9 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 			File file, String mimeType)
 		throws PortalException {
 
-		DLFolderPermission.check(
-			getPermissionChecker(), groupId, folderId, ActionKeys.ADD_DOCUMENT);
+		ModelResourcePermissionHelper.check(
+			_folderModelResourcePermission, getPermissionChecker(), groupId,
+			folderId, ActionKeys.ADD_DOCUMENT);
 
 		return TempFileEntryUtil.addTempFileEntry(
 			groupId, getUserId(), folderName, fileName, file, mimeType);
@@ -406,8 +411,9 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 			InputStream inputStream, String mimeType)
 		throws PortalException {
 
-		DLFolderPermission.check(
-			getPermissionChecker(), groupId, folderId, ActionKeys.ADD_DOCUMENT);
+		ModelResourcePermissionHelper.check(
+			_folderModelResourcePermission, getPermissionChecker(), groupId,
+			folderId, ActionKeys.ADD_DOCUMENT);
 
 		return TempFileEntryUtil.addTempFileEntry(
 			groupId, getUserId(), folderName, fileName, inputStream, mimeType);
@@ -803,8 +809,9 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 			long groupId, long folderId, String folderName, String fileName)
 		throws PortalException {
 
-		DLFolderPermission.check(
-			getPermissionChecker(), groupId, folderId, ActionKeys.ADD_DOCUMENT);
+		ModelResourcePermissionHelper.check(
+			_folderModelResourcePermission, getPermissionChecker(), groupId,
+			folderId, ActionKeys.ADD_DOCUMENT);
 
 		TempFileEntryUtil.deleteTempFileEntry(
 			groupId, getUserId(), folderName, fileName);
@@ -1163,16 +1170,15 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 			}
 		}
 
-		StringBundler msg = new StringBundler(6);
+		StringBundler sb = new StringBundler(5);
 
-		msg.append("No DLFileEntry exists with the key {");
-		msg.append("uuid=");
-		msg.append(uuid);
-		msg.append(", groupId=");
-		msg.append(groupId);
-		msg.append(StringPool.CLOSE_CURLY_BRACE);
+		sb.append("No DLFileEntry exists with the key {uuid=");
+		sb.append(uuid);
+		sb.append(", groupId=");
+		sb.append(groupId);
+		sb.append(StringPool.CLOSE_CURLY_BRACE);
 
-		throw new NoSuchFileEntryException(msg.toString());
+		throw new NoSuchFileEntryException(sb.toString());
 	}
 
 	/**
@@ -1521,14 +1527,28 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	@SuppressWarnings("rawtypes")
 	public List<Object> getFoldersAndFileEntriesAndFileShortcuts(
 			long repositoryId, long folderId, int status, String[] mimeTypes,
-			boolean includeMountFolders, int start, int end,
-			OrderByComparator<?> obc)
+			boolean includeMountFolders, boolean includeOwner, int start,
+			int end, OrderByComparator<?> obc)
 		throws PortalException {
 
 		Repository repository = getRepository(repositoryId);
 
 		return (List)repository.getFoldersAndFileEntriesAndFileShortcuts(
-			folderId, status, mimeTypes, includeMountFolders, start, end, obc);
+			folderId, status, mimeTypes, includeMountFolders, includeOwner,
+			start, end, obc);
+	}
+
+	@Override
+	@SuppressWarnings("rawtypes")
+	public List<Object> getFoldersAndFileEntriesAndFileShortcuts(
+			long repositoryId, long folderId, int status, String[] mimeTypes,
+			boolean includeMountFolders, int start, int end,
+			OrderByComparator<?> obc)
+		throws PortalException {
+
+		return getFoldersAndFileEntriesAndFileShortcuts(
+			repositoryId, folderId, status, mimeTypes, includeMountFolders,
+			true, start, end, obc);
 	}
 
 	/**
@@ -1559,10 +1579,21 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 			boolean includeMountFolders)
 		throws PortalException {
 
+		return getFoldersAndFileEntriesAndFileShortcutsCount(
+			repositoryId, folderId, status, mimeTypes, includeMountFolders,
+			true);
+	}
+
+	@Override
+	public int getFoldersAndFileEntriesAndFileShortcutsCount(
+			long repositoryId, long folderId, int status, String[] mimeTypes,
+			boolean includeMountFolders, boolean includeOwner)
+		throws PortalException {
+
 		Repository repository = getRepository(repositoryId);
 
 		return repository.getFoldersAndFileEntriesAndFileShortcutsCount(
-			folderId, status, mimeTypes, includeMountFolders);
+			folderId, status, mimeTypes, includeMountFolders, includeOwner);
 	}
 
 	/**
@@ -2013,8 +2044,9 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 			long groupId, long folderId, String folderName)
 		throws PortalException {
 
-		DLFolderPermission.check(
-			getPermissionChecker(), groupId, folderId, ActionKeys.ADD_DOCUMENT);
+		ModelResourcePermissionHelper.check(
+			_folderModelResourcePermission, getPermissionChecker(), groupId,
+			folderId, ActionKeys.ADD_DOCUMENT);
 
 		return TempFileEntryUtil.getTempFileNames(
 			groupId, getUserId(), folderName);
@@ -2300,7 +2332,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	public void subscribeFileEntryType(long groupId, long fileEntryTypeId)
 		throws PortalException {
 
-		DLPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
 
 		dlAppLocalService.subscribeFileEntryType(
@@ -2318,8 +2350,9 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	public void subscribeFolder(long groupId, long folderId)
 		throws PortalException {
 
-		DLFolderPermission.check(
-			getPermissionChecker(), groupId, folderId, ActionKeys.SUBSCRIBE);
+		ModelResourcePermissionHelper.check(
+			_folderModelResourcePermission, getPermissionChecker(), groupId,
+			folderId, ActionKeys.SUBSCRIBE);
 
 		dlAppLocalService.subscribeFolder(getUserId(), groupId, folderId);
 	}
@@ -2370,7 +2403,7 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	public void unsubscribeFileEntryType(long groupId, long fileEntryTypeId)
 		throws PortalException {
 
-		DLPermission.check(
+		_portletResourcePermission.check(
 			getPermissionChecker(), groupId, ActionKeys.SUBSCRIBE);
 
 		dlAppLocalService.unsubscribeFileEntryType(
@@ -2388,8 +2421,9 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	public void unsubscribeFolder(long groupId, long folderId)
 		throws PortalException {
 
-		DLFolderPermission.check(
-			getPermissionChecker(), groupId, folderId, ActionKeys.SUBSCRIBE);
+		ModelResourcePermissionHelper.check(
+			_folderModelResourcePermission, getPermissionChecker(), groupId,
+			folderId, ActionKeys.SUBSCRIBE);
 
 		dlAppLocalService.unsubscribeFolder(getUserId(), groupId, folderId);
 	}
@@ -3091,5 +3125,16 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DLAppServiceImpl.class);
+
+	private static volatile ModelResourcePermission<Folder>
+		_folderModelResourcePermission =
+			ModelResourcePermissionFactory.getInstance(
+				DLAppServiceImpl.class, "_folderModelResourcePermission",
+				Folder.class);
+	private static volatile PortletResourcePermission
+		_portletResourcePermission =
+			PortletResourcePermissionFactory.getInstance(
+				DLAppServiceImpl.class, "_portletResourcePermission",
+				DLConstants.RESOURCE_NAME);
 
 }

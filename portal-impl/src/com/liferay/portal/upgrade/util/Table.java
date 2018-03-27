@@ -14,6 +14,7 @@
 
 package com.liferay.portal.upgrade.util;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.dao.jdbc.postgresql.PostgreSQLJDBCUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -31,7 +32,6 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -304,7 +304,7 @@ public class Table {
 
 			int y = createSQL.indexOf(" ", x);
 
-			return createSQL.substring(x, y).trim();
+			return StringUtil.trim(createSQL.substring(x, y));
 		}
 		else {
 			return _tableName;
@@ -598,8 +598,9 @@ public class Table {
 			else {
 				DateFormat df = DateUtil.getISOFormat();
 
-				ps.setTimestamp(
-					paramIndex, new Timestamp(df.parse(value).getTime()));
+				Date date = df.parse(value);
+
+				ps.setTimestamp(paramIndex, new Timestamp(date.getTime()));
 			}
 		}
 		else if (t == Types.TINYINT) {

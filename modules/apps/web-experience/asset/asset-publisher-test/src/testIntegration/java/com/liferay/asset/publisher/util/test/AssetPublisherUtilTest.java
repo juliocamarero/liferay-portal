@@ -16,26 +16,20 @@ package com.liferay.asset.publisher.util.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.publisher.util.AssetPublisherHelper;
-import com.liferay.asset.publisher.web.util.AssetQueryRule;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.HashUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceTracker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.PortletPreferences;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,35 +41,12 @@ import org.springframework.mock.web.portlet.MockPortletPreferences;
  * @author Eudaldo Alonso
  */
 @RunWith(Arquillian.class)
-@Sync
 public class AssetPublisherUtilTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
-
-	@BeforeClass
-	public static void setUpClass() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		_serviceTracker = registry.trackServices(
-			AssetPublisherHelper.class.getName());
-
-		_serviceTracker.open();
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-		_serviceTracker.close();
-	}
-
-	@Before
-	public void setUp() throws Exception {
-		_assetPublisherHelper = _serviceTracker.getService();
-	}
+		new LiferayIntegrationTestRule();
 
 	@Test
 	public void testGetAssetCategoryIdsContainsAllCategories()
@@ -495,9 +466,89 @@ public class AssetPublisherUtilTest {
 		return portletPreferences;
 	}
 
-	private static ServiceTracker<AssetPublisherHelper, AssetPublisherHelper>
-		_serviceTracker;
-
+	@Inject
 	private AssetPublisherHelper _assetPublisherHelper;
+
+	private class AssetQueryRule {
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+
+			if (!(obj instanceof AssetQueryRule)) {
+				return false;
+			}
+
+			AssetQueryRule assetQueryRule = (AssetQueryRule)obj;
+
+			if ((_contains == assetQueryRule._contains) &&
+				(_andOperator == assetQueryRule._andOperator) &&
+				Objects.equals(_name, assetQueryRule._name)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public String getName() {
+			return _name;
+		}
+
+		public String[] getValues() {
+			return _values;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = HashUtil.hash(0, _contains);
+
+			hash = HashUtil.hash(hash, _andOperator);
+
+			return HashUtil.hash(hash, _name);
+		}
+
+		public boolean isAndOperator() {
+			return _andOperator;
+		}
+
+		public boolean isContains() {
+			return _contains;
+		}
+
+		public void setAndOperator(boolean andOperator) {
+			_andOperator = andOperator;
+		}
+
+		public void setContains(boolean contains) {
+			_contains = contains;
+		}
+
+		public void setName(String name) {
+			_name = name;
+		}
+
+		public void setValues(String[] values) {
+			_values = values;
+		}
+
+		private AssetQueryRule(
+			boolean contains, boolean andOperator, String name,
+			String[] values) {
+
+			_contains = contains;
+			_andOperator = andOperator;
+			_name = name;
+			_values = values;
+		}
+
+		private boolean _andOperator;
+		private boolean _contains;
+		private String _name;
+		private String[] _values;
+
+	}
 
 }

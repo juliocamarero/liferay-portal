@@ -2,7 +2,7 @@
 	<var name="assetType" value="Wiki Node" />
 
 	<command name="addCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${wikiNodeName}" />
@@ -146,6 +146,6 @@
 		<var name="key_wikiNodeName" value="${wikiNodeName}" />
 
 		<execute function="AssertTextNotPresent" value1="${wikiNodeName}" />
-		<execute function="AssertElementNotPresent" locator1="Wiki#NODE_TABLE_WIKI_NAME" value1="${wikiNodeName}" />
+		<execute function="AssertElementNotPresent" locator1="Wiki#NODE_TABLE_WIKI_NAME" />
 	</command>
 </definition>

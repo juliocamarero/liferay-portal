@@ -140,7 +140,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="move-folder">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="folder-title">
 										<%= HtmlUtil.escape(folder.getName()) %>
@@ -171,7 +174,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="icon-warning-sign move-error move-folder">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="folder-title">
 										<%= HtmlUtil.escape(folder.getName()) %>
@@ -214,7 +220,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="move-file">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="file-title" title="<%= HtmlUtil.escapeAttribute(validMoveFileEntry.getTitle()) %>">
 										<%= HtmlUtil.escape(validMoveFileEntry.getTitle()) %>
@@ -247,7 +256,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="icon-warning-sign move-error move-file">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="file-title" title="<%= HtmlUtil.escapeAttribute(invalidMoveFileEntry.getTitle()) %>">
 										<%= HtmlUtil.escape(invalidMoveFileEntry.getTitle()) %>
@@ -355,9 +367,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" value="move" />
+			<aui:button type="submit" value="move" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

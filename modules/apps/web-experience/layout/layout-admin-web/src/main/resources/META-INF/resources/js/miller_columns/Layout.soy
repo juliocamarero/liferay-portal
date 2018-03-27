@@ -1,0 +1,32 @@
+{namespace com.liferay.layout.admin.web.Layout}
+
+/**
+ * Layout
+ */
+{template .render}
+	{@param breadcrumbEntries: list<[
+		title: string,
+		url: string
+	]>}
+	{@param layoutColumns: list<?>}
+	{@param pathThemeImages: string}
+	{@param portletNamespace: string}
+	{@param siteNavigationMenuNames: string}
+
+	<div ref="layout">
+		{call com.liferay.layout.admin.web.LayoutBreadcrumbs.render}
+			{param breadcrumbEntries: $breadcrumbEntries /}
+		{/call}
+
+		<div class="bg-white flex-nowrap layout-columns row" ref="layoutColumns">
+			{foreach $layoutColumn in $layoutColumns}
+				{call com.liferay.layout.admin.web.LayoutColumn.render}
+					{param layoutColumn: $layoutColumn /}
+					{param pathThemeImages: $pathThemeImages /}
+					{param portletNamespace: $portletNamespace /}
+					{param siteNavigationMenuNames: $siteNavigationMenuNames /}
+				{/call}
+			{/foreach}
+		</div>
+	</div>
+{/template}

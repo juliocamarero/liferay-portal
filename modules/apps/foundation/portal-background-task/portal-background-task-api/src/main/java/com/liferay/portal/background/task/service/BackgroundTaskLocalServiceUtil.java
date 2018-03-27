@@ -383,6 +383,15 @@ public class BackgroundTaskLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasks(
+		long[] groupIds, java.lang.String name,
+		java.lang.String[] taskExecutorClassNames, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.background.task.model.BackgroundTask> orderByComparator) {
+		return getService()
+				   .getBackgroundTasks(groupIds, name, taskExecutorClassNames,
+			start, end, orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasks(
 		long[] groupIds, java.lang.String[] taskExecutorClassNames) {
 		return getService().getBackgroundTasks(groupIds, taskExecutorClassNames);
 	}
@@ -440,6 +449,22 @@ public class BackgroundTaskLocalServiceUtil {
 			end, orderByComparator);
 	}
 
+	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasksByDuration(
+		long[] groupIds, java.lang.String[] taskExecutorClassNames,
+		boolean completed, int start, int end, boolean orderByType) {
+		return getService()
+				   .getBackgroundTasksByDuration(groupIds,
+			taskExecutorClassNames, completed, start, end, orderByType);
+	}
+
+	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasksByDuration(
+		long[] groupIds, java.lang.String[] taskExecutorClassNames, int start,
+		int end, boolean orderByType) {
+		return getService()
+				   .getBackgroundTasksByDuration(groupIds,
+			taskExecutorClassNames, start, end, orderByType);
+	}
+
 	/**
 	* Returns the number of background tasks.
 	*
@@ -489,6 +514,13 @@ public class BackgroundTaskLocalServiceUtil {
 		return getService()
 				   .getBackgroundTasksCount(groupIds, name,
 			taskExecutorClassName, completed);
+	}
+
+	public static int getBackgroundTasksCount(long[] groupIds,
+		java.lang.String name, java.lang.String[] taskExecutorClassName) {
+		return getService()
+				   .getBackgroundTasksCount(groupIds, name,
+			taskExecutorClassName);
 	}
 
 	public static int getBackgroundTasksCount(long[] groupIds,

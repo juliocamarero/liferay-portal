@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.image.SpriteProcessor;
 import com.liferay.portal.kernel.image.SpriteProcessorUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.ThemeFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -360,9 +360,7 @@ public class ThemeLocalServiceImpl extends ThemeLocalServiceBaseImpl {
 
 		List<Element> companyIdsElements = element.elements("company-id");
 
-		for (int i = 0; i < companyIdsElements.size(); i++) {
-			Element companyIdElement = companyIdsElements.get(i);
-
+		for (Element companyIdElement : companyIdsElements) {
 			String name = companyIdElement.attributeValue("name");
 			String pattern = companyIdElement.attributeValue("pattern");
 
@@ -396,9 +394,7 @@ public class ThemeLocalServiceImpl extends ThemeLocalServiceBaseImpl {
 
 		List<Element> groupIdsElements = element.elements("group-id");
 
-		for (int i = 0; i < groupIdsElements.size(); i++) {
-			Element groupIdElement = groupIdsElements.get(i);
-
+		for (Element groupIdElement : groupIdsElements) {
 			String name = groupIdElement.attributeValue("name");
 			String pattern = groupIdElement.attributeValue("pattern");
 

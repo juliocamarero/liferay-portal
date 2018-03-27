@@ -34,7 +34,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewRecaptchaEnabled" priority="4">
+	<command ignore="true" name="ViewRecaptchaEnabled" priority="4">
 		<property name="test.name.skip.portal.instance" value="Captcha#ViewRecaptchaEnabled" />
 
 		<var method="TestPropsUtil#get('recaptcha.private.key')" name="recaptchaPrivateKey" />
@@ -48,12 +48,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Foundation" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="CAPTCHA" />
 			<var name="configurationName" value="CAPTCHA" />
+			<var name="configurationScope" value="System Scope" />
 		</execute>
 
 		<execute macro="SystemSettings#editTextSetting">

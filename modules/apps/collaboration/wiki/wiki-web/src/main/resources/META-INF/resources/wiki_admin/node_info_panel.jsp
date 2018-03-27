@@ -58,7 +58,12 @@ WikiNodeInfoPanelDisplayContext wikiNodeInfoPanelDisplayContext = wikiDisplayCon
 	</c:choose>
 </div>
 
-<liferay-ui:tabs cssClass="navbar-no-collapse" names="details" refresh="<%= false %>" type="dropdown">
+<liferay-ui:tabs
+	cssClass="navbar-no-collapse"
+	names="details"
+	refresh="<%= false %>"
+	type="dropdown"
+>
 	<liferay-ui:section>
 		<div class="sidebar-body">
 			<dl class="sidebar-block">
@@ -89,7 +94,7 @@ WikiNodeInfoPanelDisplayContext wikiNodeInfoPanelDisplayContext = wikiDisplayCon
 						</dt>
 
 						<%
-						List<WikiPage> orphanPages = WikiPageServiceUtil.getOrphans(scopeGroupId, node.getNodeId());
+						List<WikiPage> orphanPages = WikiPageServiceUtil.getOrphans(node);
 						%>
 
 						<dd class="sidebar-dd">

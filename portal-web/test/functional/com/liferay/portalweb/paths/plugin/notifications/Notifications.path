@@ -51,12 +51,12 @@
 </tr>
 <tr>
 	<td>NOTIFICATIONS_VERTICAL_ELLIPSIS</td>
-	<td>//li[contains(.,'${key_contentBody}')]//span/*[name()='svg'][contains(@class,'icon-ellipsis')]</td>
+	<td>//li[contains(.,'${key_contentBody}')]//a[span/*[name()='svg'][contains(@class,'icon-ellipsis')]]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>NOTIFICATIONS_WORKFLOW_TITLE</td>
-	<td>//div[@class='user-notifications']//li[contains(@class,'unread')]//h4/a</td>
+	<td>//div[@class='user-notifications']//div[contains(@data-qa-id,'rowItemContent')]//a</td>
 	<td></td>
 </tr>
 <tr>
@@ -174,7 +174,7 @@
 <!--REQUESTS-->
 <tr>
 	<td>REQUESTS_LIST_TAB</td>
-	<td>//a[@title='Requests List']</td>
+	<td>//a[contains(@title,'Requests List')]</td>
 	<td></td>
 </tr>
 </tbody>

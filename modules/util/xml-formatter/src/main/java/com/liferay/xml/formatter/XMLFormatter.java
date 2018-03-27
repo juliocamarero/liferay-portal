@@ -14,8 +14,9 @@
 
 package com.liferay.xml.formatter;
 
+import com.liferay.petra.string.StringPool;
+import com.liferay.petra.xml.Dom4jUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -56,7 +57,7 @@ public class XMLFormatter {
 			xml = _stripComments(xml);
 		}
 
-		xml = com.liferay.util.xml.Dom4jUtil.toString(xml);
+		xml = Dom4jUtil.toString(xml);
 
 		Files.write(path, xml.getBytes(StringPool.UTF8));
 	}

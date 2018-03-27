@@ -165,7 +165,7 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 							<liferay-ui:message key="number" />:
 						</th>
 						<td>
-							<%= CreditCard.hide(order.getCcNumber()) %>
+							<%= ShoppingUtil.hideCardNumber(order.getCcNumber()) %>
 						</td>
 					</tr>
 					<tr>
@@ -286,7 +286,9 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 	}
 	%>
 
-	<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+	<liferay-ui:search-iterator
+		searchContainer="<%= searchContainer %>"
+	/>
 
 	<div class="well">
 		<table class="lfr-table">
@@ -353,7 +355,7 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 	<c:if test="<%= !windowState.equals(LiferayWindowState.POP_UP) %>">
 		<aui:button-row>
 			<c:if test="<%= shoppingGroupServiceOverriddenConfiguration.usePayPal() %>">
-				<aui:button cssClass="btn-lg" onClick='<%= renderResponse.getNamespace() + "saveOrder();" %>' value="save" />
+				<aui:button onClick='<%= renderResponse.getNamespace() + "saveOrder();" %>' value="save" />
 			</c:if>
 
 			<portlet:renderURL var="viewInvoiceURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
@@ -365,32 +367,42 @@ long orderId = BeanParamUtil.getLong(order, request, "orderId");
 			String taglibOpenInvoiceWindow = "window.open('" + viewInvoiceURL + "');";
 			%>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibOpenInvoiceWindow %>" value="invoice" />
+			<aui:button onClick="<%= taglibOpenInvoiceWindow %>" value="invoice" />
 
 			<%
 			String taglibSendEmailConfirmation = renderResponse.getNamespace() + "sendEmail('confirmation');";
 			%>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibSendEmailConfirmation %>" value='<%= LanguageUtil.get(request, (order.isSendOrderEmail() ? "" : "re") + "send-confirmation-email") %>' />
+			<aui:button onClick="<%= taglibSendEmailConfirmation %>" value='<%= LanguageUtil.get(request, (order.isSendOrderEmail() ? "" : "re") + "send-confirmation-email") %>' />
 
 			<%
 			String taglibSendEmailShipping = renderResponse.getNamespace() + "sendEmail('shipping');";
 			%>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibSendEmailShipping %>" value='<%= LanguageUtil.get(request, (order.isSendShippingEmail() ? "" : "re") + "send-shipping-email") %>' />
+			<aui:button onClick="<%= taglibSendEmailShipping %>" value='<%= LanguageUtil.get(request, (order.isSendShippingEmail() ? "" : "re") + "send-shipping-email") %>' />
 
 			<c:if test="<%= ShoppingOrderPermission.contains(permissionChecker, scopeGroupId, order, ActionKeys.DELETE) %>">
 				<aui:button onClick='<%= renderResponse.getNamespace() + "deleteOrder();" %>' value="delete" />
 			</c:if>
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</c:if>
 </aui:form>
 
 <c:if test="<%= PropsValues.SHOPPING_ORDER_COMMENTS_ENABLED && !windowState.equals(LiferayWindowState.POP_UP) %>">
-	<liferay-ui:panel-container extended="<%= true %>" id="shoppingEditOrderPanelContainer" persistState="<%= true %>">
-		<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="shoppingEditOrderCommentsPanel" persistState="<%= true %>" title="comments">
+	<liferay-ui:panel-container
+		extended="<%= true %>"
+		id="shoppingEditOrderPanelContainer"
+		persistState="<%= true %>"
+	>
+		<liferay-ui:panel
+			collapsible="<%= true %>"
+			extended="<%= true %>"
+			id="shoppingEditOrderCommentsPanel"
+			persistState="<%= true %>"
+			title="comments"
+		>
 			<liferay-comment:discussion
 				className="<%= ShoppingOrder.class.getName() %>"
 				classPK="<%= order.getOrderId() %>"

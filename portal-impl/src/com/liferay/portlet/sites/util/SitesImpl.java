@@ -24,6 +24,7 @@ import com.liferay.exportimport.kernel.service.ExportImportConfigurationLocalSer
 import com.liferay.exportimport.kernel.service.ExportImportLocalServiceUtil;
 import com.liferay.exportimport.kernel.service.ExportImportServiceUtil;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.events.EventsProcessorUtil;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
@@ -97,7 +98,6 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -307,9 +307,10 @@ public class SitesImpl implements Sites {
 		UnicodeProperties typeSettingsProperties =
 			targetLayout.getTypeSettingsProperties();
 
+		Date modifiedDate = targetLayout.getModifiedDate();
+
 		typeSettingsProperties.setProperty(
-			LAST_MERGE_TIME,
-			String.valueOf(targetLayout.getModifiedDate().getTime()));
+			LAST_MERGE_TIME, String.valueOf(modifiedDate.getTime()));
 
 		LayoutLocalServiceUtil.updateLayout(targetLayout);
 

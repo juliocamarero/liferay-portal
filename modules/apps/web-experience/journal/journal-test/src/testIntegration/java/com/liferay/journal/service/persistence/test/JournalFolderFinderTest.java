@@ -21,15 +21,13 @@ import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.persistence.JournalFolderFinder;
 import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.transaction.Propagation;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.spring.hibernate.LastSessionRecorderUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -54,7 +52,6 @@ import org.osgi.framework.ServiceReference;
  * @author Zsolt Berentey
  */
 @RunWith(Arquillian.class)
-@Sync
 public class JournalFolderFinderTest {
 
 	@ClassRule
@@ -62,7 +59,6 @@ public class JournalFolderFinderTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE,
 			new TransactionalTestRule(
 				Propagation.SUPPORTS, "com.liferay.journal.service"));
 

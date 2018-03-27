@@ -22,10 +22,6 @@ import com.liferay.portal.kernel.search.suggest.Suggester;
 import com.liferay.portal.kernel.search.suggest.SuggesterTranslator;
 import com.liferay.portal.kernel.search.suggest.SuggesterVisitor;
 import com.liferay.portal.kernel.search.suggest.TermSuggester;
-import com.liferay.portal.search.elasticsearch.suggest.AggregateSuggesterTranslator;
-import com.liferay.portal.search.elasticsearch.suggest.CompletionSuggesterTranslator;
-import com.liferay.portal.search.elasticsearch.suggest.PhraseSuggesterTranslator;
-import com.liferay.portal.search.elasticsearch.suggest.TermSuggesterTranslator;
 
 import org.elasticsearch.search.suggest.SuggestBuilder;
 
@@ -52,34 +48,34 @@ public class ElasticsearchSuggesterTranslator
 
 	@Override
 	public SuggestBuilder visit(AggregateSuggester aggregateSuggester) {
-		return _aggregateSuggesteTranslator.translate(aggregateSuggester, this);
+		return aggregateSuggesteTranslator.translate(aggregateSuggester, this);
 	}
 
 	@Override
 	public SuggestBuilder visit(CompletionSuggester completionSuggester) {
-		return _completionSuggesterTranslator.translate(completionSuggester);
+		return completionSuggesterTranslator.translate(completionSuggester);
 	}
 
 	@Override
 	public SuggestBuilder visit(PhraseSuggester phraseSuggester) {
-		return _phraseSuggesterTranslator.translate(phraseSuggester);
+		return phraseSuggesterTranslator.translate(phraseSuggester);
 	}
 
 	@Override
 	public SuggestBuilder visit(TermSuggester termSuggester) {
-		return _termSuggesterTranslator.translate(termSuggester);
+		return termSuggesterTranslator.translate(termSuggester);
 	}
 
 	@Reference
-	private AggregateSuggesterTranslator _aggregateSuggesteTranslator;
+	protected AggregateSuggesterTranslator aggregateSuggesteTranslator;
 
 	@Reference
-	private CompletionSuggesterTranslator _completionSuggesterTranslator;
+	protected CompletionSuggesterTranslator completionSuggesterTranslator;
 
 	@Reference
-	private PhraseSuggesterTranslator _phraseSuggesterTranslator;
+	protected PhraseSuggesterTranslator phraseSuggesterTranslator;
 
 	@Reference
-	private TermSuggesterTranslator _termSuggesterTranslator;
+	protected TermSuggesterTranslator termSuggesterTranslator;
 
 }

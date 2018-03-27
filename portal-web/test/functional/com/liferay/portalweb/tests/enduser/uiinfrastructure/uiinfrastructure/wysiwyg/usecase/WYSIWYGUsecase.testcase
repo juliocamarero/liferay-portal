@@ -25,7 +25,7 @@
 		</if>
 	</tear-down>
 
-	<command name="AddBlogsEntryWithImageViaBlogsImages" priority="4" >
+	<command name="AddBlogsEntryWithImageViaBlogsImages" priority="4">
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
 			<var name="panel" value="Site Administration" />
@@ -73,6 +73,7 @@
 
 		<execute macro="ItemSelector#selectBlogImage">
 			<var name="imageFileName" value="Document_1.jpg" />
+			<var name="navTab" value="Blog Images" />
 		</execute>
 
 		<execute macro="PortletEntry#publish" />
@@ -82,7 +83,9 @@
 			<var name="entryTitle" value="Blogs Entry Title" />
 		</execute>
 
-		<execute function="AssertElementPresent" locator1="//div[contains(@class,'entry-content')]/p/img[contains(@src,'Document_1.jpg')]" />
+		<execute macro="BlogsEntry#viewInlineImage">
+			<var name="uploadFileName" value="Document_1" />
+		</execute>
 	</command>
 
 	<command name="AddWebContentArticleWithImageViaURL" priority="4">
@@ -96,7 +99,9 @@
 
 		<execute macro="WebContentNavigator#gotoAddCP" />
 
-		<execute function="Type" locator1="TextInput#TITLE" value1="Web Content Title" />
+		<execute macro="PortletEntry#inputTitle">
+			<var name="title" value="Web Content Title" />
+		</execute>
 
 		<execute function="Click#pauseClickAt" locator1="AlloyEditor#EDITOR">
 			<var name="key_editor" value="content" />
@@ -108,6 +113,7 @@
 
 		<execute macro="ItemSelector#addFromURL">
 			<var name="imageSourceURL" value="https://raw.githubusercontent.com/liferay/liferay-portal/master/portal-web/test/functional/com/liferay/portalweb/dependencies/Document_1.jpg" />
+			<var name="navTab" value="URL" />
 		</execute>
 
 		<execute macro="PortletEntry#publish" />
@@ -223,7 +229,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="Hebrew (Israel)" />
+			<var name="locale" value="iw-il" />
 		</execute>
 
 		<execute macro="WikiPage#addLocalizedFrontPagePG">
@@ -243,7 +249,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="English (United States)" />
+			<var name="locale" value="en-us" />
 		</execute>
 	</command>
 </definition>

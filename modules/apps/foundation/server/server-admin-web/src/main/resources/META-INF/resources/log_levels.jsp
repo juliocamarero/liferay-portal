@@ -53,7 +53,12 @@ serverURL.setParameter("tabs2", tabs2);
 
 		<c:if test='<%= tabs2.equals("update-categories") %>'>
 			<aui:nav-bar-search>
-				<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" markupView="lexicon" placeholder='<%= LanguageUtil.get(request, "keywords") %>' title='<%= LanguageUtil.get(request, "search-categories") %>' />
+				<liferay-ui:input-search
+					autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
+					markupView="lexicon"
+					placeholder='<%= LanguageUtil.get(request, "keywords") %>'
+					title='<%= LanguageUtil.get(request, "search-categories") %>'
+				/>
 			</aui:nav-bar-search>
 		</c:if>
 	</aui:nav-bar>
@@ -79,7 +84,7 @@ serverURL.setParameter("tabs2", tabs2);
 			</aui:fieldset>
 
 			<aui:button-row>
-				<aui:button cssClass="btn-lg save-server-button" data-cmd="addLogLevel" value="save" />
+				<aui:button cssClass="save-server-button" data-cmd="addLogLevel" value="save" />
 			</aui:button-row>
 		</c:when>
 		<c:otherwise>
@@ -163,11 +168,13 @@ serverURL.setParameter("tabs2", tabs2);
 					</liferay-ui:search-container-column-text>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator markupView="lexicon" />
+				<liferay-ui:search-iterator
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 
 			<aui:button-row>
-				<aui:button cssClass="btn-lg save-server-button" data-cmd="updateLogLevels" value="save" />
+				<aui:button cssClass="save-server-button" data-cmd="updateLogLevels" value="save" />
 			</aui:button-row>
 		</c:otherwise>
 	</c:choose>

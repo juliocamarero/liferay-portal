@@ -46,6 +46,7 @@ import com.liferay.expando.kernel.model.ExpandoRow;
 import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.util.ExpandoBridgeUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -104,7 +105,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -2098,7 +2098,10 @@ public class DLFileEntryLocalServiceImpl
 						WorkflowConstants.STATUS_APPROVED);
 
 				if (!approvedFileVersions.isEmpty()) {
-					newVersion = approvedFileVersions.get(0).getVersion();
+					DLFileVersion firstApprovedFileVersion =
+						approvedFileVersions.get(0);
+
+					newVersion = firstApprovedFileVersion.getVersion();
 				}
 
 				dlFileEntry.setVersion(newVersion);

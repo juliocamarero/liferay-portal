@@ -299,7 +299,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Dynamic Data Lists Display Page" />
@@ -703,7 +703,7 @@
 			<var name="fieldName" value="Text" />
 		</execute>
 
-		<execute macro="DDLTemplate#saveFormTemplateCP" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
@@ -719,7 +719,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Dynamic Data Lists Display Page" />
@@ -1011,7 +1011,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition Name" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="DDLRecord#addCP">
 			<var name="ddlDataDefinitionName" value="Data Definition Name" />
@@ -1042,16 +1042,16 @@
 			<var name="pageName" value="Dynamic Data Lists Display Page" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Record Text" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="New Data Definition Name for List: DDL List Name" />
 			<var name="searchAssetType" value="Dynamic Data Lists Record" />
 		</execute>
 
-		<execute macro="Search#gotoSearchResultPG">
+		<execute macro="SearchPortlet#gotoSearchResultPG">
 			<var name="searchAssetTitle" value="New Data Definition Name for List: DDL List Name" />
 		</execute>
 
@@ -1065,16 +1065,16 @@
 			<var name="pageName" value="Dynamic Data Lists Display Page" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="123" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="New Data Definition Name for List: DDL List Name" />
 			<var name="searchAssetType" value="Dynamic Data Lists Record" />
 		</execute>
 
-		<execute macro="Search#gotoSearchResultPG">
+		<execute macro="SearchPortlet#gotoSearchResultPG">
 			<var name="searchAssetTitle" value="New Data Definition Name for List: DDL List Name" />
 		</execute>
 
@@ -1168,7 +1168,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition Name" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
@@ -1217,16 +1217,16 @@
 			<var name="pageName" value="Dynamic Data Lists Display Page" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Record Text" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="New Data Definition Name for List: DDL List Name" />
 			<var name="searchAssetType" value="Dynamic Data Lists Record" />
 		</execute>
 
-		<execute macro="Search#gotoSearchResultPG">
+		<execute macro="SearchPortlet#gotoSearchResultPG">
 			<var name="searchAssetTitle" value="New Data Definition Name for List: DDL List Name" />
 		</execute>
 
@@ -1241,11 +1241,11 @@
 			<var name="userLoginFullName" value="userfn userln" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Record Text" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultWithNoPermissions">
+		<execute macro="SearchPortlet#viewSearchResultWithNoPermissions">
 			<var name="searchTerm" value="Record Text" />
 		</execute>
 	</command>
@@ -1287,7 +1287,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition Name" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Dynamic Data Lists Display Page" />
@@ -1834,7 +1834,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewListRecordAndAssertAnchorLink"  priority="3">
+	<command name="ViewListRecordAndAssertAnchorLink" priority="3">
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -1894,7 +1894,7 @@
 
 	<command name="ViewListRecordWithUploadedFreeMarkerDisplayTemplate" priority="5">
 		<property name="custom.properties" value="freemarker.engine.restricted.variables=${line.separator}restricted.variables=" />
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="Navigator#openURL" />
@@ -1948,7 +1948,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2071,7 +2071,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2206,7 +2206,7 @@
 			<var name="ddlDataDefinitionName" value="Data Definition" />
 		</execute>
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#openURL" />
 

@@ -30,6 +30,7 @@ import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.base.JournalFolderLocalServiceBaseImpl;
 import com.liferay.journal.util.JournalValidator;
 import com.liferay.journal.util.comparator.FolderIdComparator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -56,7 +57,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -64,8 +64,8 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.subscription.service.SubscriptionLocalService;
 import com.liferay.trash.TrashHelper;
-import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.exception.TrashEntryException;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.model.TrashVersion;
 
@@ -428,7 +428,9 @@ public class JournalFolderLocalServiceImpl
 			int articlesCount = journalArticleFinder.countByG_F(
 				groupId, folderIds.subList(start, end), queryDefinition);
 
-			folderIds.subList(start, end).clear();
+			List<Long> sublist = folderIds.subList(start, end);
+
+			sublist.clear();
 
 			articlesCount += getFoldersAndArticlesCount(
 				groupId, folderIds, status);

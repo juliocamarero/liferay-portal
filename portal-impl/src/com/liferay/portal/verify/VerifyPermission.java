@@ -102,7 +102,7 @@ public class VerifyPermission extends VerifyProcess {
 					long oldActionIds = resourcePermission.getActionIds();
 
 					long newActionIds =
-						oldActionIds & ~_deprecatedOrganizationBitwiseValues;
+						oldActionIds & ~_DEPRECATED_ORGANIZATION_BITWISE_VALUES;
 
 					if (newActionIds == oldActionIds) {
 						return;
@@ -342,16 +342,17 @@ public class VerifyPermission extends VerifyProcess {
 				StringBundler.concat(
 					"update ResourcePermission set roleId = ",
 					String.valueOf(userRole.getRoleId()),
-					" where resourcePermissionId ",
-					"in (select resourcePermissionId from ",
-					userPagePermissionsTableName, " where conflict = FALSE)"));
+					" where resourcePermissionId in (select ",
+					"resourcePermissionId from ", userPagePermissionsTableName,
+					" where conflict = FALSE)"));
 		}
 	}
+
+	private static final long _DEPRECATED_ORGANIZATION_BITWISE_VALUES;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		VerifyPermission.class);
 
-	private static final long _deprecatedOrganizationBitwiseValues;
 	private static final Map<Long, Long> _organizationToGroupBitwiseValues =
 		new HashMap<>();
 
@@ -385,7 +386,7 @@ public class VerifyPermission extends VerifyProcess {
 			}
 		}
 
-		_deprecatedOrganizationBitwiseValues =
+		_DEPRECATED_ORGANIZATION_BITWISE_VALUES =
 			deprecatedOrganizationBitwiseValues;
 	}
 

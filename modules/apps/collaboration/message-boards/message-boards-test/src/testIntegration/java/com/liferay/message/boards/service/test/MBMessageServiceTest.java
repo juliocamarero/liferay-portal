@@ -15,13 +15,13 @@
 package com.liferay.message.boards.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.message.boards.kernel.model.MBCategory;
-import com.liferay.message.boards.kernel.model.MBCategoryConstants;
-import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.model.MBMessageConstants;
-import com.liferay.message.boards.kernel.service.MBCategoryServiceUtil;
-import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
-import com.liferay.message.boards.kernel.service.MBMessageServiceUtil;
+import com.liferay.message.boards.constants.MBCategoryConstants;
+import com.liferay.message.boards.constants.MBMessageConstants;
+import com.liferay.message.boards.model.MBCategory;
+import com.liferay.message.boards.model.MBMessage;
+import com.liferay.message.boards.service.MBCategoryServiceUtil;
+import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
+import com.liferay.message.boards.service.MBMessageServiceUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
@@ -33,8 +33,6 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
@@ -69,7 +67,6 @@ import org.junit.runner.RunWith;
  * @author Alexander Chow
  */
 @RunWith(Arquillian.class)
-@Sync
 public class MBMessageServiceTest {
 
 	@ClassRule
@@ -77,8 +74,7 @@ public class MBMessageServiceTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
-			SynchronousDestinationTestRule.INSTANCE);
+			PermissionCheckerTestRule.INSTANCE);
 
 	@Before
 	public void setUp() throws Exception {
@@ -199,7 +195,7 @@ public class MBMessageServiceTest {
 
 					String message = loggingEvent.getRenderedMessage();
 
-					StringBundler sb = new StringBundler();
+					StringBundler sb = new StringBundler(2);
 
 					sb.append("com.liferay.portal.kernel.exception.");
 					sb.append("SystemException:");
@@ -212,8 +208,10 @@ public class MBMessageServiceTest {
 
 					String message = loggingEvent.getRenderedMessage();
 
-					Assert.assertTrue(message.contains("Your server command"));
 					Assert.assertTrue(
+						message, message.contains("Your server command"));
+					Assert.assertTrue(
+						message,
 						message.contains(
 							"encountered a deadlock situation. Please re-run " +
 								"your command."));

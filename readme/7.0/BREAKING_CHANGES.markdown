@@ -20,7 +20,7 @@ Here are some of the types of changes documented in this file:
   replaces an old API, in spite of the old API being kept in Liferay Portal for
   backwards compatibility.
 
-*This document has been reviewed through commit `0a476ab26e9f`.*
+*This document has been reviewed through commit `07cba9d23d9f`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -624,9 +624,9 @@ This will affect any implementations of `ActionCommand`.
 #### How should I update my code?
 
 Replace imports of `com.liferay.util.bridges.mvc.ActionCommand` with
-`com.liferay.portal.kernel.portlet.bridges.mvc.ActionCommand` and imports of
+`com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand` and imports of
 `com.liferay.util.bridges.mvc.BaseActionCommand` with
-`com.liferay.portal.kernel.portlet.bridges.mvc.BaseActionCommand`.
+`com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand`.
 
 #### Why was this change made?
 
@@ -4435,5 +4435,33 @@ you can no longer cast the returned `AssetRenderer` to `DDLRecordAssetRenderer`.
 #### Why was this change made?
 
 This change was made to clean up LPKG dependencies.
+
+---------------------------------------
+
+### Deprecated the social.activity.sets.enabled Property with No Direct Replacement
+- **Date:** 2018-Jan-24
+- **JIRA Ticket:** LPS-63635
+
+#### What changed?
+
+The `social.activity.sets.enabled` property is no longer recognized by the
+Social Activity portlet. From Liferay Portal 7.0 onwards, Social Activity Sets
+will always be used.
+
+#### Who is affected?
+
+This change affects anyone who has set the `social.activity.sets.enabled`
+property to `false`.
+
+#### How should I update my code?
+
+No changes are necessary.
+
+#### Why was this change made?
+
+The Social Activity portlet had two different versions with slightly different
+behaviors; one used in Liferay Portal and the other one in Social Office. To
+sync both components, and simplify its internal logic, activity sets are always
+enabled by default, with no option to disable them.
 
 ---------------------------------------

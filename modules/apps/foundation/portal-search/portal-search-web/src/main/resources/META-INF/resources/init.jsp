@@ -14,20 +14,15 @@
  */
 --%>
 
-<%@ page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
-page import="com.liferay.asset.kernel.model.AssetEntry" %><%@
-page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
-page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
+<%@ page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
 page import="com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil" %><%@
 page import="com.liferay.petra.string.CharPool" %><%@
+page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
 page import="com.liferay.portal.kernel.json.JSONArray" %><%@
 page import="com.liferay.portal.kernel.json.JSONObject" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
-page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest" %><%@
-page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse" %><%@
-page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.portlet.PortalPreferences" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.search.Field" %><%@
@@ -40,7 +35,6 @@ page import="com.liferay.portal.kernel.search.facet.collector.FacetCollector" %>
 page import="com.liferay.portal.kernel.search.facet.collector.TermCollector" %><%@
 page import="com.liferay.portal.kernel.search.facet.config.FacetConfiguration" %><%@
 page import="com.liferay.portal.kernel.search.highlight.HighlightUtil" %><%@
-page import="com.liferay.portal.kernel.search.suggest.KeywordsSuggestionHolder" %><%@
 page import="com.liferay.portal.kernel.security.permission.ResourceActionsUtil" %><%@
 page import="com.liferay.portal.kernel.service.GroupLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.util.ArrayUtil" %><%@
@@ -53,7 +47,6 @@ page import="com.liferay.portal.kernel.util.KeyValuePair" %><%@
 page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Tuple" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
@@ -62,12 +55,12 @@ page import="com.liferay.portal.kernel.xml.Element" %><%@
 page import="com.liferay.portal.search.web.constants.SearchPortletKeys" %><%@
 page import="com.liferay.portal.search.web.constants.SearchPortletParameterNames" %><%@
 page import="com.liferay.portal.search.web.facet.SearchFacet" %><%@
-page import="com.liferay.portal.search.web.facet.util.SearchFacetTracker" %><%@
 page import="com.liferay.portal.search.web.facet.util.comparator.SearchFacetComparator" %><%@
 page import="com.liferay.portal.search.web.internal.display.context.SearchDisplayContext" %><%@
 page import="com.liferay.portal.search.web.internal.display.context.SearchDisplayContextFactoryUtil" %><%@
 page import="com.liferay.portal.search.web.internal.facet.AssetEntriesSearchFacet" %><%@
 page import="com.liferay.portal.search.web.internal.result.display.context.SearchResultFieldDisplayContext" %><%@
+page import="com.liferay.portal.search.web.internal.search.suggest.KeywordsSuggestionHolder" %><%@
 page import="com.liferay.taglib.aui.AUIUtil" %><%@
 page import="com.liferay.taglib.servlet.PipingServletResponse" %>
 

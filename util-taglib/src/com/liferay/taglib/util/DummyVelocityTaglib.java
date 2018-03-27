@@ -14,16 +14,19 @@
 
 package com.liferay.taglib.util;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.PortletProvider;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.taglib.ui.AssetCategoriesSummaryTag;
 import com.liferay.taglib.ui.AssetLinksTag;
 import com.liferay.taglib.ui.AssetTagsSummaryTag;
 import com.liferay.taglib.ui.BreadcrumbTag;
+import com.liferay.taglib.ui.DiscussionTag;
 import com.liferay.taglib.ui.IconTag;
 import com.liferay.taglib.ui.JournalArticleTag;
+import com.liferay.taglib.ui.MySitesTag;
+import com.liferay.taglib.ui.PngImageTag;
 import com.liferay.taglib.ui.RatingsTag;
 
 import javax.portlet.PortletURL;
@@ -147,7 +150,7 @@ public class DummyVelocityTaglib implements VelocityTaglib {
 	 */
 	@Deprecated
 	@Override
-	public com.liferay.taglib.ui.DiscussionTag getDiscussionTag() {
+	public DiscussionTag getDiscussionTag() {
 		return null;
 	}
 
@@ -166,7 +169,7 @@ public class DummyVelocityTaglib implements VelocityTaglib {
 	 */
 	@Deprecated
 	@Override
-	public com.liferay.taglib.ui.MySitesTag getMySitesTag() {
+	public MySitesTag getMySitesTag() {
 		return null;
 	}
 
@@ -180,7 +183,7 @@ public class DummyVelocityTaglib implements VelocityTaglib {
 	 */
 	@Deprecated
 	@Override
-	public com.liferay.taglib.ui.PngImageTag getPngImageTag() {
+	public PngImageTag getPngImageTag() {
 		return null;
 	}
 

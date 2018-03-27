@@ -7,7 +7,26 @@ import LiferaySurface from '../surface/Surface.es';
 import Utils from '../util/Utils.es';
 import {CancellablePromise} from 'metal-promise/src/promise/Promise';
 
+/**
+ * LiferayApp
+ *
+ * Inherits from `senna/src/app/App` and adds the following Liferay specific 
+ * behavior to Senna's default App:
+ * <ul> 
+ *   <li> Makes cache expiration time configurable from System Settings</li>
+ *   <li>Lets you set valid status codes (Liferay's default valid status codes
+ *   are listed in {@link https://docs.liferay.com/portal/7.1/javadocs/portal-kernel/com/liferay/portal/kernel/servlet/ServletResponseConstants.html|ServletResponseConstants.java})
+ *   <li>Shows alert notifications when requests take too long or when they fail</li>
+ *   <li>Adds a portletBlacklist option that lets you exclude specific portlets
+ *   from the SPA lifecycle.</li>
+ * </ul>
+ */
+
 class LiferayApp extends App {
+
+	/**
+	 * @inheritDoc
+	 */
 	constructor() {
 		super();
 
@@ -19,7 +38,7 @@ class LiferayApp extends App {
 		this.timeout = Math.max(Liferay.SPA.requestTimeout, 0) || Utils.getMaxTimeout();
 		this.timeoutAlert = null;
 
-		var exceptionsSelector = Liferay.SPA.navigationExceptionSelectors;
+		const exceptionsSelector = Liferay.SPA.navigationExceptionSelectors;
 
 		this.setFormSelector('form' + exceptionsSelector);
 		this.setLinkSelector('a' + exceptionsSelector);
@@ -33,7 +52,7 @@ class LiferayApp extends App {
 		Liferay.on('beforeScreenFlip', Utils.resetAllPortlets);
 		Liferay.on('io:complete', this.onLiferayIOComplete, this);
 
-		var body = document.body;
+		const body = document.body;
 
 		if (!body.id) {
 			body.id = 'senna_surface' + core.getUid();
@@ -44,39 +63,85 @@ class LiferayApp extends App {
 		dom.append(body, '<div class="lfr-spa-loading-bar"></div>');
 	}
 
+	/**
+	 * Returns the cache expiration time configuration. This value comes from
+	 * System Settings. The configuration is set upon App initialization 
+	 * @See {@link https://github.com/liferay/liferay-portal/blob/7.1.x/modules/apps/foundation/frontend-js/frontend-js-spa-web/src/main/resources/META-INF/resources/init.tmpl|init.tmpl}
+	 * @return {!Number} The `cacheExpirationTime` value
+	 */
+
 	getCacheExpirationTime() {
 		return Liferay.SPA.cacheExpirationTime;
 	}
+
+	/**
+	 * Returns the valid status codes accepted by Liferay. These values
+	 * come from {@link https://docs.liferay.com/portal/7.1/javadocs/portal-kernel/com/liferay/portal/kernel/servlet/ServletResponseConstants.html|ServletResponseConstants.java}.
+	 * @return {!Array} The `validStatusCodes` property
+	 */
 
 	getValidStatusCodes() {
 		return this.validStatusCodes;
 	}
 
+	/**
+	 * Returns whether the cache is enabled. Cache is considered enabled
+	 * when {@link LiferayApp#getCacheExpirationTime|getCacheExpirationTime} is 
+	 * greater than zero.
+	 * @return {!Boolean} True if cache is enabled
+	 */
+
 	isCacheEnabled() {
 		return this.getCacheExpirationTime() > -1;
 	}
 
+	/**
+	 * Returns whether a given portlet element is in a blacklisted portlet
+	 * that should not behave like a SPA
+	 * @param  {!String} element The portlet boundary DOM node
+	 * @return {!Boolean} True if portlet element is blacklisted
+	 */
+
 	isInPortletBlacklist(element) {
 		return Object.keys(this.portletsBlacklist).some(
 			(portletId) => {
-				var boundaryId = Utils.getPortletBoundaryId(portletId);
+				const boundaryId = Utils.getPortletBoundaryId(portletId);
 
-				var portlets = document.querySelectorAll('[id^="' + boundaryId + '"]');
+				const portlets = document.querySelectorAll('[id^="' + boundaryId + '"]');
 
 				return Array.prototype.slice.call(portlets).some(portlet => dom.contains(portlet, element));
 			}
 		);
 	}
 
+	/**
+	 * Returns whether a given Screen's cache is expired. The expiration timeframe 
+	 * is based on the value returned by {@link LiferayApp#getCacheExpirationTime|getCacheExpirationTime}.
+	 * @param  {!Screen} screen The Senna Screen
+	 * @return {!Boolean} True if the cache has expired
+	 */
+
 	isScreenCacheExpired(screen) {
-		if (this.getCacheExpirationTime() === 0) {
-			return false;
+		let screenCacheExpired = false;
+
+		if (this.getCacheExpirationTime() !== 0) {
+			const lastModifiedInterval = (new Date()).getTime() - screen.getCacheLastModified();
+
+			screenCacheExpired = lastModifiedInterval > this.getCacheExpirationTime();
 		}
 
-		var lastModifiedInterval = (new Date()).getTime() - screen.getCacheLastModified();
-
-		return lastModifiedInterval > this.getCacheExpirationTime();
+		return screenCacheExpired;
 	}
+
+	/**
+	 * A callback for Senna's `beforeNavigate` event. The cache is cleared
+	 * for all screens when the flag `Liferay.SPA.clearScreensCache`
+	 * is set or when a form submission is about to occur. This method also
+	 * exposes the `beforeNavigate` event to the Liferay global object so
+	 * anyone can listen to it.
+	 * @param  {!Object} data Data about the event
+	 * @param  {!Event} event The event object
+	 */
 
 	onBeforeNavigate(data, event) {
 		if (Liferay.SPA.clearScreensCache || data.form) {
@@ -95,11 +160,26 @@ class LiferayApp extends App {
 		);
 	}
 
+	/**
+	 * A private event handler function, called when the 
+	 * `dataLayoutConfigReady` event is fired on the Liferay object, 
+	 * that initializes `Liferay.Layout`
+	 * @param  {!Event} event The event object
+	 */
+
 	onDataLayoutConfigReady_(event) {
 		if (Liferay.Layout) {
-			Liferay.Layout.init(Liferay.Data.layoutConfig)
+			Liferay.Layout.init(Liferay.Data.layoutConfig);
 		}
 	}
+
+	/**
+	 * @inheritDoc
+	 * Overrides Senna's default `onDocClickDelegate_ handler` and
+	 * halts SPA behavior if the click target is inside a blacklisted
+	 * portlet
+	 * @param  {!Event} event The event object
+	 */
 
 	onDocClickDelegate_(event) {
 		if (this.isInPortletBlacklist(event.delegateTarget)) {
@@ -109,6 +189,14 @@ class LiferayApp extends App {
 		super.onDocClickDelegate_(event);
 	}
 
+	/**
+	 * @inheritDoc
+	 * Overrides Senna's default `onDocSubmitDelegate_ handler` and
+	 * halts SPA behavior if the form is inside a blacklisted
+	 * portlet
+	 * @param  {!Event} event The event object
+	 */
+
 	onDocSubmitDelegate_(event) {
 		if (this.isInPortletBlacklist(event.delegateTarget)) {
 			return;
@@ -116,6 +204,12 @@ class LiferayApp extends App {
 
 		super.onDocSubmitDelegate_(event);
 	}
+
+	/**
+	 * Callback for Senna's `endNavigate` event that exposes it
+	 * to the Liferay global object
+	 * @param  {!Event} event The event object
+	 */
 
 	onEndNavigate(event) {
 		Liferay.fire(
@@ -141,9 +235,20 @@ class LiferayApp extends App {
 		Liferay.DOMTaskRunner.reset();
 	}
 
+	/**
+	 * Callback for Liferay's `io:complete` event that clears screens cache when
+	 * an async request occurs
+	 */
+
 	onLiferayIOComplete() {
 		this.clearScreensCache();
 	}
+
+	/**
+	 * Callback for Senna's `navigationError` event that displays
+	 * an alert message to the user with information about the error
+	 * @param  {!Event} event The event object
+	 */
 
 	onNavigationError(event) {
 		if (event.error.requestPrematureTermination) {
@@ -178,6 +283,12 @@ class LiferayApp extends App {
 		}
 	}
 
+	/**
+	 * Callback for Senna's `startNavigate` event that exposes it
+	 * to the Liferay global object
+	 * @param  {!Event} event The event object
+	 */
+
 	onStartNavigate(event) {
 		Liferay.fire(
 			'startNavigate',
@@ -190,13 +301,28 @@ class LiferayApp extends App {
 		this._startRequestTimer(event.path);
 	}
 
+	/**
+	 * Sets the `portletsBlacklist` property
+	 * @param  {!Object} portletsBlacklist
+	 */
+
 	setPortletsBlacklist(portletsBlacklist) {
 		this.portletsBlacklist = portletsBlacklist;
 	}
 
+	/**
+	 * Sets the `validStatusCodes` property
+	 * @param  {!Array} validStatusCodes
+	 */
+
 	setValidStatusCodes(validStatusCodes) {
 		this.validStatusCodes = validStatusCodes;
 	}
+
+	/**
+	 * Clears and detaches event handlers for Liferay's `dataLayoutConfigReady`
+	 * event
+	 */
 
 	_clearLayoutData() {
 		this.dataLayoutConfig_ = Liferay.Data.layoutConfig;
@@ -209,11 +335,24 @@ class LiferayApp extends App {
 		}
 	}
 
+	/**
+	 * Clears the timer that notifies the user when the SPA request
+	 * takes longer than the thresshold time configured in the
+	 * `Liferay.SPA.userNotification.timeout` System Settings property
+	 */
+
 	_clearRequestTimer() {
 		if (this.requestTimer) {
 			clearTimeout(this.requestTimer);
 		}
 	}
+
+	/**
+	 * Creates a user notification
+	 * @param  {!Object} configuration object that's passed to `Liferay.Notification`
+	 * @return {!CancellablePromise} A promise that renders a notification when
+	 * resolved
+	 */
 
 	_createNotification(config) {
 		return new CancellablePromise(
@@ -243,11 +382,22 @@ class LiferayApp extends App {
 		);
 	}
 
+	/**
+	 * Hides the request timeout alert
+	 */
+
 	_hideTimeoutAlert() {
 		if (this.timeoutAlert) {
 			this.timeoutAlert.hide();
 		}
 	}
+
+	/**
+	 * Starts the timer that shows the user a notification when the SPA
+	 * request takes longer than the threshold time configured in the
+	 * `Liferay.SPA.userNotification.timeout` System Settings property
+	 * @param  {!String} path The path that may time out
+	 */
 
 	_startRequestTimer(path) {
 		this._clearRequestTimer();
@@ -282,6 +432,18 @@ class LiferayApp extends App {
 				Liferay.SPA.userNotification.timeout
 			);
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+
+	updateHistory_(title, path, state, opt_replaceHistory) {
+		if (state && state.redirectPath) {
+			state.path = state.redirectPath;
+		}
+
+		super.updateHistory_(title, path, state, opt_replaceHistory);
 	}
 }
 

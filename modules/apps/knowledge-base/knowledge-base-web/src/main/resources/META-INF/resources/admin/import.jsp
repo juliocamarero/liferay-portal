@@ -55,10 +55,7 @@ renderResponse.setTitle(LanguageUtil.get(resourceBundle, "import"));
 			<aui:fieldset>
 				<aui:field-wrapper>
 					<div class="alert alert-info">
-						<liferay-ui:message
-							arguments="<%= HtmlUtil.escape(StringUtil.merge(kbGroupServiceConfiguration.markdownImporterArticleExtensions(), StringPool.COMMA_AND_SPACE)) %>"
-							key="upload-your-zip-file-help"
-						/>
+						<liferay-ui:message arguments="<%= HtmlUtil.escape(StringUtil.merge(kbGroupServiceConfiguration.markdownImporterArticleExtensions(), StringPool.COMMA_AND_SPACE)) %>" key="upload-your-zip-file-help" />
 					</div>
 				</aui:field-wrapper>
 
@@ -69,9 +66,9 @@ renderResponse.setTitle(LanguageUtil.get(resourceBundle, "import"));
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" name="submit" type="submit" />
+			<aui:button name="submit" type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

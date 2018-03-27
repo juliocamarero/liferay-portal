@@ -42,6 +42,14 @@ public class SiteNavigationMenuServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.site.navigation.service.impl.SiteNavigationMenuServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
+		long groupId, java.lang.String name, int type,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addSiteNavigationMenu(groupId, name, type, serviceContext);
+	}
+
+	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
 		long groupId, java.lang.String name,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -97,6 +105,15 @@ public class SiteNavigationMenuServiceUtil {
 	public static int getSiteNavigationMenusCount(long groupId,
 		java.lang.String keywords) {
 		return getService().getSiteNavigationMenusCount(groupId, keywords);
+	}
+
+	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
+		long siteNavigationMenuId, int type, boolean auto,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateSiteNavigationMenu(siteNavigationMenuId, type, auto,
+			serviceContext);
 	}
 
 	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(

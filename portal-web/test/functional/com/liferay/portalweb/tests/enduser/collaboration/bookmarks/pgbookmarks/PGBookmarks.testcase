@@ -20,6 +20,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Bookmarks Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Bookmarks Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -375,11 +383,11 @@
 			<var name="folderName" value="Test Folder Name" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Bookmark Name" />
 		</execute>
 
-		<execute macro="Search#viewSearchAssetTitle">
+		<execute macro="SearchPortlet#viewSearchAssetTitle">
 			<var name="searchAssetTitle" value="Test Bookmark Name" />
 		</execute>
 
@@ -391,11 +399,11 @@
 			<var name="folderName" value="Test Folder Name" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="asdf" />
 		</execute>
 
-		<execute macro="Search#viewSearchNoPG">
+		<execute macro="SearchPortlet#viewSearchNoPG">
 			<var name="searchAssetTitle" value="Test Bookmark Name" />
 			<var name="searchNoResults" value="true" />
 			<var name="searchTerm" value="asdf" />
@@ -409,11 +417,11 @@
 			<var name="folderName" value="Test Folder Name" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm"><![CDATA["Test Bookmark Name"]]></var>
 		</execute>
 
-		<execute macro="Search#viewSearchAssetTitle">
+		<execute macro="SearchPortlet#viewSearchAssetTitle">
 			<var name="searchAssetTitle" value="Test Bookmark Name" />
 		</execute>
 	</command>

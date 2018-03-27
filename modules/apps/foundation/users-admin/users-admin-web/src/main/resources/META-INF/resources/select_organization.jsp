@@ -41,17 +41,9 @@ if (Validator.isNotNull(target)) {
 renderResponse.setTitle(LanguageUtil.get(request, "organizations"));
 %>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item label="organizations" selected="<%= true %>" />
-	</aui:nav>
-
-	<aui:nav-bar-search>
-		<aui:form action="<%= portletURL.toString() %>" name="searchFm">
-			<liferay-ui:input-search markupView="lexicon" />
-		</aui:form>
-	</aui:nav-bar-search>
-</aui:nav-bar>
+<clay:navigation-bar
+	items='<%= userDisplayContext.getNavigationItems("organizations") %>'
+/>
 
 <liferay-frontend:management-bar>
 	<liferay-frontend:management-bar-buttons>
@@ -60,6 +52,14 @@ renderResponse.setTitle(LanguageUtil.get(request, "organizations"));
 				navigationKeys='<%= new String[] {"all"} %>'
 				portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
 			/>
+
+			<li>
+				<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+					<liferay-ui:input-search
+						markupView="lexicon"
+					/>
+				</aui:form>
+			</li>
 		</liferay-frontend:management-bar-filters>
 
 		<liferay-frontend:management-bar-display-buttons
@@ -86,7 +86,10 @@ renderResponse.setTitle(LanguageUtil.get(request, "organizations"));
 		}
 		%>
 
-		<liferay-ui:organization-search-container-results organizationParams="<%= organizationParams %>" parentOrganizationId="<%= parentOrganizationId %>" />
+		<liferay-ui:organization-search-container-results
+			organizationParams="<%= organizationParams %>"
+			parentOrganizationId="<%= parentOrganizationId %>"
+		/>
 
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.kernel.model.Organization"
@@ -157,7 +160,9 @@ renderResponse.setTitle(LanguageUtil.get(request, "organizations"));
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

@@ -14,34 +14,39 @@
 
 package com.liferay.portal.search.solr.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.search.analysis.SimpleTokenizer;
-import com.liferay.portal.kernel.search.analysis.Tokenizer;
-import com.liferay.portal.kernel.search.suggest.BaseQuerySuggester;
 import com.liferay.portal.kernel.search.suggest.QuerySuggester;
+import com.liferay.portal.kernel.search.suggest.Suggester;
+import com.liferay.portal.kernel.search.suggest.SuggesterResults;
 import com.liferay.portal.kernel.search.suggest.SuggestionConstants;
 import com.liferay.portal.kernel.search.suggest.WeightedWord;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.Localization;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.solr.connection.SolrClientManager;
 import com.liferay.portal.search.solr.suggest.NGramQueryBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.spell.LevensteinDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import org.apache.solr.client.solrj.SolrClient;
@@ -68,65 +73,67 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 	property = {"distance.threshold=0.6f", "search.engine.impl=Solr"},
 	service = QuerySuggester.class
 )
-public class SolrQuerySuggester extends BaseQuerySuggester {
+public class SolrQuerySuggester implements QuerySuggester {
+
+	@Override
+	public String spellCheckKeywords(SearchContext searchContext)
+		throws SearchException {
+
+		List<Suggestion> suggestions = doSuggest(searchContext, 1);
+
+		List<String> words = new ArrayList<>();
+
+		for (Suggestion suggestion : suggestions) {
+			words.add(getWord(suggestion.term, suggestion.options));
+		}
+
+		return StringUtil.merge(words, StringPool.SPACE);
+	}
 
 	@Override
 	public Map<String, List<String>> spellCheckKeywords(
 			SearchContext searchContext, int max)
 		throws SearchException {
 
-		Map<String, List<String>> suggestions = new HashMap<>();
+		List<Suggestion> suggestions = doSuggest(searchContext, max);
 
-		Tokenizer tokenizer = getTokenizer();
+		Map<String, List<String>> map = new LinkedHashMap<>();
 
-		String localizedFieldName =
-			Field.SPELL_CHECK_WORD + StringPool.UNDERLINE +
-				searchContext.getLanguageId();
-
-		List<String> keywords = tokenizer.tokenize(
-			localizedFieldName, searchContext.getKeywords(),
-			searchContext.getLanguageId());
-
-		for (String keyword : keywords) {
-			List<String> keywordSuggestions = suggestKeywords(
-				searchContext, max, keyword);
-
-			suggestions.put(keyword, keywordSuggestions);
+		for (Suggestion suggestion : suggestions) {
+			map.put(suggestion.term, suggestion.options);
 		}
 
-		return suggestions;
+		return map;
+	}
+
+	@Override
+	public SuggesterResults suggest(
+		SearchContext searchContext, Suggester suggester) {
+
+		return new SuggesterResults();
 	}
 
 	@Override
 	public String[] suggestKeywordQueries(SearchContext searchContext, int max)
 		throws SearchException {
 
-		SolrClient solrClient = _solrClientManager.getSolrClient();
-
-		SolrQuery solrQuery = new SolrQuery();
-
-		solrQuery.setFilterQueries(
-			getFilterQueries(
-				searchContext, SuggestionConstants.TYPE_QUERY_SUGGESTION));
-
-		StringBundler sb = new StringBundler(6);
-
-		sb.append("start");
-
 		String keywords = searchContext.getKeywords();
 
-		sb.append(keywords.length());
+		if (Validator.isBlank(keywords)) {
+			return new String[0];
+		}
 
-		sb.append(StringPool.COLON);
-		sb.append(StringPool.QUOTE);
-		sb.append(keywords);
-		sb.append(StringPool.QUOTE);
-
-		solrQuery.setQuery(sb.toString());
-
-		solrQuery.setRows(max);
+		SolrClient solrClient = _solrClientManager.getSolrClient();
 
 		try {
+			SolrQuery solrQuery = _nGramQueryBuilder.getNGramQuery(keywords);
+
+			solrQuery.setFilterQueries(
+				getFilterQueries(
+					searchContext, SuggestionConstants.TYPE_QUERY_SUGGESTION));
+
+			solrQuery.setRows(max);
+
 			QueryResponse queryResponse = solrClient.query(solrQuery);
 
 			SolrDocumentList solrDocumentList = queryResponse.getResults();
@@ -155,6 +162,29 @@ public class SolrQuerySuggester extends BaseQuerySuggester {
 	protected void activate(Map<String, Object> properties) {
 		_distanceThreshold = MapUtil.getDouble(
 			properties, "distance.threshold", 0.6D);
+	}
+
+	protected List<Suggestion> doSuggest(SearchContext searchContext, int max)
+		throws SearchException {
+
+		List<Suggestion> suggestions = new ArrayList<>();
+
+		List<String> keywords = Arrays.asList(
+			StringUtils.split(
+				StringUtil.toLowerCase(
+					StringUtil.unquote(searchContext.getKeywords()))));
+
+		for (String keyword : keywords) {
+			suggestions.add(
+				new Suggestion() {
+					{
+						term = keyword;
+						options = suggestKeywords(searchContext, max, keyword);
+					}
+				});
+		}
+
+		return suggestions;
 	}
 
 	protected String[] getFilterQueries(
@@ -232,12 +262,23 @@ public class SolrQuerySuggester extends BaseQuerySuggester {
 		return ArrayUtil.append(groupIds, _GLOBAL_GROUP_ID);
 	}
 
-	protected Tokenizer getTokenizer() {
-		if (tokenizer != null) {
-			return tokenizer;
+	protected Localization getLocalization() {
+
+		// See LPS-72507 and LPS-76500
+
+		if (localization != null) {
+			return localization;
 		}
 
-		return _defaultTokenizer;
+		return LocalizationUtil.getLocalization();
+	}
+
+	protected String getWord(String term, List<String> options) {
+		if (ListUtil.isEmpty(options)) {
+			return term;
+		}
+
+		return options.get(0);
 	}
 
 	@Reference(unbind = "-")
@@ -317,18 +358,14 @@ public class SolrQuerySuggester extends BaseQuerySuggester {
 
 			SolrDocumentList solrDocumentList = queryResponse.getResults();
 
-			for (int i = 0; i < solrDocumentList.size(); i++) {
-				SolrDocument solrDocument = solrDocumentList.get(i);
-
+			for (SolrDocument solrDocument : solrDocumentList) {
 				List<String> suggestions = (List<String>)solrDocument.get(
 					Field.SPELL_CHECK_WORD);
 
 				String suggestion = suggestions.get(0);
 
-				List<String> weights = (List<String>)solrDocument.get(
-					Field.PRIORITY);
-
-				float weight = GetterUtil.getFloat(weights.get(0));
+				float weight = GetterUtil.getFloat(
+					solrDocument.get(Field.PRIORITY));
 
 				if (suggestion.equals(input)) {
 					weight = _INFINITE_WEIGHT;
@@ -375,12 +412,7 @@ public class SolrQuerySuggester extends BaseQuerySuggester {
 		_stringDistance = new LevensteinDistance();
 	}
 
-	@Reference(
-		cardinality = ReferenceCardinality.OPTIONAL,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
-	)
-	protected Tokenizer tokenizer;
+	protected Localization localization;
 
 	private static final long _GLOBAL_GROUP_ID = 0;
 
@@ -391,11 +423,16 @@ public class SolrQuerySuggester extends BaseQuerySuggester {
 	private static final Log _log = LogFactoryUtil.getLog(
 		SolrQuerySuggester.class);
 
-	private static final Tokenizer _defaultTokenizer = new SimpleTokenizer();
-
 	private double _distanceThreshold;
 	private NGramQueryBuilder _nGramQueryBuilder;
 	private SolrClientManager _solrClientManager;
 	private StringDistance _stringDistance = new LevensteinDistance();
+
+	private static class Suggestion {
+
+		protected List<String> options;
+		protected String term;
+
+	}
 
 }

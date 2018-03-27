@@ -57,11 +57,11 @@ public class LayoutPageTemplateCollectionServiceUtil {
 				   .deleteLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
 	}
 
-	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> deleteLayoutPageTemplateCollections(
+	public static void deleteLayoutPageTemplateCollections(
 		long[] layoutPageTemplateCollectionIds)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService()
-				   .deleteLayoutPageTemplateCollections(layoutPageTemplateCollectionIds);
+		getService()
+			.deleteLayoutPageTemplateCollections(layoutPageTemplateCollectionIds);
 	}
 
 	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection fetchLayoutPageTemplateCollection(
@@ -69,6 +69,27 @@ public class LayoutPageTemplateCollectionServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getBasicLayoutPageTemplateCollections(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getBasicLayoutPageTemplateCollections(groupId, start, end,
+			orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getLayoutPageTemplateCollections(groupId);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getLayoutPageTemplateCollections(groupId, type);
 	}
 
 	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(

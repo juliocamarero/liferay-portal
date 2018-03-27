@@ -33,15 +33,13 @@ import com.liferay.exportimport.test.util.model.DummyReference;
 import com.liferay.exportimport.test.util.model.util.DummyFolderTestUtil;
 import com.liferay.exportimport.test.util.model.util.DummyReferenceTestUtil;
 import com.liferay.exportimport.test.util.model.util.DummyTestUtil;
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.dao.orm.hibernate.DynamicQueryFactoryImpl;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletBag;
 import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipReaderFactoryUtil;
@@ -70,16 +68,13 @@ import org.junit.runner.RunWith;
  * @author Akos Thurzo
  */
 @RunWith(Arquillian.class)
-@Sync
 public class ExportedMissingReferenceExportImportTest
 	extends BaseExportImportTestCase {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	@Override
@@ -208,7 +203,9 @@ public class ExportedMissingReferenceExportImportTest
 		List<Element> missingReferenceElements =
 			missingReferencesElement.elements();
 
-		Assert.assertFalse(missingReferenceElements.isEmpty());
+		Assert.assertFalse(
+			missingReferenceElements.toString(),
+			missingReferenceElements.isEmpty());
 	}
 
 	@Override

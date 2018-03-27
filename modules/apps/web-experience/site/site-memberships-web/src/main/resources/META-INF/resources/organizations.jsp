@@ -36,12 +36,6 @@ RowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
 
 OrganizationSearchTerms searchTerms = (OrganizationSearchTerms)organizationSearch.getSearchTerms();
 
-boolean hasAssignMembersPermission = GroupPermissionUtil.contains(permissionChecker, siteMembershipsDisplayContext.getGroupId(), ActionKeys.ASSIGN_MEMBERS);
-
-if (!searchTerms.isSearch() && hasAssignMembersPermission) {
-	organizationSearch.setEmptyResultsMessageCssClass("taglib-empty-result-message-header-has-plus-btn");
-}
-
 long parentOrganizationId = OrganizationConstants.ANY_PARENT_ORGANIZATION_ID;
 
 LinkedHashMap<String, Object> organizationParams = new LinkedHashMap<String, Object>();
@@ -58,9 +52,10 @@ List<Organization> organizations = OrganizationLocalServiceUtil.search(company.g
 organizationSearch.setResults(organizations);
 %>
 
-<liferay-util:include page="/navigation_bar.jsp" servletContext="<%= application %>">
-	<liferay-util:param name="searchEnabled" value="<%= String.valueOf((organizationsCount > 0) || searchTerms.isSearch()) %>" />
-</liferay-util:include>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= siteMembershipsDisplayContext.getViewNavigationItems() %>"
+/>
 
 <liferay-frontend:management-bar
 	disabled="<%= organizationsCount <= 0 %>"
@@ -82,6 +77,18 @@ organizationSearch.setResults(organizations);
 			portletURL="<%= changeDisplayStyleURL %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, siteMembershipsDisplayContext.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					id="selectOrganizations"
+					title='<%= LanguageUtil.get(request, "assign-organizations") %>'
+					url="javascript:;"
+				/>
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
@@ -96,6 +103,17 @@ organizationSearch.setResults(organizations);
 			orderColumns='<%= new String[] {"name", "type"} %>'
 			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
 		/>
+
+		<c:if test="<%= (organizationsCount > 0) || searchTerms.isSearch() %>">
+			<li>
+				<aui:form action="<%= siteMembershipsDisplayContext.getPortletURL() %>" name="searchFm">
+					<liferay-ui:input-search
+						autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
+						markupView="lexicon"
+					/>
+				</aui:form>
+			</li>
+		</c:if>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
@@ -104,7 +122,12 @@ organizationSearch.setResults(organizations);
 			label="info"
 		/>
 
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedOrganizations" label="remove-membership" />
+		<liferay-frontend:management-bar-button
+			href="javascript:;"
+			icon="trash"
+			id="deleteSelectedOrganizations"
+			label="remove-membership"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -148,7 +171,10 @@ organizationSearch.setResults(organizations);
 					<%@ include file="/organization_columns.jspf" %>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="<%= displayStyle %>"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
@@ -159,12 +185,6 @@ organizationSearch.setResults(organizations);
 <aui:form action="<%= addGroupOrganizationsURL %>" cssClass="hide" name="addGroupOrganizationsFm">
 	<aui:input name="tabs1" type="hidden" value="organizations" />
 </aui:form>
-
-<c:if test="<%= hasAssignMembersPermission %>">
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item id="selectOrganizations" title='<%= LanguageUtil.get(request, "assign-organizations") %>' url="javascript:;" />
-	</liferay-frontend:add-menu>
-</c:if>
 
 <aui:script use="liferay-item-selector-dialog">
 	var Util = Liferay.Util;

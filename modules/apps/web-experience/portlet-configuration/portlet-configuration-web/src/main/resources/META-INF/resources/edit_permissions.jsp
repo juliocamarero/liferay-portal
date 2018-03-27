@@ -29,17 +29,21 @@ Resource resource = portletConfigurationPermissionsDisplayContext.getResource();
 
 <div class="edit-permissions portlet-configuration-edit-permissions">
 	<div class="portlet-configuration-body-content">
-		<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-			<aui:nav cssClass="navbar-nav">
-				<aui:nav-item label="permissions" selected="<%= true %>" />
-			</aui:nav>
+		<clay:navigation-bar
+			items="<%= portletConfigurationPermissionsDisplayContext.getNavigationItems() %>"
+		/>
 
-			<aui:nav-bar-search>
-				<aui:form action="<%= portletConfigurationPermissionsDisplayContext.getIteratorURL() %>" name="searchFm">
-					<liferay-ui:input-search markupView="lexicon" />
-				</aui:form>
-			</aui:nav-bar-search>
-		</aui:nav-bar>
+		<liferay-frontend:management-bar>
+			<liferay-frontend:management-bar-filters>
+				<li>
+					<aui:form action="<%= portletConfigurationPermissionsDisplayContext.getIteratorURL() %>" name="searchFm">
+						<liferay-ui:input-search
+							markupView="lexicon"
+						/>
+					</aui:form>
+				</li>
+			</liferay-frontend:management-bar-filters>
+		</liferay-frontend:management-bar>
 
 		<aui:form action="<%= portletConfigurationPermissionsDisplayContext.getUpdateRolePermissionsURL() %>" cssClass="container-fluid-1280" method="post" name="fm">
 			<aui:input name="resourceId" type="hidden" value="<%= resource.getResourceId() %>" />
@@ -149,15 +153,17 @@ Resource resource = portletConfigurationPermissionsDisplayContext.getResource();
 
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator markupView="lexicon" />
+				<liferay-ui:search-iterator
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" name="saveButton" type="submit" />
+		<aui:button name="saveButton" type="submit" />
 
-		<aui:button cssClass="btn-lg" type="cancel" />
+		<aui:button type="cancel" />
 	</aui:button-row>
 </div>
 

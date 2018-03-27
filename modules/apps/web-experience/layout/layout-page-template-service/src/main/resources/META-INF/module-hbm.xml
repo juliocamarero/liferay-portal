@@ -4,7 +4,6 @@
 <hibernate-mapping auto-import="false" default-lazy="false">
 	<import class="com.liferay.layout.page.template.model.LayoutPageTemplateCollection" />
 	<import class="com.liferay.layout.page.template.model.LayoutPageTemplateEntry" />
-	<import class="com.liferay.layout.page.template.model.LayoutPageTemplateFragment" />
 	<class name="com.liferay.layout.page.template.model.impl.LayoutPageTemplateCollectionImpl" table="LayoutPageTemplateCollection">
 		<id name="layoutPageTemplateCollectionId" type="long">
 			<generator class="assigned" />
@@ -17,6 +16,7 @@
 		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property column="type_" name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
 	<class name="com.liferay.layout.page.template.model.impl.LayoutPageTemplateEntryImpl" table="LayoutPageTemplateEntry">
 		<id name="layoutPageTemplateEntryId" type="long">
@@ -29,20 +29,9 @@
 		<property name="createDate" type="org.hibernate.type.TimestampType" />
 		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
 		<property name="layoutPageTemplateCollectionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-	</class>
-	<class name="com.liferay.layout.page.template.model.impl.LayoutPageTemplateFragmentImpl" table="LayoutPageTemplateFragment">
-		<id name="layoutPageTemplateFragmentId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="createDate" type="org.hibernate.type.TimestampType" />
-		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
-		<property name="layoutPageTemplateEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="fragmentEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="position" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="htmlPreviewEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="defaultTemplate" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 </hibernate-mapping>

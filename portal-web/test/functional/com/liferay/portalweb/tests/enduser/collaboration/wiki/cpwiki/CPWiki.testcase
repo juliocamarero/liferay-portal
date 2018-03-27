@@ -41,7 +41,7 @@
 			<var name="wikiNodeName" value="Main" />
 		</execute>
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="WikiEntry#selectPageFormat">
 			<var name="pageFormat" value="MediaWiki" />
@@ -251,12 +251,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Collaboration" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="Wiki" />
 			<var name="configurationName" value="Wiki Service" />
+			<var name="configurationScope" value="Site Scope" />
 		</execute>
 
 		<execute macro="PortalSettings#configureWikiService">
@@ -269,9 +267,7 @@
 			<var name="editor" value="creole" />
 		</execute>
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -285,7 +281,7 @@
 			<var name="wikiNodeName" value="Main" />
 		</execute>
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="WikiEntry#addPageTitle">
 			<var name="wikiPageTitle" value="CKEditor Wiki Page Title" />
@@ -357,7 +353,7 @@
 			<var name="portlet" value="Wiki" />
 		</execute>
 
-		<execute macro="WikiNavigator#gotoNode" >
+		<execute macro="WikiNavigator#gotoNode">
 			<var name="wikiNodeName" value="Main" />
 		</execute>
 
@@ -394,7 +390,7 @@
 	</command>
 
 	<command name="DeleteWikiNode" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 

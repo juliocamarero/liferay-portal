@@ -14,6 +14,8 @@
 
 package com.liferay.portlet;
 
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -36,9 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -668,6 +668,12 @@ public class InvokerPortletImpl
 		}
 
 		if (e instanceof PortletException) {
+			if ((portletResponse instanceof StateAwareResponseImpl) &&
+				!(e instanceof UnavailableException)) {
+
+				return;
+			}
+
 			if (!(portletRequest instanceof RenderRequest)) {
 				portletRequest.setAttribute(
 					_portletId + PortletException.class.getName(), e);
@@ -698,9 +704,12 @@ public class InvokerPortletImpl
 		_expCache = portletModel.getExpCache();
 
 		if (_log.isDebugEnabled()) {
+			com.liferay.portal.kernel.model.Portlet portletContextPortet =
+				_liferayPortletContext.getPortlet();
+
 			_log.debug(
 				"Create instance cache wrapper for " +
-					_liferayPortletContext.getPortlet().getPortletId());
+					portletContextPortet.getPortletId());
 		}
 	}
 

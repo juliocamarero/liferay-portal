@@ -17,6 +17,7 @@ package com.liferay.portal.workflow.web.internal.display.context;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -31,9 +32,10 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowDefinition;
+import com.liferay.portal.kernel.workflow.WorkflowDefinitionManagerUtil;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
@@ -84,8 +86,8 @@ public class WorkflowInstanceEditDisplayContext
 		return String.valueOf(classPK);
 	}
 
-	public String getAssetName() {
-		return HtmlUtil.escape(getWorkflowDefinitionName());
+	public String getAssetName() throws PortalException {
+		return getWorkflowDefinitionName();
 	}
 
 	public AssetRenderer<?> getAssetRenderer() throws PortalException {
@@ -126,7 +128,7 @@ public class WorkflowInstanceEditDisplayContext
 		};
 	}
 
-	public String getHeaderTitle() {
+	public String getHeaderTitle() throws PortalException {
 		return LanguageUtil.get(
 			workflowInstanceRequestHelper.getRequest(),
 			getWorkflowDefinitionName());
@@ -364,10 +366,19 @@ public class WorkflowInstanceEditDisplayContext
 				WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
 	}
 
-	protected String getWorkflowDefinitionName() {
+	protected String getWorkflowDefinitionName() throws PortalException {
 		WorkflowInstance workflowInstance = getWorkflowInstance();
 
-		return workflowInstance.getWorkflowDefinitionName();
+		WorkflowDefinition workflowDefinition =
+			WorkflowDefinitionManagerUtil.getWorkflowDefinition(
+				workflowInstanceRequestHelper.getCompanyId(),
+				workflowInstance.getWorkflowDefinitionName(),
+				workflowInstance.getWorkflowDefinitionVersion());
+
+		return HtmlUtil.escape(
+			workflowDefinition.getTitle(
+				LanguageUtil.getLanguageId(
+					workflowInstanceRequestHelper.getRequest())));
 	}
 
 	protected WorkflowHandler<?> getWorkflowHandler() {

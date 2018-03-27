@@ -98,7 +98,7 @@ String randomNamespace = ParamUtil.getString(request, "randomNamespace");
 							</c:if>
 
 							<div class="button-holder">
-								<label class="btn btn-default" for="<portlet:namespace />fileName"><liferay-ui:message key="select" /></label>
+								<label class="btn btn-default" for="<portlet:namespace />fileName" id="uploadImage" tabindex="0"><liferay-ui:message key="select" /></label>
 
 								<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) || windowState.equals(LiferayWindowState.POP_UP) %>" cssClass="hide" label="" name="fileName" type="file">
 									<aui:validator name="acceptFiles">
@@ -112,11 +112,26 @@ String randomNamespace = ParamUtil.getString(request, "randomNamespace");
 			</div>
 
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" name="submitButton" type="submit" value="done" />
+				<aui:button name="submitButton" type="submit" value="done" />
 
-				<aui:button cssClass="btn-lg" onClick="window.close();" type="cancel" value="close" />
+				<aui:button onClick="window.close();" type="cancel" value="close" />
 			</aui:button-row>
 		</aui:form>
+
+		<aui:script>
+			var uploadImage = $('#uploadImage');
+
+			uploadImage.on(
+				'keypress',
+				function(event) {
+					event.preventDefault();
+
+					if (event.which == 13 || event.which == 32) {
+						uploadImage.trigger('click');
+					}
+				}
+			);
+		</aui:script>
 
 		<aui:script use="liferay-logo-editor">
 			<portlet:actionURL name="/image_uploader/view" var="addTempImageURL">

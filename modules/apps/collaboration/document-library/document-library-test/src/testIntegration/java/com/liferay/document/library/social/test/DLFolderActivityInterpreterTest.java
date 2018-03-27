@@ -18,16 +18,14 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLTrashServiceUtil;
-import com.liferay.document.library.web.social.DLFolderActivityInterpreter;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.service.test.ServiceTestUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.social.activity.test.util.BaseSocialActivityInterpreterTestCase;
 import com.liferay.social.kernel.model.SocialActivityConstants;
@@ -42,16 +40,13 @@ import org.junit.runner.RunWith;
  * @author Zsolt Berentey
  */
 @RunWith(Arquillian.class)
-@Sync
 public class DLFolderActivityInterpreterTest
 	extends BaseSocialActivityInterpreterTestCase {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	@Override
@@ -79,7 +74,7 @@ public class DLFolderActivityInterpreterTest
 
 	@Override
 	protected SocialActivityInterpreter getActivityInterpreter() {
-		return new DLFolderActivityInterpreter();
+		return _socialActivityInterpreter;
 	}
 
 	@Override
@@ -106,6 +101,11 @@ public class DLFolderActivityInterpreterTest
 	protected void restoreModelsFromTrash() throws Exception {
 		DLTrashServiceUtil.restoreFolderFromTrash(_folder.getFolderId());
 	}
+
+	@Inject(
+		filter = "model.class.name=com.liferay.document.library.kernel.model.DLFolder"
+	)
+	private static SocialActivityInterpreter _socialActivityInterpreter;
 
 	private Folder _folder;
 

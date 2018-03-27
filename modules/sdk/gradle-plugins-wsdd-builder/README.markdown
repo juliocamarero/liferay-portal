@@ -1,8 +1,8 @@
 # WSDD Builder Gradle Plugin
 
 The WSDD Builder Gradle plugin lets you run the [Liferay WSDD Builder](https://github.com/liferay/liferay-portal/tree/master/modules/util/portal-tools-wsdd-builder)
-tool in order to generate the [Apache Axis](http://axis.apache.org/axis/) Web
-Service Deployment Descriptor (WSDD) files from a [Service Builder](https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/what-is-service-builder)
+tool to generate the [Apache Axis](http://axis.apache.org/axis/) Web Service
+Deployment Descriptor (WSDD) files from a [Service Builder](https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/what-is-service-builder)
 `service.xml` file.
 
 The plugin has been successfully tested with Gradle 2.5 up to 3.3.
@@ -14,7 +14,7 @@ To use the plugin, include it in your build script:
 ```gradle
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.wsdd.builder", version: "1.0.9"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.wsdd.builder", version: "1.0.11"
 	}
 
 	repositories {
@@ -111,6 +111,6 @@ manually adding a dependency to the `wsddBuilder` configuration:
 
 ```gradle
 dependencies {
-	wsddBuilder group: "com.liferay", name: "com.liferay.portal.tools.wsdd.builder", version: "1.0.8"
+	wsddBuilder group: "com.liferay", name: "com.liferay.portal.tools.wsdd.builder", version: "1.0.10"
 }
 ```

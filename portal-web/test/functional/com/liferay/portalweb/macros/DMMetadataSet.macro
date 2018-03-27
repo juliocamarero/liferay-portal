@@ -1,12 +1,10 @@
 <definition>
 	<command name="add">
-		<execute macro="DMMetadataSet#selectMetadataSetsFrame" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
-		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="Metadata Sets" />
+		<var name="key_headerTitle" value="New Metadata Set" />
 
-		<execute function="Click" locator1="Button#PLUS" />
-
-		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="New Metadata Set" />
+		<execute function="AssertTextEquals" locator1="Dynamicdatamapping#HEADER_TITLE" value1="New Metadata Set" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${metadataSetName}" />
@@ -87,7 +85,7 @@
 	</command>
 
 	<command name="save">
-		<execute function="AssertClick" locator1="DocumentsAndMediaMetadataSets#SAVE_BUTTON" value1="Save" />
+		<execute macro="Button#clickSave" />
 	</command>
 
 	<command name="selectMetadataSetsFrame">
@@ -114,9 +112,9 @@
 
 		<execute macro="DMMetadataSet#selectMetadataSetsFrame" />
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="DM" />
-
-		<execute function="AssertClick" locator1="NavBar#BASIC_SEARCH_BUTTON" value1="Search" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="DM" />
+		</execute>
 
 		<while>
 			<condition function="IsElementPresent" locator1="DocumentsAndMediaMetadataSets#METADATA_SETS_TABLE_ACTIONS_1" />

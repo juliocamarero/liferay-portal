@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-User selUser = (User)request.getAttribute("user.selUser");
+User selUser = (User)request.getAttribute(UsersAdminWebKeys.SELECTED_USER);
 
 List<AnnouncementsDelivery> deliveries = null;
 
@@ -72,5 +72,7 @@ else {
 		/>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>

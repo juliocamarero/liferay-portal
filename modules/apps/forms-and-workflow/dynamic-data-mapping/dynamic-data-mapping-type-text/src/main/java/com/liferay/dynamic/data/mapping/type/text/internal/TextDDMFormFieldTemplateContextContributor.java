@@ -21,10 +21,9 @@ import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +62,14 @@ public class TextDDMFormFieldTemplateContextContributor
 		parameters.put(
 			"placeholder",
 			getPlaceholder(ddmFormField, ddmFormFieldRenderingContext));
+
+		String predefinedValue = getPredefinedValue(
+			ddmFormField, ddmFormFieldRenderingContext);
+
+		if (predefinedValue != null) {
+			parameters.put("predefinedValue", predefinedValue);
+		}
+
 		parameters.put(
 			"tooltip", getTooltip(ddmFormField, ddmFormFieldRenderingContext));
 
@@ -114,6 +121,20 @@ public class TextDDMFormFieldTemplateContextContributor
 			placeholder, ddmFormFieldRenderingContext.getLocale());
 	}
 
+	protected String getPredefinedValue(
+		DDMFormField ddmFormField,
+		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
+
+		LocalizedValue predefinedValue = ddmFormField.getPredefinedValue();
+
+		if (predefinedValue == null) {
+			return null;
+		}
+
+		return predefinedValue.getString(
+			ddmFormFieldRenderingContext.getLocale());
+	}
+
 	protected String getTooltip(
 		DDMFormField ddmFormField,
 		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
@@ -134,14 +155,7 @@ public class TextDDMFormFieldTemplateContextContributor
 	}
 
 	protected boolean isAutocompleteEnabled(DDMFormField ddmFormField) {
-		String dataSourceType = GetterUtil.getString(
-			ddmFormField.getProperty("dataSourceType"));
-
-		if (Validator.isNotNull(dataSourceType)) {
-			return true;
-		}
-
-		return false;
+		return GetterUtil.getBoolean(ddmFormField.getProperty("autocomplete"));
 	}
 
 	@Reference

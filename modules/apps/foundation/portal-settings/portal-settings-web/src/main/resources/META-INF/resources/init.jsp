@@ -27,6 +27,7 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.map.constants.MapProviderWebKeys" %><%@
 page import="com.liferay.petra.content.ContentUtil" %><%@
+page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.exception.AccountNameException" %><%@
 page import="com.liferay.portal.kernel.exception.CompanyMxException" %><%@
 page import="com.liferay.portal.kernel.exception.CompanyVirtualHostException" %><%@
@@ -57,7 +58,6 @@ page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortletKeys" %><%@
 page import="com.liferay.portal.kernel.util.PropsKeys" %><%@
 page import="com.liferay.portal.kernel.util.SetUtil" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.TermsOfUseContentProvider" %><%@
 page import="com.liferay.portal.kernel.util.TermsOfUseContentProviderRegistryUtil" %><%@
@@ -66,7 +66,7 @@ page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.kernel.webserver.WebServerServletTokenUtil" %><%@
 page import="com.liferay.portal.model.impl.*" %><%@
 page import="com.liferay.portal.service.*" %><%@
-page import="com.liferay.portal.settings.web.constants.PortalSettingsWebKeys" %><%@
+page import="com.liferay.portal.settings.web.internal.constants.PortalSettingsWebKeys" %><%@
 page import="com.liferay.portal.util.PrefsPropsUtil" %><%@
 page import="com.liferay.portal.util.PropsValues" %><%@
 page import="com.liferay.ratings.kernel.RatingsType" %><%@

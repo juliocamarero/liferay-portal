@@ -43,6 +43,10 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 				orderColumns='<%= new String[] {"name", "type"} %>'
 				portletURL="<%= portletURL %>"
 			/>
+
+			<li>
+				<liferay-item-selector:search />
+			</li>
 		</liferay-frontend:management-bar-filters>
 
 		<liferay-frontend:management-bar-display-buttons
@@ -177,7 +181,10 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

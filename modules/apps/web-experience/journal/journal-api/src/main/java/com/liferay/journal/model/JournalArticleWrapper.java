@@ -541,6 +541,18 @@ public class JournalArticleWrapper implements JournalArticle,
 		return _journalArticle.getFolderId();
 	}
 
+	@Override
+	public Map<java.util.Locale, java.lang.String> getFriendlyURLMap()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalArticle.getFriendlyURLMap();
+	}
+
+	@Override
+	public java.lang.String getFriendlyURLsXML()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalArticle.getFriendlyURLsXML();
+	}
+
 	/**
 	* Returns the group ID of this journal article.
 	*
@@ -886,6 +898,12 @@ public class JournalArticleWrapper implements JournalArticle,
 	@Override
 	public java.lang.String getUrlTitle() {
 		return _journalArticle.getUrlTitle();
+	}
+
+	@Override
+	public java.lang.String getUrlTitle(java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalArticle.getUrlTitle(locale);
 	}
 
 	/**

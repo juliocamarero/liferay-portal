@@ -48,7 +48,10 @@ renderResponse.setTitle(trashRenderer.getTitle(locale));
 
 <c:choose>
 	<c:when test="<%= trashHandler.isContainerModel() %>">
-		<liferay-util:include page="/navigation.jsp" servletContext="<%= application %>" />
+		<clay:navigation-bar
+			inverted="<%= true %>"
+			items="<%= trashDisplayContext.getNavigationItems() %>"
+		/>
 
 		<liferay-util:include page="/view_content_toolbar.jsp" servletContext="<%= application %>" />
 
@@ -186,7 +189,11 @@ renderResponse.setTitle(trashRenderer.getTitle(locale));
 						</c:choose>
 					</liferay-ui:search-container-row>
 
-					<liferay-ui:search-iterator displayStyle="<%= trashDisplayContext.getDisplayStyle() %>" markupView="lexicon" resultRowSplitter="<%= new TrashResultRowSplitter() %>" />
+					<liferay-ui:search-iterator
+						displayStyle="<%= trashDisplayContext.getDisplayStyle() %>"
+						markupView="lexicon"
+						resultRowSplitter="<%= new TrashResultRowSplitter() %>"
+					/>
 				</liferay-ui:search-container>
 			</div>
 		</div>

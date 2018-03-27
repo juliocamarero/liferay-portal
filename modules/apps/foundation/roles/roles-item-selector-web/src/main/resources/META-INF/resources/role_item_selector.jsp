@@ -48,6 +48,10 @@ PortletURL portletURL = roleItemSelectorViewDisplayContext.getPortletURL();
 			orderColumns='<%= new String[] {"title", "description"} %>'
 			portletURL="<%= portletURL %>"
 		/>
+
+		<li>
+			<liferay-item-selector:search />
+		</li>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
 
@@ -73,7 +77,11 @@ PortletURL portletURL = roleItemSelectorViewDisplayContext.getPortletURL();
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" searchContainer="<%= roleItemSelectorViewDisplayContext.getSearchContainer() %>" />
+		<liferay-ui:search-iterator
+			displayStyle="list"
+			markupView="lexicon"
+			searchContainer="<%= roleItemSelectorViewDisplayContext.getSearchContainer() %>"
+		/>
 	</liferay-ui:search-container>
 </div>
 

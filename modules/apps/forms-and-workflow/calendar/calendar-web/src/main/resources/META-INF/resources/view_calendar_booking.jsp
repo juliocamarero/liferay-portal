@@ -110,7 +110,9 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 				</c:if>
 			</dl>
 
-			<liferay-expando:custom-attributes-available className="<%= CalendarBooking.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= CalendarBooking.class.getName() %>"
+			>
 				<liferay-expando:custom-attribute-list
 					className="<%= CalendarBooking.class.getName() %>"
 					classPK="<%= calendarBooking.getCalendarBookingId() %>"
@@ -156,8 +158,18 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 		</aui:fieldset>
 
 		<c:if test="<%= calendar.isEnableComments() %>">
-			<liferay-ui:panel-container extended="<%= false %>" id="calendarBookingPanelContainer" persistState="<%= true %>">
-				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="calendarBookingCommentsPanel" persistState="<%= true %>" title="comments">
+			<liferay-ui:panel-container
+				extended="<%= false %>"
+				id="calendarBookingPanelContainer"
+				persistState="<%= true %>"
+			>
+				<liferay-ui:panel
+					collapsible="<%= true %>"
+					extended="<%= false %>"
+					id="calendarBookingCommentsPanel"
+					persistState="<%= true %>"
+					title="comments"
+				>
 					<liferay-comment:discussion
 						className="<%= CalendarBooking.class.getName() %>"
 						classPK="<%= calendarBooking.getCalendarBookingId() %>"
@@ -257,16 +269,16 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 			%>
 
 			<c:if test="<%= hasManageBookingsPermission && !hasWorkflowInstanceLink %>">
-				<c:if test="<%= calendarBooking.getStatus() != CalendarBookingWorkflowConstants.STATUS_APPROVED %>">
-					<aui:button onClick='<%= renderResponse.getNamespace() + "invokeTransition(" + CalendarBookingWorkflowConstants.STATUS_APPROVED + ");" %>' value="accept" />
+				<c:if test="<%= calendarBooking.getStatus() != WorkflowConstants.STATUS_APPROVED %>">
+					<aui:button onClick='<%= renderResponse.getNamespace() + "invokeTransition(" + WorkflowConstants.STATUS_APPROVED + ");" %>' value="accept" />
 				</c:if>
 
 				<c:if test="<%= calendarBooking.getStatus() != CalendarBookingWorkflowConstants.STATUS_MAYBE %>">
 					<aui:button onClick='<%= renderResponse.getNamespace() + "invokeTransition(" + CalendarBookingWorkflowConstants.STATUS_MAYBE + ");" %>' value="maybe" />
 				</c:if>
 
-				<c:if test="<%= calendarBooking.getStatus() != CalendarBookingWorkflowConstants.STATUS_DENIED %>">
-					<aui:button onClick='<%= renderResponse.getNamespace() + "invokeTransition(" + CalendarBookingWorkflowConstants.STATUS_DENIED + ");" %>' value="decline" />
+				<c:if test="<%= calendarBooking.getStatus() != WorkflowConstants.STATUS_DENIED %>">
+					<aui:button onClick='<%= renderResponse.getNamespace() + "invokeTransition(" + WorkflowConstants.STATUS_DENIED + ");" %>' value="decline" />
 				</c:if>
 			</c:if>
 		</aui:button-row>
