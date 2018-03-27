@@ -8,4 +8,6 @@ dependencies {
 	testIntegrationCompile project(":apps:analytics:analytics-api")
 }
 
-test.enabled = false
+testIntegration {
+	enabled = false
+}
