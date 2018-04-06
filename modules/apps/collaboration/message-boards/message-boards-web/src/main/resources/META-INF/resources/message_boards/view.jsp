@@ -84,7 +84,7 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 	portletURL="<%= restoreTrashEntriesURL %>"
 />
 
-<liferay-util:include page="/message_boards/top_links.jsp" servletContext="<%= application %>" />
+<liferay-util:include page="/message_boards/nav.jsp" servletContext="<%= application %>" />
 
 <c:choose>
 	<c:when test='<%= mvcRenderCommandName.equals("/message_boards/view_my_subscriptions") %>'>
@@ -98,10 +98,12 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 			portletURL.setParameter("groupThreadsUserId", String.valueOf(groupThreadsUserId));
 		}
 
-		MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, categoryId);
+		MBCategoryDisplay categoryDisplay = new MBCategoryDisplay(scopeGroupId, categoryId);
 		%>
 
 		<div class="main-content-body">
+			<h3><liferay-ui:message key="my-subscriptions" /></h3>
+
 			<liferay-ui:search-container
 				curParam="cur1"
 				deltaConfigurable="<%= false %>"
@@ -115,7 +117,7 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 				/>
 
 				<liferay-ui:search-container-row
-					className="com.liferay.message.boards.kernel.model.MBCategory"
+					className="com.liferay.message.boards.model.MBCategory"
 					escapedModel="<%= true %>"
 					keyProperty="categoryId"
 					modelVar="curCategory"
@@ -128,7 +130,9 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 					<%@ include file="/message_boards/subscribed_category_columns.jspf" %>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator type="more" />
+				<liferay-ui:search-iterator
+					type="more"
+				/>
 			</liferay-ui:search-container>
 
 			<%@ include file="/message_boards/view_threads.jspf" %>
@@ -149,18 +153,6 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 		<%@ include file="/message_boards/view_threads.jspf" %>
 	</c:when>
 	<c:when test='<%= mbListDisplayContext.isShowSearch() || mvcRenderCommandName.equals("/message_boards/view") || mvcRenderCommandName.equals("/message_boards/view_category") || mbListDisplayContext.isShowMyPosts() || mbListDisplayContext.isShowRecentPosts() %>'>
-
-		<%
-		SearchContainer entriesSearchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, SearchContainer.DEFAULT_DELTA, portletURL, null, "there-are-no-threads-nor-categories");
-
-		entriesSearchContainer.setId("mbEntries");
-		entriesSearchContainer.setOrderByCol(orderByCol);
-		entriesSearchContainer.setOrderByComparator(orderByComparator);
-		entriesSearchContainer.setOrderByType(orderByType);
-
-		mbListDisplayContext.populateResultsAndTotal(entriesSearchContainer);
-		%>
-
 		<c:choose>
 			<c:when test='<%= mvcRenderCommandName.equals("/message_boards/search") || mvcRenderCommandName.equals("/message_boards/view") || mvcRenderCommandName.equals("/message_boards/view_category") %>'>
 				<div class="main-content-body">
@@ -174,7 +166,7 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 					<%
 					boolean showAddCategoryButton = MBCategoryPermission.contains(permissionChecker, scopeGroupId, categoryId, ActionKeys.ADD_CATEGORY);
 					boolean showAddMessageButton = MBCategoryPermission.contains(permissionChecker, scopeGroupId, categoryId, ActionKeys.ADD_MESSAGE);
-					boolean showPermissionsButton = MBPermission.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS);
+					boolean showPermissionsButton = MBResourcePermission.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS);
 
 					if (showAddMessageButton && !themeDisplay.isSignedIn()) {
 						if (!allowAnonymousPosting) {
@@ -183,140 +175,246 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 					}
 					%>
 
-					<c:if test="<%= showAddCategoryButton || showAddMessageButton || showPermissionsButton %>">
-						<aui:button-row>
-							<c:if test="<%= showAddCategoryButton %>">
-								<portlet:renderURL var="editCategoryURL">
-									<portlet:param name="mvcRenderCommandName" value="/message_boards/edit_category" />
-									<portlet:param name="redirect" value="<%= currentURL %>" />
-									<portlet:param name="parentCategoryId" value="<%= String.valueOf(categoryId) %>" />
-								</portlet:renderURL>
-
-								<aui:button href="<%= editCategoryURL %>" value='<%= (category == null) ? "add-category[message-board]" : "add-subcategory[message-board]" %>' />
-							</c:if>
-
-							<c:if test="<%= showAddMessageButton %>">
-								<portlet:renderURL var="editMessageURL">
-									<portlet:param name="mvcRenderCommandName" value="/message_boards/edit_message" />
-									<portlet:param name="redirect" value="<%= currentURL %>" />
-									<portlet:param name="mbCategoryId" value="<%= String.valueOf(categoryId) %>" />
-								</portlet:renderURL>
-
-								<aui:button href="<%= editMessageURL %>" value="post-new-thread" />
-							</c:if>
-
-							<c:if test="<%= showPermissionsButton %>">
-
-								<%
-								String modelResource = "com.liferay.message.boards";
-								String modelResourceDescription = themeDisplay.getScopeGroupName();
-								String resourcePrimKey = String.valueOf(scopeGroupId);
-
-								if (category != null) {
-									modelResource = MBCategory.class.getName();
-									modelResourceDescription = category.getName();
-									resourcePrimKey = String.valueOf(category.getCategoryId());
-								}
-								%>
-
-								<liferay-security:permissionsURL
-									modelResource="<%= modelResource %>"
-									modelResourceDescription="<%= HtmlUtil.escape(modelResourceDescription) %>"
-									resourcePrimKey="<%= resourcePrimKey %>"
-									var="permissionsURL"
-									windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-								/>
-
-								<aui:button href="<%= permissionsURL %>" useDialog="<%= true %>" value="permissions" />
-							</c:if>
-						</aui:button-row>
-
-						<%@ include file="/message_boards/category_subscriptions.jspf" %>
-					</c:if>
-
 					<c:if test="<%= category != null %>">
-						<div class="category-subscription category-subscription-types">
-							<c:if test="<%= enableRSS %>">
-								<liferay-ui:rss
-									delta="<%= rssDelta %>"
-									displayStyle="<%= rssDisplayStyle %>"
-									feedType="<%= rssFeedType %>"
-									url="<%= MBUtil.getRSSURL(plid, category.getCategoryId(), 0, 0, themeDisplay) %>"
-								/>
-							</c:if>
-
-							<c:if test="<%= MBCategoryPermission.contains(permissionChecker, category, ActionKeys.SUBSCRIBE) && (mbGroupServiceSettings.isEmailMessageAddedEnabled() || mbGroupServiceSettings.isEmailMessageUpdatedEnabled()) %>">
-								<c:choose>
-									<c:when test="<%= (categorySubscriptionClassPKs != null) && categorySubscriptionClassPKs.contains(category.getCategoryId()) %>">
-										<portlet:actionURL name="/message_boards/edit_category" var="unsubscribeURL">
-											<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.UNSUBSCRIBE %>" />
-											<portlet:param name="redirect" value="<%= currentURL %>" />
-											<portlet:param name="mbCategoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
-										</portlet:actionURL>
-
-										<liferay-ui:icon
-											iconCssClass="icon-remove-sign"
-											label="<%= true %>"
-											message="unsubscribe"
-											url="<%= unsubscribeURL %>"
-										/>
-									</c:when>
-									<c:otherwise>
-										<portlet:actionURL name="/message_boards/edit_category" var="subscribeURL">
-											<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.SUBSCRIBE %>" />
-											<portlet:param name="redirect" value="<%= currentURL %>" />
-											<portlet:param name="mbCategoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
-										</portlet:actionURL>
-
-										<liferay-ui:icon
-											iconCssClass="icon-ok-sign"
-											label="<%= true %>"
-											message="subscribe"
-											url="<%= subscribeURL %>"
-										/>
-									</c:otherwise>
-								</c:choose>
-							</c:if>
-						</div>
 
 						<%
-						long parentCategoryId = category.getParentCategoryId();
-						String parentCategoryName = LanguageUtil.get(request, "message-boards-home");
-
-						if (!category.isRoot()) {
-							MBCategory parentCategory = MBCategoryLocalServiceUtil.getCategory(parentCategoryId);
-
-							parentCategoryId = parentCategory.getCategoryId();
-							parentCategoryName = parentCategory.getName();
-						}
+						MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
 						%>
 
-						<portlet:renderURL var="backURL">
-							<c:choose>
-								<c:when test="<%= parentCategoryId == MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID %>">
-									<portlet:param name="mvcRenderCommandName" value="/message_boards/view" />
-								</c:when>
-								<c:otherwise>
-									<portlet:param name="mvcRenderCommandName" value="/message_boards/view_category" />
-									<portlet:param name="mbCategoryId" value="<%= String.valueOf(parentCategoryId) %>" />
-								</c:otherwise>
-							</c:choose>
-						</portlet:renderURL>
-
-						<liferay-ui:header
-							backLabel="<%= parentCategoryName %>"
-							backURL="<%= backURL.toString() %>"
-							localizeTitle="<%= false %>"
-							title="<%= category.getName() %>"
+						<liferay-ui:breadcrumb
+							showCurrentGroup="<%= false %>"
+							showGuestGroup="<%= false %>"
+							showLayout="<%= false %>"
+							showParentGroups="<%= false %>"
 						/>
 					</c:if>
 
+					<div class="autofit-float autofit-row">
+						<div class="autofit-col autofit-col-expand">
+							<c:choose>
+								<c:when test="<%= category != null %>">
+									<h3><%= category.getName() %></h3>
+								</c:when>
+								<c:otherwise>
+
+									<%
+									MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
+									%>
+
+									<liferay-ui:breadcrumb
+										showCurrentGroup="<%= false %>"
+										showGuestGroup="<%= false %>"
+										showLayout="<%= false %>"
+										showParentGroups="<%= false %>"
+									/>
+								</c:otherwise>
+							</c:choose>
+						</div>
+
+						<div class="autofit-col autofit-col-end">
+							<div class="btn-group">
+								<c:if test="<%= showAddCategoryButton %>">
+									<portlet:renderURL var="editCategoryURL">
+										<portlet:param name="mvcRenderCommandName" value="/message_boards/edit_category" />
+										<portlet:param name="redirect" value="<%= currentURL %>" />
+										<portlet:param name="parentCategoryId" value="<%= String.valueOf(categoryId) %>" />
+									</portlet:renderURL>
+
+									<div class="btn-group-item">
+										<clay:link
+											buttonStyle="secondary"
+											elementClasses="btn-sm"
+											href="<%= editCategoryURL %>"
+											label='<%= LanguageUtil.get(request, "add-category[message-board]") %>'
+										/>
+									</div>
+								</c:if>
+
+								<c:if test="<%= showAddMessageButton %>">
+									<portlet:renderURL var="editMessageURL">
+										<portlet:param name="mvcRenderCommandName" value="/message_boards/edit_message" />
+										<portlet:param name="redirect" value="<%= currentURL %>" />
+										<portlet:param name="mbCategoryId" value="<%= String.valueOf(categoryId) %>" />
+									</portlet:renderURL>
+
+									<div class="btn-group-item">
+										<clay:link
+											buttonStyle="primary"
+											elementClasses="btn-sm"
+											href="<%= editMessageURL %>"
+											label='<%= LanguageUtil.get(request, "new-thread") %>'
+										/>
+									</div>
+								</c:if>
+
+								<liferay-ui:icon-menu
+									direction="left-side"
+									icon="<%= StringPool.BLANK %>"
+									markupView="lexicon"
+									message="<%= StringPool.BLANK %>"
+									showWhenSingleIcon="<%= true %>"
+								>
+									<c:if test="<%= showPermissionsButton %>">
+
+										<%
+										String modelResource = "com.liferay.message.boards";
+										String modelResourceDescription = themeDisplay.getScopeGroupName();
+										String resourcePrimKey = String.valueOf(scopeGroupId);
+
+										if (category != null) {
+											modelResource = MBCategory.class.getName();
+											modelResourceDescription = category.getName();
+											resourcePrimKey = String.valueOf(category.getCategoryId());
+										}
+										%>
+
+										<liferay-security:permissionsURL
+											modelResource="<%= modelResource %>"
+											modelResourceDescription="<%= HtmlUtil.escape(modelResourceDescription) %>"
+											resourcePrimKey="<%= resourcePrimKey %>"
+											var="permissionsURL"
+											windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+										/>
+
+										<liferay-ui:icon
+											label="<%= true %>"
+											message="permissions"
+											method="get"
+											url="<%= permissionsURL %>"
+											useDialog="<%= true %>"
+										/>
+									</c:if>
+
+									<c:choose>
+										<c:when test="<%= category == null %>">
+											<c:if test="<%= MBResourcePermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) && (mbGroupServiceSettings.isEmailMessageAddedEnabled() || mbGroupServiceSettings.isEmailMessageUpdatedEnabled()) %>">
+												<c:choose>
+													<c:when test="<%= SubscriptionLocalServiceUtil.isSubscribed(user.getCompanyId(), user.getUserId(), MBCategory.class.getName(), scopeGroupId) %>">
+														<portlet:actionURL name="/message_boards/edit_category" var="unsubscribeURL">
+															<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.UNSUBSCRIBE %>" />
+															<portlet:param name="redirect" value="<%= currentURL %>" />
+															<portlet:param name="mbCategoryId" value="<%= String.valueOf(MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) %>" />
+														</portlet:actionURL>
+
+														<liferay-ui:icon
+															label="<%= true %>"
+															message="unsubscribe"
+															url="<%= unsubscribeURL %>"
+														/>
+													</c:when>
+													<c:otherwise>
+														<portlet:actionURL name="/message_boards/edit_category" var="subscribeURL">
+															<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.SUBSCRIBE %>" />
+															<portlet:param name="redirect" value="<%= currentURL %>" />
+															<portlet:param name="mbCategoryId" value="<%= String.valueOf(MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) %>" />
+														</portlet:actionURL>
+
+														<liferay-ui:icon
+															label="<%= true %>"
+															message="subscribe"
+															url="<%= subscribeURL %>"
+														/>
+													</c:otherwise>
+												</c:choose>
+											</c:if>
+
+											<c:if test="<%= enableRSS %>">
+												<liferay-rss:rss
+													delta="<%= rssDelta %>"
+													displayStyle="<%= rssDisplayStyle %>"
+													feedType="<%= rssFeedType %>"
+													url="<%= MBRSSUtil.getRSSURL(plid, 0, 0, 0, themeDisplay) %>"
+												/>
+											</c:if>
+										</c:when>
+										<c:otherwise>
+											<c:if test="<%= enableRSS %>">
+												<liferay-rss:rss
+													delta="<%= rssDelta %>"
+													displayStyle="<%= rssDisplayStyle %>"
+													feedType="<%= rssFeedType %>"
+													url="<%= MBRSSUtil.getRSSURL(plid, category.getCategoryId(), 0, 0, themeDisplay) %>"
+												/>
+											</c:if>
+
+											<c:if test="<%= MBCategoryPermission.contains(permissionChecker, category, ActionKeys.SUBSCRIBE) && (mbGroupServiceSettings.isEmailMessageAddedEnabled() || mbGroupServiceSettings.isEmailMessageUpdatedEnabled()) %>">
+												<c:choose>
+													<c:when test="<%= (categorySubscriptionClassPKs != null) && categorySubscriptionClassPKs.contains(category.getCategoryId()) %>">
+														<portlet:actionURL name="/message_boards/edit_category" var="unsubscribeURL">
+															<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.UNSUBSCRIBE %>" />
+															<portlet:param name="redirect" value="<%= currentURL %>" />
+															<portlet:param name="mbCategoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
+														</portlet:actionURL>
+
+														<liferay-ui:icon
+															label="<%= true %>"
+															message="unsubscribe"
+															url="<%= unsubscribeURL %>"
+														/>
+													</c:when>
+													<c:otherwise>
+														<portlet:actionURL name="/message_boards/edit_category" var="subscribeURL">
+															<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.SUBSCRIBE %>" />
+															<portlet:param name="redirect" value="<%= currentURL %>" />
+															<portlet:param name="mbCategoryId" value="<%= String.valueOf(category.getCategoryId()) %>" />
+														</portlet:actionURL>
+
+														<liferay-ui:icon
+															label="<%= true %>"
+															message="subscribe"
+															url="<%= subscribeURL %>"
+														/>
+													</c:otherwise>
+												</c:choose>
+											</c:if>
+										</c:otherwise>
+									</c:choose>
+								</liferay-ui:icon-menu>
+							</div>
+						</div>
+					</div>
+
 					<%
-					request.setAttribute("view.jsp-displayStyle", "descriptive");
-					request.setAttribute("view.jsp-entriesSearchContainer", entriesSearchContainer);
+					SearchContainer categoryEntriesSearchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, mbListDisplayContext.getCategoryEntriesDelta(), portletURL, null, "there-are-no-threads-or-categories");
+
+					mbListDisplayContext.setCategoryEntriesDelta(categoryEntriesSearchContainer);
+
+					categoryEntriesSearchContainer.setOrderByCol(orderByCol);
+					categoryEntriesSearchContainer.setOrderByComparator(orderByComparator);
+					categoryEntriesSearchContainer.setOrderByType(orderByType);
+
+					mbListDisplayContext.populateCategoriesResultsAndTotal(categoryEntriesSearchContainer);
+
+					request.setAttribute("view.jsp-categoryEntriesSearchContainer", categoryEntriesSearchContainer);
 					%>
 
-					<liferay-util:include page='<%= "/message_boards_admin/view_entries.jsp" %>' servletContext="<%= application %>" />
+					<c:if test="<%= categoryEntriesSearchContainer.getTotal() > 0 %>">
+						<liferay-util:include page='<%= "/message_boards/view_category_entries.jsp" %>' servletContext="<%= application %>" />
+					</c:if>
+
+					<%
+					SearchContainer threadEntriesSearchContainer = new SearchContainer(renderRequest, null, null, "cur2", 0, mbListDisplayContext.getThreadEntriesDelta(), portletURL, null, "there-are-no-threads-or-categories");
+
+					mbListDisplayContext.setThreadEntriesDelta(categoryEntriesSearchContainer);
+
+					threadEntriesSearchContainer.setOrderByCol(orderByCol);
+					threadEntriesSearchContainer.setOrderByComparator(orderByComparator);
+					threadEntriesSearchContainer.setOrderByType(orderByType);
+
+					mbListDisplayContext.populateThreadsResultsAndTotal(threadEntriesSearchContainer);
+
+					request.setAttribute("view.jsp-threadEntriesSearchContainer", threadEntriesSearchContainer);
+					%>
+
+					<c:if test="<%= threadEntriesSearchContainer.getTotal() > 0 %>">
+						<liferay-util:include page='<%= "/message_boards/view_thread_entries.jsp" %>' servletContext="<%= application %>" />
+					</c:if>
+
+					<c:if test="<%= (categoryEntriesSearchContainer.getTotal() <= 0) && (threadEntriesSearchContainer.getTotal() <= 0) %>">
+						<liferay-ui:empty-result-message
+							message="there-are-no-threads-or-categories"
+						/>
+					</c:if>
 
 					<%
 					if (category != null) {
@@ -326,51 +424,104 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 					%>
 
 				</div>
-
 			</c:when>
 			<c:when test="<%= mbListDisplayContext.isShowMyPosts() || mbListDisplayContext.isShowRecentPosts() %>">
 				<div class="main-content-body">
-					<c:if test="<%= Validator.isNotNull(redirect) && mbListDisplayContext.isShowRecentPosts() %>">
-						<liferay-ui:header
-							backURL="<%= redirect %>"
-							title="recent-posts"
-						/>
-					</c:if>
+					<c:choose>
+						<c:when test="<%= mbListDisplayContext.isShowRecentPosts() %>">
+							<div class="autofit-float autofit-row">
+								<div class="autofit-col autofit-col-expand">
+									<h3><liferay-ui:message key="recent-posts" /></h3>
+								</div>
+
+								<div class="autofit-col autofit-col-end">
+									<div class="btn-group">
+										<c:if test="<%= enableRSS %>">
+											<liferay-ui:icon-menu
+												direction="left-side"
+												icon="<%= StringPool.BLANK %>"
+												markupView="lexicon"
+												message="<%= StringPool.BLANK %>"
+												showWhenSingleIcon="<%= true %>"
+											>
+												<liferay-rss:rss
+													delta="<%= rssDelta %>"
+													displayStyle="<%= rssDisplayStyle %>"
+													feedType="<%= rssFeedType %>"
+													message="rss"
+													url="<%= MBRSSUtil.getRSSURL(plid, 0, 0, groupThreadsUserId, themeDisplay) %>"
+												/>
+											</liferay-ui:icon-menu>
+										</c:if>
+									</div>
+								</div>
+							</div>
+
+							<c:if test="<%= (groupThreadsUserId > 0) %>">
+								<div class="alert alert-info">
+									<liferay-ui:message key="filter-by-user" />: <%= HtmlUtil.escape(PortalUtil.getUserName(groupThreadsUserId, StringPool.BLANK)) %>
+								</div>
+							</c:if>
+						</c:when>
+						<c:otherwise>
+
+							<%
+							if (themeDisplay.isSignedIn()) {
+								groupThreadsUserId = user.getUserId();
+							}
+							%>
+
+							<div class="autofit-float autofit-row">
+								<div class="autofit-col autofit-col-expand">
+									<h3><liferay-ui:message key="my-posts" /></h3>
+								</div>
+
+								<div class="autofit-col autofit-col-end">
+									<div class="btn-group">
+										<c:if test="<%= enableRSS %>">
+											<liferay-ui:icon-menu
+												direction="left-side"
+												icon="<%= StringPool.BLANK %>"
+												markupView="lexicon"
+												message="<%= StringPool.BLANK %>"
+												showWhenSingleIcon="<%= true %>"
+											>
+												<liferay-rss:rss
+													delta="<%= rssDelta %>"
+													displayStyle="<%= rssDisplayStyle %>"
+													feedType="<%= rssFeedType %>"
+													message="rss"
+													url="<%= MBRSSUtil.getRSSURL(plid, 0, 0, groupThreadsUserId, themeDisplay) %>"
+												/>
+											</liferay-ui:icon-menu>
+										</c:if>
+									</div>
+								</div>
+							</div>
+						</c:otherwise>
+					</c:choose>
 
 					<%
-					if (mbListDisplayContext.isShowMyPosts() && themeDisplay.isSignedIn()) {
-						groupThreadsUserId = user.getUserId();
-					}
-
 					if (groupThreadsUserId > 0) {
 						portletURL.setParameter("groupThreadsUserId", String.valueOf(groupThreadsUserId));
 					}
 					%>
 
-					<c:if test="<%= groupThreadsUserId > 0 %>">
-						<div class="alert alert-info">
-							<liferay-ui:message key="filter-by-user" />: <%= HtmlUtil.escape(PortalUtil.getUserName(groupThreadsUserId, StringPool.BLANK)) %>
-						</div>
-					</c:if>
-
 					<%
-					request.setAttribute("view.jsp-displayStyle", "descriptive");
-					request.setAttribute("view.jsp-entriesSearchContainer", entriesSearchContainer);
+					SearchContainer threadEntriesSearchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, mbListDisplayContext.getThreadEntriesDelta(), portletURL, null, "there-are-no-threads");
+
+					mbListDisplayContext.setThreadEntriesDelta(threadEntriesSearchContainer);
+
+					threadEntriesSearchContainer.setOrderByCol(orderByCol);
+					threadEntriesSearchContainer.setOrderByComparator(orderByComparator);
+					threadEntriesSearchContainer.setOrderByType(orderByType);
+
+					mbListDisplayContext.populateThreadsResultsAndTotal(threadEntriesSearchContainer);
+
+					request.setAttribute("view.jsp-threadEntriesSearchContainer", threadEntriesSearchContainer);
 					%>
 
-					<c:if test="<%= enableRSS && mbListDisplayContext.isShowRecentPosts() %>">
-						<liferay-ui:rss
-							delta="<%= rssDelta %>"
-							displayStyle="<%= rssDisplayStyle %>"
-							feedType="<%= rssFeedType %>"
-							message="rss"
-							url="<%= MBUtil.getRSSURL(plid, 0, 0, groupThreadsUserId, themeDisplay) %>"
-						/>
-					</c:if>
-
-					<liferay-util:include page='<%= "/message_boards_admin/view_entries.jsp" %>' servletContext="<%= application %>">
-						<liferay-util:param name="showBreadcrumb" value="<%= Boolean.FALSE.toString() %>" />
-					</liferay-util:include>
+					<liferay-util:include page='<%= "/message_boards/view_thread_entries.jsp" %>' servletContext="<%= application %>" />
 
 					<%
 					String pageSubtitle = null;

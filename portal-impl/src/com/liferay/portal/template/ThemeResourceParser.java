@@ -14,18 +14,19 @@
 
 package com.liferay.portal.template;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
 
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -95,7 +96,11 @@ public class ThemeResourceParser extends URLResourceParser {
 
 		File fileStorage = themeLoader.getFileStorage();
 
-		return new File(fileStorage, templateId).toURI().toURL();
+		File file = new File(fileStorage, templateId);
+
+		URI uri = file.toURI();
+
+		return uri.toURL();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

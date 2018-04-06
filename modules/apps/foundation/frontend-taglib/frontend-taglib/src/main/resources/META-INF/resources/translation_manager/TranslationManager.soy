@@ -106,7 +106,6 @@
 						<title>{$locale.icon}</title>
 					</svg>
 				</span>
-
 				<span class="">{$locale.code}</span>
 			</span>
 
@@ -124,7 +123,7 @@
 	{@param pathThemeImages: string}
 	{@param? onClickDropdownElement: any}
 
-	{call Dropdown.render}
+	{call liferay.frontend.Dropdown.render}
 		{param header kind="html"}
 			<a class="icon-monospaced" data-onclick="toggle" href="javascript:;">
 				<svg class="lexicon-icon">

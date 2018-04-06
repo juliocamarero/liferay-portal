@@ -14,8 +14,12 @@
 
 package com.liferay.portlet;
 
+import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portlet.extra.config.ExtraPortletAppConfig;
+import com.liferay.portlet.extra.config.ExtraPortletAppConfigRegistry;
 
 import java.util.Locale;
 
@@ -63,7 +67,8 @@ public class ResourceResponseImpl
 
 	@Override
 	public LiferayPortletURL createLiferayPortletURL(
-		String portletName, String lifecycle) {
+		long plid, String portletName, String lifecycle,
+		boolean includeLinkToLayoutUuid) {
 
 		ResourceRequest resourceRequest = (ResourceRequest)getPortletRequest();
 
@@ -82,7 +87,8 @@ public class ResourceResponseImpl
 					"the cacheability is not set to PAGE");
 		}
 
-		return super.createLiferayPortletURL(portletName, lifecycle);
+		return super.createLiferayPortletURL(
+			plid, portletName, lifecycle, includeLinkToLayoutUuid);
 	}
 
 	@Override
@@ -103,6 +109,8 @@ public class ResourceResponseImpl
 	@Override
 	public void setCharacterEncoding(String charset) {
 		response.setCharacterEncoding(charset);
+
+		_canSetLocaleEncoding = false;
 	}
 
 	@Override
@@ -134,7 +142,32 @@ public class ResourceResponseImpl
 
 	@Override
 	public void setLocale(Locale locale) {
+		if (locale == null) {
+			return;
+		}
+
 		response.setLocale(locale);
+
+		if (_canSetLocaleEncoding) {
+			Portlet portlet = getPortlet();
+
+			PortletApp portletApp = portlet.getPortletApp();
+
+			ExtraPortletAppConfig extraPortletAppConfig =
+				ExtraPortletAppConfigRegistry.getExtraPortletAppConfig(
+					portletApp.getServletContextName());
+
+			String characterEncoding = extraPortletAppConfig.getEncoding(
+				locale.toString());
+
+			if (characterEncoding != null) {
+				setCharacterEncoding(characterEncoding);
+
+				_canSetLocaleEncoding = true;
+			}
+		}
 	}
+
+	private boolean _canSetLocaleEncoding = true;
 
 }

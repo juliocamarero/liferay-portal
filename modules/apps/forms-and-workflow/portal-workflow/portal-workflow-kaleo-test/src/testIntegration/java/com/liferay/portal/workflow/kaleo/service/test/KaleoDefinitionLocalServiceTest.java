@@ -18,13 +18,10 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.workflow.kaleo.definition.Definition;
 import com.liferay.portal.workflow.kaleo.exception.NoSuchDefinitionException;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalServiceUtil;
@@ -43,15 +40,12 @@ import org.junit.runner.RunWith;
  * @author Inácio Nery
  */
 @RunWith(Arquillian.class)
-@Sync
 public class KaleoDefinitionLocalServiceTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	public void setUp() throws PortalException {
@@ -156,13 +150,11 @@ public class KaleoDefinitionLocalServiceTest {
 			KaleoDefinition kaleoDefinition)
 		throws IOException, PortalException {
 
-		Definition definition = new Definition(
-			kaleoDefinition.getName(), kaleoDefinition.getDescription(),
-			kaleoDefinition.getContent(), kaleoDefinition.getVersion());
-
 		kaleoDefinition =
-			KaleoDefinitionLocalServiceUtil.incrementKaleoDefinition(
-				definition, StringUtil.randomString(), _serviceContext);
+			KaleoDefinitionLocalServiceUtil.updatedKaleoDefinition(
+				kaleoDefinition.getKaleoDefinitionId(),
+				StringUtil.randomString(), StringUtil.randomString(),
+				kaleoDefinition.getContent(), _serviceContext);
 
 		KaleoDefinitionLocalServiceUtil.activateKaleoDefinition(
 			kaleoDefinition.getKaleoDefinitionId(), _serviceContext);

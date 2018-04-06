@@ -95,6 +95,18 @@
 		</execute>
 	</command>
 
+	<command name="DeleteHistory" priority="3">
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Sites Directory" />
+		</execute>
+
+		<execute macro="Staging#deleteHistory" />
+
+		<execute macro="Portlet#viewNoSpecificPG">
+			<var name="portletName" value="Sites Directory" />
+		</execute>
+	</command>
+
 	<command name="EnableAndDeleteSitePageVariationPage" priority="4">
 		<execute macro="Staging#addSitePagesVariationPG">
 			<var name="copySitePagesVariationName" value="Main Variation" />
@@ -171,7 +183,7 @@
 			<var name="portletName" value="Hello World" />
 		</execute>
 
-		<execute macro="Staging#gotoPublishToLive" >
+		<execute macro="Staging#gotoPublishToLive">
 			<var name="pleaseDoNotMarkAsReady" value="true" />
 		</execute>
 
@@ -301,7 +313,7 @@
 	</command>
 
 	<command name="StagingBlogsCP" priority="5">
-		<property name="portal.acceptance" value="pending" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -380,12 +392,12 @@
 
 		<execute function="IsElementNotPresent" locator1="Staging#PAGE_VARIATION" />
 
-		<execute macro="Staging#changePageVariationInHistory" >
+		<execute macro="Staging#changePageVariationInHistory">
 			<var name="pageVariationName" value="All Page Variations" />
 			<var name="pageVariationNameMenulistName" value="Wednesday" />
 		</execute>
 
-		<execute macro="Staging#viewHistoryVersionPG" >
+		<execute macro="Staging#viewHistoryVersionPG">
 			<var name="historyVersionName" value="Wednesday" />
 		</execute>
 
@@ -471,7 +483,7 @@
 
 		<execute macro="ProductMenu#gotoLiveSite" />
 
-		<execute function="IsElementPresent" locator1="Home#PORTLET" >
+		<execute function="IsElementPresent" locator1="Home#PORTLET">
 			<var name="portletTypeKey" value="YouTube" />
 			<var name="portletTypeKey" value="Web Content Display" />
 		</execute>
@@ -706,7 +718,7 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute function="IsElementPresent" locator1="Home#PORTLET" >
+		<execute function="IsElementPresent" locator1="Home#PORTLET">
 			<var name="portletTypeKey" value="Web Content Display" />
 		</execute>
 
@@ -825,7 +837,7 @@
 			<var name="contentDateRange" value="Last" />
 		</execute>
 
-		<execute function="AssertChecked" locator1="Checkbox#ANY_CHECKBOX" value1="Web Content" >
+		<execute function="AssertChecked" locator1="Checkbox#ANY_CHECKBOX" value1="Web Content">
 			<var name="checkboxName" value="Web Content" />
 		</execute>
 

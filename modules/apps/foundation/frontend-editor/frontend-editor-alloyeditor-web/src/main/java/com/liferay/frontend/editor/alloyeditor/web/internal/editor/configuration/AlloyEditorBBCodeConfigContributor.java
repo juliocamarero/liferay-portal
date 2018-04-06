@@ -14,7 +14,7 @@
 
 package com.liferay.frontend.editor.alloyeditor.web.internal.editor.configuration;
 
-import com.liferay.message.boards.kernel.model.MBThreadConstants;
+import com.liferay.message.boards.constants.MBThreadConstants;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigContributor;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -75,7 +75,7 @@ public class AlloyEditorBBCodeConfigContributor
 
 		String removePlugins = jsonObject.getString("removePlugins");
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(4);
 
 		sb.append("bidi,colorbutton,colordialog,div,flash,font,forms,");
 		sb.append("indentblock,keystrokes,maximize,newpage,pagebreak,");

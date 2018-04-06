@@ -30,12 +30,12 @@ import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldValueRendererRegistry;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.time.LocalDateTime;
@@ -208,7 +208,9 @@ public abstract class BaseDDLExporter implements DDLExporter {
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValueMap =
 			ddmFormValues.getDDMFormFieldValuesMap();
 
-		Stream<DDMFormField> ddmFormFieldStream = ddmFormFields.stream().filter(
+		Stream<DDMFormField> ddmFormFieldStream = ddmFormFields.stream();
+
+		ddmFormFieldStream = ddmFormFieldStream.filter(
 			ddmFormField -> ddmFormFieldValueMap.containsKey(
 				ddmFormField.getName()));
 

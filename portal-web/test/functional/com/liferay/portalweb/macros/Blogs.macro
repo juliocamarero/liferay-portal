@@ -45,7 +45,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute macro="AssetCategorization#addCategory">
@@ -75,6 +75,7 @@
 			<var name="dmFolderName" value="${dmFolderName}" />
 			<var name="dmSubFolderName" value="${dmSubFolderName}" />
 			<var name="imageFileName" value="${imageFileName}" />
+			<var name="navTab" value="${navTab}" />
 		</execute>
 
 		<execute function="Pause" locator1="1000" />
@@ -110,7 +111,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Permissions" />
+			<var name="panel" value="Permissions" />
 		</execute>
 
 		<execute macro="BlogsEntry#entryAddPermissions">
@@ -130,7 +131,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute macro="AssetCategorization#addTag">
@@ -152,7 +153,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<for list="${tagNameList}" param="tagName">
@@ -194,19 +195,9 @@
 	</command>
 
 	<command name="addViaAP">
-		<execute function="MouseOver#mouseOverNotVisible" locator1="AP#ADD_ASSET_PLUS_ICON" />
-
-		<execute function="Click" locator1="AP#ADD_ASSET_PLUS_ICON" />
-
-		<execute function="AssertVisible" locator1="MenuItem#ANY_MENU_ITEM">
-			<var name="key_menuItem" value="Blogs Entry" />
+		<execute macro="AssetPublisherPortlet#addAsset">
+			<var name="assetType" value="Blogs Entry" />
 		</execute>
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Blogs Entry">
-			<var name="key_menuItem" value="Blogs Entry" />
-		</execute>
-
-		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
 		<execute macro="AlloyEditor#addTitleAndContent">
 			<var name="content" value="${entryContent}" />
@@ -226,6 +217,10 @@
 	</command>
 
 	<command name="addViaAPSelectScope">
+		<execute macro="AssetPublisherPortlet#addAsset">
+			<var name="assetType" value="Blogs Entry" />
+		</execute>
+
 		<execute function="MouseOver#mouseOverNotVisible" locator1="AP#ADD_ASSET_PLUS_ICON" />
 
 		<execute function="Click" locator1="AP#ADD_ASSET_PLUS_ICON" />
@@ -265,7 +260,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute macro="BlogsEntry#addCustomAbstract">
@@ -285,7 +280,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute function="Click" locator1="Radio#CUSTOM_ABSTRACT" />
@@ -319,7 +314,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute function="AssertChecked" locator1="Radio#FIRST_400_ABSTRACT" value1="Use the first 400 characters of the entry content." />
@@ -376,15 +371,9 @@
 	</command>
 
 	<command name="addWithWorkflowViaAP">
-		<execute function="MouseOver#mouseOverNotVisible" locator1="AP#ADD_ASSET_PLUS_ICON" />
-
-		<execute function="Click" locator1="AP#ADD_ASSET_PLUS_ICON" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Blogs Entry">
-			<var name="key_menuItem" value="Blogs Entry" />
+		<execute macro="AssetPublisherPortlet#addAsset">
+			<var name="assetType" value="Blogs Entry" />
 		</execute>
-
-		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
 		<execute macro="AlloyEditor#addTitleAndContent">
 			<var name="content" value="${entryContent}" />
@@ -410,7 +399,13 @@
 
 		<execute macro="BlogsConfiguration#selectConfigurationIFrame" />
 
-		<execute macro="BlogsConfiguration#uncheckSocialBookmarks" />
+		<for list="${disableSocialBookmarkSites}" param="socialBookmarkSite">
+			<execute function="AddSelection" locator1="SocialBookmarks#ENABLE_SOCIAL_BOOKMARK_CURRENT_SELECT" value1="${socialBookmarkSite}" />
+
+			<execute function="Click" locator1="Button#MOVE_CURRENT_TO_AVAILABLE" />
+
+			<execute function="AssertTextEquals#assertPartialText" locator1="SocialBookmarks#ENABLE_SOCIAL_BOOKMARK_AVAILABLE_SELECT" value1="${socialBookmarkSite}" />
+		</for>
 
 		<execute macro="IFrame#saveConfiguration" />
 	</command>
@@ -463,12 +458,10 @@
 
 		<execute macro="BlogsConfiguration#selectConfigurationIFrame" />
 
-		<execute macro="BlogsConfiguration#checkSocialBookmarks" />
-
 		<for list="${socialBookmarkSites}" param="socialBookmarkSite">
 			<execute macro="BlogsConfiguration#enableSocialBookmarkSites">
+				<var name="enableSocialBookmarkSites" value="${enableSocialBookmarkSites}" />
 				<var name="socialBookmarkSite" value="${socialBookmarkSite}" />
-				<var name="socialBookmarkSites" value="${socialBookmarkSite}" />
 			</execute>
 		</for>
 
@@ -559,20 +552,25 @@
 			<var name="pageName" value="${pageName}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Link#UNSUBSCRIBE" value1="Unsubscribe" />
+		<execute function="AssertClick" locator1="Blogs#UNSUBSCRIBE_LINK" value1="Unsubscribe" />
 		<execute macro="Alert#viewSuccessMessage" />
 	</command>
 
 	<command name="unsubscribePG">
-		<execute function="AssertClick" locator1="Link#UNSUBSCRIBE" value1="Unsubscribe" />
+		<execute function="AssertClick" locator1="Blogs#UNSUBSCRIBE_LINK" value1="Unsubscribe" />
 
 		<execute macro="Alert#viewSuccessMessage" />
 	</command>
 
 	<command name="viewControlsPG">
-		<execute function="AssertTextEquals" locator1="Blogs#ADD_BLOGS_ENTRY" value1="Add Blog Entry" />
-		<execute function="AssertTextEquals" locator1="Link#SUBSCRIBE" value1="Subscribe" />
-		<execute function="AssertTextEquals" locator1="Link#RSS" value1="RSS" />
+		<var name="key_text" value="New Blog Entry" />
+
+		<execute function="AssertTextEquals" locator1="Button#ANY" value1="New Blog Entry" />
+		<execute function="AssertTextEquals" locator1="Blogs#SUBSCRIBE_LINK" value1="Subscribe" />
+
+		<var name="key_text" value="rss RSS" />
+
+		<execute function="AssertTextEquals" locator1="Button#ANY" value1="rss RSS" />
 	</command>
 
 	<command name="viewNoEntryCP">
@@ -587,13 +585,18 @@
 
 	<command name="viewNoPermissionPG">
 		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="Blogs" />
-		<execute function="AssertElementNotPresent" locator1="Blogs#ADD_BLOGS_ENTRY" value1="Add Blog Entry" />
-		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="Permissions">
+		<var name="key_text" value="New Blog Entry" />
+
+		<execute function="AssertElementNotPresent" locator1="Button#ANY" />
+		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM">
 			<var name="key_menuItem" value="Permissions" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="Link#SUBSCRIBE" />
-		<execute function="AssertTextEquals" locator1="Link#RSS" value1="RSS" />
+		<execute function="AssertElementNotPresent" locator1="Blogs#SUBSCRIBE_LINK" />
+
+		<var name="key_text" value="rss RSS" />
+
+		<execute function="AssertTextEquals" locator1="Button#ANY" value1="rss RSS" />
 	</command>
 
 	<command name="viewPermissionCP">

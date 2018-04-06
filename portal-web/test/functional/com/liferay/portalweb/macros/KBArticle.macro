@@ -1,6 +1,6 @@
 <definition>
 	<command name="_gotoAddArticleViaTemplate">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${kbTemplateTitle}">
 			<var name="key_menuItem" value="${kbTemplateTitle}" />
@@ -8,7 +8,7 @@
 	</command>
 
 	<command name="_gotoAddBasicArticle">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Basic Article">
 			<var name="key_menuItem" value="Basic Article" />
@@ -25,7 +25,7 @@
 	</command>
 
 	<command name="_gotoImportArticle">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Import">
 			<var name="key_menuItem" value="Import" />
@@ -76,7 +76,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<if>
@@ -144,7 +144,7 @@
 		</if>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<if>
@@ -223,7 +223,7 @@
 			<isset var="categoryName" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Categorization" />
+					<var name="panel" value="Categorization" />
 				</execute>
 
 				<execute macro="AssetCategorization#addCategory">
@@ -279,7 +279,7 @@
 	</command>
 
 	<command name="addCPWithBooleanCustomField">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Basic Article">
 			<var name="key_menuItem" value="Basic Article" />
@@ -295,7 +295,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Custom Fields" />
+			<var name="panel" value="Custom Fields" />
 		</execute>
 
 		<execute function="Select" locator1="KnowledgeBaseArticle#CUSTOM_FIELD_BOOLEAN" value1="${selectBoolean}" />
@@ -304,7 +304,7 @@
 	</command>
 
 	<command name="addCPWithInvalidAttachmentSize">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Basic Article">
 			<var name="key_menuItem" value="Basic Article" />
@@ -329,7 +329,7 @@
 	</command>
 
 	<command name="addCPWithInvalidTitle">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Basic Article">
 			<var name="key_menuItem" value="Basic Article" />
@@ -418,9 +418,7 @@
 
 				<execute function="Type" locator1="KnowledgeBaseConfiguration#EMAIL_FROM_ADDRESS_FIELD" value1="${userEmailAddress}" />
 
-				<execute macro="Button#clickSave" />
-
-				<execute macro="Alert#viewSuccessMessage" />
+				<execute macro="PortletEntry#save" />
 			</then>
 		</if>
 
@@ -437,9 +435,7 @@
 
 				<execute function="SelectFrame" locator1="KnowledgeBaseConfiguration#IFRAME" />
 
-				<execute macro="Button#clickSave" />
-
-				<execute macro="Alert#viewSuccessMessage" />
+				<execute macro="PortletEntry#save" />
 			</then>
 		</if>
 
@@ -456,9 +452,7 @@
 
 				<execute function="SelectFrame" locator1="KnowledgeBaseConfiguration#IFRAME" />
 
-				<execute macro="Button#clickSave" />
-
-				<execute macro="Alert#viewSuccessMessage" />
+				<execute macro="PortletEntry#save" />
 			</then>
 		</if>
 
@@ -475,9 +469,7 @@
 
 				<execute function="SelectFrame" locator1="KnowledgeBaseConfiguration#IFRAME" />
 
-				<execute macro="Button#clickSave" />
-
-				<execute macro="Alert#viewSuccessMessage" />
+				<execute macro="PortletEntry#save" />
 			</then>
 		</if>
 
@@ -573,9 +565,7 @@
 			</elseif>
 		</if>
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 
 		<execute function="SelectFrame" value1="relative=top" />
 	</command>
@@ -602,9 +592,7 @@
 
 		<execute function="SelectFrame" locator1="KnowledgeBaseConfiguration#IFRAME" />
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 	</command>
 
 	<command name="configureKBRatingTypePG">
@@ -646,9 +634,7 @@
 
 		<execute function="AddSelection" locator1="KnowledgeBaseSection#CONFIGURATION_SECTIONS_SELECT" value1="${kbArticleSection}" />
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 	</command>
 
 	<command name="configureKBSocialBookmarkSites">
@@ -660,13 +646,6 @@
 		<execute function="SelectFrame" locator1="KnowledgeBaseConfiguration#IFRAME" />
 
 		<execute function="AssertClick" locator1="KnowledgeBaseConfiguration#NAVIGATION_TAB_DISPLAY_SETTINGS" value1="Display Settings" />
-
-		<if>
-			<condition function="IsNotVisible" locator1="Select#DISPLAY_STYLE" />
-			<then>
-				<execute function="Check#toggleSwitch" locator1="Checkbox#ENABLE_SOCIAL_BOOKMARKS" />
-			</then>
-		</if>
 
 		<if>
 			<isset var="enableSocialBookmarkSites" />
@@ -736,9 +715,11 @@
 
 	<command name="disableSocialBookmarkSites">
 		<for list="${disableSocialBookmarkSites}" param="socialBookmarkSite">
-			<execute function="Uncheck" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_CONFIGURATION_CHECKBOX">
-				<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
-			</execute>
+			<execute function="AddSelection" locator1="SocialBookmarks#ENABLE_SOCIAL_BOOKMARK_CURRENT_SELECT" value1="${socialBookmarkSite}" />
+
+			<execute function="Click" locator1="Button#MOVE_CURRENT_TO_AVAILABLE" />
+
+			<execute function="AssertTextEquals#assertPartialText" locator1="SocialBookmarks#ENABLE_SOCIAL_BOOKMARK_AVAILABLE_SELECT" value1="${socialBookmarkSite}" />
 		</for>
 	</command>
 
@@ -775,7 +756,7 @@
 			<isset var="selectBoolean" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Custom Fields" />
+					<var name="panel" value="Custom Fields" />
 				</execute>
 
 				<execute function="Select" locator1="KnowledgeBaseArticle#CUSTOM_FIELD_BOOLEAN" value1="${selectBoolean}" />
@@ -790,9 +771,7 @@
 			<elseif>
 				<equals arg1="${saveAsDraft}" arg2="true" />
 				<then>
-					<execute macro="Button#clickSaveAsDraft" />
-
-					<execute macro="Alert#viewSuccessMessage" />
+					<execute macro="PortletEntry#saveAsDraft" />
 				</then>
 			</elseif>
 			<else>
@@ -879,9 +858,11 @@
 
 	<command name="enableSocialBookmarkSites">
 		<for list="${enableSocialBookmarkSites}" param="socialBookmarkSite">
-			<execute function="Check" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_CONFIGURATION_CHECKBOX">
-				<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
-			</execute>
+			<execute function="AddSelection" locator1="SocialBookmarks#ENABLE_SOCIAL_BOOKMARK_AVAILABLE_SELECT" value1="${socialBookmarkSite}" />
+
+			<execute function="Click" locator1="Button#MOVE_AVAILABLE_TO_CURRENT" />
+
+			<execute function="AssertTextEquals#assertPartialText" locator1="SocialBookmarks#ENABLE_SOCIAL_BOOKMARK_CURRENT_SELECT" value1="${socialBookmarkSite}" />
 		</for>
 	</command>
 
@@ -1099,12 +1080,6 @@
 		</if>
 
 		<execute function="AssertTextEquals" locator1="KnowledgeBase#DISPLAY_VOTES" value1="${articleVoteCount}" />
-	</command>
-
-	<command name="searchPGViaKBSearch">
-		<execute function="Type" locator1="KnowledgeBaseSearch#SEARCH_FIELD" value1="${searchTerm}" />
-
-		<execute function="Click" locator1="NavBar#SEARCH_BUTTON" />
 	</command>
 
 	<command name="selectAllCP">
@@ -1507,9 +1482,9 @@
 	</command>
 
 	<command name="viewDefaultKBDisplaySettingsPG">
-		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#SUBSCRIBE" value1="Subscribe" />
-		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#HISTORY" value1="History" />
-		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#PRINT" value1="Print" />
+		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#SUBSCRIBE" />
+		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#HISTORY" />
+		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#PRINT" />
 	</command>
 
 	<command name="viewDefaultViaKBArticlePG">
@@ -1522,18 +1497,6 @@
 		<execute function="AssertElementNotPresent" locator1="KnowledgeBase#DISPLAY_TITLE" />
 	</command>
 
-	<command name="viewDisabledKBSocialBookmarkSites">
-		<execute function="AssertElementNotPresent" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_SITE_LINK">
-			<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
-		</execute>
-	</command>
-
-	<command name="viewEnabledKBSocialBookmarkSites">
-		<execute function="AssertElementPresent" locator1="SocialBookmarks#SOCIAL_BOOKMARKS_SITE_LINK">
-			<var name="key_socialBookmarkSite" value="${socialBookmarkSite}" />
-		</execute>
-	</command>
-
 	<command name="viewFriendlyURLCP">
 		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS_2">
 			<var name="key_rowEntry" value="${kbArticleTitle}" />
@@ -1544,14 +1507,14 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="KnowledgeBaseArticle#EDIT_FRIENDLY_URL_FIELD" value1="${kbArticleFriendlyURL}" />
 	</command>
 
 	<command name="viewImageCaptionViaContentCmd">
-		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#CONTENT_IMAGE" value1="${kbImageCaption}" />
+		<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#CONTENT_IMAGE" />
 	</command>
 
 	<command name="viewImageViaContentCmd">
@@ -1630,12 +1593,12 @@
 		<if>
 			<equals arg1="${subscribe}" arg2="true" />
 			<then>
-				<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#SUBSCRIBE" value1="Subscribe" />
+				<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#SUBSCRIBE" />
 			</then>
 			<elseif>
 				<equals arg1="${subscribe}" arg2="false" />
 				<then>
-					<execute function="AssertElementNotPresent" locator1="KnowledgeBaseArticle#SUBSCRIBE" value1="Subscribe" />
+					<execute function="AssertElementNotPresent" locator1="KnowledgeBaseArticle#SUBSCRIBE" />
 				</then>
 			</elseif>
 		</if>
@@ -1643,12 +1606,12 @@
 		<if>
 			<equals arg1="${history}" arg2="true" />
 			<then>
-				<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#HISTORY" value1="History" />
+				<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#HISTORY" />
 			</then>
 			<elseif>
 				<equals arg1="${history}" arg2="false" />
 				<then>
-					<execute function="AssertElementNotPresent" locator1="KnowledgeBaseArticle#HISTORY" value1="History" />
+					<execute function="AssertElementNotPresent" locator1="KnowledgeBaseArticle#HISTORY" />
 				</then>
 			</elseif>
 		</if>
@@ -1656,12 +1619,12 @@
 		<if>
 			<equals arg1="${print}" arg2="true" />
 			<then>
-				<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#PRINT" value1="Print" />
+				<execute function="AssertElementPresent" locator1="KnowledgeBaseArticle#PRINT" />
 			</then>
 			<elseif>
 				<equals arg1="${print}" arg2="false" />
 				<then>
-					<execute function="AssertElementNotPresent" locator1="KnowledgeBaseArticle#PRINT" value1="Print" />
+					<execute function="AssertElementNotPresent" locator1="KnowledgeBaseArticle#PRINT" />
 				</then>
 			</elseif>
 		</if>
@@ -1790,7 +1753,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="CKEditor#SOURCE_URL" value1="${kbArticleSourceURL}" />
@@ -1802,7 +1765,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="CKEditor#SOURCE_URL" value1="${kbArticleSourceURL}" />

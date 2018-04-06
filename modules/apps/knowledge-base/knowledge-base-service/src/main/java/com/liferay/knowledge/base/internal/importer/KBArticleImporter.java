@@ -21,13 +21,13 @@ import com.liferay.knowledge.base.exception.KBArticleImportException;
 import com.liferay.knowledge.base.internal.importer.util.KBArticleMarkdownConverter;
 import com.liferay.knowledge.base.model.KBArticle;
 import com.liferay.knowledge.base.service.KBArticleLocalService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -182,14 +182,18 @@ public class KBArticleImporter {
 		String leadingDigits = StringUtil.extractLeadingDigits(shortFileName);
 
 		try {
-			double priority = Double.parseDouble(leadingDigits);
-
-			return Math.max(1.0, priority);
+			return Math.max(
+				KBArticleConstants.DEFAULT_PRIORITY,
+				Double.parseDouble(leadingDigits));
 		}
 		catch (NumberFormatException nfe) {
-			throw new KBArticleImportException(
-				"Invalid numerical prefix: " + kbArchiveResourceName, nfe);
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Invalid numerical prefix: " + kbArchiveResourceName, nfe);
+			}
 		}
+
+		return KBArticleConstants.DEFAULT_PRIORITY;
 	}
 
 	protected Map<String, String> getMetadata(ZipReader zipReader)

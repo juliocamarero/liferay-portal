@@ -15,6 +15,7 @@
 package com.liferay.portal.servlet.filters.cache;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -35,7 +36,6 @@ import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -141,7 +141,10 @@ public class CacheFilter extends BasePortalFilter {
 				request.getHeader(HttpHeaders.USER_AGENT));
 
 			sb.append(StringPool.POUND);
-			sb.append(StringUtil.toLowerCase(userAgent).hashCode());
+
+			String userAgentLowerCase = StringUtil.toLowerCase(userAgent);
+
+			sb.append(userAgentLowerCase.hashCode());
 		}
 
 		// Gzip compression
@@ -149,7 +152,7 @@ public class CacheFilter extends BasePortalFilter {
 		sb.append(StringPool.POUND);
 		sb.append(BrowserSnifferUtil.acceptsGzip(request));
 
-		return StringUtil.toUpperCase(sb.toString().trim());
+		return StringUtil.toUpperCase(StringUtil.trim(sb.toString()));
 	}
 
 	protected long getPlid(

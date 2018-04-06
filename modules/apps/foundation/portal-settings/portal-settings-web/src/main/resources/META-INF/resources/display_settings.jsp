@@ -16,7 +16,10 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="displaySettings" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="displaySettings"
+/>
 
 <h3><liferay-ui:message key="display-settings" /></h3>
 
@@ -70,8 +73,10 @@
 
 		List leftList = new ArrayList();
 
-		for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
-			leftList.add(new KeyValuePair(LocaleUtil.toLanguageId(availableLocale), availableLocale.getDisplayName(locale)));
+		String[] currentLanguageIds = PrefsPropsUtil.getStringArray(company.getCompanyId(), PropsKeys.LOCALES, StringPool.COMMA, PropsValues.LOCALES_ENABLED);
+
+		for (Locale currentLocale : LocaleUtil.fromLanguageIds(currentLanguageIds)) {
+			leftList.add(new KeyValuePair(LanguageUtil.getLanguageId(currentLocale), currentLocale.getDisplayName(locale)));
 		}
 
 		// Right list

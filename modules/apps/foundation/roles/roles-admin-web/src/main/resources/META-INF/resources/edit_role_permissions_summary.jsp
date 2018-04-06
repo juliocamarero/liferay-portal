@@ -64,7 +64,9 @@ for (int i = 0; i < permissions.size(); i++) {
 	String curPortletLabel = null;
 	String curModelName = null;
 	String curModelLabel = null;
+
 	String actionId = permission.getActionId();
+
 	String actionLabel = _getActionLabel(request, themeDisplay, resource.getName(), actionId);
 
 	if (PortletLocalServiceUtil.hasPortlet(company.getCompanyId(), resource.getName())) {
@@ -232,4 +234,6 @@ for (int i = 0; i < results.size(); i++) {
 }
 %>
 
-<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+<liferay-ui:search-iterator
+	searchContainer="<%= searchContainer %>"
+/>

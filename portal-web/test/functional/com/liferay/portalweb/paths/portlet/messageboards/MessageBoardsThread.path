@@ -10,7 +10,7 @@
 <tbody>
 <tr>
 	<td>TITLE_HEADER</td>
-	<td>//h3[@class='header-title']</td>
+	<td>//h3</td>
 	<td></td>
 </tr>
 <tr>
@@ -36,7 +36,7 @@
 </tr>
 <tr>
 	<td>THREAD_REPLY_BUTTON</td>
-	<td>//div[@class='thread-container' and contains(.,'${key_threadSubject}')]//span[contains(.,'Reply to Main Thread')]</td>
+	<td>//div[@class='thread-container']/button[contains(.,'Reply')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -76,11 +76,6 @@
 </tr>
 <!--THREAD_CONTROLS-->
 <tr>
-	<td>THREAD_CONTROLS_BACK</td>
-	<td>//a[contains(@id,'TabsBack')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>THREAD_CONTROLS_MOVE_TO_THE_RECYCLE_BIN</td>
 	<td>//div[@class='thread-actions']/ul/li/a[contains(.,'Move to the Recycle Bin')]</td>
 	<td></td>
@@ -107,13 +102,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>THREAD_ACTIONS_LOCK_THREAD</td>
-	<td>//div[@class='thread-actions']/ul/li/a/span[contains(.,'Lock Thread')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>THREAD_ACTIONS_UNLOCK_THREAD</td>
-	<td>//div[@class='thread-actions']/ul/li/a/span[contains(.,'Unlock Thread')]</td>
+	<td>THREAD_ACTIONS_UNLOCK</td>
+	<td>//div[@class='thread-actions']/ul/li/a/span[contains(.,'Unlock')]</td>
 	<td></td>
 </tr>
 <tr>

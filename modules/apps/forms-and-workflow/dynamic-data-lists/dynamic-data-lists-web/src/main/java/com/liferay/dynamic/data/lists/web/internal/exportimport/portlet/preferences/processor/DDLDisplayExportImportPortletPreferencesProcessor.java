@@ -14,11 +14,11 @@
 
 package com.liferay.dynamic.data.lists.web.internal.exportimport.portlet.preferences.processor;
 
+import com.liferay.dynamic.data.lists.constants.DDLConstants;
 import com.liferay.dynamic.data.lists.constants.DDLPortletKeys;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
-import com.liferay.dynamic.data.lists.service.permission.DDLPermission;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -26,7 +26,6 @@ import com.liferay.exportimport.kernel.lar.PortletDataException;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.portlet.preferences.processor.Capability;
 import com.liferay.exportimport.portlet.preferences.processor.ExportImportPortletPreferencesProcessor;
-import com.liferay.exportimport.portlet.preferences.processor.capability.ReferencedStagedModelImporterCapability;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -68,8 +67,7 @@ public class DDLDisplayExportImportPortletPreferencesProcessor
 
 	@Override
 	public List<Capability> getImportCapabilities() {
-		return ListUtil.toList(
-			new Capability[] {_referencedStagedModelImporterCapability});
+		return ListUtil.toList(new Capability[] {_capability});
 	}
 
 	@Override
@@ -80,7 +78,7 @@ public class DDLDisplayExportImportPortletPreferencesProcessor
 
 		try {
 			portletDataContext.addPortletPermissions(
-				DDLPermission.RESOURCE_NAME);
+				DDLConstants.RESOURCE_NAME);
 		}
 		catch (PortalException pe) {
 			throw new PortletDataException(
@@ -145,7 +143,7 @@ public class DDLDisplayExportImportPortletPreferencesProcessor
 
 		try {
 			portletDataContext.importPortletPermissions(
-				DDLPermission.RESOURCE_NAME);
+				DDLConstants.RESOURCE_NAME);
 		}
 		catch (PortalException pe) {
 			throw new PortletDataException(
@@ -262,15 +260,6 @@ public class DDLDisplayExportImportPortletPreferencesProcessor
 		_ddmTemplateLocalService = ddmTemplateLocalService;
 	}
 
-	@Reference(unbind = "-")
-	protected void setReferencedStagedModelImporterCapability(
-		ReferencedStagedModelImporterCapability
-			referencedStagedModelImporterCapability) {
-
-		_referencedStagedModelImporterCapability =
-			referencedStagedModelImporterCapability;
-	}
-
 	private void _exportReferenceDDMTemplate(
 			PortletDataContext portletDataContext, String portletId,
 			long ddmTemplateId)
@@ -299,10 +288,11 @@ public class DDLDisplayExportImportPortletPreferencesProcessor
 	private static final Log _log = LogFactoryUtil.getLog(
 		DDLDisplayExportImportPortletPreferencesProcessor.class);
 
+	@Reference(target = "(name=ReferencedStagedModelImporter)")
+	private Capability _capability;
+
 	private DDLRecordSetLocalService _ddlRecordSetLocalService;
 	private StagedModelRepository<DDLRecord> _ddlRecordStagedModelRepository;
 	private DDMTemplateLocalService _ddmTemplateLocalService;
-	private ReferencedStagedModelImporterCapability
-		_referencedStagedModelImporterCapability;
 
 }

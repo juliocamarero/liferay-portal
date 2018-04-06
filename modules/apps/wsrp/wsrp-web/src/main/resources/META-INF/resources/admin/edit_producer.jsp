@@ -64,7 +64,12 @@ renderResponse.setTitle(((wsrpProducer == null) ? LanguageUtil.get(request, "new
 
 			<c:if test="<%= wsrpProducer != null %>">
 				<aui:field-wrapper label="url">
-					<aui:a href="<%= wsrpProducer.getURL(themeDisplay.getPortalURL()) %>" target="_blank"><%= wsrpProducer.getURL(themeDisplay.getPortalURL()) %></aui:a><br />
+
+					<%
+					String wsrpProducerURL = wsrpProducer.getURL(themeDisplay.getPortalURL() + "/o/wsrp-service");
+					%>
+
+					<aui:a href="<%= wsrpProducerURL %>" target="_blank"><%= wsrpProducerURL %></aui:a><br />
 				</aui:field-wrapper>
 			</c:if>
 
@@ -140,9 +145,9 @@ renderResponse.setTitle(((wsrpProducer == null) ? LanguageUtil.get(request, "new
 	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
 

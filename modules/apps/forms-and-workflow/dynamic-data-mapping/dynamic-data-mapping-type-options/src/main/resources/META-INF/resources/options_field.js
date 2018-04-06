@@ -1,9 +1,7 @@
 AUI.add(
 	'liferay-ddm-form-field-options',
 	function(A) {
-		var Renderer = Liferay.DDM.Renderer;
-
-		var Util = Renderer.Util;
+		var AObject = A.Object;
 
 		var TPL_DRAG_HANDLE = '<div class="drag-handle icon-reorder"><span aria-hidden="true"></span></div>';
 
@@ -211,13 +209,15 @@ AUI.add(
 					moveOption: function(oldIndex, newIndex) {
 						var instance = this;
 
-						var value = instance.getValue();
+						var value = instance.get('value');
 
-						value.splice(newIndex, 0, value.splice(oldIndex, 1)[0]);
+						AObject.keys(value).forEach(
+							function(languageId) {
+								value[languageId].splice(newIndex, 0, value[languageId].splice(oldIndex, 1)[0]);
+							}
+						);
 
-						instance._setValue(value);
-
-						instance._renderOptions();
+						instance.setValue(value);
 					},
 
 					processEvaluationContext: function(context) {
@@ -240,11 +240,21 @@ AUI.add(
 
 						var index = options.indexOf(option);
 
-						var value = instance.getValue();
+						var value = instance.get('value');
 
-						value.splice(index, 1);
+						var optionTextValue = option.get('value');
 
-						instance._setValue(value);
+						optionTextValue = optionTextValue.trim();
+
+						if (optionTextValue.length > 0) {
+							AObject.keys(value).forEach(
+								function(languageId) {
+									value[languageId].splice(index, 1);
+								}
+							);
+
+							instance.setValue(value);
+						}
 
 						instance.fire('removeOption');
 
@@ -271,11 +281,9 @@ AUI.add(
 					setValue: function(value) {
 						var instance = this;
 
-						if (!Util.compare(value, instance.get('value'))) {
-							instance.set('value', value);
+						instance.set('value', value);
 
-							instance._renderOptions();
-						}
+						instance._renderOptions();
 					},
 
 					showErrorMessage: function() {
@@ -304,10 +312,9 @@ AUI.add(
 						var value = instance.getValue();
 
 						if (value.length === 0 || value.length === 1 && value[0].label === '') {
-							value = [];
+							instance._setValue([]);
 						}
 
-						instance._setValue(value);
 					},
 
 					_afterEditableChange: function(event) {
@@ -319,7 +326,9 @@ AUI.add(
 
 						options.forEach(
 							function(option) {
-								option.set('generationLocked', !editable);
+								if (option.getValue()) {
+									option.set('generationLocked', !editable);
+								}
 							}
 						);
 					},
@@ -491,6 +500,19 @@ AUI.add(
 						instance._bindOptionUI(instance._mainOption);
 					},
 
+					_getCurrentDefaultLanguageId: function() {
+						var instance = this;
+
+						var form = instance.get('parent');
+
+						if (!form) {
+							return instance.get('locale');
+						}
+						var builder = form.get('builder');
+
+						return builder.get('defaultLanguageId');
+					},
+
 					_getCurrentEditingLanguageId: function() {
 						var instance = this;
 
@@ -499,10 +521,9 @@ AUI.add(
 						if (!form) {
 							return instance.get('locale');
 						}
+						var builder = form.get('builder');
 
-						var field = form.get('field');
-
-						return field.get('locale');
+						return builder.get('editingLanguageId');
 					},
 
 					_getCurrentLocaleOptionsValues: function() {
@@ -510,7 +531,7 @@ AUI.add(
 
 						var value = instance.get('value');
 
-						var defaultLanguageId = instance.get('locale');
+						var defaultLanguageId = instance._getCurrentDefaultLanguageId();
 						var editingLanguageId = instance._getCurrentEditingLanguageId();
 
 						return value[editingLanguageId] || value[defaultLanguageId] || [];
@@ -590,6 +611,9 @@ AUI.add(
 
 						var container = option.get('container');
 
+						container.one('input').setAttribute('data-predefined-value', Liferay.Language.get('option'));
+						container.one('input').setAttribute('data-interaction', true);
+
 						container.append(TPL_DRAG_HANDLE + TPL_REMOVE_BUTTON);
 					},
 
@@ -618,7 +642,7 @@ AUI.add(
 
 						var context = OptionsField.superclass._setContext.apply(instance, arguments);
 
-						var locale = instance.get('locale');
+						var locale = instance._getCurrentEditingLanguageId();
 
 						var value = context.value;
 

@@ -15,6 +15,7 @@
 package com.liferay.site.navigation.menu.item.url.internal.type;
 
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
@@ -72,12 +73,26 @@ public class URLSiteNavigationMenuItemType
 	}
 
 	@Override
+	public String getURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException {
+
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		return typeSettingsProperties.get("url");
+	}
+
+	@Override
 	public void renderAddPage(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
 
 		_jspRenderer.renderJSP(
-			_servletContext, request, response, "/add_url.jsp");
+			_servletContext, request, response, "/edit_url.jsp");
 	}
 
 	@Override

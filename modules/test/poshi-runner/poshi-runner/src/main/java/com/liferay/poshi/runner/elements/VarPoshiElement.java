@@ -26,7 +26,7 @@ import org.dom4j.Node;
 /**
  * @author Kenji Heigel
  */
-public class VarPoshiElement extends BasePoshiElement {
+public class VarPoshiElement extends PoshiElement {
 
 	@Override
 	public PoshiElement clone(Element element) {
@@ -206,7 +206,7 @@ public class VarPoshiElement extends BasePoshiElement {
 				"Invalid variable element " + Dom4JUtil.format(element));
 		}
 		catch (IOException ioe) {
-			throw new IllegalArgumentException("Invalid variable element");
+			throw new IllegalArgumentException("Invalid variable element", ioe);
 		}
 	}
 

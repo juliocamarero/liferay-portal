@@ -154,8 +154,6 @@ request.setAttribute("view.jsp-displayStyle", displayStyle);
 
 request.setAttribute("view.jsp-bookmarksSearchContainer", bookmarksSearchContainer);
 
-request.setAttribute("view.jsp-total", String.valueOf(total));
-
 BookmarksUtil.addPortletBreadcrumbEntries(folder, request, renderResponse);
 %>
 
@@ -166,8 +164,6 @@ BookmarksUtil.addPortletBreadcrumbEntries(folder, request, renderResponse);
 <liferay-trash:undo
 	portletURL="<%= restoreTrashEntriesURL %>"
 />
-
-<liferay-util:include page="/bookmarks/navigation.jsp" servletContext="<%= application %>" />
 
 <liferay-util:include page="/bookmarks/toolbar.jsp" servletContext="<%= application %>">
 	<liferay-util:param name="searchContainerId" value="entries" />
@@ -188,7 +184,12 @@ BookmarksUtil.addPortletBreadcrumbEntries(folder, request, renderResponse);
 	<div class="sidenav-content">
 		<div class="bookmakrs-breadcrumb" id="<portlet:namespace />breadcrumbContainer">
 			<c:if test='<%= !navigation.equals("recent") && !navigation.equals("mine") %>'>
-				<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
+				<liferay-ui:breadcrumb
+					showCurrentGroup="<%= false %>"
+					showGuestGroup="<%= false %>"
+					showLayout="<%= false %>"
+					showParentGroups="<%= false %>"
+				/>
 			</c:if>
 		</div>
 
@@ -207,10 +208,6 @@ BookmarksUtil.addPortletBreadcrumbEntries(folder, request, renderResponse);
 		</aui:form>
 	</div>
 </div>
-
-<c:if test="<%= portletName.equals(BookmarksPortletKeys.BOOKMARKS_ADMIN) %>">
-	<liferay-util:include page="/bookmarks/add_button.jsp" servletContext="<%= application %>" />
-</c:if>
 
 <%
 if (navigation.equals("all") && !defaultFolderView && (folder != null) && (portletName.equals(BookmarksPortletKeys.BOOKMARKS) || portletName.equals(BookmarksPortletKeys.BOOKMARKS_ADMIN))) {

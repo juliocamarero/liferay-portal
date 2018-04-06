@@ -19,8 +19,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>MENUBAR_CATEGORY</td>
-	<td>//ul[@role='menubar']//a[@role='menuitem' and contains(.,'${key_category}')]</td>
+	<td>SCOPED_CONFIGURATION_NAME</td>
+	<td>//a[contains(.,'${key_configurationScope}')]/following-sibling::div//a[contains(@class,'nav-link') and normalize-space(./text())='${key_configurationName}']</td>
 	<td></td>
 </tr>
 <tr>

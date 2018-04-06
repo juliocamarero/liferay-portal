@@ -16,7 +16,7 @@
 <!--RULE_BUILDER-->
 <tr>
 	<td>RULE_BUILDER_ADD_RULE_BUTTON</td>
-	<td>//button[contains(@class,'add-rule-button-icon')]</td>
+	<td>//button[contains(@class,'ddm-add-rule')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -51,7 +51,7 @@
 </tr>
 <tr>
 	<td>RULE_BUILDER_SELECT_CONDITION_FIELD</td>
-	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@id,'condition-first')]/following-sibling::div[@class='drop-chosen']//li[contains(.,'${key_conditionField}')]</td>
+	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@id,'condition-first')]/following-sibling::div[@class='drop-chosen']//a[text()='${key_conditionField}']</td>
 	<td></td>
 </tr>
 <tr>
@@ -163,12 +163,12 @@
 </tr>
 <tr>
 	<td>RULE_BUILDER_CALCULATE_ELLIPSIS</td>
-	<td>//*[name()='svg'][contains(@class,'icon-ellipsis-h')]</td>
+	<td>//a[span/*[name()='svg'][contains(@class,'icon-ellipsis-h')]]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>RULE_BUILDER_CALCULATE_ADVANCED_OPERATOR</td>
-	<td>//div[@class='container-list-advanced-operators']//ul[@class='results-chosen']//li[contains(.,'${key_calculateAdvancedOperator}')]</td>
+	<td>//div[@class='container-list-advanced-operators']//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_calculateAdvancedOperator}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -178,7 +178,7 @@
 </tr>
 <tr>
 	<td>RULE_BUILDER_CALCULATE_ADD_FIELD_LIST</td>
-	<td>//div[@class='calculator-add-field-button-container']//ul[@class='results-chosen']//li[contains(.,'${key_calculateFieldOption}')]</td>
+	<td>//div[@class='calculator-add-field-button-container']//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_calculateFieldOption}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -188,7 +188,7 @@
 </tr>
 <tr>
 	<td>RULE_BUILDER_CALCULATE_RESULT_FIELD_LIST</td>
-	<td>//div[contains(@class,'calculate-container-fields')]//ul[@class='results-chosen']//li[contains(.,'${key_calculateResultField}')]</td>
+	<td>//div[contains(@class,'calculate-container-fields')]//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_calculateResultField}')]</td>
 	<td></td>
 </tr>
 <tr>

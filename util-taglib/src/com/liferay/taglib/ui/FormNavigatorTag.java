@@ -97,6 +97,8 @@ public class FormNavigatorTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
+		super.cleanUp();
+
 		_backURL = null;
 		_categoryNames = null;
 		_categorySections = null;
@@ -143,9 +145,7 @@ public class FormNavigatorTag extends IncludeTag {
 
 		String[][] categorySectionKeys = new String[0][];
 
-		for (int i = 0; i < categoryKeys.length; i++) {
-			String categoryKey = categoryKeys[i];
-
+		for (String categoryKey : categoryKeys) {
 			categorySectionKeys = ArrayUtil.append(
 				categorySectionKeys,
 				FormNavigatorEntryUtil.getKeys(
@@ -167,9 +167,7 @@ public class FormNavigatorTag extends IncludeTag {
 
 		String[][] categorySectionLabels = new String[0][];
 
-		for (int i = 0; i < categoryKeys.length; i++) {
-			String categoryKey = categoryKeys[i];
-
+		for (String categoryKey : categoryKeys) {
 			categorySectionLabels = ArrayUtil.append(
 				categorySectionLabels,
 				FormNavigatorEntryUtil.getLabels(

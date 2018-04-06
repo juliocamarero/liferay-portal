@@ -18,18 +18,20 @@ import com.liferay.asset.display.template.constants.AssetDisplayTemplateActionKe
 import com.liferay.asset.display.template.constants.AssetDisplayTemplatePortletKeys;
 import com.liferay.asset.display.template.model.AssetDisplayTemplate;
 import com.liferay.asset.display.template.service.AssetDisplayTemplateLocalServiceUtil;
-import com.liferay.asset.display.template.service.permission.AssetDisplayPermission;
 import com.liferay.asset.display.template.util.comparator.AssetDisplayTemplateClassNameIdComparator;
 import com.liferay.asset.display.template.util.comparator.AssetDisplayTemplateCreateDateComparator;
+import com.liferay.asset.display.template.web.internal.security.permission.resource.AssetDisplayPermission;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.util.DDMDisplay;
 import com.liferay.dynamic.data.mapping.util.DDMDisplayRegistry;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -40,9 +42,11 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -160,6 +164,25 @@ public class AssetDisplayTemplateDisplayContext {
 		return _keywords;
 	}
 
+	public List<NavigationItem> getNavigationItems() {
+		List<NavigationItem> navigationItems = new ArrayList<>();
+
+		NavigationItem entriesNavigationItem = new NavigationItem();
+
+		entriesNavigationItem.setActive(true);
+
+		PortletURL mainURL = _renderResponse.createRenderURL();
+
+		entriesNavigationItem.setHref(mainURL.toString());
+
+		entriesNavigationItem.setLabel(
+			LanguageUtil.get(_request, "asset-display-templates"));
+
+		navigationItems.add(entriesNavigationItem);
+
+		return navigationItems;
+	}
+
 	public String getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -193,17 +216,7 @@ public class AssetDisplayTemplateDisplayContext {
 			_renderRequest, _renderResponse.createRenderURL(), null,
 			"there-are-no-asset-display-templates");
 
-		if (!isSearch()) {
-			if (isShowAddButton()) {
-				searchContainer.setEmptyResultsMessage(
-					"there-are-no-asset-display-templates-you-can-add-an-" +
-						"asset-display-template-by-clicking-plus-button-on-" +
-							"the-bottom-right-corner");
-				searchContainer.setEmptyResultsMessageCssClass(
-					"taglib-empty-result-message-header-has-plus-btn");
-			}
-		}
-		else {
+		if (isSearch()) {
 			searchContainer.setSearch(true);
 		}
 
@@ -281,8 +294,6 @@ public class AssetDisplayTemplateDisplayContext {
 
 		if (AssetDisplayPermission.contains(
 				themeDisplay.getPermissionChecker(),
-				AssetDisplayPermission.RESOURCE_NAME,
-				AssetDisplayTemplatePortletKeys.ASSET_DISPLAY_TEMPLATE,
 				themeDisplay.getSiteGroupId(),
 				AssetDisplayTemplateActionKeys.ADD_ASSET_DISPLAY_TEMPLATE)) {
 

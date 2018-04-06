@@ -17,10 +17,11 @@ package com.liferay.mentions.internal.util;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.mentions.constants.MentionsConstants;
+import com.liferay.mentions.constants.MentionsPortletKeys;
 import com.liferay.mentions.matcher.MentionsMatcher;
 import com.liferay.mentions.util.MentionsNotifier;
 import com.liferay.mentions.util.MentionsUserFinder;
-import com.liferay.mentions.web.constants.MentionsPortletKeys;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -31,7 +32,6 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 import com.liferay.social.kernel.util.SocialInteractionsConfiguration;
 import com.liferay.social.kernel.util.SocialInteractionsConfigurationUtil;
@@ -106,9 +106,7 @@ public class DefaultMentionsNotifier implements MentionsNotifier {
 		subscriptionSender.setLocalizedSubjectMap(
 			LocalizationUtil.getMap(subjectLocalizedValuesMap));
 
-		for (int i = 0; i < mentionedUsersScreenNames.length; i++) {
-			String mentionedUserScreenName = mentionedUsersScreenNames[i];
-
+		for (String mentionedUserScreenName : mentionedUsersScreenNames) {
 			User mentionedUser = _userLocalService.fetchUserByScreenName(
 				user.getCompanyId(), mentionedUserScreenName);
 

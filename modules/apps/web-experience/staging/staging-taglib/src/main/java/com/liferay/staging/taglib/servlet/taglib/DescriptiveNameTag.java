@@ -14,6 +14,7 @@
 
 package com.liferay.staging.taglib.servlet.taglib;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -22,7 +23,6 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.util.IncludeTag;
 
@@ -35,6 +35,8 @@ public class DescriptiveNameTag extends IncludeTag {
 
 	@Override
 	public void cleanUp() {
+		super.cleanUp();
+
 		_group = null;
 	}
 
@@ -55,7 +57,7 @@ public class DescriptiveNameTag extends IncludeTag {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		StringBundler sb = new StringBundler(1);
+		StringBundler sb = new StringBundler(5);
 
 		try {
 			String descriptiveName = HtmlUtil.escape(
@@ -70,8 +72,6 @@ public class DescriptiveNameTag extends IncludeTag {
 				sb.append(StringPool.OPEN_PARENTHESIS);
 				sb.append(LanguageUtil.get(request, "staging"));
 				sb.append(StringPool.CLOSE_PARENTHESIS);
-
-				return sb.toString();
 			}
 		}
 		catch (PortalException pe) {
@@ -80,7 +80,7 @@ public class DescriptiveNameTag extends IncludeTag {
 			}
 		}
 
-		return StringPool.BLANK;
+		return sb.toString();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

@@ -34,6 +34,8 @@ public interface Build {
 
 	public String getArchivePath();
 
+	public long getAverageDelayTime();
+
 	public List<String> getBadBuildURLs();
 
 	public String getBaseRepositoryName();
@@ -56,6 +58,8 @@ public interface Build {
 
 	public String getDatabase();
 
+	public Long getDelayTime();
+
 	public String getDisplayName();
 
 	public int getDownstreamBuildCount(String status);
@@ -76,6 +80,8 @@ public interface Build {
 
 	public String getInvocationURL();
 
+	public Long getInvokedTime();
+
 	public String getJDK();
 
 	public JenkinsMaster getJenkinsMaster();
@@ -94,6 +100,8 @@ public interface Build {
 
 	public Long getLatestStartTimestamp();
 
+	public Build getLongestDelayedDownstreamBuild();
+
 	public Build getLongestRunningDownstreamBuild();
 
 	public TestResult getLongestRunningTest();
@@ -110,7 +118,7 @@ public interface Build {
 
 	public Map<String, String> getStartPropertiesTempMap();
 
-	public Long getStartTimestamp();
+	public Long getStartTime();
 
 	public String getStatus();
 

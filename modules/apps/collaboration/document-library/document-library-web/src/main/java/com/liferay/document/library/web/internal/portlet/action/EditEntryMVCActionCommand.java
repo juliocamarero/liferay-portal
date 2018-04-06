@@ -16,6 +16,7 @@ package com.liferay.document.library.web.internal.portlet.action;
 
 import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.asset.kernel.exception.AssetTagException;
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
 import com.liferay.document.library.kernel.exception.InvalidFolderException;
@@ -25,7 +26,7 @@ import com.liferay.document.library.kernel.exception.SourceFileNameException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.document.library.kernel.service.DLTrashService;
-import com.liferay.document.library.web.constants.DLPortletKeys;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.lock.DuplicateLockException;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -39,10 +40,10 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.trash.service.TrashEntryService;
@@ -104,6 +105,21 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 			_dlAppService.checkInFileEntry(
 				fileEntryId, false, StringPool.BLANK, serviceContext);
 		}
+
+		long[] fileShortcutIds = ParamUtil.getLongValues(
+			actionRequest, "rowIdsDLFileShortcut");
+
+		for (long fileShortcutId : fileShortcutIds) {
+			FileShortcut fileShortcut = _dlAppService.getFileShortcut(
+				fileShortcutId);
+
+			long toFileEntryId = fileShortcut.getToFileEntryId();
+
+			if (!ArrayUtil.contains(fileEntryIds, toFileEntryId)) {
+				_dlAppService.checkInFileEntry(
+					toFileEntryId, false, StringPool.BLANK, serviceContext);
+			}
+		}
 	}
 
 	protected void checkOutEntries(ActionRequest actionRequest)
@@ -118,6 +134,20 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		for (long fileEntryId : fileEntryIds) {
 			_dlAppService.checkOutFileEntry(fileEntryId, serviceContext);
 		}
+
+		long[] fileShortcutIds = ParamUtil.getLongValues(
+			actionRequest, "rowIdsDLFileShortcut");
+
+		for (long fileShortcutId : fileShortcutIds) {
+			FileShortcut fileShortcut = _dlAppService.getFileShortcut(
+				fileShortcutId);
+
+			long toFileEntryId = fileShortcut.getToFileEntryId();
+
+			if (!ArrayUtil.contains(fileEntryIds, toFileEntryId)) {
+				_dlAppService.checkOutFileEntry(toFileEntryId, serviceContext);
+			}
+		}
 	}
 
 	protected void deleteEntries(
@@ -129,12 +159,15 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		List<TrashedModel> trashedModels = new ArrayList<>();
 
-		for (int i = 0; i < deleteFolderIds.length; i++) {
-			long deleteFolderId = deleteFolderIds[i];
-
+		for (long deleteFolderId : deleteFolderIds) {
 			if (moveToTrash) {
-				Folder folder = _dlTrashService.moveFolderToTrash(
-					deleteFolderId);
+				Folder folder = _dlAppService.getFolder(deleteFolderId);
+
+				if (folder.isMountPoint()) {
+					continue;
+				}
+
+				folder = _dlTrashService.moveFolderToTrash(deleteFolderId);
 
 				if (folder.getModel() instanceof TrashedModel) {
 					trashedModels.add((TrashedModel)folder.getModel());
@@ -150,9 +183,7 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		long[] deleteFileShortcutIds = ParamUtil.getLongValues(
 			actionRequest, "rowIdsDLFileShortcut");
 
-		for (int i = 0; i < deleteFileShortcutIds.length; i++) {
-			long deleteFileShortcutId = deleteFileShortcutIds[i];
-
+		for (long deleteFileShortcutId : deleteFileShortcutIds) {
 			if (moveToTrash) {
 				FileShortcut fileShortcut =
 					_dlTrashService.moveFileShortcutToTrash(

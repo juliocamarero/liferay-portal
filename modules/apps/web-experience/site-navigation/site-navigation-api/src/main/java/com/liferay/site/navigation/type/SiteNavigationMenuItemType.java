@@ -14,12 +14,18 @@
 
 package com.liferay.site.navigation.type;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 
 import java.io.IOException;
 
 import java.util.Locale;
+
+import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +34,12 @@ import javax.servlet.http.HttpServletResponse;
  * @author Pavel Savinov
  */
 public interface SiteNavigationMenuItemType {
+
+	public default PortletURL getAddURL(
+		RenderRequest renderRequest, RenderResponse renderResponse) {
+
+		return null;
+	}
 
 	public default String getIcon() {
 		return "magic";
@@ -41,6 +53,15 @@ public interface SiteNavigationMenuItemType {
 	public default String getType() {
 		return StringPool.BLANK;
 	}
+
+	public default String getTypeSettingsFromLayout(Layout layout) {
+		return layout.getTypeSettings();
+	}
+
+	public String getURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException;
 
 	public default void renderAddPage(
 			HttpServletRequest request, HttpServletResponse response)

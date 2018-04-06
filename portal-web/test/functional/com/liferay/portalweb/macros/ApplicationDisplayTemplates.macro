@@ -6,7 +6,7 @@
 			<var name="message" value="There are no results." />
 		</execute>
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${adtType} Template">
 			<var name="key_menuItem" value="${adtType} Template" />
@@ -47,7 +47,7 @@
 
 		<execute function="SelectFrame" locator1="ApplicationDisplayTemplates#ADT_IFRAME" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertVisible" locator1="ApplicationDisplayTemplates#RSS_FEEDS" />
 		<execute function="AssertElementPresent" locator1="ApplicationDisplayTemplates#RSS_FEEDS" />
@@ -72,15 +72,23 @@
 		<execute function="Pause" locator1="5000" />
 
 		<if>
-			<condition function="IsElementPresent" locator1="Configuration#SETUP_DISPLAY_SETTINGS" />
+			<condition function="IsElementPresent" locator1="NavTab#TAB_LINK">
+				<var name="key_tab" value="Display Settings" />
+			</condition>
+
 			<then>
-				<execute function="AssertClick" locator1="Configuration#SETUP_DISPLAY_SETTINGS" value1="Display Settings" />
+				<execute macro="Navigator#gotoNavTab">
+					<var name="key_tab" value="Display Settings" />
+				</execute>
 			</then>
 			<elseif>
-				<condition function="IsElementPresent" locator1="Configuration#SETUP_DISPLAY_SETTINGS_PANEL" />
+				<condition function="IsElementPresent" locator1="Panel#PANEL">
+					<var name="key_panel" value="Display Settings" />
+				</condition>
+
 				<then>
 					<execute macro="Panel#expandPanel">
-						<var name="panelHeading" value="Display Settings" />
+						<var name="panel" value="Display Settings" />
 					</execute>
 				</then>
 			</elseif>
@@ -94,7 +102,7 @@
 
 		<execute function="SelectFrame" locator1="ApplicationDisplayTemplates#ADT_IFRAME" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<var name="key_adtType" value="${adtType}" />
 
@@ -166,9 +174,7 @@
 
 		<execute function="Select" locator1="Select#DISPLAY_TEMPLATE" value1="${templateName}" />
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 
 		<execute function="SelectFrameTop" />
 	</command>
@@ -193,9 +199,7 @@
 
 				<execute function="Select" locator1="ApplicationDisplayTemplatesConfiguration#DISPLAY_TEMPLATE_SELECT" value1="${defaultADT}" />
 
-				<execute macro="Button#clickSave" />
-
-				<execute macro="Alert#viewSuccessMessage" />
+				<execute macro="PortletEntry#save" />
 
 				<execute function="SelectFrameTop" locator1="IFrame#DIALOG" value1="relative=top" />
 			</then>

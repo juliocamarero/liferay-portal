@@ -17,17 +17,22 @@
 <%@ include file="/init.jsp" %>
 
 <%
-User selUser = (User)request.getAttribute("user.selUser");
-List<UserGroup> userGroups = (List<UserGroup>)request.getAttribute("user.userGroups");
+User selUser = userDisplayContext.getSelectedUser();
+List<UserGroup> userGroups = userDisplayContext.getUserGroups();
 
 currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGroups");
 %>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="user-groups" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="user-groups"
+/>
 
 <liferay-ui:membership-policy-error />
 
-<liferay-util:buffer var="removeUserGroupIcon">
+<liferay-util:buffer
+	var="removeUserGroupIcon"
+>
 	<liferay-ui:icon
 		icon="times"
 		markupView="lexicon"
@@ -70,7 +75,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGr
 		</c:if>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>
 
 <c:if test="<%= !portletName.equals(myAccountPortletId) %>">
@@ -78,7 +85,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGr
 		cssClass="modify-link"
 		id="openUserGroupsLink"
 		label="<%= true %>"
-		linkCssClass="btn btn-default btn-lg"
+		linkCssClass="btn btn-primary"
 		message="select"
 		url="javascript:;"
 	/>

@@ -4,7 +4,8 @@ $sidebar-header-padding: 0.5rem 1.5rem;
 $sidebar-list-group-icon-size: 0.75rem;
 $sidebar-list-subtitle-font-size: 0.7rem;
 $sidebar-load-icon-pos-top: 150px;
-$sidebar-margin-top: 65px;
+$sidebar-margin-top-lg: 65px;
+$sidebar-margin-top-sm: 49px;
 $sidebar-navbar-border-color: #F1F2F5;
 $sidebar-subtitle-font-size: 1rem;
 $sidebar-title-font-size: 1.2rem;
@@ -16,11 +17,18 @@ $sidebar-z-index: 1000;
 }
 
 @mixin sidebarContentHeight($height) {
-	height: calc(100vh - #{$height + $sidebar-margin-top});
+	height: calc(100vh - #{$height + $sidebar-margin-top-lg});
+}
+
+@media only screen and (min-width: 768px) {
+	.form-builder-field-settings-sidebar.form-builder-sidebar,
+	.form-builder-field-types-sidebar.form-builder-sidebar {
+		margin-top: $sidebar-margin-top-lg;
+	}
 }
 
 .form-builder-sidebar {
-	margin-top: $sidebar-margin-top;
+	margin-top: $sidebar-margin-top-sm;
 
 	&.sidenav-fixed.sidenav-menu-slider {
 		z-index: $sidebar-z-index;
@@ -33,6 +41,10 @@ $sidebar-z-index: 1000;
 	.navbar {
 		border-bottom: 1px solid $sidebar-navbar-border-color;
 		border-top: 1px solid $sidebar-navbar-border-color;
+	}
+
+	.form-builder-sidebar-title {
+		margin-top: 8px;
 	}
 
 	.sidebar-body {
@@ -74,7 +86,12 @@ $sidebar-z-index: 1000;
 
 	.lfr-ddm-form-tabs-content {
 		overflow: auto;
+
 		@include sidebarContentHeight(145px);
+
+		.help-icon:hover {
+			color: $sidebar-background-color;
+		}
 	}
 }
 
@@ -84,6 +101,7 @@ $sidebar-z-index: 1000;
 
 .form-builder-sidebar-list {
 	overflow: auto;
+
 	@include sidebarContentHeight(124px);
 
 	.list-group {
@@ -107,6 +125,10 @@ $sidebar-z-index: 1000;
 		@extend %no-border-side;
 		border-bottom-width: 0;
 
+		.flex-col:first-child {
+			margin: 0 16px 0 8px;
+		}
+
 		&:first-child,
 		&:last-child {
 			border-radius: 0;
@@ -115,6 +137,7 @@ $sidebar-z-index: 1000;
 
 	.list-group-subtitle {
 		font-size: $sidebar-list-subtitle-font-size;
+		margin-bottom: 2px;
 	}
 
 	.toggler-header-collapsed {
@@ -162,7 +185,13 @@ $sidebar-z-index: 1000;
 		display: none;
 	}
 
-	#field-type-menu-content span {
-		margin: 0 6px;
+	#field-type-menu-content {
+		span {
+			margin: 0 6px;
+		}
+
+		> div {
+			display: inline;
+		}
 	}
 }

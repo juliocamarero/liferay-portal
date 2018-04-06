@@ -56,8 +56,8 @@ public class ConfigurationAdminBundleActivator implements BundleActivator {
 			_cxfConfiguration.update(properties);
 
 			_jaxWsApiConfiguration = configurationAdmin.getConfiguration(
-				"com.liferay.portal.remote.soap.extender.configuration." +
-					"JaxWsApiConfiguration",
+				"com.liferay.portal.remote.soap.extender.internal." +
+					"configuration.JaxWsApiConfiguration",
 				null);
 
 			_jaxWsApiConfigurationProperties =
@@ -71,8 +71,8 @@ public class ConfigurationAdminBundleActivator implements BundleActivator {
 			_jaxWsApiConfiguration.update(properties);
 
 			_soapConfiguration = configurationAdmin.createFactoryConfiguration(
-				"com.liferay.portal.remote.soap.extender.configuration." +
-					"SoapExtenderConfiguration",
+				"com.liferay.portal.remote.soap.extender.internal." +
+					"configuration.SoapExtenderConfiguration",
 				null);
 
 			properties = new Hashtable<>();
@@ -85,7 +85,7 @@ public class ConfigurationAdminBundleActivator implements BundleActivator {
 
 			_soapConfiguration.update(properties);
 
-			StringBundler sb = new StringBundler();
+			StringBundler sb = new StringBundler(5);
 
 			sb.append("(&(objectClass=");
 			sb.append(ServletContextHelper.class.getName());

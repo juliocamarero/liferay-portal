@@ -4,7 +4,7 @@
 
 		<execute function="AssertClick" locator1="MobileDevice#DEVICE_FAMILY_TABLE_NAME_LINK" value1="${mobileDeviceFamilyName}" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="Portlet#HEADER" value1="New Classification Rule" />
 
@@ -13,7 +13,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Operating System and Type" />
+			<var name="panel" value="Operating System and Type" />
 		</execute>
 
 		<var name="key_ruleOSScope" value="${ruleOSScope}" />
@@ -30,7 +30,7 @@
 	</command>
 
 	<command name="addDeviceFamilyCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="Portlet#HEADER" value1="New Device Family" />
 

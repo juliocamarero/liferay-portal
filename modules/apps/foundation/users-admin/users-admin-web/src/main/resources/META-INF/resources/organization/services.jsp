@@ -97,7 +97,10 @@ else {
 Format timeFormat = FastDateFormatFactoryUtil.getSimpleDateFormat("HH:mm", locale);
 %>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="services" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="services"
+/>
 
 <liferay-ui:error key="<%= NoSuchListTypeException.class.getName() + Organization.class.getName() + ListTypeConstants.ORGANIZATION_SERVICE %>" message="please-select-a-type" />
 
@@ -158,6 +161,7 @@ Format timeFormat = FastDateFormatFactoryUtil.getSimpleDateFormat("HH:mm", local
 
 							while (cal.get(Calendar.DATE) == today) {
 								String timeOfDayDisplay = timeFormat.format(cal.getTime());
+
 								int timeOfDayValue = GetterUtil.getInteger(StringUtil.replace(timeOfDayDisplay, CharPool.COLON, StringPool.BLANK));
 
 								cal.add(Calendar.MINUTE, 30);
@@ -184,6 +188,7 @@ Format timeFormat = FastDateFormatFactoryUtil.getSimpleDateFormat("HH:mm", local
 
 							while (cal.get(Calendar.DATE) == today) {
 								String timeOfDayDisplay = timeFormat.format(cal.getTime());
+
 								int timeOfDayValue = GetterUtil.getInteger(StringUtil.replace(timeOfDayDisplay, CharPool.COLON, StringPool.BLANK));
 
 								cal.add(Calendar.MINUTE, 30);

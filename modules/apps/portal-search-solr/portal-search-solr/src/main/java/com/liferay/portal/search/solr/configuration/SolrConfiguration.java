@@ -21,7 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Michael C. Han
  */
-@ExtendedObjectClassDefinition(category = "foundation")
+@ExtendedObjectClassDefinition(category = "search")
 @Meta.OCD(
 	id = "com.liferay.portal.search.solr.configuration.SolrConfiguration",
 	localization = "content/Language", name = "solr-configuration-name"
@@ -44,8 +44,7 @@ public interface SolrConfiguration {
 	public String defaultCollection();
 
 	@Meta.AD(
-		deflt = "true",
-		description = "Set to true to only log exceptions from Solr and not rethrow them.",
+		deflt = "true", description = "log-exceptions-only-help",
 		required = false
 	)
 	public boolean logExceptionsOnly();

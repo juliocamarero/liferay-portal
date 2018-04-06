@@ -14,9 +14,9 @@
 
 package com.liferay.portal.tools;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -26,6 +26,7 @@ import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.Type;
 import com.thoughtworks.qdox.model.TypeVariable;
@@ -90,7 +91,11 @@ public class InstanceWrapperBuilder {
 		// Package
 
 		sb.append("package ");
-		sb.append(javaClass.getPackage().getName());
+
+		JavaPackage javaPackage = javaClass.getPackage();
+
+		sb.append(javaPackage.getName());
+
 		sb.append(";");
 
 		// Class declaration
@@ -132,11 +137,8 @@ public class InstanceWrapperBuilder {
 			if (typeParameters.length > 0) {
 				sb.append(" <");
 
-				for (int i = 0; i < typeParameters.length; i++) {
-					TypeVariable typeParameter = typeParameters[i];
-
+				for (TypeVariable typeParameter : typeParameters) {
 					sb.append(typeParameter.getName());
-
 					sb.append(", ");
 				}
 
@@ -152,9 +154,7 @@ public class InstanceWrapperBuilder {
 
 			JavaParameter[] javaParameters = javaMethod.getParameters();
 
-			for (int i = 0; i < javaParameters.length; i++) {
-				JavaParameter javaParameter = javaParameters[i];
-
+			for (JavaParameter javaParameter : javaParameters) {
 				sb.append(_getTypeGenericsName(javaParameter.getType()));
 
 				if (javaParameter.isVarArgs()) {
@@ -176,9 +176,7 @@ public class InstanceWrapperBuilder {
 
 			Set<String> newExceptions = new LinkedHashSet<>();
 
-			for (int j = 0; j < thrownExceptions.length; j++) {
-				Type thrownException = thrownExceptions[j];
-
+			for (Type thrownException : thrownExceptions) {
 				newExceptions.add(thrownException.getValue());
 			}
 
@@ -208,11 +206,8 @@ public class InstanceWrapperBuilder {
 			sb.append(javaMethod.getName());
 			sb.append("(");
 
-			for (int j = 0; j < javaParameters.length; j++) {
-				JavaParameter javaParameter = javaParameters[j];
-
+			for (JavaParameter javaParameter : javaParameters) {
 				sb.append(javaParameter.getName());
-
 				sb.append(", ");
 			}
 
@@ -246,8 +241,8 @@ public class InstanceWrapperBuilder {
 		File file = new File(
 			StringBundler.concat(
 				parentDir, "/",
-				StringUtil.replace(javaClass.getPackage().getName(), '.', '/'),
-				"/", javaClass.getName(), "_IW.java"));
+				StringUtil.replace(javaPackage.getName(), '.', '/'), "/",
+				javaClass.getName(), "_IW.java"));
 
 		ToolsUtil.writeFile(file, sb.toString(), null);
 	}

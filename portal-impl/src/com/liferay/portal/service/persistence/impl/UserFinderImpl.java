@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.persistence.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.dao.orm.CustomSQLParam;
@@ -36,7 +37,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TableNameOrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
@@ -863,14 +863,14 @@ public class UserFinderImpl extends UserFinderBaseImpl implements UserFinder {
 
 	protected String getColumnNames(OrderByComparator obc) {
 		if (obc == null) {
-			return "User_.userId AS userId";
+			return "DISTINCT User_.userId AS userId";
 		}
 
 		String[] orderByFields = obc.getOrderByFields();
 
 		StringBundler sb = new StringBundler(orderByFields.length * 4 + 1);
 
-		sb.append("User_.userId AS userId");
+		sb.append("DISTINCT User_.userId AS userId");
 
 		for (String field : orderByFields) {
 			sb.append(", User_.");
@@ -1496,7 +1496,7 @@ public class UserFinderImpl extends UserFinderBaseImpl implements UserFinder {
 			int pos = join.indexOf("WHERE");
 
 			if (pos != -1) {
-				join = join.substring(pos + 5, join.length()).concat(" AND ");
+				join = join.substring(pos + 5).concat(" AND ");
 			}
 			else {
 				join = StringPool.BLANK;

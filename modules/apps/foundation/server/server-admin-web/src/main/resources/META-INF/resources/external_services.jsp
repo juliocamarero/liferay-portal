@@ -18,8 +18,19 @@
 
 <div class="server-admin-tabs">
 	<aui:fieldset>
-		<liferay-ui:panel-container extended="<%= true %>" id="adminExternalServicesPanelContainer" persistState="<%= true %>">
-			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="adminImageMagickConversionPanel" markupView="lexicon" persistState="<%= true %>" title="enabling-imagemagick-provides-document-preview-functionality">
+		<liferay-ui:panel-container
+			extended="<%= true %>"
+			id="adminExternalServicesPanelContainer"
+			persistState="<%= true %>"
+		>
+			<liferay-ui:panel
+				collapsible="<%= true %>"
+				extended="<%= true %>"
+				id="adminImageMagickConversionPanel"
+				markupView="lexicon"
+				persistState="<%= true %>"
+				title="enabling-imagemagick-provides-document-preview-functionality"
+			>
 				<aui:input label="enabled" name="imageMagickEnabled" type="checkbox" value="<%= ImageMagickUtil.isEnabled() %>" />
 
 				<aui:input cssClass="lfr-input-text-container" label="path" name="imageMagickPath" type="text" value="<%= ImageMagickUtil.getGlobalSearchPath() %>" />
@@ -42,7 +53,14 @@
 				</aui:fieldset>
 			</liferay-ui:panel>
 
-			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="adminXugglerPanel" markupView="lexicon" persistState="<%= true %>" title="enabling-xuggler-provides-video-conversion-functionality">
+			<liferay-ui:panel
+				collapsible="<%= true %>"
+				extended="<%= true %>"
+				id="adminXugglerPanel"
+				markupView="lexicon"
+				persistState="<%= true %>"
+				title="enabling-xuggler-provides-video-conversion-functionality"
+			>
 				<liferay-ui:error exception="<%= XugglerInstallException.class %>" targetNode="#controlMenuAlertsContainer">
 
 					<%
@@ -134,7 +152,7 @@
 						</aui:select>
 
 						<aui:button-row>
-							<aui:button cssClass="btn-lg save-server-button" data-cmd="installXuggler" name="installXugglerButton" value="install" />
+							<aui:button cssClass="save-server-button" data-cmd="installXuggler" name="installXugglerButton" value="install" />
 						</aui:button-row>
 					</c:otherwise>
 				</c:choose>
@@ -144,7 +162,7 @@
 </div>
 
 <aui:button-row>
-	<aui:button cssClass="btn-lg save-server-button" data-cmd="updateExternalServices" value="save" />
+	<aui:button cssClass="save-server-button" data-cmd="updateExternalServices" value="save" />
 </aui:button-row>
 
 <%!

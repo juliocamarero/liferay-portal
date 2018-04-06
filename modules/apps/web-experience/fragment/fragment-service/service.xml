@@ -23,6 +23,7 @@
 
 		<!-- Other fields -->
 
+		<column name="fragmentCollectionKey" type="String" />
 		<column name="name" type="String" />
 		<column name="description" type="String" />
 
@@ -37,9 +38,9 @@
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
-		<finder name="G_N" return-type="FragmentCollection" unique="true">
+		<finder name="G_FCK" return-type="FragmentCollection" unique="true">
 			<finder-column name="groupId" />
-			<finder-column name="name" />
+			<finder-column name="fragmentCollectionKey" />
 		</finder>
 		<finder name="G_LikeN" return-type="Collection">
 			<finder-column name="groupId" />
@@ -73,10 +74,16 @@
 		<!-- Other fields -->
 
 		<column name="fragmentCollectionId" type="long" />
+		<column name="fragmentEntryKey" type="String" />
 		<column name="name" type="String" />
 		<column name="css" type="String" />
 		<column name="html" type="String" />
 		<column name="js" type="String" />
+		<column name="htmlPreviewEntryId" type="long" />
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />
 
 		<!-- Order -->
 
@@ -96,9 +103,13 @@
 			<finder-column name="groupId" />
 			<finder-column name="fragmentCollectionId" />
 		</finder>
-		<finder name="G_N" return-type="FragmentEntry" unique="true">
+		<finder name="G_FEK" return-type="FragmentEntry" unique="true">
 			<finder-column name="groupId" />
-			<finder-column name="name" />
+			<finder-column name="fragmentEntryKey" />
+		</finder>
+		<finder name="FCI_S" return-type="Collection">
+			<finder-column name="fragmentCollectionId" />
+			<finder-column name="status" />
 		</finder>
 		<finder name="G_FCI_LikeN" return-type="Collection">
 			<finder-column name="groupId" />
@@ -109,13 +120,70 @@
 		<!-- References -->
 
 		<reference entity="FragmentCollection" package-path="com.liferay.fragment" />
+		<reference entity="FragmentEntryLink" package-path="com.liferay.fragment" />
+		<reference entity="ClassName" package-path="com.liferay.portal" />
+		<reference entity="Resource" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+	</entity>
+	<entity local-service="true" name="FragmentEntryLink" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="fragmentEntryLinkId" primary="true" type="long" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="originalFragmentEntryLinkId" type="long" />
+		<column name="fragmentEntryId" type="long" />
+		<column name="classNameId" type="long" />
+		<column name="classPK" type="long" />
+		<column name="css" type="String" />
+		<column name="html" type="String" />
+		<column name="js" type="String" />
+		<column name="editableValues" type="String" />
+		<column name="position" type="int" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="classNameId" />
+			<order-column name="classPK" />
+			<order-column name="position" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="G_F" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="fragmentEntryId" />
+		</finder>
+		<finder name="G_C_C" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="FragmentEntry" package-path="com.liferay.fragment" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
 	</entity>
 	<exceptions>
 		<exception>DuplicateFragmentCollection</exception>
+		<exception>DuplicateFragmentCollectionKey</exception>
 		<exception>DuplicateFragmentEntry</exception>
+		<exception>DuplicateFragmentEntryKey</exception>
 		<exception>FragmentCollectionName</exception>
+		<exception>FragmentEntryContent</exception>
 		<exception>FragmentEntryName</exception>
+		<exception>RequiredFragmentEntry</exception>
 	</exceptions>
 </service-builder>

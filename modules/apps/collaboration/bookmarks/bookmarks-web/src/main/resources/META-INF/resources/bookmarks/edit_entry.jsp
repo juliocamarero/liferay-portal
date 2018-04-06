@@ -129,9 +129,9 @@ if (portletTitleBasedNavigation) {
 											function(event) {
 												var folderData = {
 													idString: 'folderId',
-													idValue: event.folderid,
+													idValue: event.entityid,
 													nameString: 'folderName',
-													nameValue: event.name
+													nameValue: event.entityname
 												};
 
 												Liferay.Util.selectFolder(folderData, '<portlet:namespace />');
@@ -156,7 +156,9 @@ if (portletTitleBasedNavigation) {
 					<aui:input name="description" />
 				</aui:fieldset>
 
-				<liferay-expando:custom-attributes-available className="<%= BookmarksEntry.class.getName() %>">
+				<liferay-expando:custom-attributes-available
+					className="<%= BookmarksEntry.class.getName() %>"
+				>
 					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 						<liferay-expando:custom-attribute-list
 							className="<%= BookmarksEntry.class.getName() %>"
@@ -168,9 +170,15 @@ if (portletTitleBasedNavigation) {
 				</liferay-expando:custom-attributes-available>
 
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
-					<liferay-asset:asset-categories-selector className="<%= BookmarksEntry.class.getName() %>" classPK="<%= entryId %>" />
+					<liferay-asset:asset-categories-selector
+						className="<%= BookmarksEntry.class.getName() %>"
+						classPK="<%= entryId %>"
+					/>
 
-					<liferay-asset:asset-tags-selector className="<%= BookmarksEntry.class.getName() %>" classPK="<%= entryId %>" />
+					<liferay-asset:asset-tags-selector
+						className="<%= BookmarksEntry.class.getName() %>"
+						classPK="<%= entryId %>"
+					/>
 				</aui:fieldset>
 
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
@@ -191,9 +199,9 @@ if (portletTitleBasedNavigation) {
 		</div>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

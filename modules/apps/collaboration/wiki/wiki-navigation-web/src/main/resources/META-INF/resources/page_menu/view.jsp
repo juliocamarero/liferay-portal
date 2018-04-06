@@ -22,7 +22,11 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 <c:choose>
 	<c:when test="<%= wikiPage != null %>">
-		<liferay-ui:panel-container extended="<%= true %>" id="pageMenu" persistState="<%= true %>">
+		<liferay-ui:panel-container
+			extended="<%= true %>"
+			id="pageMenu"
+			persistState="<%= true %>"
+		>
 
 			<%
 			List<MenuItem> menuItems = MenuItem.fromWikiPage(wikiPage, portletURL);
@@ -34,7 +38,13 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 				<c:choose>
 					<c:when test="<%= Validator.isNotNull(label) %>">
-						<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id='<%= "pageMenu_" + label %>' persistState="<%= true %>" title="<%= label %>">
+						<liferay-ui:panel
+							collapsible="<%= true %>"
+							extended="<%= true %>"
+							id='<%= "pageMenu_" + label %>'
+							persistState="<%= true %>"
+							title="<%= label %>"
+						>
 							<%= _buildPageMenuLinksHTML(menuItem.getChildren()) %>
 						</liferay-ui:panel>
 					</c:when>
@@ -49,7 +59,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 		</liferay-ui:panel-container>
 
-		<c:if test="<%= PortletPermissionUtil.contains(permissionChecker, plid, portletDisplay.getId(), ActionKeys.CONFIGURATION) && WikiPagePermissionChecker.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) %>">
+		<c:if test="<%= PortletPermissionUtil.contains(permissionChecker, plid, portletDisplay.getId(), ActionKeys.CONFIGURATION) && WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) %>">
 			<br />
 
 			<liferay-portlet:renderURL portletName="<%= WikiPortletKeys.WIKI %>" var="editURL">

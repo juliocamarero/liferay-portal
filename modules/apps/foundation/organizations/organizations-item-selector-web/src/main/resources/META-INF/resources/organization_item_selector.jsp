@@ -48,6 +48,10 @@ PortletURL portletURL = organizationItemSelectorViewDisplayContext.getPortletURL
 			orderColumns='<%= new String[] {"name", "type"} %>'
 			portletURL="<%= portletURL %>"
 		/>
+
+		<li>
+			<liferay-item-selector:search />
+		</li>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
 
@@ -69,11 +73,21 @@ PortletURL portletURL = organizationItemSelectorViewDisplayContext.getPortletURL
 
 			<liferay-ui:search-container-column-text
 				cssClass="table-cell-content"
+				name="path"
+				value="<%= organizationItemSelectorViewDisplayContext.getPath(organization) %>"
+			/>
+
+			<liferay-ui:search-container-column-text
+				cssClass="table-cell-content"
 				property="type"
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" searchContainer="<%= organizationItemSelectorViewDisplayContext.getSearchContainer() %>" />
+		<liferay-ui:search-iterator
+			displayStyle="list"
+			markupView="lexicon"
+			searchContainer="<%= organizationItemSelectorViewDisplayContext.getSearchContainer() %>"
+		/>
 	</liferay-ui:search-container>
 </div>
 

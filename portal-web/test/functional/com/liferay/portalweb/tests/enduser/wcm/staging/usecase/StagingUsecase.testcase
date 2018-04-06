@@ -57,6 +57,52 @@
 		</if>
 	</tear-down>
 
+	<command name="ContentCannotBeCreatedOnLive" priority="5">
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Tags" />
+		</execute>
+
+		<execute macro="Staging#viewAddButtonDoesNotExist" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Categories" />
+		</execute>
+
+		<execute macro="Staging#viewAddButtonDoesNotExist" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
+
+		<execute macro="Staging#viewAddButtonDoesNotExist" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
+
+		<execute macro="Staging#viewAddButtonDoesNotExist" />
+	</command>
+
 	<command name="DeleteLivePage" priority="5">
 		<property name="portal.acceptance" value="quarantine" />
 
@@ -243,7 +289,7 @@
 		</execute>
 
 		<execute macro="Staging#configurePublishToLive">
-			<var name="checkAllContent" value="true" />
+			<var name="checkContentNameList" value="Blogs" />
 			<var name="checkPageName" value="Public Pages" />
 		</execute>
 
@@ -253,7 +299,7 @@
 		</execute>
 
 		<execute macro="Staging#publishToLivePublishTemplate">
-			<var name="publishTemplateName" value="Publish Template Name" />
+			<var name="publishTemplateName" value="Publish Template Name Edit" />
 			<var name="siteName" value="Site Name" />
 		</execute>
 
@@ -317,7 +363,7 @@
 
 		<execute macro="Staging#gotoPublishToLive" />
 
-		<execute macro="Staging#publishToLive" >
+		<execute macro="Staging#publishToLive">
 			<var name="publicationName" value="Content Update" />
 		</execute>
 
@@ -1076,6 +1122,7 @@
 
 		<execute macro="Staging#configurePublishToLive">
 			<var name="contentDateRange" value="All" />
+			<var name="mainContent" value="Documents and Media" />
 			<var name="uncheckContentNameList" value="Documents and Media" />
 			<var name="uncheckSubContent" value="Web Content" />
 		</execute>

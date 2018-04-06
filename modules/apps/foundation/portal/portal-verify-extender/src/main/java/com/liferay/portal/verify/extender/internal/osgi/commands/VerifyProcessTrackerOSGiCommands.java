@@ -37,7 +37,6 @@ import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.verify.VerifyException;
 import com.liferay.portal.verify.VerifyProcess;
 import com.liferay.portal.verify.extender.internal.configuration.VerifyProcessTrackerConfiguration;
-import com.liferay.portal.verify.extender.marker.VerifyProcessCompletionMarker;
 import com.liferay.portlet.exportimport.staging.StagingAdvicesThreadLocal;
 
 import java.io.IOException;
@@ -82,7 +81,7 @@ public class VerifyProcessTrackerOSGiCommands {
 	@Descriptor("List latest execution result for a specific verify process")
 	public void check(final String verifyProcessName) {
 		try {
-			getVerifyProcesses(verifyProcessName);
+			getVerifyProcesses(_verifyProcesses, verifyProcessName);
 		}
 		catch (IllegalArgumentException iae) {
 			System.out.println(
@@ -123,14 +122,16 @@ public class VerifyProcessTrackerOSGiCommands {
 
 	@Descriptor("Execute a specific verify process")
 	public void execute(final String verifyProcessName) {
-		_execute(verifyProcessName, null, true);
+		_execute(_verifyProcesses, verifyProcessName, null, true);
 	}
 
 	@Descriptor("Execute a specific verify process with a specific output")
 	public void execute(
 		String verifyProcessName, String outputStreamContainerFactoryName) {
 
-		_execute(verifyProcessName, outputStreamContainerFactoryName, true);
+		_execute(
+			_verifyProcesses, verifyProcessName,
+			outputStreamContainerFactoryName, true);
 	}
 
 	@Descriptor("Execute all verify processes")
@@ -161,7 +162,7 @@ public class VerifyProcessTrackerOSGiCommands {
 	@Descriptor("Show all registered verify processes")
 	public void show(String verifyProcessName) {
 		try {
-			getVerifyProcesses(verifyProcessName);
+			getVerifyProcesses(_verifyProcesses, verifyProcessName);
 		}
 		catch (IllegalArgumentException iae) {
 			System.out.println(
@@ -206,14 +207,12 @@ public class VerifyProcessTrackerOSGiCommands {
 
 		_serviceRegistrations = new ConcurrentHashMap<>();
 
-		_verifyProcesses = ServiceTrackerMapFactory.multiValueMap(
+		_verifyProcesses = ServiceTrackerMapFactory.openMultiValueMap(
 			_bundleContext, VerifyProcess.class, null,
 			new PropertyServiceReferenceMapper<String, VerifyProcess>(
 				"verify.process.name"),
 			new PropertyServiceReferenceComparator("service.ranking"),
 			verifyServiceTrackerMapListener);
-
-		_verifyProcesses.open();
 	}
 
 	protected void close(OutputStream outputStream) {
@@ -230,12 +229,12 @@ public class VerifyProcessTrackerOSGiCommands {
 		_verifyProcesses.close();
 
 		for (Map.Entry
-				<String, ServiceRegistration<VerifyProcessCompletionMarker>>
+				<String, ServiceRegistration<Object>>
 					serviceRegistrationEntry :
 						_serviceRegistrations.entrySet()) {
 
-			ServiceRegistration<VerifyProcessCompletionMarker>
-				serviceRegistration = serviceRegistrationEntry.getValue();
+			ServiceRegistration<Object> serviceRegistration =
+				serviceRegistrationEntry.getValue();
 
 			serviceRegistration.unregister();
 		}
@@ -244,12 +243,13 @@ public class VerifyProcessTrackerOSGiCommands {
 	}
 
 	protected void executeVerifyProcesses(
+		ServiceTrackerMap<String, List<VerifyProcess>> verifyProcessTrackerMap,
 		String verifyProcessName, OutputStream outputStream, boolean force) {
 
 		PrintWriter printWriter = new PrintWriter(outputStream, true);
 
 		List<VerifyProcess> verifyProcesses = getVerifyProcesses(
-			verifyProcessName);
+			verifyProcessTrackerMap, verifyProcessName);
 
 		boolean indexReadOnly = indexStatusManager.isIndexReadOnly();
 
@@ -266,7 +266,7 @@ public class VerifyProcessTrackerOSGiCommands {
 
 			if ((release != null) && !force && release.isVerified()) {
 				if (!_serviceRegistrations.containsKey(verifyProcessName)) {
-					_registerVerifyProcessCompletionMarker(verifyProcessName);
+					_registerMarkerObject(verifyProcessName);
 				}
 
 				return;
@@ -306,7 +306,7 @@ public class VerifyProcessTrackerOSGiCommands {
 
 				releaseLocalService.updateRelease(release);
 
-				_registerVerifyProcessCompletionMarker(verifyProcessName);
+				_registerMarkerObject(verifyProcessName);
 			}
 			else {
 				release.setState(ReleaseConstants.STATE_VERIFY_FAILURE);
@@ -324,6 +324,8 @@ public class VerifyProcessTrackerOSGiCommands {
 	}
 
 	protected void executeVerifyProcesses(
+		final ServiceTrackerMap<String, List<VerifyProcess>>
+			verifyProcessTrackerMap,
 		final String verifyProcessName, String outputStreamContainerFactoryName,
 		String outputStreamName, final boolean force) {
 
@@ -353,7 +355,8 @@ public class VerifyProcessTrackerOSGiCommands {
 				@Override
 				public void run() {
 					executeVerifyProcesses(
-						verifyProcessName, outputStream, force);
+						verifyProcessTrackerMap, verifyProcessName,
+						outputStream, force);
 				}
 
 			},
@@ -362,9 +365,12 @@ public class VerifyProcessTrackerOSGiCommands {
 		close(outputStream);
 	}
 
-	protected List<VerifyProcess> getVerifyProcesses(String verifyProcessName) {
-		List<VerifyProcess> verifyProcesses = _verifyProcesses.getService(
-			verifyProcessName);
+	protected List<VerifyProcess> getVerifyProcesses(
+		ServiceTrackerMap<String, List<VerifyProcess>> verifyProcessTrackerMap,
+		String verifyProcessName) {
+
+		List<VerifyProcess> verifyProcesses =
+			verifyProcessTrackerMap.getService(verifyProcessName);
 
 		if (verifyProcesses == null) {
 			throw new IllegalArgumentException(
@@ -393,25 +399,24 @@ public class VerifyProcessTrackerOSGiCommands {
 	protected ReleaseLocalService releaseLocalService;
 
 	private void _execute(
+		ServiceTrackerMap<String, List<VerifyProcess>> verifyProcessTrackerMap,
 		final String verifyProcessName, String outputStreamContainerFactoryName,
 		final boolean force) {
 
 		executeVerifyProcesses(
-			verifyProcessName, outputStreamContainerFactoryName,
-			"verify-" + verifyProcessName, force);
+			verifyProcessTrackerMap, verifyProcessName,
+			outputStreamContainerFactoryName, "verify-" + verifyProcessName,
+			force);
 	}
 
-	private void _registerVerifyProcessCompletionMarker(
-		String verifyProcessName) {
-
+	private void _registerMarkerObject(String verifyProcessName) {
 		Dictionary<String, String> dictionary = new HashMapDictionary<>();
 
 		dictionary.put("verify.process.name", verifyProcessName);
 
-		ServiceRegistration<VerifyProcessCompletionMarker> serviceRegistration =
+		ServiceRegistration<Object> serviceRegistration =
 			_bundleContext.registerService(
-				VerifyProcessCompletionMarker.class,
-				new VerifyProcessCompletionMarker() {}, dictionary);
+				Object.class, new Object(), dictionary);
 
 		_serviceRegistrations.put(verifyProcessName, serviceRegistration);
 	}
@@ -435,8 +440,7 @@ public class VerifyProcessTrackerOSGiCommands {
 		VerifyProcessTrackerOSGiCommands.class);
 
 	private BundleContext _bundleContext;
-	private Map<String, ServiceRegistration<VerifyProcessCompletionMarker>>
-		_serviceRegistrations;
+	private Map<String, ServiceRegistration<Object>> _serviceRegistrations;
 	private ServiceTrackerMap<String, List<VerifyProcess>> _verifyProcesses;
 	private VerifyProcessTrackerConfiguration
 		_verifyProcessTrackerConfiguration;
@@ -454,7 +458,7 @@ public class VerifyProcessTrackerOSGiCommands {
 
 			for (String verifyProcessName : verifyProcessNames) {
 				executeVerifyProcesses(
-					verifyProcessName, _outputStream, _force);
+					_verifyProcesses, verifyProcessName, _outputStream, _force);
 			}
 		}
 
@@ -474,7 +478,7 @@ public class VerifyProcessTrackerOSGiCommands {
 			String key, VerifyProcess serviceVerifyProcess,
 			List<VerifyProcess> contentVerifyProcesses) {
 
-			_execute(key, null, false);
+			_execute(verifyProcessTrackerMap, key, null, false);
 		}
 
 		@Override

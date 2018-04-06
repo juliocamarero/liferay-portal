@@ -14,8 +14,11 @@
 
 package com.liferay.source.formatter.checks.util;
 
+import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.SourceFormatterMessage;
 import com.liferay.source.formatter.checks.FileCheck;
 import com.liferay.source.formatter.checks.GradleFileCheck;
@@ -23,13 +26,14 @@ import com.liferay.source.formatter.checks.JavaTermCheck;
 import com.liferay.source.formatter.checks.SourceCheck;
 import com.liferay.source.formatter.checks.configuration.SourceCheckConfiguration;
 import com.liferay.source.formatter.checks.configuration.SourceChecksResult;
-import com.liferay.source.formatter.checks.configuration.SourceChecksSuppressions;
 import com.liferay.source.formatter.checks.configuration.SourceFormatterConfiguration;
+import com.liferay.source.formatter.checks.configuration.SourceFormatterSuppressions;
 import com.liferay.source.formatter.parser.GradleFile;
 import com.liferay.source.formatter.parser.GradleFileParser;
 import com.liferay.source.formatter.parser.JavaClass;
 import com.liferay.source.formatter.parser.JavaClassParser;
 import com.liferay.source.formatter.parser.ParseException;
+import com.liferay.source.formatter.util.CheckType;
 import com.liferay.source.formatter.util.DebugUtil;
 import com.liferay.source.formatter.util.SourceFormatterUtil;
 
@@ -39,6 +43,9 @@ import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -49,26 +56,28 @@ public class SourceChecksUtil {
 
 	public static List<SourceCheck> getSourceChecks(
 			SourceFormatterConfiguration sourceFormatterConfiguration,
-			String sourceProcessorName, boolean portalSource,
-			boolean subrepository, boolean includeModuleChecks)
+			String sourceProcessorName, Map<String, Properties> propertiesMap,
+			boolean portalSource, boolean subrepository,
+			boolean includeModuleChecks)
 		throws Exception {
 
 		List<SourceCheck> sourceChecks = _getSourceChecks(
-			sourceFormatterConfiguration, sourceProcessorName, portalSource,
-			subrepository, includeModuleChecks);
+			sourceFormatterConfiguration, sourceProcessorName, propertiesMap,
+			portalSource, subrepository, includeModuleChecks);
 
 		sourceChecks.addAll(
 			_getSourceChecks(
-				sourceFormatterConfiguration, "all", includeModuleChecks,
-				subrepository, includeModuleChecks));
+				sourceFormatterConfiguration, "all", propertiesMap,
+				includeModuleChecks, subrepository, includeModuleChecks));
 
 		return sourceChecks;
 	}
 
 	public static SourceChecksResult processSourceChecks(
 			File file, String fileName, String absolutePath, String content,
-			boolean modulesFile, List<SourceCheck> sourceChecks,
-			SourceChecksSuppressions sourceChecksSuppressions,
+			Set<String> modifiedMessages, boolean modulesFile,
+			List<SourceCheck> sourceChecks,
+			SourceFormatterSuppressions sourceFormatterSuppressions,
 			boolean showDebugInformation)
 		throws Exception {
 
@@ -89,7 +98,7 @@ public class SourceChecksUtil {
 
 			Class<?> clazz = sourceCheck.getClass();
 
-			if (sourceChecksSuppressions.isSuppressed(
+			if (sourceFormatterSuppressions.isSuppressed(
 					clazz.getSimpleName(), absolutePath)) {
 
 				continue;
@@ -111,7 +120,9 @@ public class SourceChecksUtil {
 					catch (ParseException pe) {
 						sourceChecksResult.addSourceFormatterMessage(
 							new SourceFormatterMessage(
-								fileName, pe.getMessage(), null, -1));
+								fileName, pe.getMessage(),
+								CheckType.SOURCE_CHECK, clazz.getSimpleName(),
+								null, -1));
 
 						continue;
 					}
@@ -133,7 +144,9 @@ public class SourceChecksUtil {
 					catch (ParseException pe) {
 						sourceChecksResult.addSourceFormatterMessage(
 							new SourceFormatterMessage(
-								fileName, pe.getMessage(), null, -1));
+								fileName, pe.getMessage(),
+								CheckType.SOURCE_CHECK, clazz.getSimpleName(),
+								null, -1));
 
 						continue;
 					}
@@ -152,6 +165,22 @@ public class SourceChecksUtil {
 			}
 
 			if (!content.equals(sourceChecksResult.getContent())) {
+				StringBundler sb = new StringBundler(7);
+
+				sb.append(file.toString());
+				sb.append(CharPool.SPACE);
+				sb.append(CharPool.OPEN_PARENTHESIS);
+
+				CheckType checkType = CheckType.SOURCE_CHECK;
+
+				sb.append(checkType.getValue());
+
+				sb.append(CharPool.COLON);
+				sb.append(clazz.getSimpleName());
+				sb.append(CharPool.CLOSE_PARENTHESIS);
+
+				modifiedMessages.add(sb.toString());
+
 				if (showDebugInformation) {
 					DebugUtil.printContentModifications(
 						clazz.getSimpleName(), fileName, content,
@@ -167,8 +196,9 @@ public class SourceChecksUtil {
 
 	private static List<SourceCheck> _getSourceChecks(
 			SourceFormatterConfiguration sourceFormatterConfiguration,
-			String sourceProcessorName, boolean portalSource,
-			boolean subrepository, boolean includeModuleChecks)
+			String sourceProcessorName, Map<String, Properties> propertiesMap,
+			boolean portalSource, boolean subrepository,
+			boolean includeModuleChecks)
 		throws Exception {
 
 		List<SourceCheck> sourceChecks = new ArrayList<>();
@@ -223,19 +253,35 @@ public class SourceChecksUtil {
 				continue;
 			}
 
+			Class<?> clazz = sourceCheck.getClass();
+
 			for (String attributeName :
 					sourceCheckConfiguration.attributeNames()) {
 
-				for (String attributeValue :
-						sourceCheckConfiguration.getAttributeValues(
-							attributeName)) {
+				List<String> values =
+					sourceCheckConfiguration.getAttributeValues(attributeName);
 
-					BeanUtils.setProperty(
-						sourceCheck, attributeName, attributeValue);
+				for (String value : values) {
+					BeanUtils.setProperty(sourceCheck, attributeName, value);
 				}
 			}
 
-			sourceChecks.add(sourceCheck);
+			List<String> attributeNames = SourceFormatterUtil.getAttributeNames(
+				CheckType.SOURCE_CHECK, clazz.getSimpleName(), propertiesMap);
+
+			for (String attributeName : attributeNames) {
+				String value = SourceFormatterUtil.getPropertyValue(
+					attributeName, CheckType.SOURCE_CHECK,
+					clazz.getSimpleName(), propertiesMap);
+
+				if (Validator.isNotNull(value)) {
+					BeanUtils.setProperty(sourceCheck, attributeName, value);
+				}
+			}
+
+			if (sourceCheck.isEnabled()) {
+				sourceChecks.add(sourceCheck);
+			}
 		}
 
 		return sourceChecks;

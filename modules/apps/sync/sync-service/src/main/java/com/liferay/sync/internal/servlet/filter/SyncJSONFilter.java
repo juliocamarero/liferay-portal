@@ -14,6 +14,7 @@
 
 package com.liferay.sync.internal.servlet.filter;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.upload.UploadServletRequest;
@@ -22,18 +23,17 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.sync.SyncClientMinBuildException;
 import com.liferay.sync.SyncDeviceHeaderException;
 import com.liferay.sync.SyncServicesUnavailableException;
+import com.liferay.sync.internal.util.SyncDeviceThreadLocal;
 import com.liferay.sync.model.SyncDevice;
 import com.liferay.sync.service.SyncDeviceLocalServiceUtil;
 import com.liferay.sync.service.configuration.SyncServiceConfigurationKeys;
-import com.liferay.sync.service.configuration.SyncServiceConfigurationValues;
-import com.liferay.sync.util.SyncDeviceThreadLocal;
-import com.liferay.sync.util.SyncUtil;
+import com.liferay.sync.service.internal.configuration.SyncServiceConfigurationValues;
+import com.liferay.sync.util.SyncHelper;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -219,7 +219,7 @@ public class SyncJSONFilter implements Filter {
 
 		OutputStream outputStream = servletResponse.getOutputStream();
 
-		String json = _syncUtil.buildExceptionMessage(throwable);
+		String json = _syncHelper.buildExceptionMessage(throwable);
 
 		json = "{\"exception\": \"" + json + "\"}";
 
@@ -288,6 +288,6 @@ public class SyncJSONFilter implements Filter {
 	private Portal _portal;
 
 	@Reference
-	private SyncUtil _syncUtil;
+	private SyncHelper _syncHelper;
 
 }

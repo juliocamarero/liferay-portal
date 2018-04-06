@@ -14,13 +14,12 @@
 
 package com.liferay.document.library.repository.cmis.internal.model;
 
-import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
-import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.repository.cmis.internal.CMISRepository;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -30,8 +29,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.repository.model.RepositoryModelOperation;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
 
 import java.io.Serializable;
 
@@ -92,11 +89,7 @@ public class CMISFolder extends CMISModel implements Folder {
 				Folder folder = DLAppLocalServiceUtil.getMountFolder(
 					getRepositoryId());
 
-				DLFolder dlFolder = DLFolderLocalServiceUtil.getFolder(
-					folder.getFolderId());
-
-				return DLFolderPermission.contains(
-					permissionChecker, dlFolder, actionId);
+				return folder.containsPermission(permissionChecker, actionId);
 			}
 			catch (PortalException pe) {
 				throw new SystemException(pe);

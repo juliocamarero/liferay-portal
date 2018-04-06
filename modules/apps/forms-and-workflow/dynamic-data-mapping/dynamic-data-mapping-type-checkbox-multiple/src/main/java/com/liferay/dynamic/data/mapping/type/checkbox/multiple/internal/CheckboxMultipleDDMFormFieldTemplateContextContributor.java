@@ -17,6 +17,7 @@ package com.liferay.dynamic.data.mapping.type.checkbox.multiple.internal;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTemplateContextContributor;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
+import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
@@ -58,6 +59,14 @@ public class CheckboxMultipleDDMFormFieldTemplateContextContributor
 			GetterUtil.getBoolean(ddmFormField.getProperty("inline")));
 		parameters.put(
 			"options", getOptions(ddmFormField, ddmFormFieldRenderingContext));
+
+		List<String> predefinedValue = getValue(
+			getPredefinedValue(ddmFormField, ddmFormFieldRenderingContext));
+
+		if (predefinedValue != null) {
+			parameters.put("predefinedValue", predefinedValue);
+		}
+
 		parameters.put(
 			"showAsSwitcher",
 			GetterUtil.getBoolean(ddmFormField.getProperty("showAsSwitcher")));
@@ -107,6 +116,20 @@ public class CheckboxMultipleDDMFormFieldTemplateContextContributor
 					ddmFormFieldRenderingContext.getLocale());
 
 		return checkboxMultipleDDMFormFieldContextHelper.getOptions();
+	}
+
+	protected String getPredefinedValue(
+		DDMFormField ddmFormField,
+		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
+
+		LocalizedValue predefinedValue = ddmFormField.getPredefinedValue();
+
+		if (predefinedValue == null) {
+			return null;
+		}
+
+		return predefinedValue.getString(
+			ddmFormFieldRenderingContext.getLocale());
 	}
 
 	protected List<String> getValue(String valueString) {

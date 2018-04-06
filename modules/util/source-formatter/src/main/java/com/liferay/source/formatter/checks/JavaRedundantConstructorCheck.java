@@ -14,13 +14,12 @@
 
 package com.liferay.source.formatter.checks;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.source.formatter.checks.util.JavaSourceUtil;
 import com.liferay.source.formatter.checks.util.SourceUtil;
 import com.liferay.source.formatter.parser.JavaClass;
-import com.liferay.source.formatter.parser.JavaConstructor;
 import com.liferay.source.formatter.parser.JavaTerm;
 import com.liferay.source.formatter.util.ThreadSafeSortedClassLibraryBuilder;
 
@@ -126,7 +125,7 @@ public class JavaRedundantConstructorCheck extends BaseJavaTermCheck {
 		int count = 0;
 
 		for (JavaTerm javaTerm : javaClass.getChildJavaTerms()) {
-			if (javaTerm instanceof JavaConstructor) {
+			if (javaTerm.isJavaConstructor()) {
 				count++;
 			}
 		}

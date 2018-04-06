@@ -16,9 +16,14 @@ package com.liferay.dynamic.data.mapping.type.select.internal;
 
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueRequestParameterRetriever;
 import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,15 +56,29 @@ public class SelectDDMFormFieldValueRequestParameterRetriever
 	protected String[] getDefaultDDMFormFieldParameterValues(
 		String defaultDDMFormFieldParameterValue) {
 
-		if (Validator.isNull(defaultDDMFormFieldParameterValue)) {
+		if (Validator.isNull(defaultDDMFormFieldParameterValue) ||
+			Objects.equals(defaultDDMFormFieldParameterValue, "[]")) {
+
 			return GetterUtil.DEFAULT_STRING_VALUES;
 		}
 
-		return jsonFactory.looseDeserialize(
-			defaultDDMFormFieldParameterValue, String[].class);
+		try {
+			return jsonFactory.looseDeserialize(
+				defaultDDMFormFieldParameterValue, String[].class);
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(e, e);
+			}
+
+			return StringUtil.split(defaultDDMFormFieldParameterValue);
+		}
 	}
 
 	@Reference
 	protected JSONFactory jsonFactory;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SelectDDMFormFieldValueRequestParameterRetriever.class);
 
 }

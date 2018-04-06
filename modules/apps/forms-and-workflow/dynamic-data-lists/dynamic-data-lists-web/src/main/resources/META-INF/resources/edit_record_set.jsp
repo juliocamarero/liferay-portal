@@ -46,6 +46,8 @@ if (ddmStructureId > 0) {
 	}
 }
 
+String languageId = LanguageUtil.getLanguageId(request);
+
 if (ddlDisplayContext.isAdminPortlet()) {
 	portletDisplay.setShowBackIcon(true);
 	portletDisplay.setURLBack(redirect);
@@ -133,7 +135,7 @@ if (ddlDisplayContext.isAdminPortlet()) {
 						}
 					%>
 
-						<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+						<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 					<%
 					}
@@ -153,9 +155,9 @@ if (ddlDisplayContext.isAdminPortlet()) {
 	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" name="saveButton" type="submit" value="save" />
+		<aui:button name="saveButton" type="submit" value="save" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" name="cancelButton" type="cancel" />
+		<aui:button href="<%= redirect %>" name="cancelButton" type="cancel" />
 	</aui:button-row>
 </aui:form>
 

@@ -38,12 +38,32 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 			"com.liferay.message.boards.model.MBBan"
 		},
 		{
+			"com.liferay.message.boards.kernel.model.MBCategory",
+			"com.liferay.message.boards.model.MBCategory"
+		},
+		{
+			"com.liferay.message.boards.kernel.model.MBDiscussion",
+			"com.liferay.message.boards.model.MBDiscussion"
+		},
+		{
 			"com.liferay.message.boards.kernel.model.MBMailingList",
 			"com.liferay.message.boards.model.MBMailingList"
 		},
 		{
+			"com.liferay.message.boards.kernel.model.MBMessage",
+			"com.liferay.message.boards.model.MBMessage"
+		},
+		{
 			"com.liferay.message.boards.kernel.model.MBStatsUser",
 			"com.liferay.message.boards.model.MBStatsUser"
+		},
+		{
+			"com.liferay.message.boards.kernel.model.MBThread",
+			"com.liferay.message.boards.model.MBThread"
+		},
+		{
+			"com.liferay.message.boards.kernel.model.MBThreadFlag",
+			"com.liferay.message.boards.model.MBThreadFlag"
 		}
 	};
 

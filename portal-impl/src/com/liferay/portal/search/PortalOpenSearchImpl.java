@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Portlet;
@@ -33,7 +34,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -84,7 +84,9 @@ public class PortalOpenSearchImpl extends BaseOpenSearchImpl {
 				(com.liferay.portal.kernel.xml.Document)values[0];
 			Element root = (Element)values[1];
 
-			for (int i = 0; i < results.getDocs().length; i++) {
+			Document[] docs = results.getDocs();
+
+			for (int i = 0; i < docs.length; i++) {
 				Document result = results.doc(i);
 
 				String className = result.get(Field.ENTRY_CLASS_NAME);

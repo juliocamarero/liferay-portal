@@ -20,7 +20,7 @@ Here are some of the types of changes documented in this file:
   replaces an old API, in spite of the old API being kept in Liferay Portal for
   backwards compatibility.
 
-*This document has been reviewed through commit `f10f11757431`.*
+*This document has been reviewed through commit `fc099e3999f4`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -161,7 +161,7 @@ portlet URLs without passing the request as a necessary parameter.
 #### What changed?
 
 The Users File Uploads portlet properties have been moved from Server
-Administration to an OSGI configuration named
+Administration to an OSGi configuration named
 `UserFileUploadsConfiguration.java` in the `users-admin-api` module.
 
 #### Who is affected?
@@ -244,7 +244,7 @@ configuration changes.
 ---------------------------------------
 
 ### Moved OpenOffice Properties to OSGi Configuration
-- **Date:** 2017-March-24
+- **Date:** 2017-Mar-24
 - **JIRA Ticket:** LPS-71382
 
 #### What changed?
@@ -550,5 +550,132 @@ migrate to FreeMarker. Also, Velocity has had no new releases for a long time.
 
 The removal of Velocity support for Liferay Portal 7.1 themes allows for an
 increased focus on existing and new template engines.
+
+---------------------------------------
+
+### Moved Organization Type Properties to OSGi Configuration
+- **Date:** 2018-Jan-19
+- **JIRA Ticket:** LPS-77183
+
+#### What changed?
+
+The organization type properties have been moved from `portal.properties` to an
+OSGi configuration named `OrganizationsTypesConfiguration.java` in the
+`users-admin-api` module.
+
+#### Who is affected?
+
+This affects anyone using the following portal properties:
+
+- `organizations.types`
+- `organizations.rootable`
+- `organizations.children.types`
+- `organizations.country.enabled`
+- `organizations.country.required`
+
+#### How should I update my code?
+
+Instead of overriding the `portal.properties` file, you can manage the
+properties from Portal's configuration administrator. This can be accessed by
+navigating to Liferay Portal's *Control Panel* &rarr; *Configuration* &rarr;
+*System Settings* &rarr; *Foundation* &rarr; *Organization Type* and editing
+the settings there.
+
+If you would like to include the new configuration in your application, follow
+the instructions for
+[making your applications configurable](https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/making-your-applications-configurable).
+
+#### Why was this change made?
+
+This change was made as part of the modularization efforts to ease portal
+configuration changes.
+
+---------------------------------------
+
+### Updated jQuery and Lodash Bundled Versions
+- **Date:** 2018-Feb-07
+- **JIRA Ticket:** LPS-66645, LPS-66646
+
+#### What changed?
+
+The bundled jQuery version has been updated from 2.1.4 to 3.3.1. The bundled
+Lodash version has been updated from 3.10.1 to 4.17.4.
+
+#### Who is affected?
+
+This affects anyone using the previous API versions in their code.
+
+#### How should I update my code?
+
+Follow the changelogs on the [jQuery](http://jquery.com/upgrade-guide/3.0/) and
+[Lodash](https://github.com/lodash/lodash/wiki/Changelog#v400) sites to update
+any affected code.
+
+#### Why was this change made?
+
+This change provides the latest jQuery and Lodash versions available.
+
+---------------------------------------
+
+### Removed JavaScript Minification Properties minifier.javascript.impl and yui.compressor.* from portal.properties
+- **Date:** 2018-Feb-28
+- **JIRA Ticket:** LPS-74375
+
+#### What changed?
+
+The JavaScript minifiers have been extracted from `portal-kernel` and moved to
+their own OSGi module. Thus, they are not configured in `portal.properties` any
+more, but rather, through OSGi configuration.
+
+#### Who is affected?
+
+This affects anyone who had the Yahoo JavaScript minifier active and configured
+to override its default settings.
+
+#### How should I update my code?
+
+If you are implementing your own JavaScript minifier, you should extract it to
+its own OSGi module. See module
+[frontend-js-minifier](https://github.com/liferay/liferay-portal/tree/master/modules/apps/foundation/frontend-js/frontend-js-minifier)
+for an example of how to do this.
+
+#### Why was this change made?
+
+The JavaScript minifiers were not easy to customize. For example, the Google
+minifier used an old version of the closure-compiler, which was difficult to
+upgrade because it required `portal-kernel` dependency changes. This could
+create conflicts.
+
+Having JavaScript minifiers in their own OSGi modules requires less dependency
+management and makes it easier to provide new implementations of JavaScript
+minifiers. Also, configuration can now be done using OSGi standards.
+
+---------------------------------------
+
+### Changed Behavior of liferay-ui:input-date Taglib's showDisableCheckbox Argument
+- **Date:** 2018-Mar-06
+- **JIRA Ticket:** LPS-78475
+
+#### What changed?
+
+Previously, when the `liferay-ui:input-date` taglib's `showDisableCheckbox`
+argument was set to `true`, the disable checkbox was hidden. Now, the value
+`true` displays it, and `false` hides it.
+
+#### Who is affected?
+
+This affects anyone trying to hide the `liferay-ui:input-date` taglib's disable
+checkbox.
+
+#### How should I update my code?
+
+If you are setting the `showDisableCheckbox` argument to `true` to hide the
+`liferay-ui:input-date` taglib's disable checkbox, you should now set it to
+`false`, and vice versa.
+
+#### Why was this change made?
+
+The behavior did not match with the name of the argument and was
+counter-intuitive.
 
 ---------------------------------------

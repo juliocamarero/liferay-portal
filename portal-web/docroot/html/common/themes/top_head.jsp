@@ -116,6 +116,21 @@ if (layout != null) {
 		}
 	}
 
+	Iterator<Portlet> portletsIterator = portlets.iterator();
+
+	LayoutTypeAccessPolicy layoutTypeAccessPolicy = LayoutTypeAccessPolicyTracker.getLayoutTypeAccessPolicy(layout);
+
+	while (portletsIterator.hasNext()) {
+		Portlet portlet = portletsIterator.next();
+
+		try {
+			layoutTypeAccessPolicy.checkAccessAllowedToPortlet(request, layout, portlet);
+		}
+		catch (PrincipalException pe) {
+			portletsIterator.remove();
+		}
+	}
+
 	request.setAttribute(WebKeys.LAYOUT_PORTLETS, portlets);
 }
 %>
@@ -213,11 +228,7 @@ StringBundler pageTopSB = OutputTag.getData(request, WebKeys.PAGE_TOP);
 
 <%!
 private String _escapeCssBlock(String css) {
-	return StringUtil.replace(
-		css,
-		new String[] {"<", "expression("},
-		new String[] {"\\3c", ""}
-	);
+	return StringUtil.replace(css, new String[] {"<", "expression("}, new String[] {"\\3c", ""});
 }
 
 private static Log _log = LogFactoryUtil.getLog("portal_web.docroot.html.common.themes.top_head_jsp");

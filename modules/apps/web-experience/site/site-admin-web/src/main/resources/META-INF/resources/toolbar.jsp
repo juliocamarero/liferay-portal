@@ -21,9 +21,12 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 
 String displayStyle = GetterUtil.getString((String)request.getAttribute("view.jsp-displayStyle"));
 SearchContainer groupSearch = (SearchContainer)request.getAttribute("view.jsp-groupSearchContainer");
-
-PortletURL portletURL = siteAdminDisplayContext.getPortletURL();
 %>
+
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= siteAdminDisplayContext.getNavigationItems() %>"
+/>
 
 <liferay-frontend:management-bar
 	includeCheckBox="<%= true %>"
@@ -44,20 +47,61 @@ PortletURL portletURL = siteAdminDisplayContext.getPortletURL();
 			portletURL="<%= changeDisplayStyleURL %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<c:if test="<%= PortalPermissionUtil.contains(permissionChecker, ActionKeys.ADD_COMMUNITY) %>">
+
+			<%
+			Group group = siteAdminDisplayContext.getGroup();
+			%>
+
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-portlet:renderURL varImpl="addSiteURL">
+					<portlet:param name="jspPage" value="/select_site_initializer.jsp" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+
+					<c:if test="<%= (group != null) && siteAdminDisplayContext.hasAddChildSitePermission(group) %>">
+						<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(group.getGroupId()) %>" />
+					</c:if>
+				</liferay-portlet:renderURL>
+
+				<liferay-frontend:add-menu-item
+					title='<%= LanguageUtil.get(request, "add") %>'
+					url="<%= addSiteURL.toString() %>"
+				/>
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= portletURL %>"
+			portletURL="<%= siteAdminDisplayContext.getPortletURL() %>"
 		/>
 
 		<liferay-frontend:management-bar-sort
 			orderByCol="<%= groupSearch.getOrderByCol() %>"
 			orderByType="<%= groupSearch.getOrderByType() %>"
 			orderColumns='<%= new String[] {"name"} %>'
-			portletURL="<%= portletURL %>"
+			portletURL="<%= siteAdminDisplayContext.getPortletURL() %>"
 		/>
+
+		<%
+		PortletURL searchURL = siteAdminDisplayContext.getSearchURL();
+
+		pageContext.setAttribute("searchURL", searchURL);
+		%>
+
+		<li>
+			<aui:form action="<%= searchURL.toString() %>" name="searchFm">
+				<liferay-portlet:renderURLParams varImpl="searchURL" />
+
+				<liferay-ui:input-search
+					markupView="lexicon"
+				/>
+			</aui:form>
+		</li>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
@@ -66,7 +110,12 @@ PortletURL portletURL = siteAdminDisplayContext.getPortletURL();
 			label="info"
 		/>
 
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSites" label="delete" />
+		<liferay-frontend:management-bar-button
+			href="javascript:;"
+			icon="trash"
+			id="deleteSites"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 

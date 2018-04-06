@@ -19,34 +19,20 @@
 <%
 LayoutPageTemplateDisplayContext layoutPageTemplateDisplayContext = new LayoutPageTemplateDisplayContext(renderRequest, renderResponse, request);
 
-String redirect = layoutPageTemplateDisplayContext.getEditLayoutPageTemplateEntryRedirect();
+FragmentsEditorContext fragmentsEditorContext = new FragmentsEditorContext(request, renderResponse, LayoutPageTemplateEntry.class.getName(), layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryId());
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(redirect);
+portletDisplay.setURLBack(layoutPageTemplateDisplayContext.getEditLayoutPageTemplateEntryRedirect());
 
 renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryTitle());
 %>
 
-<portlet:actionURL name="/layout/edit_layout_page_template_fragments" var="editLayoutPageTemplateFragmentsURL">
-	<portlet:param name="mvcPath" value="/edit_layout_page_template_entry.jsp" />
-</portlet:actionURL>
-
-<portlet:actionURL name="/layout/fragment_entry" var="fragmentEntryURL" />
-
-<%
-Map<String, Object> layoutPageTemplateEditorContext = new HashMap<>();
-
-layoutPageTemplateEditorContext.put("fragments", layoutPageTemplateDisplayContext.getLayoutPageTemplateFragmentsJSONArray());
-layoutPageTemplateEditorContext.put("fragmentCollections", layoutPageTemplateDisplayContext.getFragmentCollectionsJSONArray());
-layoutPageTemplateEditorContext.put("fragmentEntryURL", fragmentEntryURL);
-layoutPageTemplateEditorContext.put("layoutPageTemplateEntryId", layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryId());
-layoutPageTemplateEditorContext.put("portletNamespace", renderResponse.getNamespace());
-layoutPageTemplateEditorContext.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
-layoutPageTemplateEditorContext.put("updatePageTemplateURL", String.valueOf(editLayoutPageTemplateFragmentsURL));
-%>
+<liferay-editor:resources
+	editorName="alloyeditor"
+/>
 
 <soy:template-renderer
-	context="<%= layoutPageTemplateEditorContext %>"
-	module="layout-admin-web/js/LayoutPageTemplateEditor.es"
-	templateNamespace="LayoutPageTemplateEditor.render"
+	context="<%= fragmentsEditorContext.getEditorContext() %>"
+	module="layout-admin-web/js/fragments_editor/FragmentsEditor.es"
+	templateNamespace="com.liferay.layout.admin.web.FragmentsEditor.render"
 />

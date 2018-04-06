@@ -14,32 +14,60 @@
 
 package com.liferay.fragment.model.impl;
 
-import aQute.bnd.annotation.ProviderType;
+import com.liferay.fragment.util.FragmentEntryRenderUtil;
+import com.liferay.html.preview.model.HtmlPreviewEntry;
+import com.liferay.html.preview.service.HtmlPreviewEntryLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.zip.ZipWriter;
 
 /**
- * The extended model implementation for the FragmentEntry service. Represents a
- * row in the &quot;FragmentEntry&quot; database table, with each column mapped
- * to a property of this class.
- *
- * <p>
- * Helper methods and all application logic should be put in this class.
- * Whenever methods are added, rerun ServiceBuilder to copy their definitions
- * into the {@link com.liferay.fragment.model.FragmentEntry} interface.
- * </p>
- *
- * @author Brian Wing Shun Chan
+ * @author Eudaldo Alonso
  */
-@ProviderType
 public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a fragment
-	 * entry model instance should use the {@link
-	 * com.liferay.fragment.model.FragmentEntry} interface instead.
-	 */
-	public FragmentEntryImpl() {
+	@Override
+	public String getContent() {
+		return FragmentEntryRenderUtil.renderFragmentEntry(this);
+	}
+
+	@Override
+	public String getImagePreviewURL(ThemeDisplay themeDisplay) {
+		if (getHtmlPreviewEntryId() <= 0) {
+			return StringPool.BLANK;
+		}
+
+		HtmlPreviewEntry htmlPreviewEntry =
+			HtmlPreviewEntryLocalServiceUtil.fetchHtmlPreviewEntry(
+				getHtmlPreviewEntryId());
+
+		if (htmlPreviewEntry == null) {
+			return StringPool.BLANK;
+		}
+
+		return htmlPreviewEntry.getImagePreviewURL(themeDisplay);
+	}
+
+	@Override
+	public void populateZipWriter(ZipWriter zipWriter, String path)
+		throws Exception {
+
+		path = path + StringPool.SLASH + getFragmentEntryKey();
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("cssPath", path + "/src/index.css");
+		jsonObject.put("htmlPath", path + "/src/index.html");
+		jsonObject.put("jsPath", path + "/src/index.js");
+		jsonObject.put("name", getName());
+
+		zipWriter.addEntry(path + "/fragment.json", jsonObject.toString());
+
+		zipWriter.addEntry(path + "/src/index.css", getCss());
+		zipWriter.addEntry(path + "/src/index.js", getJs());
+		zipWriter.addEntry(path + "/src/index.html", getHtml());
 	}
 
 }

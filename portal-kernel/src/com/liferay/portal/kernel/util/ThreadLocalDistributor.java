@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -117,7 +118,9 @@ public class ThreadLocalDistributor implements Externalizable {
 
 	public void restore() {
 		for (int i = 0; i < _threadLocalValues.length; i++) {
-			_threadLocals.get(i).set(_threadLocalValues[i]);
+			ThreadLocal<Serializable> threadLocal = _threadLocals.get(i);
+
+			threadLocal.set(_threadLocalValues[i]);
 		}
 	}
 

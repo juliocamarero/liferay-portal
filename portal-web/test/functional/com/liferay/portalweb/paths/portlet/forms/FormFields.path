@@ -51,7 +51,12 @@
 <!--CHECKBOX-->
 <tr>
 	<td>CHECKBOX</td>
-	<td>//input[@type='checkbox' and contains(@id,'${key_fieldName}')]</td>
+	<td>//input[@type='checkbox' and contains(@id,'${key_fieldName}')] | //li[contains(.,'${key_fieldName}')]//input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CHECKBOX_LABEL</td>
+	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//label | //li[contains(.,'${key_fieldName}')]//label</td>
 	<td></td>
 </tr>
 <tr>
@@ -60,8 +65,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>CHECKBOX_LABEL</td>
-	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//label[contains(.,'${key_fieldLabel}')]</td>
+	<td>CHECKBOX_OPTION_LABEL</td>
+	<td>//label[contains(.,'${key_checkboxOption}')]/input[@type='checkbox' and contains(@name,'${key_fieldName}')]/../span</td>
 	<td></td>
 </tr>
 <tr>
@@ -93,7 +98,7 @@
 <!--HELP TEXT-->
 <tr>
 	<td>HELP_TEXT</td>
-	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//p[@class='liferay-ddm-form-field-tip'] | //div[contains(@data-fieldname,'${key_fieldName}')]/span</td>
+	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//p[@class='liferay-ddm-form-field-tip'] | //div[contains(@data-fieldname,'${key_fieldName}')]//span[contains(@class, 'form-text')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -159,6 +164,11 @@
 </tr>
 <!--GRID-->
 <tr>
+	<td>GRID_OPTIONS_OPTION_DELETE_ROW_BUTTON</td>
+	<td>//div[contains(@data-fieldname,'${key_gridField}sOption')]/../../div[${key_rowNumber}]//button[contains(@class,'close-modal')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>GRID_OPTIONS_OPTION_VALUE_FIELD</td>
 	<td>//div[contains(@data-fieldname,'${key_gridField}sOption')]/../../div[${key_rowNumber}]//input</td>
 	<td></td>
@@ -174,6 +184,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>GRID_OPTIONS_DRAG_ICON_1</td>
+	<td>//div[contains(@data-fieldname,'${key_gridField}sOption')]/../../div[${key_rowNumber1}]//div[contains(@class,'drag-handle')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>GRID_OPTIONS_DRAG_ICON_2</td>
+	<td>//div[contains(@data-fieldname,'${key_gridField}sOption')]/../../div[${key_rowNumber2}]//div[contains(@class,'drag-handle')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -185,8 +205,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>RADIO_OPTION_LABEL</td>
+	<td>//label[contains(.,'${key_radioOption}')]/input[@type='radio' and contains(@name,'${key_fieldName}')]/../span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>RADIO_OPTION_CHECKED</td>
-	<td>//label[contains(@class,'${key_radioOption}')]/input[@type='radio' and @checked="" and contains(@name,'${key_fieldName}')]</td>
+	<td>//label[contains(@*,'${key_radioOption}')]/input[@type='radio' and @checked="" and contains(@name,'${key_fieldName}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -227,7 +252,7 @@
 </tr>
 <tr>
 	<td>TEXT_FIELD_2</td>
-	<td>//div[contains(@class,'ddm-form')][2]//input[@type='text' and contains(@id,'${key_fieldName}')]</td>
+	<td>xpath=(//input[@type='text' and contains(@id,'${key_fieldName}')])[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -300,12 +325,12 @@
 </tr>
 <tr>
 	<td>SELECT_FIELD_OPTIONS_LIST</td>
-	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//div[contains(@class,'form-builder-select-field')]//ul[@class='results-chosen']//li[contains(.,'${key_selectOption}')]</td>
+	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//div[contains(@class,'form-builder-select-field')]//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_selectOption}')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SELECT_FIELD_OPTIONS_LIST_CHECKBOX</td>
-	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//div[contains(@class,'form-builder-select-field')]//ul[@class='results-chosen']//li[contains(.,'${key_selectOption}')]//input</td>
+	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//div[contains(@class,'form-builder-select-field')]//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_selectOption}')]//input</td>
 	<td></td>
 </tr>
 <tr>
@@ -436,6 +461,12 @@
 <tr>
 	<td>UPLOAD_DOWNLOAD_ICON</td>
 	<td>//div[contains(@data-fieldname,'${key_fieldName}')]//a[@download='${key_uploadFileName}']</td>
+	<td></td>
+</tr>
+<!--CHANGE FIELD TYPE-->
+<tr>
+	<td>CHANGE_FIELD_TYPE_BUTTON</td>
+	<td>//button[contains(@id,'field-type-menu-content')]</td>
 	<td></td>
 </tr>
 </tbody>

@@ -16,7 +16,8 @@ package com.liferay.message.boards.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -54,7 +55,7 @@ public class MBThreadFlagLocalServiceUtil {
 	}
 
 	public static com.liferay.message.boards.model.MBThreadFlag addThreadFlag(
-		long userId, com.liferay.message.boards.kernel.model.MBThread thread,
+		long userId, com.liferay.message.boards.model.MBThread thread,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addThreadFlag(userId, thread, serviceContext);
@@ -328,13 +329,13 @@ public class MBThreadFlagLocalServiceUtil {
 	}
 
 	public static com.liferay.message.boards.model.MBThreadFlag getThreadFlag(
-		long userId, com.liferay.message.boards.kernel.model.MBThread thread)
+		long userId, com.liferay.message.boards.model.MBThread thread)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getThreadFlag(userId, thread);
 	}
 
 	public static boolean hasThreadFlag(long userId,
-		com.liferay.message.boards.kernel.model.MBThread thread)
+		com.liferay.message.boards.model.MBThread thread)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().hasThreadFlag(userId, thread);
 	}
@@ -354,6 +355,17 @@ public class MBThreadFlagLocalServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<MBThreadFlagLocalService, MBThreadFlagLocalService> _serviceTracker =
-		ServiceTrackerFactory.open(MBThreadFlagLocalService.class);
+	private static ServiceTracker<MBThreadFlagLocalService, MBThreadFlagLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(MBThreadFlagLocalService.class);
+
+		ServiceTracker<MBThreadFlagLocalService, MBThreadFlagLocalService> serviceTracker =
+			new ServiceTracker<MBThreadFlagLocalService, MBThreadFlagLocalService>(bundle.getBundleContext(),
+				MBThreadFlagLocalService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

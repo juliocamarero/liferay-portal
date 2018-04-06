@@ -55,4 +55,8 @@ public interface FragmentCollection extends FragmentCollectionModel,
 				return FragmentCollection.class;
 			}
 		};
+
+	public void populateZipWriter(
+		com.liferay.portal.kernel.zip.ZipWriter zipWriter)
+		throws java.lang.Exception;
 }

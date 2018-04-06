@@ -27,6 +27,8 @@ PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
 if (Validator.isNotNull(viewUsersRedirect)) {
 	portletURL.setParameter("viewUsersRedirect", viewUsersRedirect);
 }
+
+boolean showSearch = ParamUtil.getBoolean(request, "showSearch", true);
 %>
 
 <c:if test="<%= Validator.isNotNull(viewUsersRedirect) %>">
@@ -54,6 +56,12 @@ if (Validator.isNotNull(viewUsersRedirect)) {
 			orderColumns='<%= new String[] {"first-name", "last-name", "screen-name", "job-title"} %>'
 			portletURL="<%= portletURL %>"
 		/>
+
+		<c:if test="<%= showSearch %>">
+			<li>
+				<liferay-util:include page="/user_search.jsp" servletContext="<%= application %>" />
+			</li>
+		</c:if>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
 
@@ -169,6 +177,8 @@ if (Validator.isNotNull(viewUsersRedirect)) {
 			<liferay-ui:message key="filter-by-user-group" />: <%= HtmlUtil.escape(userGroup.getName()) %><br />
 		</c:if>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </div>

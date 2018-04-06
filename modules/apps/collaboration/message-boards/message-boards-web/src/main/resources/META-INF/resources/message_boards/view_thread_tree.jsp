@@ -40,7 +40,6 @@ MBMessageDisplay messageDisplay = (MBMessageDisplay)request.getAttribute(WebKeys
 <c:if test="<%= (message.getMessageId() != selMessage.getMessageId()) || MBUtil.isViewableMessage(themeDisplay, message) %>">
 
 	<%
-	request.setAttribute("edit-message.jsp-showDeletedAttachmentsFileEntries", Boolean.TRUE);
 	request.setAttribute("edit-message.jsp-showPermanentLink", Boolean.TRUE);
 	request.setAttribute("edit-message.jsp-showRecentPosts", Boolean.TRUE);
 	request.setAttribute("edit_message.jsp-category", category);
@@ -65,7 +64,7 @@ MBMessageDisplay messageDisplay = (MBMessageDisplay)request.getAttribute(WebKeys
 
 	depth++;
 
-	MBMessageIterator mbMessageIterator = new MBMessageIteratorImpl(messages, range[0], range[1]);
+	MBMessageIterator mbMessageIterator = new MBMessageIterator(messages, range[0], range[1]);
 
 	while (mbMessageIterator.hasNext()) {
 		MBMessage curMessage = mbMessageIterator.next();

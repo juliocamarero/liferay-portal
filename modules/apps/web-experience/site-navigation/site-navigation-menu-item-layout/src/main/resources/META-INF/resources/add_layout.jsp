@@ -16,79 +16,45 @@
 
 <%@ include file="/init.jsp" %>
 
-<aui:input id="layoutUuid" name="TypeSettingsProperties--layoutUuid--" type="hidden">
+<aui:input id="groupId" name="TypeSettingsProperties--groupId--" type="hidden" value="<%= scopeGroupId %>" />
+
+<aui:input id="layoutUuid" name="TypeSettingsProperties--layoutUuid--" type="hidden" value="">
 	<aui:validator name="required" />
 </aui:input>
 
-<p class="text-default">
-	<span class="hide" id="<portlet:namespace />layoutItemRemove" role="button">
-		<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
-	</span>
-	<span id="<portlet:namespace />layoutNameInput">
-		<span class="text-muted"><liferay-ui:message key="none" /></span>
-	</span>
-</p>
+<aui:input id="privateLayout" name="TypeSettingsProperties--privateLayout--" type="hidden" value="<%= false %>" />
 
-<aui:button name="chooseLayout" value="choose" />
+<liferay-layout:select-layout
+	componentId='<%= liferayPortletResponse.getNamespace() + "selectLayout" %>'
+	itemSelectorSaveEvent='<%= liferayPortletResponse.getNamespace() + "selectLayout" %>'
+	multiSelection="<%= true %>"
+	namespace="<%= liferayPortletResponse.getNamespace() %>"
+	pathThemeImages="<%= themeDisplay.getPathThemeImages() %>"
+	privateLayout="<%= false %>"
+/>
 
-<%
-String eventName = renderResponse.getNamespace() + "selectLayout";
-
-ItemSelector itemSelector = (ItemSelector)request.getAttribute(SiteNavigationMenuItemTypeLayoutWebKeys.ITEM_SELECTOR);
-
-LayoutItemSelectorCriterion layoutItemSelectorCriterion = new LayoutItemSelectorCriterion();
-
-List<ItemSelectorReturnType> desiredItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
-
-desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
-
-PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(renderRequest), eventName, layoutItemSelectorCriterion);
-%>
-
-<aui:script use="liferay-item-selector-dialog">
-	var layoutItemRemove = $('#<portlet:namespace />layoutItemRemove');
-	var layoutNameInput = $('#<portlet:namespace />layoutNameInput');
+<aui:script>
 	var layoutUuid = $('#<portlet:namespace />layoutUuid');
 
-	$('#<portlet:namespace />chooseLayout').on(
-		'click',
-		function(event) {
-			var itemSelectorDialog = new A.LiferayItemSelectorDialog(
-				{
-					eventName: '<%= eventName %>',
-					on: {
-						selectedItemChange: function(event) {
-							var selectedItem = event.newVal;
+	Liferay.componentReady('<portlet:namespace />selectLayout').then(
+		function(selectLayout) {
+			selectLayout.on(
+				'<portlet:namespace />selectLayout',
+				function(event) {
+					var selectedItems = event.data;
 
-							if (selectedItem) {
-								layoutUuid.val(selectedItem.id);
+					if (selectedItems) {
+						var layoutUuids = selectedItems.reduce(
+							function(previousValue, currentValue) {
+								return previousValue.concat([currentValue.id]);
+							},
+							[]
+						);
 
-								layoutNameInput.html(selectedItem.name);
-
-								layoutItemRemove.removeClass('hide');
-							}
-						}
-					},
-					'strings.add': '<liferay-ui:message key="done" />',
-					title: '<liferay-ui:message key="select-layout" />',
-					url: '<%= itemSelectorURL.toString() %>'
+						layoutUuid.val(layoutUuids.join());
+					}
 				}
 			);
-
-			itemSelectorDialog.open();
-		}
-	);
-
-	layoutItemRemove.on(
-		'click',
-		function(event) {
-			layoutNameInput.html('<liferay-ui:message key="none" />');
-
-			layoutUuid.val('');
-
-			layoutItemRemove.addClass('hide');
 		}
 	);
 </aui:script>

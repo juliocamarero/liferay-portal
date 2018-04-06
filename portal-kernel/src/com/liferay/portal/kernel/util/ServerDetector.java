@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -302,7 +303,7 @@ public class ServerDetector {
 	private enum ServerType {
 
 		GLASSFISH, JBOSS, JETTY, JONAS, OC4J, RESIN, TOMCAT, UNKNOWN, WEBLOGIC,
-		WEBSPHERE, WILDFLY;
+		WEBSPHERE, WILDFLY
 
 	}
 

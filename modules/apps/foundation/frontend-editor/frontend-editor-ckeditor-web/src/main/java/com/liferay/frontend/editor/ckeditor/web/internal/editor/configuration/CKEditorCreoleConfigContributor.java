@@ -14,6 +14,7 @@
 
 package com.liferay.frontend.editor.ckeditor.web.internal.editor.configuration;
 
+import com.liferay.frontend.editor.ckeditor.web.internal.constants.CKEditorConstants;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigContributor;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -55,7 +56,7 @@ public class CKEditorCreoleConfigContributor
 
 		Map<String, String> fileBrowserParams =
 			(Map<String, String>)inputEditorTaglibAttributes.get(
-				"liferay-ui:input-editor:fileBrowserParams");
+				CKEditorConstants.ATTRIBUTE_NAMESPACE + ":fileBrowserParams");
 
 		if (fileBrowserParams != null) {
 			String attachmentURLPrefix = fileBrowserParams.get(
@@ -76,7 +77,7 @@ public class CKEditorCreoleConfigContributor
 			"title=" + LanguageUtil.get(themeDisplay.getLocale(), "browse"));
 		jsonObject.put("format_tags", "p;h1;h2;h3;h4;h5;h6;pre");
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(4);
 
 		sb.append("bidi,colorbutton,colordialog,div,elementspath,flash,font,");
 		sb.append("forms,indentblock,justify,keystrokes,link,maximize,");

@@ -15,6 +15,7 @@
 	{@param label: string}
 	{@param name: string}
 	{@param options: list<[label: string, value: string]>}
+	{@param pathThemeImages: string}
 	{@param readOnly: bool}
 	{@param showLabel: bool}
 	{@param value: string}
@@ -28,38 +29,41 @@
 
 	<div class="form-group {$visible ? '' : 'hide'}"
 		data-fieldname="{$name}">
+		<div>
+			<label for="{$name}">
+				{if $showLabel}
+					{$label}{sp}
+				{/if}
 
-		{if $showLabel}
-			<div>
-				<label for="{$name}">
-					{$label}
+				{if $required}
+					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+						<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#asterisk" />
+					</svg>
+				{/if}
+			</label>
 
-					{if $required}
-						<span class="icon-asterisk text-warning"></span>
-					{/if}
-				</label>
-
+			{if $showLabel}
 				{if $tip}
 					<span class="form-text">{$tip}</span>
 				{/if}
-			</div>
-		{/if}
+			{/if}
+		</div>
 
 		{foreach $option in $options}
-			<div class="form-check {$inline ? 'form-check-inline' : ''}">
-				<label class="form-check-label form-check-label-option-{$option.value}"
-					for="{$name}_{$option.value}">
 
-					<input {if $option.value == $displayValue}checked{/if}
+			<div class="custom-control {$inline ? 'custom-control-inline' : ''} custom-radio">
+				<label for="{$name}_{$option.value}">
+						<input {if $option.value == $displayValue}checked{/if}
 						{if $dir}dir="{$dir}"{/if}
 						{if $readOnly}disabled{/if}
-						class="form-check-input"
+						class="custom-control-input"
 						id="{$name}_{$option.value}"
 						name="{$name}"
 						type="radio"
 						value="{$option.value}" />
-
-					<span class="form-check-description">{$option.label}</span>
+					<span class="custom-control-label">
+						<span class="custom-control-label-text">{$option.label}</span>
+					</span>
 				</label>
 			</div>
 		{/foreach}

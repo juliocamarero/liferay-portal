@@ -26,7 +26,13 @@ User user2 = (User)row.getObject();
 long userId = user2.getUserId();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 
 	<%
 	boolean hasUpdatePermission = UserPermissionUtil.contains(permissionChecker, userId, ActionKeys.UPDATE);
@@ -112,10 +118,14 @@ long userId = user2.getUserId();
 		<c:if test="<%= userId != user.getUserId() %>">
 			<c:choose>
 				<c:when test="<%= user2.isActive() %>">
-					<liferay-ui:icon-deactivate url="<%= deleteUserURL %>" />
+					<liferay-ui:icon-deactivate
+						url="<%= deleteUserURL %>"
+					/>
 				</c:when>
 				<c:when test="<%= !user2.isActive() && PropsValues.USERS_DELETE %>">
-					<liferay-ui:icon-delete url="<%= deleteUserURL %>" />
+					<liferay-ui:icon-delete
+						url="<%= deleteUserURL %>"
+					/>
 				</c:when>
 			</c:choose>
 		</c:if>
@@ -136,5 +146,29 @@ long userId = user2.getUserId();
 			message="remove"
 			url="<%= removeUserURL %>"
 		/>
+	</c:if>
+
+	<%
+	UserActionDisplayContext userActionDisplayContext = new UserActionDisplayContext(request, liferayPortletRequest, user, user2);
+
+	UserActionContributor[] filteredUserActionContributors = userActionDisplayContext.getFilteredUserActionContributors();
+	%>
+
+	<c:if test="<%= filteredUserActionContributors.length > 0 %>">
+		<li aria-hidden="true" class="dropdown-divider" role="presentation"></li>
+
+		<%
+		for (UserActionContributor userActionContributor : filteredUserActionContributors) {
+		%>
+
+			<liferay-ui:icon
+				message="<%= userActionContributor.getMessage(liferayPortletRequest) %>"
+				url="<%= userActionContributor.getURL(liferayPortletRequest, liferayPortletResponse, user, user2) %>"
+			/>
+
+		<%
+		}
+		%>
+
 	</c:if>
 </liferay-ui:icon-menu>

@@ -22,7 +22,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Juergen Kappler
  */
 @ExtendedObjectClassDefinition(
-	category = "web-experience",
+	category = "navigation",
 	scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
 )
 @Meta.OCD(
@@ -32,10 +32,10 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface SitesDirectoryPortletInstanceConfiguration {
 
-	@Meta.AD(deflt = "descriptive", name = "display-style", required = false)
-	public String displayStyle();
-
 	@Meta.AD(deflt = "top-level", name = "sites", required = false)
 	public String sites();
+
+	@Meta.AD(deflt = "descriptive", name = "display-style", required = false)
+	public String displayStyle();
 
 }

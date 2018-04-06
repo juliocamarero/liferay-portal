@@ -20,6 +20,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Documents and Media Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Documents and Media Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -78,6 +86,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_1.doc" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -93,6 +102,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_1.docx" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -107,7 +117,9 @@
 
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFileType" value="Image" />
 			<var name="dmDocumentTitle" value="Document_1.jpeg" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -122,7 +134,26 @@
 
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFileType" value="Image" />
 			<var name="dmDocumentTitle" value="Document_1.jpg" />
+			<var name="dmDocumentType" value="Basic Document" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Documents and Media Page" />
+		</execute>
+
+		<execute macro="DMDocument#addPG">
+			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFile" value="Generated_by_adobe.jpg" />
+			<var name="dmDocumentTitle" value="Generated_by_adobe.jpg" />
+		</execute>
+
+		<execute macro="DMDocument#viewAllPG">
+			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFileType" value="Image" />
+			<var name="dmDocumentTitle" value="Generated_by_adobe.jpg" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -138,6 +169,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_2.mp3" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -153,6 +185,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_1.odt" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -168,6 +201,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_1.pdf" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -182,7 +216,9 @@
 
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFileType" value="Image" />
 			<var name="dmDocumentTitle" value="Document_1.png" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -198,6 +234,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_1.xls" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -213,6 +250,7 @@
 		<execute macro="DMDocument#viewAllPG">
 			<var name="dmDocumentDescription" value="DM Document Description" />
 			<var name="dmDocumentTitle" value="Document_1.xlsx" />
+			<var name="dmDocumentType" value="Basic Document" />
 		</execute>
 	</command>
 
@@ -223,7 +261,7 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
-		<for list="1,2,3" param="entryCount" >
+		<for list="1,2,3" param="entryCount">
 			<execute macro="DMDocument#addPG">
 				<var name="dmDocumentDescription" value="DM Document Description" />
 				<var name="dmDocumentFile" value="Document_${entryCount}.doc" />
@@ -231,7 +269,7 @@
 			</execute>
 		</for>
 
-		<for list="1,2,3" param="entryCount" >
+		<for list="1,2,3" param="entryCount">
 			<execute macro="Navigator#gotoPage">
 				<var name="pageName" value="Documents and Media Page" />
 			</execute>
@@ -1463,7 +1501,7 @@
 		</execute>
 	</command>
 
-	<command name="RemovePortlet" priority="5" >
+	<command name="RemovePortlet" priority="5">
 		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Navigator#gotoPage">
@@ -1563,11 +1601,11 @@
 			<var name="dmDocumentTitle" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="This is a *.doc file." />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetSummary" value="This is a *.doc file." />
 			<var name="searchAssetTitle" value="DM Document Title" />
 			<var name="searchAssetType" value="Document" />
@@ -1585,11 +1623,11 @@
 			<var name="dmDocumentTitle" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="DM Document Title" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -1615,11 +1653,11 @@
 			<var name="dmDocumentTitle" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="DM Document Title" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -1645,11 +1683,11 @@
 			<var name="dmDocumentTitle" value="DM Image Title" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="DM Image Title" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="DM Image Title" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -1684,13 +1722,111 @@
 			<var name="dmDocumentTitle" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="DM Document Title" />
 			<var name="searchAssetType" value="Document" />
+		</execute>
+	</command>
+
+	<command name="SubscribeToCommentAndViewEmailNotification" priority="5">
+		<description message="This is a use case for LPS-51280" />
+
+		<property name="test.smtp.server.enabled" value="true" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Users" />
+			<var name="panel" value="Control Panel" />
+			<var name="portlet" value="Users and Organizations" />
+		</execute>
+
+		<execute macro="User#addCP">
+			<var name="userEmailAddress" value="userea@liferay.com" />
+			<var name="userFirstName" value="userfn" />
+			<var name="userLastName" value="userln" />
+			<var name="userScreenName" value="usersn" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Users" />
+			<var name="panel" value="Control Panel" />
+			<var name="portlet" value="Users and Organizations" />
+		</execute>
+
+		<execute macro="User#editPasswordCP">
+			<var name="userEmailAddress" value="userea@liferay.com" />
+			<var name="userScreenName" value="usersn" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Documents and Media Page" />
+		</execute>
+
+		<execute macro="DMFolder#addPG">
+			<var name="dmFolderDescription" value="DM Folder Description" />
+			<var name="dmFolderName" value="DM Folder Name" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoFolder">
+			<var name="dmFolderName" value="DM Folder Name" />
+		</execute>
+
+		<execute macro="DMDocument#addPG">
+			<var name="dmDocumentDescription" value="DM Document Description" />
+			<var name="dmDocumentFile" value="Document_1.doc" />
+			<var name="dmDocumentTitle" value="DM Document Title" />
+		</execute>
+
+		<execute macro="User#logoutAndLoginPG">
+			<var name="userLoginEmailAddress" value="userea@liferay.com" />
+			<var name="userLoginFullName" value="userfn userln" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Documents and Media Page" />
+		</execute>
+
+		<execute macro="Portlet#changeDisplayStyle">
+			<var name="displayStyle" value="descriptive" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoFolder">
+			<var name="dmFolderName" value="DM Folder Name" />
+		</execute>
+
+		<execute macro="DMDocument#viewPG">
+			<var name="dmDocumentTitle" value="DM Document Title" />
+		</execute>
+
+		<execute macro="Comments#subscribePG" />
+
+		<execute macro="User#logoutAndLoginPG">
+			<var name="userLoginEmailAddress" value="test@liferay.com" />
+			<var name="userLoginFullName" value="test test" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Documents and Media Page" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoFolder">
+			<var name="dmFolderName" value="DM Folder Name" />
+		</execute>
+
+		<execute macro="DMDocumentComment#addPG">
+			<var name="commentBody" value="DM Document Comment Body" />
+			<var name="dmDocumentTitle" value="DM Document Title" />
+		</execute>
+
+		<execute macro="MockMock#viewMail">
+			<var name="asset" value="New Comments by Test Test" />
+			<var name="content" value="DM Document Comment Body" />
+			<var name="recipient" value="userfn userln" />
+			<var name="sender" value="Joe Bloggs" />
+			<var name="subject" value="New Comments by Test Test" />
 		</execute>
 	</command>
 
@@ -1984,6 +2120,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Documents and Media Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Documents and Media Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -2114,6 +2258,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Search Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Search Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -2131,11 +2283,11 @@
 			<var name="siteName" value="Site Name 1" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="DM Document Title" />
 		</execute>
 
-		<execute macro="Search#viewSearchNoPG">
+		<execute macro="SearchPortlet#viewSearchNoPG">
 			<var name="searchAssetTitle" value="DM Document Title" />
 			<var name="searchAssetType" value="Document" />
 			<var name="searchNoResults" value="true" />

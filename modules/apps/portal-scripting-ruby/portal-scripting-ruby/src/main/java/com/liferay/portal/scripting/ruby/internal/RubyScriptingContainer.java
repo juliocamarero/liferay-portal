@@ -14,9 +14,9 @@
 
 package com.liferay.portal.scripting.ruby.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.scripting.ScriptingContainer;
 import com.liferay.portal.kernel.scripting.ScriptingException;
-import com.liferay.portal.kernel.util.StringPool;
 
 import org.jruby.RubyArray;
 import org.jruby.RubyException;
@@ -59,11 +59,8 @@ public class RubyScriptingContainer
 				String.valueOf(rubyException.message.toJava(String.class)));
 			sb.append(StringPool.NEW_LINE);
 
-			for (int i = 0; i < rubyArray.size(); i++) {
-				Object object = rubyArray.get(i);
-
+			for (Object object : rubyArray) {
 				sb.append(String.valueOf(object));
-
 				sb.append(StringPool.NEW_LINE);
 			}
 

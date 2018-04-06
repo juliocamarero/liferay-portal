@@ -14,14 +14,12 @@
 
 package com.liferay.source.formatter.checks;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.source.formatter.parser.JavaClass;
-import com.liferay.source.formatter.parser.JavaConstructor;
-import com.liferay.source.formatter.parser.JavaMethod;
 import com.liferay.source.formatter.parser.JavaTerm;
 import com.liferay.source.formatter.parser.JavaVariable;
 
@@ -62,7 +60,7 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		String classContent = javaClass.getContent();
 
 		for (JavaTerm childJavaTerm : javaClass.getChildJavaTerms()) {
-			if (childJavaTerm instanceof JavaVariable) {
+			if (childJavaTerm.isJavaVariable()) {
 				classContent = _checkFieldType(
 					absolutePath, javaClass, classContent,
 					(JavaVariable)childJavaTerm);
@@ -100,13 +98,15 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		}
 
 		if (isFinal) {
-			if (!javaVariable.isStatic() &&
-				(_immutableFieldTypes.contains(fieldType) ||
+			JavaClass parentJavaClass = javaClass.getParentJavaClass();
+
+			if ((parentJavaClass == null) && !javaVariable.isStatic() &&
+				(_isImmutableField(fieldType) ||
 				 (fieldType.equals("Log") &&
 				  !isExcludedPath(_STATIC_LOG_EXCLUDES, absolutePath)))) {
 
 				classContent = _formatStaticableFieldType(
-					classContent, javaVariable.getContent());
+					classContent, javaVariable.getContent(), fieldType);
 			}
 		}
 		else if (!_containsNonAccessModifier(javaVariable, "volatile")) {
@@ -212,9 +212,13 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 	}
 
 	private String _formatStaticableFieldType(
-		String classContent, String javaVariableContent) {
+		String classContent, String javaVariableContent, String fieldType) {
 
-		if (!javaVariableContent.contains(StringPool.EQUAL)) {
+		if (!javaVariableContent.contains(StringPool.EQUAL) ||
+			(fieldType.endsWith("[]") &&
+			 (javaVariableContent.contains(" new ") ||
+			  javaVariableContent.contains("\tnew ")))) {
+
 			return classContent;
 		}
 
@@ -231,7 +235,7 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		for (JavaTerm childJavaTerm : javaClass.getChildJavaTerms()) {
 			childJavaTerms.add(childJavaTerm);
 
-			if (childJavaTerm instanceof JavaClass) {
+			if (childJavaTerm.isJavaClass()) {
 				JavaClass childJavaClass = (JavaClass)childJavaTerm;
 
 				childJavaTerms.addAll(_getAllChildJavaTerms(childJavaClass));
@@ -294,7 +298,7 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 				assignmentCount++;
 			}
 
-			if (childJavaTerm instanceof JavaConstructor) {
+			if (childJavaTerm.isJavaConstructor()) {
 				JavaClass constructorClass = childJavaTerm.getParentJavaClass();
 
 				String constructorClassName = constructorClass.getName();
@@ -308,12 +312,12 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 					return false;
 				}
 			}
-			else if (childJavaTerm instanceof JavaMethod) {
+			else if (childJavaTerm.isJavaMethod()) {
 				if (found) {
 					return false;
 				}
 			}
-			else if (childJavaTerm instanceof JavaVariable) {
+			else if (childJavaTerm.isJavaVariable()) {
 				if (found && content.contains("{\n\n")) {
 					return false;
 				}
@@ -325,6 +329,18 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		}
 
 		return true;
+	}
+
+	private boolean _isImmutableField(String fieldType) {
+		for (String immutableFieldType : _immutableFieldTypes) {
+			if (fieldType.equals(immutableFieldType) ||
+				fieldType.startsWith(immutableFieldType + "[]")) {
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static final String _STATIC_LOG_EXCLUDES = "static.log.excludes";

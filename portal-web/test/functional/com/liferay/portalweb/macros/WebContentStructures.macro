@@ -7,23 +7,19 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Details" />
+			<var name="panel" value="Details" />
 		</execute>
 
 		<if>
 			<isset var="structureDescription" />
 			<then>
-				<execute macro="WebContentStructures#addDescription">
-					<var name="structureDescription" value="${structureDescription}" />
+				<execute macro="PortletEntry#inputDescriptionTextInput">
+					<var name="description" value="${structureDescription}" />
 				</execute>
 			</then>
 		</if>
 
 		<execute function="SelectFrame" value1="relative=top" />
-	</command>
-
-	<command name="addDescription">
-		<execute function="Type" locator1="TextInput#DESCRIPTION" value1="${structureDescription}" />
 	</command>
 
 	<command name="addFavoriteStructure">
@@ -37,20 +33,22 @@
 	</command>
 
 	<command name="addLocalization">
-		<var name="key_localizationName" value="${localization1NameKey}" />
-
-		<execute function="Click" locator1="Translation#LOCALIZATION_NAME" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Name" />
+			<var name="locale" value="${locale}" />
+		</execute>
 
 		<execute macro="WebContentStructures#addName">
 			<var name="structureName" value="${localization1Name}" />
 		</execute>
 
 		<if>
-			<isset var="localization2NameKey" />
+			<isset var="locale2" />
 			<then>
-				<var name="key_localizationName" value="${localization2NameKey}" />
-
-				<execute function="Click" locator1="Translation#LOCALIZATION_NAME" />
+				<execute macro="PortletEntry#changeLocale">
+					<var name="fieldName" value="Name" />
+					<var name="locale" value="${locale2}" />
+				</execute>
 
 				<execute macro="WebContentStructures#addName">
 					<var name="structureName" value="${localization2Name}" />
@@ -110,8 +108,8 @@
 		<if>
 			<isset var="structureDescription" />
 			<then>
-				<execute macro="WebContentStructures#addDescription">
-					<var name="structureDescription" value="${structureDescription}" />
+				<execute macro="PortletEntry#inputDescriptionTextInput">
+					<var name="description" value="${structureDescription}" />
 				</execute>
 			</then>
 		</if>
@@ -123,7 +121,9 @@
 	</command>
 
 	<command name="deleteCP">
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<var name="key_ddlDataDefinitionName" value="${structureName}" />
 
@@ -151,16 +151,13 @@
 	<command name="editSubstructureDefaultValuesCP">
 		<var name="key_ddlDataDefinitionName" value="${substructureName}" />
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${substructureName}" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="${substructureName}" />
+		</execute>
 
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
-
-		<var name="key_rowEntry" value="${substructureName}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit Default Values">
-			<var name="key_menuItem" value="Edit Default Values" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit Default Values" />
+			<var name="rowEntry" value="${substructureName}" />
 		</execute>
 
 		<for list="${editSubstructureFieldNames}" param="structureFieldName">
@@ -178,7 +175,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="Search#searchCP">
 			<var name="searchTerm" value="${substructureName}" />
@@ -199,19 +198,14 @@
 	</command>
 
 	<command name="saveCP">
-		<execute function="AssertClick" locator1="DDMEditStructure#SAVE_BUTTON" value1="Save" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<if>
 			<isset var="addRoleViewPermissions" />
 			<then>
-				<var name="key_rowEntry" value="${structureName}" />
-
-				<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-				<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Permissions">
-					<var name="key_menuItem" value="Permissions" />
+				<execute macro="LexiconEntry#gotoEntryMenuItem">
+					<var name="menuItem" value="Permissions" />
+					<var name="rowEntry" value="${structureName}" />
 				</execute>
 
 				<execute function="SelectFrame" locator1="IFrame#DIALOG" />
@@ -235,11 +229,13 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="2" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="2" />
+		</execute>
 
 		<while>
 			<condition function="IsElementNotPresent" locator1="Message#EMPTY_INFO" />
@@ -254,9 +250,9 @@
 			</then>
 		</while>
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="Structure" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="Structure" />
+		</execute>
 
 		<while>
 			<condition function="IsElementNotPresent" locator1="Message#EMPTY_INFO" />

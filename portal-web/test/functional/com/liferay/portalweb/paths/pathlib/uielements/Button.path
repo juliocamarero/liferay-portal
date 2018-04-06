@@ -35,7 +35,7 @@
 </tr>
 <tr>
 	<td>ADD_CATEGORY</td>
-	<td>//span[contains(.,'Add Category')]</td>
+	<td>//a[contains(.,'Add Category')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -104,11 +104,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>ADD_SUBCATEGORY</td>
-	<td>//span[contains(.,'Add Subcategory')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>ADD_SUBFOLDER</td>
 	<td>//a[contains(.,'Add Subfolder')]</td>
 	<td></td>
@@ -165,7 +160,7 @@
 </tr>
 <tr>
 	<td>BROWSE</td>
-	<td>//input[contains(@id,'fileName')]</td>
+	<td>//input[contains(@id,'file')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -194,13 +189,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>CHANGE</td>
-	<td>//button[contains(.,'Change')]</td>
+	<td>CANCEL_GIVEN_POSITION</td>
+	<td>//div[contains(@class,'lfr-form-content')]/../div/a[contains(@class,'cancel') and contains(@class,'btn')] | //button[contains(.,'Cancel')] | //a[contains(@class,'btn') and contains(.,'Cancel')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>CHANGE_LOGO</td>
-	<td>//button[contains(@class,'edit-logo')]</td>
+	<td>CHANGE</td>
+	<td>//button[contains(.,'Change')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -269,8 +264,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>CLOSE_SUCCESS_MESSAGE</td>
+	<td>//button[contains(@class,'close')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>COLOR_EFFECT</td>
-	<td>//a[contains(@class, 'btn')]//*[name()='svg'][@data-icon='effects']</td>
+	<td>//a[contains(@class, 'btn')][*[name()='svg'][@data-icon='effects']]</td>
 	<td></td>
 </tr>
 <tr>
@@ -310,7 +310,7 @@
 </tr>
 <tr>
 	<td>DELETE</td>
-	<td>//*[@data-qa-id='deleteButton'] | //button[contains(.,'Delete')]</td>
+	<td>//*[@data-qa-id='deleteButton'] | //button[contains(.,'Delete')] | //button[contains(.,'delete')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -359,6 +359,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>EDIT_ROW</td>
+	<td>//*[@data-qa-id='row' and contains(.,'${key_rowEntry}')]//*[normalize-space(text())='Edit']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ENTER</td>
 	<td>//button[contains(.,'Enter')]</td>
 	<td></td>
@@ -370,7 +375,7 @@
 </tr>
 <tr>
 	<td>EDITOR_SWITCH</td>
-	<td>//button[contains(@id,'EditorSwitch')]/span/*[name()='svg'][contains(@class,'lexicon-icon-code')]</td>
+	<td>//div[@class='alloy-editor-switch']/button[contains(@id,'EditorSwitch') and contains(@class,'editor-view')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -390,7 +395,7 @@
 </tr>
 <tr>
 	<td>FILTER_EFFECT</td>
-	<td>//a[contains(@class,'btn') and (@data-control='effects')]//*[name()='svg'][contains(@class,'lexicon-icon')]</td>
+	<td>//a[contains(@class,'btn') and (@data-control='effects')][*[name()='svg'][contains(@class,'lexicon-icon')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -454,6 +459,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>LOCALIZATION</td>
+	<td>//div[label[contains(.,'${key_fieldName}')]]//div[contains(@class,'localized')]//button[contains(@class,'localized')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>MERGE</td>
 	<td>//button[contains(.,'Merge')]</td>
 	<td></td>
@@ -470,22 +480,22 @@
 </tr>
 <tr>
 	<td>MOVE_AVAILABLE_TO_CURRENT</td>
-	<td>//div[@id='metadataContent']//button[@title='Move selected items from Available to Current.']</td>
+	<td>//button[@title='Move selected items from Available to Current.']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>MOVE_CURRENT_TO_AVAILABLE</td>
-	<td>//div[@id='metadataContent']//button[@title='Move selected items from Current to Available.']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>MOVE_THREAD</td>
-	<td>//button[contains(.,'Move Thread')]</td>
+	<td>//button[@title='Move selected items from Current to Available.']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>MOVE_TO_THE_RECYCLE_BIN</td>
 	<td>//a[contains(@class,'btn') and contains(.,'Move to the Recycle Bin')] | //button[contains(.,'Move to the Recycle Bin')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>NEW_THREAD</td>
+	<td>//a[contains(.,'New Thread')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -529,11 +539,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>POST_NEW_THREAD</td>
-	<td>//span[contains(.,'Post New Thread')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>PREVIEW</td>
 	<td>//button[contains(.,'Preview')]</td>
 	<td></td>
@@ -546,6 +551,11 @@
 <tr>
 	<td>PUBLISH</td>
 	<td>//button[span[contains(.,'Publish')]]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PUBLISH_GIVEN_POSITION</td>
+	<td>//div[contains(@class,'lfr-form-content')]/../div/button[span[contains(.,'Publish')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -596,6 +606,11 @@
 <tr>
 	<td>REPLY_AS</td>
 	<td>//button[contains(.,'Reply as...')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>REPORT</td>
+	<td>//button[contains(.,'Report')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -719,8 +734,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>SHARE</td>
-	<td>//button[contains(.,'Share')]</td>
+	<td>SEND_PASSWORD_RESET_LINK</td>
+	<td>//button[contains(.,'Send Password Reset Link')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -749,6 +764,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>MODAL_CONTENT_SUBMIT</td>
+	<td>//div[@class='modal-content']//button[contains(.,'Submit')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>TAB_SUBMIT_BTN</td>
 	<td>//button[contains(@type,'submit') and contains(.,'${key_tab}')]</td>
 	<td></td>
@@ -760,7 +780,7 @@
 </tr>
 <tr>
 	<td>TRANSFORM</td>
-	<td>//a[contains(@class, 'btn')]//*[name()='svg'][@data-icon='transform']</td>
+	<td>//div[a/*[name()='svg'][@data-icon='transform']]</td>
 	<td></td>
 </tr>
 <tr>

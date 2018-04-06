@@ -571,7 +571,23 @@ public class LiferayOSGiPlugin implements Plugin<Project> {
 					Map<String, String> properties =
 						liferayOSGiExtension.getBundleDefaultInstructions();
 
+					Map<String, ?> projectProperties = project.getProperties();
+
+					for (Map.Entry<String, ?> entry :
+							projectProperties.entrySet()) {
+
+						String key = entry.getKey();
+
+						if (Character.isLowerCase(key.charAt(0))) {
+							properties.put(
+								key, GradleUtil.toString(entry.getValue()));
+						}
+					}
+
 					properties.remove(Constants.DONOTCOPY);
+					properties.remove(
+						LiferayOSGiExtension.
+							BUNDLE_DEFAULT_INSTRUCTION_LIFERAY_SERVICE_XML);
 
 					String bundleName = _getBundleInstruction(
 						project, Constants.BUNDLE_NAME);

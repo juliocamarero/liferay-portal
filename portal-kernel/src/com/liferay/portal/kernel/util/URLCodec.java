@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.util;
 import com.liferay.petra.nio.CharsetDecoderUtil;
 import com.liferay.petra.nio.CharsetEncoderUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -54,58 +55,51 @@ public class URLCodec {
 		for (int i = 0; i < encodedURLString.length(); i++) {
 			char c = encodedURLString.charAt(i);
 
-			switch (c) {
-				case CharPool.PERCENT:
-					ByteBuffer byteBuffer = _getEncodedByteBuffer(
-						encodedURLString, i);
+			if (c == CharPool.PERCENT) {
+				ByteBuffer byteBuffer = _getEncodedByteBuffer(
+					encodedURLString, i);
 
-					if (charsetDecoder == null) {
-						charsetDecoder = CharsetDecoderUtil.getCharsetDecoder(
-							charsetName);
+				if (charsetDecoder == null) {
+					charsetDecoder = CharsetDecoderUtil.getCharsetDecoder(
+						charsetName);
+				}
+
+				CharBuffer charBuffer = null;
+
+				try {
+					charBuffer = charsetDecoder.decode(byteBuffer);
+				}
+				catch (CharacterCodingException cce) {
+					_log.error(cce, cce);
+
+					return StringPool.BLANK;
+				}
+
+				if (sb == null) {
+					sb = new StringBuilder(encodedURLString.length());
+
+					if (i > 0) {
+						sb.append(encodedURLString, 0, i);
 					}
+				}
 
-					CharBuffer charBuffer = null;
+				sb.append(charBuffer);
 
-					try {
-						charBuffer = charsetDecoder.decode(byteBuffer);
+				i += byteBuffer.capacity() * 3 - 1;
+			}
+			else if (c == CharPool.PLUS) {
+				if (sb == null) {
+					sb = new StringBuilder(encodedURLString.length());
+
+					if (i > 0) {
+						sb.append(encodedURLString, 0, i);
 					}
-					catch (CharacterCodingException cce) {
-						_log.error(cce, cce);
+				}
 
-						return StringPool.BLANK;
-					}
-
-					if (sb == null) {
-						sb = new StringBuilder(encodedURLString.length());
-
-						if (i > 0) {
-							sb.append(encodedURLString, 0, i);
-						}
-					}
-
-					sb.append(charBuffer);
-
-					i += byteBuffer.capacity() * 3 - 1;
-
-					break;
-
-				case CharPool.PLUS:
-					if (sb == null) {
-						sb = new StringBuilder(encodedURLString.length());
-
-						if (i > 0) {
-							sb.append(encodedURLString, 0, i);
-						}
-					}
-
-					sb.append(CharPool.SPACE);
-
-					break;
-
-				default:
-					if (sb != null) {
-						sb.append(c);
-					}
+				sb.append(CharPool.SPACE);
+			}
+			else if (sb != null) {
+				sb.append(c);
 			}
 		}
 
@@ -144,7 +138,7 @@ public class URLCodec {
 		for (int i = 0; i < rawURLString.length(); i++) {
 			char c = rawURLString.charAt(i);
 
-			if ((c < 128) && _validChars[c]) {
+			if ((c < 128) && _VALID_CHARS[c]) {
 				continue;
 			}
 
@@ -274,7 +268,7 @@ public class URLCodec {
 		for (int i = start; i < rawString.length(); i++) {
 			char rawChar = rawString.charAt(i);
 
-			if (((rawChar >= 128) || !_validChars[rawChar]) &&
+			if (((rawChar >= 128) || !_VALID_CHARS[rawChar]) &&
 				(escapeSpaces || (rawChar != CharPool.SPACE))) {
 
 				count++;
@@ -298,9 +292,9 @@ public class URLCodec {
 
 	private static final char[][] _ENCODING_REPLACEMENTS = new char[128][];
 
-	private static final Log _log = LogFactoryUtil.getLog(URLCodec.class);
+	private static final boolean[] _VALID_CHARS = new boolean[128];
 
-	private static final boolean[] _validChars = new boolean[128];
+	private static final Log _log = LogFactoryUtil.getLog(URLCodec.class);
 
 	static {
 		_ENCODING_REPLACEMENTS[CharPool.AMPERSAND] = "%26".toCharArray();
@@ -313,21 +307,21 @@ public class URLCodec {
 		_ENCODING_REPLACEMENTS[CharPool.SPACE] = "%20".toCharArray();
 
 		for (int i = 'a'; i <= 'z'; i++) {
-			_validChars[i] = true;
+			_VALID_CHARS[i] = true;
 		}
 
 		for (int i = 'A'; i <= 'Z'; i++) {
-			_validChars[i] = true;
+			_VALID_CHARS[i] = true;
 		}
 
 		for (int i = '0'; i <= '9'; i++) {
-			_validChars[i] = true;
+			_VALID_CHARS[i] = true;
 		}
 
-		_validChars['-'] = true;
-		_validChars['_'] = true;
-		_validChars['.'] = true;
-		_validChars['*'] = true;
+		_VALID_CHARS['-'] = true;
+		_VALID_CHARS['_'] = true;
+		_VALID_CHARS['.'] = true;
+		_VALID_CHARS['*'] = true;
 	}
 
 }

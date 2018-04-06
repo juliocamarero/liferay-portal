@@ -84,26 +84,6 @@ recordSearchContainer.setOrderByType(ddlViewRecordsDisplayContext.getOrderByType
 	<portlet:param name="formDDMTemplateId" value="<%= String.valueOf(formDDMTemplateId) %>" />
 </portlet:renderURL>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<c:if test="<%= ddlDisplayContext.isAdminPortlet() %>">
-		<aui:nav cssClass="navbar-nav">
-			<aui:nav-item label="<%= HtmlUtil.escape(recordSet.getName(locale)) %>" selected="<%= true %>" />
-		</aui:nav>
-	</c:if>
-
-	<aui:nav-bar-search searchContainer="<%= recordSearchContainer %>">
-		<portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="searchURL">
-			<portlet:param name="mvcPath" value="<%= mvcPath %>" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
-			<portlet:param name="recordSetId" value="<%= String.valueOf(recordSet.getRecordSetId()) %>" />
-		</portlet:renderURL>
-
-		<aui:form action="<%= searchURL.toString() %>" name="fm1">
-			<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" markupView="lexicon" name="<%= DisplayTerms.KEYWORDS %>" />
-		</aui:form>
-	</aui:nav-bar-search>
-</aui:nav-bar>
-
 <liferay-frontend:management-bar
 	includeCheckBox="<%= !user.isDefaultUser() %>"
 	searchContainerId="ddlRecord"
@@ -120,12 +100,45 @@ recordSearchContainer.setOrderByType(ddlViewRecordsDisplayContext.getOrderByType
 			orderColumns='<%= new String[] {"create-date", "modified-date"} %>'
 			portletURL="<%= portletURL %>"
 		/>
+
+		<li>
+			<portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="searchURL">
+				<portlet:param name="mvcPath" value="<%= mvcPath %>" />
+				<portlet:param name="redirect" value="<%= redirect %>" />
+				<portlet:param name="recordSetId" value="<%= String.valueOf(recordSet.getRecordSetId()) %>" />
+			</portlet:renderURL>
+
+			<aui:form action="<%= searchURL.toString() %>" name="fm1">
+				<liferay-ui:input-search
+					autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
+					markupView="lexicon"
+					name="<%= DisplayTerms.KEYWORDS %>"
+				/>
+			</aui:form>
+		</li>
 	</liferay-frontend:management-bar-filters>
 
 	<c:if test="<%= hasDeletePermission %>">
 		<liferay-frontend:management-bar-action-buttons>
-			<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteRecords();" %>' icon="trash" label="delete" />
+			<liferay-frontend:management-bar-button
+				href='<%= "javascript:" + renderResponse.getNamespace() + "deleteRecords();" %>'
+				icon="trash"
+				label="delete"
+			/>
 		</liferay-frontend:management-bar-action-buttons>
+	</c:if>
+
+	<c:if test="<%= showAddRecordButton && ddlDisplayContext.isAdminPortlet() %>">
+		<liferay-frontend:management-bar-buttons>
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					title='<%= LanguageUtil.format(request, "add-x", HtmlUtil.escape(ddmStructure.getName(locale)), false) %>'
+					url="<%= addRecordURL.toString() %>"
+				/>
+			</liferay-frontend:add-menu>
+		</liferay-frontend:management-bar-buttons>
 	</c:if>
 </liferay-frontend:management-bar>
 
@@ -199,16 +212,13 @@ recordSearchContainer.setOrderByType(ddlViewRecordsDisplayContext.getOrderByType
 			}
 			%>
 
-			<liferay-ui:search-iterator displayStyle="<%= ddlViewRecordsDisplayContext.getDisplayStyle() %>" markupView="lexicon" />
+			<liferay-ui:search-iterator
+				displayStyle="<%= ddlViewRecordsDisplayContext.getDisplayStyle() %>"
+				markupView="lexicon"
+			/>
 		</liferay-ui:search-container>
 	</aui:form>
 </div>
-
-<c:if test="<%= showAddRecordButton && ddlDisplayContext.isAdminPortlet() %>">
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.format(request, "add-x", HtmlUtil.escape(ddmStructure.getName(locale)), false) %>' url="<%= addRecordURL.toString() %>" />
-	</liferay-frontend:add-menu>
-</c:if>
 
 <%@ include file="/export_record_set.jspf" %>
 

@@ -16,17 +16,21 @@
 
 <%@ include file="/adaptive_media/init.jsp" %>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<portlet:renderURL var="viewImageConfigurationEntriesURL" />
-
-		<aui:nav-item
-			href="<%= viewImageConfigurationEntriesURL %>"
-			label="image-resolutions"
-			selected="<%= true %>"
-		/>
-	</aui:nav>
-</aui:nav-bar>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(renderResponse.createRenderURL());
+						navigationItem.setLabel(LanguageUtil.get(request, "image-resolutions"));
+					});
+			}
+		}
+	%>"
+/>
 
 <%
 List<AMImageConfigurationEntry> selectedConfigurationEntries = (List)request.getAttribute(AMWebKeys.CONFIGURATION_ENTRIES_LIST);
@@ -49,6 +53,20 @@ List<AMImageConfigurationEntry> selectedConfigurationEntries = (List)request.get
 			portletURL="<%= PortletURLUtil.clone(currentURLObj, liferayPortletResponse) %>"
 			selectedDisplayStyle="list"
 		/>
+
+		<portlet:renderURL var="addImageConfigurationEntryURL">
+			<portlet:param name="mvcRenderCommandName" value="/adaptive_media/edit_image_configuration_entry" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+		</portlet:renderURL>
+
+		<liferay-frontend:add-menu
+			inline="<%= true %>"
+		>
+			<liferay-frontend:add-menu-item
+				title='<%= LanguageUtil.get(request, "add-image-resolution") %>'
+				url="<%= addImageConfigurationEntryURL %>"
+			/>
+		</liferay-frontend:add-menu>
 	</liferay-frontend:management-bar-buttons>
 
 	<%
@@ -200,7 +218,12 @@ PortletURL portletURL = renderResponse.createRenderURL();
 							);
 
 							<c:if test="<%= ((optimizeImagesAllConfigurationsBackgroundTasksCount > 0) && amImageConfigurationEntry.isEnabled()) || currentBackgroundTaskConfigurationEntryUuids.contains(uuid) %>">
-								setTimeout(() => component.startProgress(), 0);
+								setTimeout(
+									function() {
+										component.startProgress();
+									},
+									0
+								);
 							</c:if>
 						</aui:script>
 					</liferay-ui:search-container-column-text>
@@ -234,7 +257,10 @@ PortletURL portletURL = renderResponse.createRenderURL();
 					/>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="list"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
@@ -255,12 +281,3 @@ PortletURL portletURL = renderResponse.createRenderURL();
 		component.startProgress(backgroundTaskUrl);
 	}
 </aui:script>
-
-<portlet:renderURL var="addImageConfigurationEntryURL">
-	<portlet:param name="mvcRenderCommandName" value="/adaptive_media/edit_image_configuration_entry" />
-	<portlet:param name="redirect" value="<%= currentURL %>" />
-</portlet:renderURL>
-
-<liferay-frontend:add-menu>
-	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-image-resolution") %>' url="<%= addImageConfigurationEntryURL %>" />
-</liferay-frontend:add-menu>

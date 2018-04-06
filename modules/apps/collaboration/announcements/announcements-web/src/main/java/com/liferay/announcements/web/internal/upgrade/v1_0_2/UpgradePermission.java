@@ -14,6 +14,7 @@
 
 package com.liferay.announcements.web.internal.upgrade.v1_0_2;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -23,7 +24,6 @@ import com.liferay.portal.kernel.model.ResourcePermission;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -121,7 +121,7 @@ public class UpgradePermission extends UpgradeProcess {
 		try {
 			long resourceActionId = increment(ResourceAction.class.getName());
 
-			StringBundler sb = new StringBundler(4);
+			StringBundler sb = new StringBundler(3);
 
 			sb.append("insert into ResourceAction (mvccVersion, ");
 			sb.append("resourceActionId, name, actionId, bitwiseValue) ");
@@ -224,8 +224,8 @@ public class UpgradePermission extends UpgradeProcess {
 		StringBundler sb2 = new StringBundler(5);
 
 		sb2.append("select resourcePermissionId, companyId, scope, primKey, ");
-		sb2.append("primKeyId, roleId, actionIds from ");
-		sb2.append("ResourcePermission where name = '");
+		sb2.append("primKeyId, roleId, actionIds from ResourcePermission ");
+		sb2.append("where name = '");
 		sb2.append(name);
 		sb2.append("'");
 

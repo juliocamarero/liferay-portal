@@ -489,14 +489,8 @@
 			<var name="pageName" value="Private Blogs Page" />
 		</execute>
 
-		<execute macro="ProductMenuHelper#expandCategory">
-			<var name="category" value="Navigation" />
-		</execute>
-
 		<execute macro="PermissionsInline#gotoSitepageCP">
-			<var name="page" value="Private Pages" />
 			<var name="pageName" value="Private Blogs Page" />
-			<var name="siteName" value="Site Name" />
 		</execute>
 
 		<execute function="AssertElementNotPresent" locator1="Permissions#CONTENT_PERMISSIONS_ROLE_NAME">
@@ -512,7 +506,7 @@
 			<var name="portletName" value="Blogs" />
 		</execute>
 
-		<execute macro="PermissionsInline#gotoConfigurationPG" >
+		<execute macro="PermissionsInline#gotoConfigurationPG">
 			<var name="portletName" value="Blogs" />
 		</execute>
 
@@ -712,11 +706,11 @@
 			<var name="siteName" value="Organization Name" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="Test Document" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -745,11 +739,11 @@
 
 		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no documents or media files in this folder." />
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#viewSearchNoPG">
+		<execute macro="SearchPortlet#viewSearchNoPG">
 			<var name="searchAssetTitle" value="Test Document" />
 			<var name="searchNoResults" value="true" />
 			<var name="searchTerm" value="Test Document" />
@@ -772,11 +766,11 @@
 			<var name="dmDocumentTitle" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="Test Document" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -1150,7 +1144,7 @@
 			<var name="pageName" value="Dynamic Data Lists Page" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="DDL#TOOLBAR_ADD" value1="Add Employee Profile Data Definition" />
+		<execute function="AssertElementNotPresent" locator1="DDL#TOOLBAR_ADD" />
 		<execute function="AssertElementPresent" locator1="DDL#RECORD_TABLE_ELLIPSIS_1" />
 
 		<execute macro="User#logoutPG" />
@@ -1322,11 +1316,11 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="Test Document" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -1354,11 +1348,11 @@
 
 		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no documents or media files in this folder." />
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#viewSearchNoPG">
+		<execute macro="SearchPortlet#viewSearchNoPG">
 			<var name="searchAssetTitle" value="Test Document" />
 			<var name="searchNoResults" value="true" />
 			<var name="searchTerm" value="Test Document" />
@@ -1380,11 +1374,11 @@
 			<var name="dmDocumentTitle" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#searchPG">
+		<execute macro="SearchPortlet#searchPG">
 			<var name="searchTerm" value="Test Document" />
 		</execute>
 
-		<execute macro="Search#viewSearchResultPG">
+		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="Test Document" />
 			<var name="searchAssetType" value="Document" />
 		</execute>
@@ -1963,7 +1957,7 @@
 		<execute function="AssertTextEquals" locator1="Portlet#SPECIFIC_TITLE" value1="Message Boards" />
 
 		<execute function="AssertTextEquals" locator1="Button#ADD_CATEGORY" value1="Add Category" />
-		<execute function="AssertTextEquals" locator1="Button#POST_NEW_THREAD" value1="Post New Thread" />
+		<execute function="AssertTextEquals" locator1="Button#NEW_THREAD" value1="New Thread" />
 		<execute function="AssertTextEquals" locator1="Button#PERMISSIONS" value1="Permissions" />
 
 		<execute macro="User#logoutPG" />
@@ -2219,7 +2213,9 @@
 			<var name="portlet" value="Site Teams" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no site teams. You can add a site team by clicking the plus button on the bottom right corner." />
+		<execute macro="PortletEntry#viewEmptyMessage">
+			<var name="entity" value="Site Teams" />
+		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Members" />
@@ -2464,12 +2460,12 @@
 			<var name="portletOption" value="Preferences" />
 		</execute>
 
-		<var name="key_pageName" value="Welcome" />
-
-		<execute function="AssertElementPresent" locator1="Home#PAGE" value1="Welcome" />
+		<execute function="AssertElementPresent" locator1="Home#PAGE">
+			<var name="key_pageName" value="Welcome" />
+		</execute>
 
 		<execute function="AssertTextEquals#assertText" locator1="HelloWorld#PORTLET_TITLE" value1="Hello World" />
-		<execute function="AssertElementPresent" locator1="HelloWorld#PORTLET_CONTENT" value1="Welcome to Liferay Portal" />
+		<execute function="AssertElementPresent" locator1="HelloWorld#PORTLET_CONTENT" />
 
 		<execute macro="User#logoutPG" />
 
@@ -2694,7 +2690,7 @@
 
 		<execute function="Pause" locator1="3000" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="Pause" locator1="3000" />
 

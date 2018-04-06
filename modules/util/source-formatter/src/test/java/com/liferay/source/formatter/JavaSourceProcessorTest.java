@@ -65,7 +65,7 @@ public class JavaSourceProcessorTest extends BaseSourceProcessorTestCase {
 
 	@Test
 	public void testDuplicateVariables() throws Exception {
-		test("DuplicateVariables.testjava", "Duplicate _s2");
+		test("DuplicateVariables.testjava", "Duplicate _STRING_2");
 	}
 
 	@Test
@@ -120,9 +120,10 @@ public class JavaSourceProcessorTest extends BaseSourceProcessorTestCase {
 				"Missing parentheses in if-statement",
 				"Unnecessary parentheses around expression.",
 				"Redundant parentheses in if-statement",
-				"Unnecessary parentheses around expression."
+				"Unnecessary parentheses around expression.",
+				"Missing parentheses in if-statement"
 			},
-			new Integer[] {25, 29, 33, 39, 43, 43, 47, 51});
+			new Integer[] {25, 29, 33, 39, 43, 43, 47, 51, 59});
 	}
 
 	@Test
@@ -186,14 +187,13 @@ public class JavaSourceProcessorTest extends BaseSourceProcessorTestCase {
 					"Comparator<String>() {'",
 				"There should be a line break after '},'",
 				"There should be a line break before 'throws'",
-				"There should be a line break after " +
-					"'themeDisplay.getCompanyId(),'",
+				"There should be a line break after 'companyId,'",
 				"There should be a line break before 'throws'",
 				"There should be a line break after '}'"
 			},
 			new Integer[] {
-				33, 37, 45, 49, 49, 54, 57, 60, 63, 67, 70, 75, 79, 84, 88, 95,
-				106, 119, 124, 131, 141, 159
+				32, 36, 44, 48, 48, 53, 56, 59, 62, 66, 69, 74, 78, 83, 87, 94,
+				105, 118, 123, 130, 140, 158
 			});
 		test("IncorrectLineBreaks2.testjava");
 	}
@@ -230,15 +230,16 @@ public class JavaSourceProcessorTest extends BaseSourceProcessorTestCase {
 		test(
 			"IncorrectVariableNames1.testjava",
 			new String[] {
-				"Protected or public constant '_TEST_1' must match " +
-					"pattern '^[a-zA-Z0-9][_a-zA-Z0-9]*$'",
+				"public constant '_TEST_1' of type 'int' must match pattern " +
+					"'^[A-Z0-9][_A-Z0-9]*$'",
 				"Protected or public non-static field '_test2' must match " +
 					"pattern '^[a-z0-9][_a-zA-Z0-9]*$'"
 			},
 			new Integer[] {22, 28});
 		test(
 			"IncorrectVariableNames2.testjava",
-			"Private constant 'STRING_1' must match pattern '^_[_a-zA-Z0-9]*$'",
+			"private constant 'STRING_1' of type 'String' must match pattern " +
+				"'^_[A-Z0-9][_A-Z0-9]*$'",
 			26);
 		test(
 			"IncorrectVariableNames3.testjava",

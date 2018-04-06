@@ -50,12 +50,6 @@ RowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
 
 UserSearchTerms searchTerms = (UserSearchTerms)userSearch.getSearchTerms();
 
-boolean hasAssignMembersPermission = GroupPermissionUtil.contains(permissionChecker, siteMembershipsDisplayContext.getGroupId(), ActionKeys.ASSIGN_MEMBERS);
-
-if (!searchTerms.isSearch() && hasAssignMembersPermission) {
-	userSearch.setEmptyResultsMessageCssClass("taglib-empty-result-message-header-has-plus-btn");
-}
-
 LinkedHashMap<String, Object> userParams = new LinkedHashMap<String, Object>();
 
 userParams.put("inherit", Boolean.TRUE);
@@ -74,9 +68,10 @@ List<User> users = UserLocalServiceUtil.search(company.getCompanyId(), searchTer
 userSearch.setResults(users);
 %>
 
-<liferay-util:include page="/navigation_bar.jsp" servletContext="<%= application %>">
-	<liferay-util:param name="searchEnabled" value="<%= String.valueOf((usersCount > 0) || searchTerms.isSearch()) %>" />
-</liferay-util:include>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= siteMembershipsDisplayContext.getViewNavigationItems() %>"
+/>
 
 <liferay-frontend:management-bar
 	disabled='<%= (usersCount <= 0) && Objects.equals(navigation, "all") %>'
@@ -98,6 +93,18 @@ userSearch.setResults(users);
 			portletURL="<%= changeDisplayStyleURL %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, siteMembershipsDisplayContext.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					id="selectUsers"
+					title='<%= LanguageUtil.get(request, "assign-users") %>'
+					url="javascript:;"
+				/>
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
@@ -121,9 +128,18 @@ userSearch.setResults(users);
 			viewAllURL.setParameter("roleId", "0");
 			%>
 
-			<liferay-frontend:management-bar-filter-item active='<%= Objects.equals(navigation, "all") %>' label="all" url="<%= viewAllURL.toString() %>" />
+			<liferay-frontend:management-bar-filter-item
+				active='<%= Objects.equals(navigation, "all") %>'
+				label="all"
+				url="<%= viewAllURL.toString() %>"
+			/>
 
-			<liferay-frontend:management-bar-filter-item active='<%= Objects.equals(navigation, "roles") %>' id="roles" label="roles" url="javascript:;" />
+			<liferay-frontend:management-bar-filter-item
+				active='<%= Objects.equals(navigation, "roles") %>'
+				id="roles"
+				label="roles"
+				url="javascript:;"
+			/>
 		</liferay-frontend:management-bar-navigation>
 
 		<liferay-frontend:management-bar-sort
@@ -132,6 +148,17 @@ userSearch.setResults(users);
 			orderColumns='<%= new String[] {"first-name", "screen-name"} %>'
 			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
 		/>
+
+		<c:if test="<%= (usersCount > 0) || searchTerms.isSearch() %>">
+			<li>
+				<aui:form action="<%= siteMembershipsDisplayContext.getPortletURL() %>" name="searchFm">
+					<liferay-ui:input-search
+						autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
+						markupView="lexicon"
+					/>
+				</aui:form>
+			</li>
+		</c:if>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
@@ -141,7 +168,12 @@ userSearch.setResults(users);
 		/>
 
 		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ASSIGN_USER_ROLES) %>">
-			<liferay-frontend:management-bar-button href="javascript:;" icon="add-role" id="selectSiteRole" label="assign-site-roles" />
+			<liferay-frontend:management-bar-button
+				href="javascript:;"
+				icon="add-role"
+				id="selectSiteRole"
+				label="assign-site-roles"
+			/>
 
 			<c:if test="<%= role != null %>">
 
@@ -149,11 +181,21 @@ userSearch.setResults(users);
 				String label = LanguageUtil.format(request, "remove-site-role-x", role.getTitle(themeDisplay.getLocale()), false);
 				%>
 
-				<liferay-frontend:management-bar-button href="javascript:;" icon="remove-role" id="removeUserSiteRole" label="<%= label %>" />
+				<liferay-frontend:management-bar-button
+					href="javascript:;"
+					icon="remove-role"
+					id="removeUserSiteRole"
+					label="<%= label %>"
+				/>
 			</c:if>
 		</c:if>
 
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedUsers" label="remove-membership" />
+		<liferay-frontend:management-bar-button
+			href="javascript:;"
+			icon="trash"
+			id="deleteSelectedUsers"
+			label="remove-membership"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -202,7 +244,10 @@ userSearch.setResults(users);
 					<%@ include file="/user_columns.jspf" %>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="<%= displayStyle %>"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
@@ -220,12 +265,6 @@ userSearch.setResults(users);
 	<aui:input name="tabs1" type="hidden" value="users" />
 	<aui:input name="p_u_i_d" type="hidden" />
 </aui:form>
-
-<c:if test="<%= hasAssignMembersPermission %>">
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item id="selectUsers" title='<%= LanguageUtil.get(request, "assign-users") %>' url="javascript:;" />
-	</liferay-frontend:add-menu>
-</c:if>
 
 <aui:script use="liferay-item-selector-dialog">
 	var form = $(document.<portlet:namespace />fm);

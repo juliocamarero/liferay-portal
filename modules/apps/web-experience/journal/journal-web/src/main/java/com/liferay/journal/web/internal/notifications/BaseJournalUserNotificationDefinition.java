@@ -16,7 +16,6 @@ package com.liferay.journal.web.internal.notifications;
 
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
@@ -41,10 +40,8 @@ public abstract class BaseJournalUserNotificationDefinition
 
 	@Override
 	public String getDescription(Locale locale) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
 		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
-			languageId);
+			locale);
 
 		String description = ResourceBundleUtil.getString(
 			resourceBundle, _description);

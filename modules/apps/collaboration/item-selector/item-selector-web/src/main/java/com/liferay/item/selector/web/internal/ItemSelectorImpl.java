@@ -23,6 +23,7 @@ import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorView;
 import com.liferay.item.selector.ItemSelectorViewRenderer;
 import com.liferay.item.selector.constants.ItemSelectorPortletKeys;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -32,7 +33,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -116,13 +116,14 @@ public class ItemSelectorImpl implements ItemSelector {
 		String namespace = _portal.getPortletNamespace(
 			ItemSelectorPortletKeys.ITEM_SELECTOR);
 
-		for (String parameterName : parameters.keySet()) {
+		for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+			String parameterName = entry.getKey();
+
 			if (parameterName.contains(namespace)) {
 				String key = StringUtil.removeSubstring(
 					parameterName, namespace);
 
-				itemSelectorURLParameterMap.put(
-					key, parameters.get(parameterName));
+				itemSelectorURLParameterMap.put(key, entry.getValue());
 			}
 		}
 
@@ -148,9 +149,8 @@ public class ItemSelectorImpl implements ItemSelector {
 			itemSelectorCriteria.toArray(
 				new ItemSelectorCriterion[itemSelectorCriteria.size()]);
 
-		for (int i = 0; i < itemSelectorCriteria.size(); i++) {
-			ItemSelectorCriterion itemSelectorCriterion =
-				itemSelectorCriteria.get(i);
+		for (ItemSelectorCriterion itemSelectorCriterion :
+				itemSelectorCriteria) {
 
 			Class<? extends ItemSelectorCriterion> itemSelectorCriterionClass =
 				itemSelectorCriterion.getClass();

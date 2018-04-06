@@ -22,7 +22,13 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 Layout curLayout = (Layout)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<liferay-ui:icon
 		message="edit"
 		target="_blank"
@@ -39,7 +45,15 @@ Layout curLayout = (Layout)row.getObject();
 	<c:if test="<%= layoutsAdminDisplayContext.showAddChildPageAction(curLayout) %>">
 		<liferay-ui:icon
 			message="add-child-page"
-			url="<%= layoutsAdminDisplayContext.getAddLayoutURL(curLayout.getPlid(), curLayout.isPrivateLayout()) %>"
+			url="<%= layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(layoutsAdminDisplayContext.getFirstLayoutPageTemplateCollectionId(), curLayout.getPlid()) %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= layoutsAdminDisplayContext.showCopyLayoutAction(curLayout) %>">
+		<liferay-ui:icon
+			cssClass="copy-layout-action-option"
+			message="copy-page"
+			url="javascript:;"
 		/>
 	</c:if>
 
@@ -72,3 +86,43 @@ Layout curLayout = (Layout)row.getObject();
 		/>
 	</c:if>
 </liferay-ui:icon-menu>
+
+<%
+String autoSiteNavigationMenuNames = layoutsAdminDisplayContext.getAutoSiteNavigationMenuNames();
+%>
+
+<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
+	var addLayoutPrototypeActionOptionQueryClickHandler = dom.delegate(
+		document.body,
+		'click',
+		'.<portlet:namespace />copy-layout-action-option',
+		function(event) {
+			var actionElement = event.delegateTarget;
+
+			modalCommands.openSimpleInputModal(
+				{
+					<c:if test="<%= Validator.isNotNull(autoSiteNavigationMenuNames) %>">
+						checkboxFieldLabel: '<liferay-ui:message arguments="<%= autoSiteNavigationMenuNames %>" key="add-this-page-to-the-following-menus-x" />',
+						checkboxFieldName: 'TypeSettingsProperties--addToAutoMenus--',
+						checkboxFieldValue: true,
+					</c:if>
+
+					dialogTitle: '<liferay-ui:message key="copy-page" />',
+					formSubmitURL: '<%= layoutsAdminDisplayContext.getCopyLayoutURL(curLayout) %>',
+					mainFieldName: 'name',
+					mainFieldLabel: '<liferay-ui:message key="name" />',
+					namespace: '<portlet:namespace />',
+					spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
+				}
+			);
+		}
+	);
+
+	function handleDestroyPortlet () {
+		addLayoutPrototypeActionOptionQueryClickHandler.removeListener();
+
+		Liferay.detach('destroyPortlet', handleDestroyPortlet);
+	}
+
+	Liferay.on('destroyPortlet', handleDestroyPortlet);
+</aui:script>

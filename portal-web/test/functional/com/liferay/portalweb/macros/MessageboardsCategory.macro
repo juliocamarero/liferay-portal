@@ -2,7 +2,7 @@
 	<var name="assetType" value="Message Boards Category" />
 
 	<command name="addCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Category">
 			<var name="key_menuItem" value="Category" />
@@ -71,7 +71,7 @@
 
 		<execute function="AssertClick" locator1="MessageBoards#CATEGORY_LIST_CATEGORY" value1="${categoryName}" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Subcategory">
 			<var name="key_menuItem" value="Subcategory" />
@@ -93,7 +93,7 @@
 
 		<execute function="AssertClick" locator1="MessageBoards#CATEGORY_TABLE_ADMIN_CATEGORY" value1="${categoryName}" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Subcategory">
 			<var name="key_menuItem" value="Subcategory" />
@@ -117,7 +117,7 @@
 
 		<execute function="AssertClick" locator1="MessageBoards#CATEGORY_LIST_CATEGORY" value1="${categoryName}" />
 
-		<execute function="AssertClick" locator1="Button#ADD_SUBCATEGORY" value1="Add Subcategory" />
+		<execute function="AssertClick" locator1="Button#ADD_CATEGORY" value1="Add Category" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${subCategoryNullName}" />
@@ -137,7 +137,7 @@
 
 		<execute function="AssertClick" locator1="MessageBoards#CATEGORY_LIST_CATEGORY" value1="${categoryName}" />
 
-		<execute function="AssertClick" locator1="Button#ADD_SUBCATEGORY" value1="Add Subcategory" />
+		<execute function="AssertClick" locator1="Button#ADD_CATEGORY" value1="Add Category" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${subCategoryName}" />
@@ -159,7 +159,7 @@
 
 		<execute function="AssertClick" locator1="MessageBoards#CATEGORY_LIST_SUBCATEGORY" value1="${subCategoryName}" />
 
-		<execute function="AssertClick" locator1="Button#ADD_SUBCATEGORY" value1="Add Subcategory" />
+		<execute function="AssertClick" locator1="Button#ADD_CATEGORY" value1="Add Category" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${subCategorySubCategoryName}" />
@@ -403,7 +403,7 @@
 
 		<execute function="AssertClick" locator1="MessageBoards#CATEGORY_TABLE_ADMIN_CATEGORY" value1="${categoryName}" />
 
-		<execute function="AssertElementNotPresent" locator1="MessageBoards#CATEGORY_TABLE_ADMIN_CATEGORY" value1="${subCategoryName}" />
+		<execute function="AssertElementNotPresent" locator1="MessageBoards#CATEGORY_TABLE_ADMIN_CATEGORY" />
 	</command>
 
 	<command name="viewPG">

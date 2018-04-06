@@ -1,4 +1,4 @@
-{namespace SelectFolder}
+{namespace com.liferay.journal.web.SelectFolder}
 
 /**
  * This renders the main element.
@@ -41,7 +41,7 @@
 		<form class="container-fluid-1280" name="{$namespace}selectFolderFm">
 			<fieldset class="panel-body">
 				<div class="portlet-journal-tree" id="{$namespace}folderContainer">
-					{call CardsTreeview.render}
+					{call liferay.frontend.CardsTreeview.render}
 						{param events: [
 							'selectedNodesChanged': $selectedNodeChange_
 						]/}

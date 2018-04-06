@@ -14,6 +14,7 @@
 
 package com.liferay.portal.upgrade.v7_0_5;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -25,7 +26,6 @@ import com.liferay.portal.kernel.tree.TreePathUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.PortalInstances;
 
 import java.io.Serializable;
@@ -127,9 +127,9 @@ public class UpgradeGroup extends UpgradeProcess {
 
 			sb.append("select stagingGroup_.groupId, ");
 			sb.append("liveGroup_.parentGroupId from Group_ stagingGroup_ ");
-			sb.append("inner join Group_ liveGroup_ on ");
-			sb.append("(liveGroup_.groupId = stagingGroup_.liveGroupId) ");
-			sb.append("where (stagingGroup_.remoteStagingGroupCount = 0) and ");
+			sb.append("inner join Group_ liveGroup_ on (liveGroup_.groupId = ");
+			sb.append("stagingGroup_.liveGroupId) where ");
+			sb.append("(stagingGroup_.remoteStagingGroupCount = 0) and ");
 			sb.append("(liveGroup_.parentGroupId != ");
 			sb.append("stagingGroup_.parentGroupId)");
 

@@ -39,7 +39,7 @@ public class CheckboxMultipleDDMFormFieldTypeSettingsTest
 	extends BaseDDMFormFieldTypeSettingsTestCase {
 
 	@Test
-	public void testCreateRadioDDMFormFieldTypeSettingsDDMForm() {
+	public void testCreateCheckboxMultipleDDMFormFieldTypeSettingsDDMForm() {
 		DDMForm ddmForm = DDMFormFactory.create(
 			CheckboxMultipleDDMFormFieldTypeSettings.class);
 
@@ -58,15 +58,7 @@ public class CheckboxMultipleDDMFormFieldTypeSettingsTest
 		Assert.assertNotNull(optionsDDMFormField);
 		Assert.assertEquals("ddm-options", optionsDDMFormField.getDataType());
 		Assert.assertNotNull(optionsDDMFormField.getLabel());
-		Assert.assertTrue(optionsDDMFormField.isRequired());
 		Assert.assertEquals("options", optionsDDMFormField.getType());
-
-		DDMFormField validationDDMFormField = ddmFormFieldsMap.get(
-			"validation");
-
-		Assert.assertNotNull(validationDDMFormField);
-		Assert.assertEquals(
-			"FALSE", validationDDMFormField.getVisibilityExpression());
 	}
 
 }

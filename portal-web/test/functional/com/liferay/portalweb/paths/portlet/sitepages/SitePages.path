@@ -10,7 +10,7 @@
 <tbody>
 <tr>
 	<td>SITE_NAME</td>
-	<td>//span[contains(@class,'site-name') and contains(@title,'${key_siteName}')] | //div[contains(@class,'site-name') and contains(.,'${key_siteName}')]</td>
+	<td>//span[contains(@class,'site-name') and contains(.,'${key_siteName}')] | //div[contains(@class,'site-name') and contains(.,'${key_siteName}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -21,6 +21,42 @@
 <tr>
 	<td></td>
 	<td></td>
+	<td></td>
+</tr>
+<!--LIST_GROUP_ITEM-->
+<tr>
+	<td>LIST_GROUP_ITEM</td>
+	<td>//li[contains(@class,'list-group-item')]//div[h4[normalize-space()='${key_itemName}']]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LIST_GROUP_ITEM_ANGLE_ICON</td>
+	<td>xpath=(//a[*[name()='svg'][contains(@class,'icon-angle-right')]])[${key_depth}]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LIST_GROUP_ITEM_CHECKBOX</td>
+	<td>//li[contains(@class,'list-group-item')][div[normalize-space()='${key_pageName}']]//input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LIST_GROUP_ITEM_ELLIPSIS_ICON</td>
+	<td>//li[contains(@class,'list-group-item')][div[normalize-space()='${key_pageName}']]//button[*[name()='svg'][contains(@class,'icon-ellipsis-v')]]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LIST_GROUP_ITEM_PLUS_ICON</td>
+	<td>//li[contains(@class,'list-group-item')][div[normalize-space()='${key_pageName}']]//a[*[name()='svg'][contains(@class,'icon-plus')]]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LIST_GROUP_ITEM_ROW_ENTRY</td>
+	<td>xpath=(//li[contains(@class,'list-group-item')])[${key_index}]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LIST_GROUP_ITEM_ROW_ELLIPSIS</td>
+	<td>xpath=(//li[contains(@class,'list-group-item')])[${key_index}]//button[*[name()='svg'][contains(@class,'icon-ellipsis-v')]]</td>
 	<td></td>
 </tr>
 <!--NAVIGATION-->
@@ -41,7 +77,7 @@
 </tr>
 <tr>
 	<td>NAVIGATION_MY_DASHBOARD</td>
-	<td>//a[contains(@title,'Dashboard')]//span/*[name()='svg'][contains(@class,'icon-cog')]</td>
+	<td>//a[contains(@title,'Dashboard')]//a[span/*[name()='svg'][contains(@class,'icon-cog')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -152,11 +188,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>PAGE_TREE_PAGE_EDIT_COG</td>
-	<td>xpath=(//a[contains(@id,'layoutsTree_layout_')])[1]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>PAGE_TREE_PAGE_SPECIFIC_PAGE</td>
 	<td>//a[span[contains(.,'${key_page}')]]</td>
 	<td></td>
@@ -169,11 +200,6 @@
 <tr>
 	<td>PAGE_TREE_PAGE_LINK</td>
 	<td>//div[@class='list-group-item']//span/a[@title='${key_page}']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>PAGE_TREE_PAGE_EDIT_COG</td>
-	<td>//a[contains(@class,'tree-edit') and contains(.,'${key_page}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -239,7 +265,7 @@
 </tr>
 <tr>
 	<td>DETAILS_FRIENDLY_BASE_URL</td>
-	<td>//span[contains(@id,'urlBase')]</td>
+	<td>//span[contains(@id,'friendlyURL')]</td>
 	<td></td>
 </tr>
 <tr>

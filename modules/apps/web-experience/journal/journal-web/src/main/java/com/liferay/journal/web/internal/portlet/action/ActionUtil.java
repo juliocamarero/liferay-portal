@@ -26,10 +26,12 @@ import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalArticleServiceUtil;
 import com.liferay.journal.service.JournalFeedServiceUtil;
 import com.liferay.journal.service.JournalFolderServiceUtil;
-import com.liferay.journal.service.permission.JournalPermission;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
-import com.liferay.journal.util.impl.JournalUtil;
 import com.liferay.journal.web.internal.portlet.JournalPortlet;
+import com.liferay.journal.web.internal.security.permission.resource.JournalPermission;
+import com.liferay.journal.web.internal.util.JournalHelperUtil;
+import com.liferay.journal.web.util.JournalUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.diff.CompareVersionsException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
@@ -42,7 +44,6 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -90,8 +91,7 @@ public class ActionUtil {
 
 		if (index != -1) {
 			sourceArticleId = sourceArticleId.substring(
-				index + JournalPortlet.VERSION_SEPARATOR.length(),
-				sourceArticleId.length());
+				index + JournalPortlet.VERSION_SEPARATOR.length());
 		}
 
 		double sourceVersion = GetterUtil.getDouble(sourceArticleId);
@@ -103,8 +103,7 @@ public class ActionUtil {
 
 		if (index != -1) {
 			targetArticleId = targetArticleId.substring(
-				index + JournalPortlet.VERSION_SEPARATOR.length(),
-				targetArticleId.length());
+				index + JournalPortlet.VERSION_SEPARATOR.length());
 		}
 
 		double targetVersion = GetterUtil.getDouble(targetArticleId);
@@ -142,7 +141,7 @@ public class ActionUtil {
 		String diffHtmlResults = null;
 
 		try {
-			diffHtmlResults = JournalUtil.diffHtml(
+			diffHtmlResults = JournalHelperUtil.diffHtml(
 				groupId, articleId, sourceVersion, targetVersion, languageId,
 				new PortletRequestModel(renderRequest, renderResponse),
 				themeDisplay);
@@ -392,7 +391,7 @@ public class ActionUtil {
 		else {
 			JournalPermission.check(
 				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), ActionKeys.VIEW);
+				themeDisplay.getScopeGroup(), ActionKeys.VIEW);
 		}
 
 		return folder;

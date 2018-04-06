@@ -5,8 +5,6 @@ AUI.add(
 
 		var TPL_ERROR_MESSAGE = '<div class="form-feedback-item help-block">{errorMessage}</div>';
 
-		var TPL_FEEDBACK = '<span aria-hidden="true" class="form-control-feedback"><span class="icon-{icon}"></span></span>';
-
 		var FieldFeedbackSupport = function() {
 		};
 
@@ -70,18 +68,23 @@ AUI.add(
 				var inputNode = instance.getInputNode();
 
 				if (errorMessage && inputNode) {
-					inputNode.insert(instance._errorMessageNode, 'after');
+					var targetNode = inputNode.ancestor('.form-group');
 
+					targetNode.append(instance._errorMessageNode);
+
+					instance.set('valid', false);
 					instance._errorMessageNode.show();
-
 					instance.showValidationStatus();
+
+					var root = instance.getRoot();
+
+					if (root) {
+						Liferay.fire('ddmFieldValidationError', {
+							fieldName: instance.get('fieldName'),
+							formId: root.getFormId()
+						});
+					}
 				}
-			},
-
-			showLoadingFeedback: function() {
-				var instance = this;
-
-				instance._showFeedback('spinner icon-spin');
 			},
 
 			showSuccessFeedback: function() {
@@ -126,26 +129,6 @@ AUI.add(
 							errorMessage: errorMessage
 						}
 					)
-				);
-			},
-
-			_showFeedback: function(icon) {
-				var instance = this;
-
-				instance.hideFeedback();
-
-				var container = instance.get('container');
-
-				container.addClass('has-feedback');
-
-				instance.getInputNode().insert(
-					Lang.sub(
-						TPL_FEEDBACK,
-						{
-							icon: icon
-						}
-					),
-					'after'
 				);
 			}
 		};

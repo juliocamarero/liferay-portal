@@ -56,6 +56,10 @@ AUI.add(
 						setter: '_setParent'
 					},
 
+					pathThemeImages: {
+						value: themeDisplay.getPathThemeImages()
+					},
+
 					portletNamespace: {
 						value: ''
 					},
@@ -76,6 +80,10 @@ AUI.add(
 					showLabel: {
 						state: true,
 						value: true
+					},
+
+					startedFilling: {
+						value: false
 					},
 
 					type: {
@@ -229,6 +237,7 @@ AUI.add(
 							instance.get('context'),
 							{
 								name: instance.getQualifiedName(),
+								pathThemeImages: instance.get('pathThemeImages'),
 								value: instance.get('value')
 							}
 						);
@@ -277,7 +286,7 @@ AUI.add(
 							container.appendTo(target);
 						}
 
-						container.html(instance.getTemplate());
+						container.setContent(instance.getTemplate());
 
 						instance.eachField(
 							function(field) {

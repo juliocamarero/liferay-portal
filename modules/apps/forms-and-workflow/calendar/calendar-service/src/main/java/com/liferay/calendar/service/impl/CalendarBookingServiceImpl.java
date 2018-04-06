@@ -14,41 +14,43 @@
 
 package com.liferay.calendar.service.impl;
 
+import com.liferay.calendar.configuration.CalendarServiceConfigurationValues;
 import com.liferay.calendar.constants.CalendarActionKeys;
 import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.model.CalendarBookingConstants;
 import com.liferay.calendar.service.base.CalendarBookingServiceBaseImpl;
-import com.liferay.calendar.service.permission.CalendarPermission;
-import com.liferay.calendar.util.CalendarUtil;
 import com.liferay.calendar.util.JCalendarUtil;
-import com.liferay.calendar.util.RSSUtil;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
+import com.liferay.petra.content.ContentUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.spring.extender.service.ServiceReference;
+import com.liferay.rss.export.RSSExporter;
+import com.liferay.rss.model.SyndContent;
+import com.liferay.rss.model.SyndEntry;
+import com.liferay.rss.model.SyndFeed;
+import com.liferay.rss.model.SyndLink;
+import com.liferay.rss.model.SyndModelFactory;
+import com.liferay.rss.util.RSSUtil;
 
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.feed.synd.SyndLink;
-import com.sun.syndication.feed.synd.SyndLinkImpl;
-import com.sun.syndication.io.FeedException;
+import java.text.Format;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,7 +117,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -186,7 +188,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -202,7 +204,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -219,7 +221,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -236,7 +238,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -251,7 +253,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendar(),
 			CalendarActionKeys.VIEW_BOOKING_DETAILS);
 
@@ -288,7 +290,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			long calendarId, long parentCalendarBookingId)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -354,7 +356,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		Calendar calendar = calendarService.getCalendar(calendarId);
 
 		int[] statuses = {
-			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			WorkflowConstants.STATUS_APPROVED,
 			CalendarBookingWorkflowConstants.STATUS_MAYBE
 		};
 
@@ -443,7 +445,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			ActionKeys.VIEW);
 
@@ -459,15 +461,12 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
-		calendarBooking = CalendarUtil.getNewStartTimeCalendarBooking(
-			calendarBooking, offset);
-
-		calendarBooking = CalendarUtil.getNewDurationCalendarBooking(
-			calendarBooking, duration);
+		calendarBooking.setStartTime(calendarBooking.getStartTime() + offset);
+		calendarBooking.setEndTime(calendarBooking.getStartTime() + duration);
 
 		return calendarBooking;
 	}
@@ -523,7 +522,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -539,7 +538,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -555,7 +554,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -647,7 +646,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -668,7 +667,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -689,7 +688,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			String secondReminderType, ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -711,7 +710,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -768,7 +767,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			String secondReminderType, ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -787,7 +786,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -852,7 +851,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			String secondReminderType, ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -880,7 +879,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
@@ -896,7 +895,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		String displayStyle, String feedURL,
 		List<CalendarBooking> calendarBookings, ThemeDisplay themeDisplay) {
 
-		SyndFeed syndFeed = new SyndFeedImpl();
+		SyndFeed syndFeed = _syndModelFactory.createSyndFeed();
 
 		syndFeed.setDescription(description);
 
@@ -907,17 +906,17 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		Locale locale = themeDisplay.getLocale();
 
 		for (CalendarBooking calendarBooking : calendarBookings) {
-			SyndEntry syndEntry = new SyndEntryImpl();
+			SyndEntry syndEntry = _syndModelFactory.createSyndEntry();
 
 			String author = PortalUtil.getUserName(calendarBooking);
 
 			syndEntry.setAuthor(author);
 
-			SyndContent syndContent = new SyndContentImpl();
+			SyndContent syndContent = _syndModelFactory.createSyndContent();
 
 			syndContent.setType(RSSUtil.ENTRY_TYPE_DEFAULT);
 
-			String value = RSSUtil.getContent(
+			String value = _getContent(
 				calendarBooking, displayStyle, themeDisplay);
 
 			syndContent.setValue(value);
@@ -942,7 +941,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 
 		syndFeed.setLinks(syndLinks);
 
-		SyndLink syndLink = new SyndLinkImpl();
+		SyndLink syndLink = _syndModelFactory.createSyndLink();
 
 		syndLinks.add(syndLink);
 
@@ -953,23 +952,18 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		syndFeed.setTitle(name);
 		syndFeed.setUri(feedURL);
 
-		try {
-			return RSSUtil.export(syndFeed);
-		}
-		catch (FeedException fe) {
-			throw new SystemException(fe);
-		}
+		return _rssExporter.export(syndFeed);
 	}
 
 	protected CalendarBooking filterCalendarBooking(
 			CalendarBooking calendarBooking)
 		throws PortalException {
 
-		CalendarPermission.check(
+		_calendarModelResourcePermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			ActionKeys.VIEW);
 
-		if (!CalendarPermission.contains(
+		if (!_calendarModelResourcePermission.contains(
 				getPermissionChecker(), calendarBooking.getCalendarId(),
 				CalendarActionKeys.VIEW_BOOKING_DETAILS)) {
 
@@ -997,11 +991,11 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 				continue;
 			}
 
-			if (!CalendarPermission.contains(
+			if (!_calendarModelResourcePermission.contains(
 					getPermissionChecker(), calendarBooking.getCalendarId(),
 					CalendarActionKeys.VIEW_BOOKING_DETAILS)) {
 
-				if (!CalendarPermission.contains(
+				if (!_calendarModelResourcePermission.contains(
 						getPermissionChecker(), calendarBooking.getCalendarId(),
 						actionId)) {
 
@@ -1017,10 +1011,10 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 	}
 
 	protected boolean isPendingInWorkflow(CalendarBooking calendarBooking)
-		throws PortalException, PrincipalException {
+		throws PortalException {
 
 		if (calendarBooking.isPending() &&
-			!CalendarPermission.contains(
+			!_calendarModelResourcePermission.contains(
 				getPermissionChecker(), calendarBooking.getCalendarId(),
 				CalendarActionKeys.MANAGE_BOOKINGS)) {
 
@@ -1030,7 +1024,62 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		return false;
 	}
 
+	private static String _getContent(
+		CalendarBooking calendarBooking, String displayStyle,
+		ThemeDisplay themeDisplay) {
+
+		if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
+			return StringUtil.shorten(
+				calendarBooking.getDescription(themeDisplay.getLocale()), 200);
+		}
+
+		if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
+			return calendarBooking.getTitle(themeDisplay.getLocale());
+		}
+
+		String content = ContentUtil.get(
+			CalendarServiceConfigurationValues.class.getClassLoader(),
+			CalendarServiceConfigurationValues.CALENDAR_RSS_TEMPLATE);
+
+		TimeZone timeZone = themeDisplay.getTimeZone();
+
+		if (calendarBooking.isAllDay()) {
+			timeZone = TimeZone.getTimeZone(StringPool.UTC);
+		}
+
+		Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(
+			themeDisplay.getLocale(), timeZone);
+
+		content = StringUtil.replace(
+			content,
+			new String[] {
+				"[$EVENT_DESCRIPTION$]", "[$EVENT_END_DATE$]",
+				"[$EVENT_LOCATION$]", "[$EVENT_START_DATE$]", "[$EVENT_TITLE$]"
+			},
+			new String[] {
+				calendarBooking.getDescription(themeDisplay.getLocale()),
+				dateFormatDateTime.format(calendarBooking.getEndTime()),
+				calendarBooking.getLocation(),
+				dateFormatDateTime.format(calendarBooking.getStartTime()),
+				calendarBooking.getTitle(themeDisplay.getLocale())
+			});
+
+		return content;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		CalendarBookingServiceImpl.class);
+
+	private static volatile ModelResourcePermission<Calendar>
+		_calendarModelResourcePermission =
+			ModelResourcePermissionFactory.getInstance(
+				CalendarBookingServiceImpl.class,
+				"_calendarModelResourcePermission", Calendar.class);
+
+	@ServiceReference(type = RSSExporter.class)
+	private RSSExporter _rssExporter;
+
+	@ServiceReference(type = SyndModelFactory.class)
+	private SyndModelFactory _syndModelFactory;
 
 }

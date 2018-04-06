@@ -66,6 +66,8 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("name", getName());
+		attributes.put("type", getType());
+		attributes.put("auto", getAuto());
 
 		return attributes;
 	}
@@ -119,6 +121,18 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 		if (name != null) {
 			setName(name);
 		}
+
+		Integer type = (Integer)attributes.get("type");
+
+		if (type != null) {
+			setType(type);
+		}
+
+		Boolean auto = (Boolean)attributes.get("auto");
+
+		if (auto != null) {
+			setAuto(auto);
+		}
 	}
 
 	@Override
@@ -129,6 +143,16 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 	@Override
 	public int compareTo(SiteNavigationMenu siteNavigationMenu) {
 		return _siteNavigationMenu.compareTo(siteNavigationMenu);
+	}
+
+	/**
+	* Returns the auto of this site navigation menu.
+	*
+	* @return the auto of this site navigation menu
+	*/
+	@Override
+	public boolean getAuto() {
+		return _siteNavigationMenu.getAuto();
 	}
 
 	/**
@@ -212,6 +236,21 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 	}
 
 	/**
+	* Returns the type of this site navigation menu.
+	*
+	* @return the type of this site navigation menu
+	*/
+	@Override
+	public int getType() {
+		return _siteNavigationMenu.getType();
+	}
+
+	@Override
+	public java.lang.String getTypeKey() {
+		return _siteNavigationMenu.getTypeKey();
+	}
+
+	/**
 	* Returns the user ID of this site navigation menu.
 	*
 	* @return the user ID of this site navigation menu
@@ -246,6 +285,16 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 		return _siteNavigationMenu.hashCode();
 	}
 
+	/**
+	* Returns <code>true</code> if this site navigation menu is auto.
+	*
+	* @return <code>true</code> if this site navigation menu is auto; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isAuto() {
+		return _siteNavigationMenu.isAuto();
+	}
+
 	@Override
 	public boolean isCachedModel() {
 		return _siteNavigationMenu.isCachedModel();
@@ -262,8 +311,23 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 	}
 
 	@Override
+	public boolean isPrimary() {
+		return _siteNavigationMenu.isPrimary();
+	}
+
+	@Override
 	public void persist() {
 		_siteNavigationMenu.persist();
+	}
+
+	/**
+	* Sets whether this site navigation menu is auto.
+	*
+	* @param auto the auto of this site navigation menu
+	*/
+	@Override
+	public void setAuto(boolean auto) {
+		_siteNavigationMenu.setAuto(auto);
 	}
 
 	@Override
@@ -365,6 +429,16 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 	@Override
 	public void setSiteNavigationMenuId(long siteNavigationMenuId) {
 		_siteNavigationMenu.setSiteNavigationMenuId(siteNavigationMenuId);
+	}
+
+	/**
+	* Sets the type of this site navigation menu.
+	*
+	* @param type the type of this site navigation menu
+	*/
+	@Override
+	public void setType(int type) {
+		_siteNavigationMenu.setType(type);
 	}
 
 	/**

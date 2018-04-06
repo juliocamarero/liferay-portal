@@ -37,6 +37,8 @@ if (workflowEnabled) {
 	workflowDefinitions = WorkflowDefinitionManagerUtil.getActiveWorkflowDefinitions(company.getCompanyId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 }
 
+String languageId = LocaleUtil.toLanguageId(locale);
+
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
@@ -61,7 +63,9 @@ renderResponse.setTitle(title);
 	<portlet:param name="mvcPath" value="/edit_folder.jsp" />
 </portlet:actionURL>
 
-<liferay-util:buffer var="removeDDMStructureIcon">
+<liferay-util:buffer
+	var="removeDDMStructureIcon"
+>
 	<liferay-ui:icon
 		icon="times"
 		markupView="lexicon"
@@ -98,7 +102,9 @@ renderResponse.setTitle(title);
 				<aui:input name="description" />
 			</aui:fieldset>
 
-			<liferay-expando:custom-attributes-available className="<%= JournalFolder.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= JournalFolder.class.getName() %>"
+			>
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 					<liferay-expando:custom-attribute-list
 						className="<%= JournalFolder.class.getName() %>"
@@ -184,7 +190,7 @@ renderResponse.setTitle(title);
 		<c:if test="<%= rootFolder || (folder != null) %>">
 
 			<%
-			List<DDMStructure> ddmStructures = JournalFolderLocalServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), folderId, JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW);
+			List<DDMStructure> ddmStructures = journalDisplayContext.getDDMStructures(JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW);
 
 			String headerNames = null;
 
@@ -234,7 +240,9 @@ renderResponse.setTitle(title);
 								/>
 
 								<c:if test="<%= workflowEnabled %>">
-									<liferay-ui:search-container-column-text name="workflow">
+									<liferay-ui:search-container-column-text
+										name="workflow"
+									>
 										<aui:select label="" name='<%= "workflowDefinition" + ddmStructure.getStructureId() %>'>
 											<aui:option label="no-workflow" value="" />
 
@@ -255,7 +263,7 @@ renderResponse.setTitle(title);
 												}
 											%>
 
-												<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+												<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 											<%
 											}
@@ -270,7 +278,10 @@ renderResponse.setTitle(title);
 								</liferay-ui:search-container-column-text>
 							</liferay-ui:search-container-row>
 
-							<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
+							<liferay-ui:search-iterator
+								markupView="lexicon"
+								paginate="<%= false %>"
+							/>
 						</liferay-ui:search-container>
 
 						<liferay-ui:icon
@@ -314,7 +325,7 @@ renderResponse.setTitle(title);
 								}
 							%>
 
-								<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+								<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 							<%
 							}
@@ -336,13 +347,15 @@ renderResponse.setTitle(title);
 	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
 
-<liferay-util:buffer var="workflowDefinitionsBuffer">
+<liferay-util:buffer
+	var="workflowDefinitionsBuffer"
+>
 	<c:if test="<%= workflowEnabled %>">
 		<aui:select label="" name="LIFERAY_WORKFLOW_DEFINITION_DDM_STRUCTURE" title="workflow-definition">
 			<aui:option label="no-workflow" value="" />
@@ -351,7 +364,7 @@ renderResponse.setTitle(title);
 			for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
 			%>
 
-				<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getName()) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+				<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 			<%
 			}

@@ -19,12 +19,12 @@ import com.liferay.adaptive.media.AdaptiveMedia;
 import com.liferay.adaptive.media.exception.AMException;
 import com.liferay.adaptive.media.handler.AMRequestHandler;
 import com.liferay.adaptive.media.web.internal.constants.AMWebConstants;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.IOException;
 
@@ -147,7 +147,7 @@ public class AMServlet extends HttpServlet {
 	private String _getRequestHandlerPattern(HttpServletRequest request) {
 		String pathInfo = request.getPathInfo();
 
-		Matcher matcher = _REQUEST_HANDLER_PATTERN.matcher(pathInfo);
+		Matcher matcher = _requestHandlerPattern.matcher(pathInfo);
 
 		if (matcher.find()) {
 			return matcher.group(1);
@@ -156,7 +156,7 @@ public class AMServlet extends HttpServlet {
 		return StringPool.BLANK;
 	}
 
-	private static final Pattern _REQUEST_HANDLER_PATTERN = Pattern.compile(
+	private static final Pattern _requestHandlerPattern = Pattern.compile(
 		"^/([^/]*)");
 
 	private AMRequestHandlerLocator _amRequestHandlerLocator;

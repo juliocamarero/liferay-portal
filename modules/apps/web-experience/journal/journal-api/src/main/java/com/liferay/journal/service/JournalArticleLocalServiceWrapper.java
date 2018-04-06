@@ -75,6 +75,8 @@ public class JournalArticleLocalServiceWrapper
 	* @param titleMap the web content article's locales and localized titles
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
+	* @param friendlyURLMap the web content article's locales and localized
+	friendly URLs
 	* @param content the HTML content wrapped in XML
 	* @param ddmStructureKey the primary key of the web content article's DDM
 	structure, if the article is related to a DDM structure, or
@@ -120,8 +122,6 @@ public class JournalArticleLocalServiceWrapper
 	* @param smallImageFile the web content article's small image file
 	* @param images the web content's images
 	* @param articleURL the web content article's accessible URL
-	* @param latestVersion whether the article references and structure fields
-	are validated or not, as it is needed for the latest version only
 	* @param serviceContext the service context to be applied. Can set the
 	UUID, creation date, modification date, expando bridge
 	attributes, guest permissions, group permissions, asset category
@@ -136,6 +136,7 @@ public class JournalArticleLocalServiceWrapper
 		java.lang.String articleId, boolean autoArticleId, double version,
 		java.util.Map<java.util.Locale, java.lang.String> titleMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
 		java.lang.String content, java.lang.String ddmStructureKey,
 		java.lang.String ddmTemplateKey, java.lang.String layoutUuid,
 		int displayDateMonth, int displayDateDay, int displayDateYear,
@@ -147,19 +148,19 @@ public class JournalArticleLocalServiceWrapper
 		boolean smallImage, java.lang.String smallImageURL,
 		java.io.File smallImageFile,
 		java.util.Map<java.lang.String, byte[]> images,
-		java.lang.String articleURL, boolean latestVersion,
+		java.lang.String articleURL,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _journalArticleLocalService.addArticle(userId, groupId,
 			folderId, classNameId, classPK, articleId, autoArticleId, version,
-			titleMap, descriptionMap, content, ddmStructureKey, ddmTemplateKey,
-			layoutUuid, displayDateMonth, displayDateDay, displayDateYear,
-			displayDateHour, displayDateMinute, expirationDateMonth,
-			expirationDateDay, expirationDateYear, expirationDateHour,
-			expirationDateMinute, neverExpire, reviewDateMonth, reviewDateDay,
-			reviewDateYear, reviewDateHour, reviewDateMinute, neverReview,
-			indexable, smallImage, smallImageURL, smallImageFile, images,
-			articleURL, latestVersion, serviceContext);
+			titleMap, descriptionMap, friendlyURLMap, content, ddmStructureKey,
+			ddmTemplateKey, layoutUuid, displayDateMonth, displayDateDay,
+			displayDateYear, displayDateHour, displayDateMinute,
+			expirationDateMonth, expirationDateDay, expirationDateYear,
+			expirationDateHour, expirationDateMinute, neverExpire,
+			reviewDateMonth, reviewDateDay, reviewDateYear, reviewDateHour,
+			reviewDateMinute, neverReview, indexable, smallImage,
+			smallImageURL, smallImageFile, images, articleURL, serviceContext);
 	}
 
 	/**
@@ -3745,52 +3746,6 @@ public class JournalArticleLocalServiceWrapper
 	}
 
 	/**
-	* Updates the web content article matching the version, replacing its
-	* folder, title, description, content, and layout UUID.
-	*
-	* @param userId the primary key of the user updating the web content
-	article
-	* @param groupId the primary key of the web content article's group
-	* @param folderId the primary key of the web content article folder
-	* @param articleId the primary key of the web content article
-	* @param version the web content article's version
-	* @param titleMap the web content article's locales and localized titles
-	* @param descriptionMap the web content article's locales and localized
-	descriptions
-	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the {@link #addArticle(long, long,
-	long, long, long, String, boolean, double, Map, Map, String,
-	String, String, String, int, int, int, int, int, int, int, int,
-	int, int, boolean, int, int, int, int, int, boolean, boolean,
-	boolean, String, File, Map, String, ServiceContext)} description.
-	* @param layoutUuid the unique string identifying the web content
-	article's display page
-	* @param serviceContext the service context to be applied. Can set the
-	modification date, expando bridge attributes, asset category IDs,
-	asset tag names, asset link entry IDs, asset priority, workflow
-	actions, URL title, and can set whether to add the default
-	command update for the web content article. With respect to
-	social activities, by setting the service context's command to
-	{@link Constants#UPDATE}, the invocation is considered a web
-	content update activity; otherwise it is considered a web content
-	add activity.
-	* @return the updated web content article
-	*/
-	@Override
-	public com.liferay.journal.model.JournalArticle updateArticle(long userId,
-		long groupId, long folderId, java.lang.String articleId,
-		double version,
-		java.util.Map<java.util.Locale, java.lang.String> titleMap,
-		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
-		java.lang.String content, java.lang.String layoutUuid,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _journalArticleLocalService.updateArticle(userId, groupId,
-			folderId, articleId, version, titleMap, descriptionMap, content,
-			layoutUuid, serviceContext);
-	}
-
-	/**
 	* Updates the web content article with additional parameters.
 	*
 	* @param userId the primary key of the user updating the web content
@@ -3802,6 +3757,8 @@ public class JournalArticleLocalServiceWrapper
 	* @param titleMap the web content article's locales and localized titles
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
+	* @param friendlyURLMap the web content article's locales and localized
+	friendly URLs
 	* @param content the HTML content wrapped in XML. For more information,
 	see the content example in the {@link #addArticle(long, long,
 	long, long, long, String, boolean, double, Map, Map, String,
@@ -3859,8 +3816,6 @@ public class JournalArticleLocalServiceWrapper
 	* @param images the web content's images (optionally <code>null</code>)
 	* @param articleURL the web content article's accessible URL (optionally
 	<code>null</code>)
-	* @param latestVersion whether the article references and structure fields
-	are validated or not, as it is needed for the latest version only
 	* @param serviceContext the service context to be applied. Can set the
 	modification date, expando bridge attributes, asset category IDs,
 	asset tag names, asset link entry IDs, asset priority, workflow
@@ -3878,6 +3833,7 @@ public class JournalArticleLocalServiceWrapper
 		double version,
 		java.util.Map<java.util.Locale, java.lang.String> titleMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
 		java.lang.String content, java.lang.String ddmStructureKey,
 		java.lang.String ddmTemplateKey, java.lang.String layoutUuid,
 		int displayDateMonth, int displayDateDay, int displayDateYear,
@@ -3889,19 +3845,65 @@ public class JournalArticleLocalServiceWrapper
 		boolean smallImage, java.lang.String smallImageURL,
 		java.io.File smallImageFile,
 		java.util.Map<java.lang.String, byte[]> images,
-		java.lang.String articleURL, boolean latestVersion,
+		java.lang.String articleURL,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalArticleLocalService.updateArticle(userId, groupId,
+			folderId, articleId, version, titleMap, descriptionMap,
+			friendlyURLMap, content, ddmStructureKey, ddmTemplateKey,
+			layoutUuid, displayDateMonth, displayDateDay, displayDateYear,
+			displayDateHour, displayDateMinute, expirationDateMonth,
+			expirationDateDay, expirationDateYear, expirationDateHour,
+			expirationDateMinute, neverExpire, reviewDateMonth, reviewDateDay,
+			reviewDateYear, reviewDateHour, reviewDateMinute, neverReview,
+			indexable, smallImage, smallImageURL, smallImageFile, images,
+			articleURL, serviceContext);
+	}
+
+	/**
+	* Updates the web content article matching the version, replacing its
+	* folder, title, description, content, and layout UUID.
+	*
+	* @param userId the primary key of the user updating the web content
+	article
+	* @param groupId the primary key of the web content article's group
+	* @param folderId the primary key of the web content article folder
+	* @param articleId the primary key of the web content article
+	* @param version the web content article's version
+	* @param titleMap the web content article's locales and localized titles
+	* @param descriptionMap the web content article's locales and localized
+	descriptions
+	* @param content the HTML content wrapped in XML. For more information,
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
+	* @param layoutUuid the unique string identifying the web content
+	article's display page
+	* @param serviceContext the service context to be applied. Can set the
+	modification date, expando bridge attributes, asset category IDs,
+	asset tag names, asset link entry IDs, asset priority, workflow
+	actions, URL title, and can set whether to add the default
+	command update for the web content article. With respect to
+	social activities, by setting the service context's command to
+	{@link Constants#UPDATE}, the invocation is considered a web
+	content update activity; otherwise it is considered a web content
+	add activity.
+	* @return the updated web content article
+	*/
+	@Override
+	public com.liferay.journal.model.JournalArticle updateArticle(long userId,
+		long groupId, long folderId, java.lang.String articleId,
+		double version,
+		java.util.Map<java.util.Locale, java.lang.String> titleMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.lang.String content, java.lang.String layoutUuid,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _journalArticleLocalService.updateArticle(userId, groupId,
 			folderId, articleId, version, titleMap, descriptionMap, content,
-			ddmStructureKey, ddmTemplateKey, layoutUuid, displayDateMonth,
-			displayDateDay, displayDateYear, displayDateHour,
-			displayDateMinute, expirationDateMonth, expirationDateDay,
-			expirationDateYear, expirationDateHour, expirationDateMinute,
-			neverExpire, reviewDateMonth, reviewDateDay, reviewDateYear,
-			reviewDateHour, reviewDateMinute, neverReview, indexable,
-			smallImage, smallImageURL, smallImageFile, images, articleURL,
-			latestVersion, serviceContext);
+			layoutUuid, serviceContext);
 	}
 
 	/**

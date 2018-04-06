@@ -14,7 +14,7 @@
 
 package com.liferay.source.formatter.checks;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.source.formatter.parser.JavaClass;
@@ -142,7 +142,7 @@ public abstract class BaseJavaTermCheck
 		}
 
 		for (JavaTerm javaTerm : javaClass.getChildJavaTerms()) {
-			if (javaTerm instanceof JavaClass) {
+			if (javaTerm.isJavaClass()) {
 				JavaClass childJavaClass = (JavaClass)javaTerm;
 
 				newJavaClassContent = _walkJavaClass(

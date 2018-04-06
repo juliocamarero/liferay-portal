@@ -25,7 +25,9 @@ String displayStyle = ParamUtil.getString(request, "displayStyle");
 List<ExportImportConfiguration> exportImportConfigurations = ExportImportConfigurationLocalServiceUtil.getExportImportConfigurations(liveGroupId, ExportImportConfigurationConstants.TYPE_EXPORT_LAYOUT);
 %>
 
-<liferay-frontend:add-menu>
+<liferay-frontend:add-menu
+	inline="<%= true %>"
+>
 
 	<%
 	for (ExportImportConfiguration exportImportConfiguration : exportImportConfigurations) {
@@ -42,7 +44,10 @@ List<ExportImportConfiguration> exportImportConfigurations = ExportImportConfigu
 			<portlet:param name="displayStyle" value="<%= displayStyle %>" />
 		</portlet:renderURL>
 
-		<liferay-frontend:add-menu-item title="<%= exportImportConfiguration.getName() %>" url="<%= addNewExportProcessURL %>" />
+		<liferay-frontend:add-menu-item
+			title="<%= exportImportConfiguration.getName() %>"
+			url="<%= addNewExportProcessURL %>"
+		/>
 
 	<%
 	}
@@ -57,5 +62,8 @@ List<ExportImportConfiguration> exportImportConfigurations = ExportImportConfigu
 		<portlet:param name="displayStyle" value="<%= displayStyle %>" />
 	</liferay-portlet:renderURL>
 
-	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "custom-export") %>' url="<%= addNewCustomExportProcessURL %>" />
+	<liferay-frontend:add-menu-item
+		title='<%= LanguageUtil.get(request, "custom-export") %>'
+		url="<%= addNewCustomExportProcessURL %>"
+	/>
 </liferay-frontend:add-menu>

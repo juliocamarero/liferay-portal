@@ -87,7 +87,9 @@ public class MailEngine {
 		if (_log.isDebugEnabled()) {
 			session.setDebug(true);
 
-			session.getProperties().list(System.out);
+			Properties sessionProperties = session.getProperties();
+
+			sessionProperties.list(System.out);
 		}
 
 		return session;
@@ -110,7 +112,9 @@ public class MailEngine {
 		if (_log.isDebugEnabled()) {
 			session.setDebug(true);
 
-			session.getProperties().list(System.out);
+			Properties properties = session.getProperties();
+
+			properties.list(System.out);
 		}
 
 		return session;
@@ -314,9 +318,7 @@ public class MailEngine {
 					messageMultipart.addBodyPart(bodyPart);
 				}
 
-				for (int i = 0; i < fileAttachments.size(); i++) {
-					FileAttachment fileAttachment = fileAttachments.get(i);
-
+				for (FileAttachment fileAttachment : fileAttachments) {
 					File file = fileAttachment.getFile();
 
 					if (file == null) {

@@ -76,6 +76,11 @@ public class BuildServiceTask extends JavaExec {
 	}
 
 	@Input
+	public int getDatabaseNameMaxLength() {
+		return _databaseNameMaxLength;
+	}
+
+	@Input
 	public File getHbmFile() {
 		return GradleUtil.toFile(getProject(), _hbmFile);
 	}
@@ -168,6 +173,18 @@ public class BuildServiceTask extends JavaExec {
 	}
 
 	@Input
+	@Optional
+	public File getUADDir() {
+		return GradleUtil.toFile(getProject(), _uadDir);
+	}
+
+	@Input
+	@Optional
+	public File getUADTestIntegrationDir() {
+		return GradleUtil.toFile(getProject(), _uadTestIntegrationDir);
+	}
+
+	@Input
 	public boolean isAutoImportDefaultReferences() {
 		return _autoImportDefaultReferences;
 	}
@@ -249,6 +266,10 @@ public class BuildServiceTask extends JavaExec {
 
 	public void setBuildNumberIncrement(boolean buildNumberIncrement) {
 		_buildNumberIncrement = buildNumberIncrement;
+	}
+
+	public void setDatabaseNameMaxLength(int databaseNameMaxLength) {
+		_databaseNameMaxLength = databaseNameMaxLength;
 	}
 
 	public void setHbmFile(Object hbmFile) {
@@ -353,6 +374,14 @@ public class BuildServiceTask extends JavaExec {
 		_testDir = testDir;
 	}
 
+	public void setUADDir(Object uadDir) {
+		_uadDir = uadDir;
+	}
+
+	public void setUADTestIntegrationDir(Object uadTestIntegrationDir) {
+		_uadTestIntegrationDir = uadTestIntegrationDir;
+	}
+
 	public BuildServiceTask springNamespaces(
 		Iterable<Object> springNamespaces) {
 
@@ -376,6 +405,8 @@ public class BuildServiceTask extends JavaExec {
 		args.add("service.bean.locator.util=" + getBeanLocatorUtil());
 		args.add("service.build.number.increment=" + isBuildNumberIncrement());
 		args.add("service.build.number=" + getBuildNumber());
+		args.add(
+			"service.database.name.max.length=" + getDatabaseNameMaxLength());
 		args.add("service.hbm.file=" + _relativize(getHbmFile()));
 		args.add("service.impl.dir=" + _relativize(getImplDir()));
 		args.add("service.input.file=" + _relativize(getInputFile()));
@@ -415,6 +446,20 @@ public class BuildServiceTask extends JavaExec {
 
 		if (testDir != null) {
 			args.add("service.test.dir=" + _relativize(testDir));
+		}
+
+		File uadDir = getUADDir();
+
+		if (uadDir != null) {
+			args.add("service.uad.dir=" + _relativize(uadDir));
+		}
+
+		File uadTestIntegrationDir = getUADTestIntegrationDir();
+
+		if (uadTestIntegrationDir != null) {
+			args.add(
+				"service.uad.test.integration.dir=" +
+					_relativize(uadTestIntegrationDir));
 		}
 
 		return args;
@@ -462,6 +507,7 @@ public class BuildServiceTask extends JavaExec {
 		"com.liferay.util.bean.PortletBeanLocatorUtil";
 	private long _buildNumber = 1;
 	private boolean _buildNumberIncrement = true;
+	private int _databaseNameMaxLength = 30;
 	private Object _hbmFile;
 	private Object _implDir;
 	private Object _inputFile;
@@ -481,5 +527,7 @@ public class BuildServiceTask extends JavaExec {
 	private Object _sqlSequencesFileName = "sequences.sql";
 	private Object _targetEntityName;
 	private Object _testDir;
+	private Object _uadDir;
+	private Object _uadTestIntegrationDir;
 
 }

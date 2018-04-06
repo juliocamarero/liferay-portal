@@ -34,6 +34,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -102,6 +103,10 @@ public class NpmInstallTask extends ExecuteNpmTask {
 		return GradleUtil.toFile(getProject(), _nodeModulesCacheDir);
 	}
 
+	public File getNodeModulesDigestFile() {
+		return GradleUtil.toFile(getProject(), _nodeModulesDigestFile);
+	}
+
 	public File getNodeModulesDir() {
 		Project project = getProject();
 
@@ -130,6 +135,10 @@ public class NpmInstallTask extends ExecuteNpmTask {
 		return GradleUtil.toBoolean(_removeShrinkwrappedUrls);
 	}
 
+	public boolean isUseNpmCI() {
+		return GradleUtil.toBoolean(_useNpmCI);
+	}
+
 	public void setNodeModulesCacheDir(Object nodeModulesCacheDir) {
 		_nodeModulesCacheDir = nodeModulesCacheDir;
 	}
@@ -140,8 +149,16 @@ public class NpmInstallTask extends ExecuteNpmTask {
 		_nodeModulesCacheNativeSync = nodeModulesCacheNativeSync;
 	}
 
+	public void setNodeModulesDigestFile(Object nodeModulesDigestFile) {
+		_nodeModulesDigestFile = nodeModulesDigestFile;
+	}
+
 	public void setRemoveShrinkwrappedUrls(Object removeShrinkwrappedUrls) {
 		_removeShrinkwrappedUrls = removeShrinkwrappedUrls;
+	}
+
+	public void setUseNpmCI(Object useNpmCI) {
+		_useNpmCI = useNpmCI;
 	}
 
 	protected void executeNpmInstall(boolean reset) throws Exception {
@@ -178,7 +195,12 @@ public class NpmInstallTask extends ExecuteNpmTask {
 					logger.info("Cache for {} is disabled", this);
 				}
 
-				_npmInstall(reset);
+				if (_isCheckDigest()) {
+					_npmInstallCheckDigest(reset);
+				}
+				else {
+					_npmInstall(reset);
+				}
 			}
 		}
 		finally {
@@ -194,7 +216,12 @@ public class NpmInstallTask extends ExecuteNpmTask {
 	protected List<String> getCompleteArgs() {
 		List<String> completeArgs = super.getCompleteArgs();
 
-		completeArgs.add("install");
+		if (isUseNpmCI()) {
+			completeArgs.add("ci");
+		}
+		else {
+			completeArgs.add("install");
+		}
 
 		return completeArgs;
 	}
@@ -223,10 +250,15 @@ public class NpmInstallTask extends ExecuteNpmTask {
 					(Map<String, Object>)jsonSlurper.parse(
 						packageJsonPath.toFile());
 
-				Map<String, String> binJsonMap =
-					(Map<String, String>)packageJsonMap.get("bin");
+				Object binObject = packageJsonMap.get("bin");
 
-				if ((binJsonMap == null) || binJsonMap.isEmpty()) {
+				if (!(binObject instanceof Map<?, ?>)) {
+					continue;
+				}
+
+				Map<String, String> binJsonMap = (Map<String, String>)binObject;
+
+				if (binJsonMap.isEmpty()) {
 					continue;
 				}
 
@@ -404,6 +436,21 @@ public class NpmInstallTask extends ExecuteNpmTask {
 		return false;
 	}
 
+	private boolean _isCheckDigest() {
+		Project project = getProject();
+
+		PluginContainer pluginContainer = project.getPlugins();
+
+		if (!pluginContainer.hasPlugin("com.liferay.cache") &&
+			(getNodeModulesCacheDir() == null) &&
+			(getNodeModulesDigestFile() != null)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private void _npmInstall(boolean reset) throws Exception {
 		Logger logger = getLogger();
 		int npmInstallRetries = getNpmInstallRetries();
@@ -430,6 +477,33 @@ public class NpmInstallTask extends ExecuteNpmTask {
 				}
 			}
 		}
+	}
+
+	private void _npmInstallCheckDigest(boolean reset) throws Exception {
+		String digest = _getNodeModulesCacheDigest(this);
+
+		byte[] digestBytes = digest.getBytes(StandardCharsets.UTF_8);
+
+		File nodeModulesDigestFile = getNodeModulesDigestFile();
+
+		Path nodeModulesDigestPath = nodeModulesDigestFile.toPath();
+
+		if (!reset && Files.exists(nodeModulesDigestPath)) {
+			byte[] bytes = Files.readAllBytes(nodeModulesDigestPath);
+
+			if (Arrays.equals(bytes, digestBytes)) {
+				return;
+			}
+
+			reset = true;
+		}
+		else {
+			reset = true;
+		}
+
+		_npmInstall(reset);
+
+		Files.write(nodeModulesDigestPath, digestBytes);
 	}
 
 	private void _removeShrinkwrappedUrls() throws IOException {
@@ -460,6 +534,8 @@ public class NpmInstallTask extends ExecuteNpmTask {
 
 	private Object _nodeModulesCacheDir;
 	private boolean _nodeModulesCacheNativeSync = true;
+	private Object _nodeModulesDigestFile;
 	private Object _removeShrinkwrappedUrls;
+	private Object _useNpmCI;
 
 }

@@ -513,6 +513,7 @@
 		<exception>ArticleContent</exception>
 		<exception>ArticleDisplayDate</exception>
 		<exception>ArticleExpirationDate</exception>
+		<exception>ArticleFriendlyURL</exception>
 		<exception>ArticleId</exception>
 		<exception>ArticleReviewDate</exception>
 		<exception>ArticleSmallImageName</exception>

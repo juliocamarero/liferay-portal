@@ -10,22 +10,54 @@
 <tbody>
 <tr>
 	<td>HTML_EDITOR</td>
-	<td>//div[@class='fragment-editor']/div[@class='source-editor'][1]//textarea</td>
+	<td>//div[contains(@class,'fragment-editor')]/div[contains(@class,'source-editor')][1]//textarea</td>
 	<td></td>
 </tr>
 <tr>
 	<td>CSS_EDITOR</td>
-	<td>//div[@class='fragment-editor']/div[@class='source-editor'][2]//textarea</td>
+	<td>//div[contains(@class,'fragment-editor')]/div[contains(@class,'source-editor')][2]//textarea</td>
 	<td></td>
 </tr>
 <tr>
 	<td>JAVASCRIPT_EDITOR</td>
-	<td>//div[@class='fragment-editor']/div[@class='source-editor'][3]//textarea</td>
+	<td>//div[contains(@class,'fragment-editor')]/div[contains(@class,'source-editor')][3]//textarea</td>
+	<td></td>
+</tr>
+<!--FRAGMENT_SIDEBAR-->
+<tr>
+	<td>FRAGMENT_SIDEBAR_COLLECTION_PANEL</td>
+	<td>//div[contains(@class,'sidebar-body')]//a[contains(@href,'fragment-collection')][normalize-space()='${key_collectionName}']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>FRAGMENT_PREVIEW_IFRAME</td>
-	<td>//iframe[@class='fragment-preview__frame']</td>
+	<td>FRAGMENT_SIDEBAR_COLLECTION_PANEL_COLLAPSED</td>
+	<td>//div[contains(@class,'sidebar-body')]//a[contains(@href,'fragment-collection')][contains(@class,'collapsed')][normalize-space()='${key_collectionName}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FRAGMENT_SIDEBAR_COLLECTION_PANEL_EXPANDED</td>
+	<td>//div[contains(@class,'sidebar-body')]//a[contains(@href,'fragment-collection')][@aria-expanded='true'][normalize-space()='${key_collectionName}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FRAGMENT_SIDEBAR_FRAGMENT</td>
+	<td>//ul[contains(@class,'nav')]//div[contains(@id,'fragment-collection')]//button[@data-fragment-entry-name='${key_fragmentName}']</td>
+	<td></td>
+</tr>
+<!--PAGE_TEMPLATE-->
+<tr>
+	<td>PAGE_TEMPLATE_AUTOSAVE_MESSAGE</td>
+	<td>//div[contains(@class,'management-bar')]//span[@class='navbar-text']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PAGE_TEMPLATE_FRAGMENT_HEADER</td>
+	<td>//div[@class='container'][normalize-space()='${key_fragmentName}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PAGE_TEMPLATE_FRAGMENT_DELETE_BUTTON</td>
+	<td>//div[@class='container'][normalize-space()='${key_fragmentName}']//button</td>
 	<td></td>
 </tr>
 </tbody>

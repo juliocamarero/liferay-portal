@@ -19,6 +19,7 @@ import com.ecyrd.jspwiki.WikiException;
 import com.ecyrd.jspwiki.WikiPage;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.log.Log;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.language.LanguageResources;
@@ -301,7 +301,7 @@ public class JSPWikiEngine extends BaseWikiEngine {
 	}
 
 	private static String _encodeJSPWikiContent(String content) {
-		StringBundler encodedContent = new StringBundler();
+		StringBundler sb = new StringBundler();
 
 		Matcher commentMatcher = _wikiCommentPattern.matcher(content);
 
@@ -315,9 +315,9 @@ public class JSPWikiEngine extends BaseWikiEngine {
 
 			Matcher wikiLinkMatcher = _wikiLinkPattern.matcher(oldContent);
 
-			encodedContent.append(_encodeLink(oldContent, wikiLinkMatcher));
+			sb.append(_encodeLink(oldContent, wikiLinkMatcher));
 
-			encodedContent.append(
+			sb.append(
 				content.substring(
 					commentMatcher.start(), commentMatcher.end()));
 
@@ -329,10 +329,10 @@ public class JSPWikiEngine extends BaseWikiEngine {
 
 			Matcher wikiLinkMatcher = _wikiLinkPattern.matcher(content);
 
-			encodedContent.append(_encodeLink(content, wikiLinkMatcher));
+			sb.append(_encodeLink(content, wikiLinkMatcher));
 		}
 
-		return encodedContent.toString();
+		return sb.toString();
 	}
 
 	private static String _encodeJSPWikiName(String name) {

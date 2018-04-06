@@ -1059,6 +1059,10 @@ public class PropsValues {
 
 	public static final String[] MINIFIER_INLINE_CONTENT_CACHE_SKIP_JAVASCRIPT = PropsUtil.getArray(PropsKeys.MINIFIER_INLINE_CONTENT_CACHE_SKIP_JAVASCRIPT);
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement, as minifiers have been extracted as OSGi components
+	 */
+	@Deprecated
 	public static final String MINIFIER_JAVASCRIPT_IMPL = GetterUtil.getString(PropsUtil.get(PropsKeys.MINIFIER_JAVASCRIPT_IMPL));
 
 	public static final boolean MOBILE_DEVICE_RULES_PUBLISH_TO_LIVE_BY_DEFAULT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.MOBILE_DEVICE_RULES_PUBLISH_TO_LIVE_BY_DEFAULT));
@@ -1205,6 +1209,11 @@ public class PropsValues {
 
 	public static final boolean ORGANIZATIONS_SEARCH_WITH_INDEX = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.ORGANIZATIONS_SEARCH_WITH_INDEX));
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             OrganizationLocalService#getOrganizationTypes()}
+	 */
+	@Deprecated
 	public static String[] ORGANIZATIONS_TYPES = PropsUtil.getArray(PropsKeys.ORGANIZATIONS_TYPES);
 
 	public static final boolean PASSWORDS_DEFAULT_POLICY_ALLOW_DICTIONARY_WORDS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.PASSWORDS_DEFAULT_POLICY_ALLOW_DICTIONARY_WORDS));
@@ -1875,15 +1884,37 @@ public class PropsValues {
 
 	public static final int YUI_COMPRESSOR_CSS_LINE_BREAK = GetterUtil.getInteger(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_CSS_LINE_BREAK));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement, as minifiers have been extracted as OSGi components
+	 */
+	@Deprecated
 	public static final boolean YUI_COMPRESSOR_JS_DISABLE_OPTIMIZATIONS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_JS_DISABLE_OPTIMIZATIONS));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement, as minifiers have been extracted as OSGi components
+	 */
+	@Deprecated
 	public static final int YUI_COMPRESSOR_JS_LINE_BREAK = GetterUtil.getInteger(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_JS_LINE_BREAK));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement, as minifiers have been extracted as OSGi components
+	 */
+	@Deprecated
 	public static final boolean YUI_COMPRESSOR_JS_MUNGE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_JS_MUNGE));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement, as minifiers have been extracted as OSGi components
+	 */
+	@Deprecated
 	public static final boolean YUI_COMPRESSOR_JS_PRESERVE_ALL_SEMICOLONS = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_JS_PRESERVE_ALL_SEMICOLONS));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement, as minifiers have been extracted as OSGi components
+	 */
+	@Deprecated
 	public static final boolean YUI_COMPRESSOR_JS_VERBOSE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.YUI_COMPRESSOR_JS_VERBOSE));
+
+	public static final String ZIP_FILE_NAME_ENCODING = GetterUtil.getString(PropsUtil.get(PropsKeys.ZIP_FILE_NAME_ENCODING));
 
 	static {
 		if (!LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED) {

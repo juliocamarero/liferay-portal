@@ -169,7 +169,9 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 
 										<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="hidden" value="<%= true %>" />
 
-										<liferay-util:buffer var="badgeHTML">
+										<liferay-util:buffer
+											var="badgeHTML"
+										>
 											<span class="badge badge-info"><%= importModelCount > 0 ? importModelCount : StringPool.BLANK %></span>
 											<span class="badge badge-warning deletions"><%= modelDeletionCount > 0 ? (modelDeletionCount + StringPool.SPACE + LanguageUtil.get(request, "deletions")) : StringPool.BLANK %></span>
 										</liferay-util:buffer>
@@ -284,10 +286,17 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 						</ul>
 					</aui:fieldset>
 
-					<liferay-staging:deletions cmd="<%= Constants.IMPORT %>" />
+					<liferay-staging:deletions
+						cmd="<%= Constants.IMPORT %>"
+					/>
 				</c:if>
 
-				<liferay-staging:permissions action="<%= Constants.IMPORT %>" descriptionCSSClass="permissions-description" global="<%= group.isCompany() %>" labelCSSClass="permissions-label" />
+				<liferay-staging:permissions
+					action="<%= Constants.IMPORT %>"
+					descriptionCSSClass="permissions-description"
+					global="<%= group.isCompany() %>"
+					labelCSSClass="permissions-label"
+				/>
 
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" cssClass="options-group" label="update-data">
 
@@ -298,7 +307,7 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 					<aui:input checked="<%= true %>" data-name='<%= LanguageUtil.get(request, "mirror") %>' id="mirror" label="<%= taglibMirrorLabel %>" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR %>" />
 
 					<%
-					String taglibMirrorWithOverwritingLabel = LanguageUtil.get(request, "mirror-with-overwriting") + ": <span style='font-weight: normal'>" + LanguageUtil.get(request, (portletDataHandler.isSupportsDataStrategyMirrorWithOverwriting() ? "import-data-strategy-mirror-with-overwriting-help" : "not-supported")) + "</span>";
+					String taglibMirrorWithOverwritingLabel = LanguageUtil.get(request, "mirror-with-overwriting") + ": <span style='font-weight: normal'>" + LanguageUtil.get(request, (portletDataHandler.isSupportsDataStrategyMirrorWithOverwriting() ? "import-data-strategy-mirror-with-overwriting-help" : "import-data-strategy-mirror-with-overwriting-is-not-available-help")) + "</span>";
 					%>
 
 					<aui:input data-name='<%= LanguageUtil.get(request, "mirror-with-overwriting") %>' disabled="<%= !portletDataHandler.isSupportsDataStrategyMirrorWithOverwriting() %>" id="mirrorWithOverwriting" label="<%= taglibMirrorWithOverwritingLabel %>" name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR_OVERWRITE %>" />
@@ -336,9 +345,9 @@ ManifestSummary manifestSummary = ExportImportHelperUtil.getManifestSummary(them
 			<portlet:param name="portletResource" value="<%= String.valueOf(portletResource) %>" />
 		</portlet:renderURL>
 
-		<aui:button cssClass="btn-lg" href="<%= backURL %>" name="back" value="back" />
+		<aui:button href="<%= backURL %>" name="back" value="back" />
 
-		<aui:button cssClass="btn-lg" type="submit" value="import" />
+		<aui:button type="submit" value="import" />
 	</aui:button-row>
 </aui:form>
 

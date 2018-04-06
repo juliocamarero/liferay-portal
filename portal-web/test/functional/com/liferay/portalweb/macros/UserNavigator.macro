@@ -1,0 +1,74 @@
+<definition>
+	<command name="gotoDisplaySettings">
+		<execute macro="UserNavigator#gotoPreferences" />
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Display Settings" />
+		</execute>
+	</command>
+
+	<command name="gotoGeneral">
+		<if>
+			<condition function="IsElementNotPresent" locator1="NavUnderline#ACTIVE_NAV_UNDERLINE_LINK" />
+			<then>
+				<execute macro="Navigator#gotoNavUnderline">
+					<var name="navUnderline" value="General" />
+				</execute>
+			</then>
+		</if>
+	</command>
+
+	<command name="gotoMemberships">
+		<execute macro="UserNavigator#gotoGeneral" />
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Memberships" />
+		</execute>
+	</command>
+
+	<command name="gotoOrganizations">
+		<execute macro="UserNavigator#gotoGeneral" />
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Organizations" />
+		</execute>
+	</command>
+
+	<command name="gotoPassword">
+		<execute macro="UserNavigator#gotoGeneral" />
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Password" />
+		</execute>
+	</command>
+
+	<command name="gotoPreferences">
+		<execute macro="Navigator#gotoNavUnderline">
+			<var name="navUnderline" value="Preferences" />
+		</execute>
+	</command>
+
+	<command name="gotoProfileAndPrivateArea">
+		<execute macro="UserNavigator#gotoGeneral" />
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Profile and Private Area" />
+		</execute>
+	</command>
+
+	<command name="gotoRoles">
+		<execute macro="UserNavigator#gotoGeneral" />
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Roles" />
+		</execute>
+	</command>
+
+	<command name="gotoUser">
+		<var name="key_userScreenName" value="${userScreenName}" />
+
+		<execute function="AssertClick" locator1="UsersAndOrganizations#USER_TABLE_SCREEN_NAME" value1="${userScreenName}" />
+
+		<execute function="Pause" locator1="1000" />
+	</command>
+</definition>

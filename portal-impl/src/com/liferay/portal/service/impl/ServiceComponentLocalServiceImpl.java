@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBContext;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -132,8 +132,9 @@ public class ServiceComponentLocalServiceImpl
 			throw new SystemException(e);
 		}
 
-		ServiceComponent serviceComponent = null;
+		long previousBuildNumber = 0;
 		ServiceComponent previousServiceComponent = null;
+		ServiceComponent serviceComponent = null;
 
 		List<ServiceComponent> serviceComponents =
 			serviceComponentPersistence.findByBuildNamespace(
@@ -152,7 +153,9 @@ public class ServiceComponentLocalServiceImpl
 		else {
 			serviceComponent = serviceComponents.get(0);
 
-			if (serviceComponent.getBuildNumber() < buildNumber) {
+			previousBuildNumber = serviceComponent.getBuildNumber();
+
+			if (previousBuildNumber < buildNumber) {
 				previousServiceComponent = serviceComponent;
 
 				long serviceComponentId = counterLocalService.increment();
@@ -164,12 +167,12 @@ public class ServiceComponentLocalServiceImpl
 				serviceComponent.setBuildNumber(buildNumber);
 				serviceComponent.setBuildDate(buildDate);
 			}
-			else if (serviceComponent.getBuildNumber() > buildNumber) {
+			else if (previousBuildNumber > buildNumber) {
 				throw new OldServiceComponentException(
 					StringBundler.concat(
 						"Build namespace ", buildNamespace,
 						" has build number ",
-						String.valueOf(serviceComponent.getBuildNumber()),
+						String.valueOf(previousBuildNumber),
 						" which is newer than ", String.valueOf(buildNumber)));
 			}
 			else {
@@ -209,24 +212,6 @@ public class ServiceComponentLocalServiceImpl
 			serviceComponent.setData(dataXML);
 
 			serviceComponentPersistence.update(serviceComponent);
-
-			Release release = releaseLocalService.fetchRelease(
-				serviceComponentConfiguration.getServletContextName());
-
-			int previousBuildNumber = 0;
-
-			if (release == null) {
-				release = releaseLocalService.addRelease(
-					serviceComponentConfiguration.getServletContextName(),
-					(int)buildNumber);
-			}
-			else {
-				previousBuildNumber = release.getBuildNumber();
-
-				release.setBuildNumber((int)buildNumber);
-
-				releaseLocalService.updateRelease(release);
-			}
 
 			if (((serviceComponentConfiguration instanceof
 					ServletServiceContextComponentConfiguration) &&
@@ -530,9 +515,7 @@ public class ServiceComponentLocalServiceImpl
 				buildNamespace, _SERVICE_COMPONENTS_MAX,
 				serviceComponentsCount);
 
-		for (int i = 0; i < serviceComponents.size(); i++) {
-			ServiceComponent serviceComponent = serviceComponents.get(i);
-
+		for (ServiceComponent serviceComponent : serviceComponents) {
 			serviceComponentPersistence.remove(serviceComponent);
 		}
 	}
@@ -621,7 +604,7 @@ public class ServiceComponentLocalServiceImpl
 		}
 		else if (PropsValues.SCHEMA_MODULE_BUILD_AUTO_UPGRADE) {
 			if (_log.isWarnEnabled()) {
-				StringBundler sb = new StringBundler(6);
+				StringBundler sb = new StringBundler(7);
 
 				sb.append("Auto upgrading ");
 				sb.append(buildNamespace);

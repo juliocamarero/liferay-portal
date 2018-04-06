@@ -96,6 +96,16 @@ PortalUtil.addPortletBreadcrumbEntry(request, passwordPolicy.getName(), null);
 			orderColumns="<%= orderColumns %>"
 			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
+
+		<c:if test='<%= passwordPolicyDisplayContext.hasAssignMembersPermission() && tabs1.equals("assignees") %>'>
+			<li>
+				<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+					<liferay-ui:input-search
+						markupView="lexicon"
+					/>
+				</aui:form>
+			</li>
+		</c:if>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-buttons>
@@ -104,6 +114,16 @@ PortalUtil.addPortletBreadcrumbEntry(request, passwordPolicy.getName(), null);
 			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<liferay-frontend:add-menu
+			inline="<%= true %>"
+		>
+			<liferay-frontend:add-menu-item
+				id="addAssignees"
+				title='<%= LanguageUtil.get(request, "add-assignees") %>'
+				url="javascript:;"
+			/>
+		</liferay-frontend:add-menu>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-action-buttons>
@@ -119,7 +139,11 @@ PortalUtil.addPortletBreadcrumbEntry(request, passwordPolicy.getName(), null);
 		}
 		%>
 
-		<liferay-frontend:management-bar-button href="<%= taglibURL %>" icon="trash" label="delete" />
+		<liferay-frontend:management-bar-button
+			href="<%= taglibURL %>"
+			icon="trash"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -132,7 +156,12 @@ PortalUtil.addPortletBreadcrumbEntry(request, passwordPolicy.getName(), null);
 	<aui:input name="passwordPolicyId" type="hidden" value="<%= String.valueOf(passwordPolicy.getPasswordPolicyId()) %>" />
 
 	<div id="breadcrumb">
-		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+		<liferay-ui:breadcrumb
+			showCurrentGroup="<%= false %>"
+			showGuestGroup="<%= false %>"
+			showLayout="<%= false %>"
+			showPortletBreadcrumb="<%= true %>"
+		/>
 	</div>
 
 	<c:choose>
@@ -161,7 +190,10 @@ PortalUtil.addPortletBreadcrumbEntry(request, passwordPolicy.getName(), null);
 
 				<%@ include file="/user_search_columns.jspf" %>
 
-				<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="<%= displayStyle %>"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</c:when>
 		<c:when test='<%= tabs2.equals("organizations") %>'>
@@ -189,15 +221,14 @@ PortalUtil.addPortletBreadcrumbEntry(request, passwordPolicy.getName(), null);
 
 				<%@ include file="/organization_search_columns.jspf" %>
 
-				<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="<%= displayStyle %>"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</c:when>
 	</c:choose>
 </aui:form>
-
-<liferay-frontend:add-menu>
-	<liferay-frontend:add-menu-item id="addAssignees" title='<%= LanguageUtil.get(request, "add-assignees") %>' url="javascript:;" />
-</liferay-frontend:add-menu>
 
 <aui:script use="liferay-item-selector-dialog">
 	var Util = Liferay.Util;

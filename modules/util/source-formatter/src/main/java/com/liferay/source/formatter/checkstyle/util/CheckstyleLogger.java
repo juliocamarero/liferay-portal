@@ -18,6 +18,7 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.SourceFormatterMessage;
+import com.liferay.source.formatter.util.CheckType;
 
 import com.puppycrawl.tools.checkstyle.DefaultLogger;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
@@ -48,27 +49,26 @@ public class CheckstyleLogger extends DefaultLogger {
 
 	@Override
 	public void addError(AuditEvent auditEvent) {
-		_sourceFormatterMessages.add(
-			new SourceFormatterMessage(
-				_getRelativizedFileName(auditEvent), auditEvent.getMessage(),
-				auditEvent.getLine()));
-
-		super.addError(auditEvent);
+		addError(auditEvent, getRelativizedFileName(auditEvent));
 	}
 
 	public Set<SourceFormatterMessage> getSourceFormatterMessages() {
 		return _sourceFormatterMessages;
 	}
 
-	private Path _getAbsoluteNormalizedPath(String pathName) {
-		Path path = Paths.get(pathName);
+	protected void addError(AuditEvent auditEvent, String fileName) {
+		String checkName = CheckstyleUtil.getCheckName(
+			auditEvent.getSourceName());
 
-		path = path.toAbsolutePath();
+		_sourceFormatterMessages.add(
+			new SourceFormatterMessage(
+				fileName, auditEvent.getMessage(), CheckType.CHECKSTYLE,
+				checkName, null, auditEvent.getLine()));
 
-		return path.normalize();
+		super.addError(auditEvent);
 	}
 
-	private String _getRelativizedFileName(AuditEvent auditEvent) {
+	protected String getRelativizedFileName(AuditEvent auditEvent) {
 		if (Validator.isNull(_baseDirName)) {
 			return auditEvent.getFileName();
 		}
@@ -82,6 +82,14 @@ public class CheckstyleLogger extends DefaultLogger {
 			StringUtil.replace(
 				relativizedPath.toString(), CharPool.BACK_SLASH,
 				CharPool.SLASH);
+	}
+
+	private Path _getAbsoluteNormalizedPath(String pathName) {
+		Path path = Paths.get(pathName);
+
+		path = path.toAbsolutePath();
+
+		return path.normalize();
 	}
 
 	private static final Set<SourceFormatterMessage> _sourceFormatterMessages =

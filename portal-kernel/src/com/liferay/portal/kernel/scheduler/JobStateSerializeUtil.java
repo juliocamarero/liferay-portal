@@ -47,15 +47,13 @@ public class JobStateSerializeUtil {
 	}
 
 	public static Map<String, Object> serialize(JobState jobState) {
-		switch (JobState.VERSION) {
-			case 1:
-				return _serialize_1(jobState);
-
-			default:
-				throw new IllegalStateException(
-					"Unable to serialize field for job state with version " +
-						JobState.VERSION);
+		if (JobState.VERSION == 1) {
+			return _serialize_1(jobState);
 		}
+
+		throw new IllegalStateException(
+			"Unable to serialize field for job state with version " +
+				JobState.VERSION);
 	}
 
 	private static JobState _deserialize_1(Map<String, Object> jobStateMap) {
@@ -122,8 +120,11 @@ public class JobStateSerializeUtil {
 		jobStateMap.put(
 			_EXCEPTIONS_MAX_SIZE_FIELD, jobState.getExceptionsMaxSize());
 		jobStateMap.put(_TRIGGER_DATES_FIELD, jobState.getTriggerDates());
-		jobStateMap.put(
-			_TRIGGER_STATE_FIELD, jobState.getTriggerState().toString());
+
+		TriggerState triggerState = jobState.getTriggerState();
+
+		jobStateMap.put(_TRIGGER_STATE_FIELD, triggerState.toString());
+
 		jobStateMap.put(_VERSION_FIELD, JobState.VERSION);
 
 		return jobStateMap;

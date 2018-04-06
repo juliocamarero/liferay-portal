@@ -318,14 +318,13 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#viewCP">
-			<var name="mbAttachmentFile" value="Recently Removed Attachment" />
-			<var name="postsNumber" value="1" />
+			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Body Edit" />
 			<var name="threadSubject" value="MB Subject" />
 			<var name="userName" value="Test Test" />
 		</execute>
 
-		<execute macro="ProductMenuHelper#closeProductMenu" />
+		<execute macro="PortletEntry#clickEditFromEllipsis" />
 
 		<execute macro="MessageboardsThread#restoreMBAttachmentCP">
 			<var name="mbAttachmentFile" value="Document_1.doc" />
@@ -343,7 +342,7 @@
 
 		<execute macro="MessageboardsThread#viewCP">
 			<var name="mbAttachmentFile" value="Document_1.doc" />
-			<var name="postsNumber" value="1" />
+			<var name="replyCount" value="1" />
 			<var name="threadBody" value="MB Body Edit" />
 			<var name="threadSubject" value="MB Subject" />
 			<var name="userName" value="Test Test" />
@@ -391,7 +390,7 @@
 		<execute macro="RecycleBin#viewCP">
 			<var name="assetName" value="Blogs Entry Title" />
 			<var name="assetType" value="Blogs Entry" />
-			<var name="customMaxAgeMsg" value="Entries that have been in the Recycle Bin for more than 1 minute are automatically deleted." />
+			<var name="customMaxAge" value="1 minute" />
 			<var name="deleteUser" value="Test Test" />
 		</execute>
 
@@ -472,8 +471,8 @@
 			<var name="portlet" value="Recycle Bin" />
 		</execute>
 
-		<execute macro="RecycleBin#searchCP">
-			<var name="assetName" value="1" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="1" />
 		</execute>
 
 		<execute macro="RecycleBin#viewCP">
@@ -492,8 +491,8 @@
 			<var name="portlet" value="Recycle Bin" />
 		</execute>
 
-		<execute macro="RecycleBin#searchCP">
-			<var name="assetName" value="2" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="2" />
 		</execute>
 
 		<execute macro="RecycleBin#viewCP">
@@ -512,8 +511,8 @@
 			<var name="portlet" value="Recycle Bin" />
 		</execute>
 
-		<execute macro="RecycleBin#searchCP">
-			<var name="assetName" value="3" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="3" />
 		</execute>
 
 		<execute macro="RecycleBin#viewCP">
@@ -604,8 +603,8 @@
 			<var name="portlet" value="Recycle Bin" />
 		</execute>
 
-		<execute macro="RecycleBin#searchCP">
-			<var name="assetName" value="1" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="1" />
 		</execute>
 
 		<execute macro="RecycleBin#viewCP">
@@ -624,8 +623,8 @@
 			<var name="portlet" value="Recycle Bin" />
 		</execute>
 
-		<execute macro="RecycleBin#searchCP">
-			<var name="assetName" value="2" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="2" />
 		</execute>
 
 		<execute macro="RecycleBin#viewCP">
@@ -753,7 +752,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -780,7 +781,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -792,7 +795,7 @@
 			<var name="templateFieldNames" value="Text" />
 		</execute>
 
-		<execute macro="WebContentTemplates#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#openSiteURL">
 			<var name="siteName" value="Site Name" />
@@ -881,7 +884,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1274,13 +1279,13 @@
 
 		<execute macro="MessageboardsCategory#viewCP">
 			<var name="categoryName" value="MB Category Name" />
-			<var name="postsNumber" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="subcategoriesNumber" value="0" />
 			<var name="threadsNumber" value="1" />
 		</execute>
 
 		<execute macro="MessageboardsThread#viewCP">
-			<var name="postsNumber" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="threadBody" value="MB Body" />
 			<var name="threadSubject" value="MB Subject" />
 			<var name="userName" value="Test Test" />

@@ -30,12 +30,12 @@
 </tr>
 <tr>
 	<td>DRAFT_AUTO_SAVE</td>
-	<td>//div/small[contains(@id,'saveStatus') and contains(.,'Draft saved at')]</td>
+	<td>//div/small[contains(@id,'saveStatus') and contains(.,'Draft Saved at')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>EMPTY_INFO</td>
-	<td>//div[contains(@class,'empty-result-message')]</td>
+	<td>//div[@class='sheet']/div[contains(@class,'sheet-text')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@
 </tr>
 <tr>
 	<td>INFO_4</td>
-	<td>xpath=(//div[contains(@class,'alert-info') and contains(@class,'alert-warning')]/a)[1]</td>
+	<td>xpath=(//div[contains(@class,'alert-info')]/a)[1]</td>
 	<td></td>
 </tr>
 <tr>

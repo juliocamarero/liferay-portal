@@ -14,6 +14,7 @@
 
 package com.liferay.portlet;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
@@ -186,6 +187,16 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 
 		if (StringUtil.equalsIgnoreCase(
 				key, MimeResponse.MARKUP_HEAD_ELEMENT)) {
+
+			if (StringUtil.equalsIgnoreCase(element.getNodeName(), "script") &&
+				!element.hasChildNodes()) {
+
+				// LPS-77798
+
+				element = (Element)element.cloneNode(true);
+
+				element.appendChild(_document.createTextNode(StringPool.SPACE));
+			}
 
 			List<Element> values = _markupHeadElements.get(key);
 
@@ -583,7 +594,9 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 
 		String portletURLClass = portlet.getPortletURLClass();
 
-		if (portlet.getPortletId().equals(portletName) &&
+		String portletId = portlet.getPortletId();
+
+		if (portletId.equals(portletName) &&
 			Validator.isNotNull(portletURLClass)) {
 
 			if (portletURLClass.equals(

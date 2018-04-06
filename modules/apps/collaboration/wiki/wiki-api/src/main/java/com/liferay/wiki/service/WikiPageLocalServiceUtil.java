@@ -16,7 +16,8 @@ package com.liferay.wiki.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -427,6 +428,17 @@ public class WikiPageLocalServiceUtil {
 		return getService().getDependentPages(nodeId, head, title, status);
 	}
 
+	public static com.liferay.wiki.model.WikiPageDisplay getDisplay(
+		long nodeId, java.lang.String title,
+		javax.portlet.PortletURL viewPageURL,
+		java.util.function.Supplier<javax.portlet.PortletURL> editPageURLSupplier,
+		java.lang.String attachmentURLPrefix)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getDisplay(nodeId, title, viewPageURL, editPageURLSupplier,
+			attachmentURLPrefix);
+	}
+
 	public static com.liferay.wiki.model.WikiPage getDraftPage(long nodeId,
 		java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -471,6 +483,12 @@ public class WikiPageLocalServiceUtil {
 
 	public static java.util.List<com.liferay.wiki.model.WikiPage> getNoAssetPages() {
 		return getService().getNoAssetPages();
+	}
+
+	public static java.util.List<com.liferay.wiki.model.WikiPage> getOrphans(
+		java.util.List<com.liferay.wiki.model.WikiPage> pages)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getOrphans(pages);
 	}
 
 	public static java.util.List<com.liferay.wiki.model.WikiPage> getOrphans(
@@ -993,6 +1011,17 @@ public class WikiPageLocalServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<WikiPageLocalService, WikiPageLocalService> _serviceTracker =
-		ServiceTrackerFactory.open(WikiPageLocalService.class);
+	private static ServiceTracker<WikiPageLocalService, WikiPageLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(WikiPageLocalService.class);
+
+		ServiceTracker<WikiPageLocalService, WikiPageLocalService> serviceTracker =
+			new ServiceTracker<WikiPageLocalService, WikiPageLocalService>(bundle.getBundleContext(),
+				WikiPageLocalService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

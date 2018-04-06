@@ -19,8 +19,8 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMTemplateTestUtil;
+import com.liferay.exportimport.kernel.lar.PortletDataHandler;
 import com.liferay.journal.constants.JournalPortletKeys;
-import com.liferay.journal.exportimport.data.handler.JournalPortletDataHandler;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalFolderLocalServiceUtil;
@@ -33,14 +33,13 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.lar.test.BasePortletDataHandlerTestCase;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.LayoutTestUtil;
 
@@ -59,16 +58,13 @@ import org.junit.runner.RunWith;
  * @author Zsolt Berentey
  */
 @RunWith(Arquillian.class)
-@Sync
 public class JournalPortletDataHandlerTest
 	extends BasePortletDataHandlerTestCase {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	@Override
@@ -143,14 +139,11 @@ public class JournalPortletDataHandlerTest
 
 	@Override
 	protected void addParameters(Map<String, String[]> parameterMap) {
-		addBooleanParameter(
-			parameterMap, JournalPortletDataHandler.NAMESPACE, "feeds", true);
-		addBooleanParameter(
-			parameterMap, JournalPortletDataHandler.NAMESPACE, "structures",
-			true);
-		addBooleanParameter(
-			parameterMap, JournalPortletDataHandler.NAMESPACE, "web-content",
-			true);
+		String namespace = _journalPortletDataHandler.getNamespace();
+
+		addBooleanParameter(parameterMap, namespace, "feeds", true);
+		addBooleanParameter(parameterMap, namespace, "structures", true);
+		addBooleanParameter(parameterMap, namespace, "web-content", true);
 	}
 
 	@Override
@@ -190,6 +183,9 @@ public class JournalPortletDataHandlerTest
 	protected String getPortletId() {
 		return JournalPortletKeys.JOURNAL;
 	}
+
+	@Inject(filter = "javax.portlet.name=" + JournalPortletKeys.JOURNAL)
+	private PortletDataHandler _journalPortletDataHandler;
 
 	private String _originalPortalPreferencesXML;
 

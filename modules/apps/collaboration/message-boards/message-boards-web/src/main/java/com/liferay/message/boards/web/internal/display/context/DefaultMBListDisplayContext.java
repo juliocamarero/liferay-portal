@@ -14,13 +14,18 @@
 
 package com.liferay.message.boards.web.internal.display.context;
 
+import com.liferay.message.boards.constants.MBPortletKeys;
 import com.liferay.message.boards.display.context.MBListDisplayContext;
-import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.service.MBCategoryServiceUtil;
-import com.liferay.message.boards.kernel.service.MBThreadServiceUtil;
+import com.liferay.message.boards.model.MBMessage;
+import com.liferay.message.boards.model.MBThread;
+import com.liferay.message.boards.service.MBCategoryServiceUtil;
+import com.liferay.message.boards.service.MBThreadServiceUtil;
+import com.liferay.message.boards.settings.MBGroupServiceSettings;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
@@ -35,10 +40,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portlet.messageboards.MBGroupServiceSettings;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,6 +62,28 @@ public class DefaultMBListDisplayContext implements MBListDisplayContext {
 		_request = request;
 
 		_categoryId = categoryId;
+	}
+
+	@Override
+	public int getCategoryEntriesDelta() {
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(_request);
+
+		return GetterUtil.getInteger(
+			portalPreferences.getValue(
+				MBPortletKeys.MESSAGE_BOARDS, "categoryEntriesDelta"),
+			SearchContainer.DEFAULT_DELTA);
+	}
+
+	@Override
+	public int getThreadEntriesDelta() {
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(_request);
+
+		return GetterUtil.getInteger(
+			portalPreferences.getValue(
+				MBPortletKeys.MESSAGE_BOARDS, "threadEntriesDelta"),
+			SearchContainer.DEFAULT_DELTA);
 	}
 
 	@Override
@@ -114,7 +141,53 @@ public class DefaultMBListDisplayContext implements MBListDisplayContext {
 	}
 
 	@Override
+	public void populateCategoriesResultsAndTotal(
+			SearchContainer searchContainer)
+		throws PortalException {
+
+		if (isShowSearch()) {
+			return;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		int status = WorkflowConstants.STATUS_APPROVED;
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		if (permissionChecker.isContentReviewer(
+				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId())) {
+
+			status = WorkflowConstants.STATUS_ANY;
+		}
+
+		QueryDefinition<?> queryDefinition = new QueryDefinition<>(
+			status, themeDisplay.getUserId(), true, searchContainer.getStart(),
+			searchContainer.getEnd(), null);
+
+		searchContainer.setTotal(
+			MBCategoryServiceUtil.getCategoriesCount(
+				themeDisplay.getScopeGroupId(), _categoryId, queryDefinition));
+		searchContainer.setResults(
+			MBCategoryServiceUtil.getCategories(
+				themeDisplay.getScopeGroupId(), _categoryId, queryDefinition));
+	}
+
+	/**
+	 * @deprecated As of 2.0.0, with no direct replacement
+	 */
+	@Deprecated
+	@Override
 	public void populateResultsAndTotal(SearchContainer searchContainer)
+		throws PortalException {
+
+		populateThreadsResultsAndTotal(searchContainer);
+	}
+
+	@Override
+	public void populateThreadsResultsAndTotal(SearchContainer searchContainer)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
@@ -177,36 +250,45 @@ public class DefaultMBListDisplayContext implements MBListDisplayContext {
 
 			calendar.add(Calendar.DATE, -offset);
 
+			boolean includeAnonymous = false;
+
+			if (groupThreadsUserId == themeDisplay.getUserId()) {
+				includeAnonymous = true;
+			}
+
 			searchContainer.setTotal(
 				MBThreadServiceUtil.getGroupThreadsCount(
 					themeDisplay.getScopeGroupId(), groupThreadsUserId,
-					calendar.getTime(), WorkflowConstants.STATUS_APPROVED));
+					calendar.getTime(), includeAnonymous,
+					WorkflowConstants.STATUS_APPROVED));
 			searchContainer.setResults(
 				MBThreadServiceUtil.getGroupThreads(
 					themeDisplay.getScopeGroupId(), groupThreadsUserId,
-					calendar.getTime(), WorkflowConstants.STATUS_APPROVED,
+					calendar.getTime(), includeAnonymous,
+					WorkflowConstants.STATUS_APPROVED,
 					searchContainer.getStart(), searchContainer.getEnd()));
 		}
 		else if (isShowMyPosts()) {
-			long groupThreadsUserId = ParamUtil.getLong(
-				_request, "groupThreadsUserId");
+			searchContainer.setEmptyResultsMessage("you-do-not-have-any-posts");
 
-			if (themeDisplay.isSignedIn()) {
-				groupThreadsUserId = themeDisplay.getUserId();
+			if (!themeDisplay.isSignedIn()) {
+				searchContainer.setTotal(0);
+				searchContainer.setResults(Collections.emptyList());
+
+				return;
 			}
 
 			int status = WorkflowConstants.STATUS_ANY;
 
 			searchContainer.setTotal(
 				MBThreadServiceUtil.getGroupThreadsCount(
-					themeDisplay.getScopeGroupId(), groupThreadsUserId,
+					themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
 					status));
 			searchContainer.setResults(
 				MBThreadServiceUtil.getGroupThreads(
-					themeDisplay.getScopeGroupId(), groupThreadsUserId, status,
-					searchContainer.getStart(), searchContainer.getEnd()));
-
-			searchContainer.setEmptyResultsMessage("you-do-not-have-any-posts");
+					themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
+					status, searchContainer.getStart(),
+					searchContainer.getEnd()));
 		}
 		else {
 			int status = WorkflowConstants.STATUS_APPROVED;
@@ -221,19 +303,49 @@ public class DefaultMBListDisplayContext implements MBListDisplayContext {
 				status = WorkflowConstants.STATUS_ANY;
 			}
 
-			QueryDefinition<?> queryDefinition = new QueryDefinition<>(
+			QueryDefinition<MBThread> queryDefinition = new QueryDefinition<>(
 				status, themeDisplay.getUserId(), true,
 				searchContainer.getStart(), searchContainer.getEnd(),
 				searchContainer.getOrderByComparator());
 
 			searchContainer.setTotal(
-				MBCategoryServiceUtil.getCategoriesAndThreadsCount(
+				MBThreadServiceUtil.getThreadsCount(
 					themeDisplay.getScopeGroupId(), _categoryId,
 					queryDefinition));
 			searchContainer.setResults(
-				MBCategoryServiceUtil.getCategoriesAndThreads(
+				MBThreadServiceUtil.getThreads(
 					themeDisplay.getScopeGroupId(), _categoryId,
 					queryDefinition));
+		}
+	}
+
+	@Override
+	public void setCategoryEntriesDelta(SearchContainer searchContainer) {
+		int categoryEntriesDelta = ParamUtil.getInteger(
+			_request, searchContainer.getDeltaParam());
+
+		if (categoryEntriesDelta > 0) {
+			PortalPreferences portalPreferences =
+				PortletPreferencesFactoryUtil.getPortalPreferences(_request);
+
+			portalPreferences.setValue(
+				MBPortletKeys.MESSAGE_BOARDS, "categoryEntriesDelta",
+				String.valueOf(categoryEntriesDelta));
+		}
+	}
+
+	@Override
+	public void setThreadEntriesDelta(SearchContainer searchContainer) {
+		int threadEntriesDelta = ParamUtil.getInteger(
+			_request, searchContainer.getDeltaParam());
+
+		if (threadEntriesDelta > 0) {
+			PortalPreferences portalPreferences =
+				PortletPreferencesFactoryUtil.getPortalPreferences(_request);
+
+			portalPreferences.setValue(
+				MBPortletKeys.MESSAGE_BOARDS, "threadEntriesDelta",
+				String.valueOf(threadEntriesDelta));
 		}
 	}
 

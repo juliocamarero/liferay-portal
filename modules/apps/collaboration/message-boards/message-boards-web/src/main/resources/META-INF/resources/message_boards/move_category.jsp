@@ -39,11 +39,7 @@ if (portletTitleBasedNavigation) {
 
 <div <%= portletTitleBasedNavigation ? "class=\"container-fluid-1280\"" : StringPool.BLANK %>>
 	<c:if test="<%= !portletTitleBasedNavigation %>">
-		<liferay-ui:header
-			backURL="<%= redirect %>"
-			localizeTitle="<%= (category == null) %>"
-			title='<%= LanguageUtil.format(request, "move-x", category.getName(), false) %>'
-		/>
+		<h3><%= LanguageUtil.format(request, "move-x", category.getName(), false) %></h3>
 	</c:if>
 
 	<portlet:actionURL name="/message_boards/move_category" var="moveCategoryURL" />
@@ -87,9 +83,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" value="move" />
+			<aui:button type="submit" value="move" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

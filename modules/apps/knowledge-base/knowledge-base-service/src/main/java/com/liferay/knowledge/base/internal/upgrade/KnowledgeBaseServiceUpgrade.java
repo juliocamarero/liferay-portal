@@ -14,7 +14,9 @@
 
 package com.liferay.knowledge.base.internal.upgrade;
 
+import com.liferay.knowledge.base.internal.upgrade.v2_0_2.UpgradeKBArticle;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
+import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 
 import org.osgi.service.component.annotations.Component;
@@ -113,11 +115,27 @@ public class KnowledgeBaseServiceUpgrade implements UpgradeStepRegistrator {
 				UpgradeKBComment(),
 			new com.liferay.knowledge.base.internal.upgrade.v2_0_0.
 				UpgradeRepository());
+
+		registry.register(
+			"com.liferay.knowledge.base.service", "2.0.0", "2.0.1",
+			new com.liferay.knowledge.base.internal.upgrade.v2_0_1.
+				UpgradePortletSettings(_settingsFactory));
+
+		registry.register(
+			"com.liferay.knowledge.base.service", "2.0.1", "2.0.2",
+			new UpgradeKBArticle());
 	}
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
+
+	@Reference(unbind = "-")
+	protected void setSettingsFactory(SettingsFactory settingsFactory) {
+		_settingsFactory = settingsFactory;
+	}
+
+	private SettingsFactory _settingsFactory;
 
 }

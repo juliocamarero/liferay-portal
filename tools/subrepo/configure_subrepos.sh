@@ -115,10 +115,10 @@ fi
 #
 
 SUBREPO_SEARCH_PARAMETERS=(
-	"7.0.x:../..:modules/apps"
-	"7.0.x-private:../../../liferay-portal-ee:modules/private/apps"
-	"master-private:../../../liferay-portal-ee:modules/private/apps"
-	"master:../..:modules/apps"
+	"7.0.x:../..:modules"
+	"7.0.x-private:../../../liferay-portal-ee:modules/private"
+	"master-private:../../../liferay-portal-ee:modules/private"
+	"master:../..:modules"
 )
 
 if [[ "${SUBREPO_NAME}" ]]
@@ -198,7 +198,7 @@ do
 	GITREPO_PATH="${GITREPO##*:}"
 	REPO_PATH="$(echo "${GITREPO}" | sed 's/:[^:]*$//' | sed 's/.*://')"
 
-	if [[ "${GITREPO_PATH}" == modules/apps/* ]] && [[ -z "$(echo "${GITREPOS[@]}" | grep "modules/private/apps.*/$(echo "${GITREPO_PATH}" | sed 's@.*/\([^/]*/\.gitrepo$\)$@\1@')")" ]]
+	if [[ "${GITREPO_PATH}" == modules/* ]] && [[ -z "$(echo "${GITREPOS[@]}" | grep "modules/private.*/$(echo "${GITREPO_PATH}" | sed 's@.*/\([^/]*/\.gitrepo$\)$@\1@')")" ]]
 	then
 		GITREPOS=("${GITREPOS[@]}" "${GITREPO}-private")
 	fi
@@ -211,10 +211,15 @@ for GITREPO in "${GITREPOS[@]}"
 do
 	BRANCH_NAME="${GITREPO%%:*}"
 	GITREPO_PATH="${GITREPO##*:}"
+	PRIVATE_MIRROR=false
 	REPO_PATH="$(echo "${GITREPO}" | sed 's/:[^:]*$//' | sed 's/.*://')"
 
-	PRIVATE_CREATE_PARAMETERS=
-	PRIVATE_MIRROR=false
+	if [[ "${BRANCH_NAME}" == *-private ]]
+	then
+		PRIVATE_CREATE_PARAMETERS=",\"private\": \"true\""
+	else
+		PRIVATE_CREATE_PARAMETERS=
+	fi
 
 	if [[ "${GITREPO_PATH}" == */.gitrepo-private ]]
 	then

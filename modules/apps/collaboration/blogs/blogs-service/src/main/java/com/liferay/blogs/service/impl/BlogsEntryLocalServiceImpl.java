@@ -27,18 +27,17 @@ import com.liferay.blogs.exception.EntryUrlTitleException;
 import com.liferay.blogs.exception.NoSuchEntryException;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.base.BlogsEntryLocalServiceBaseImpl;
-import com.liferay.blogs.service.permission.BlogsPermission;
 import com.liferay.blogs.settings.BlogsGroupServiceSettings;
 import com.liferay.blogs.social.BlogsActivityKeys;
-import com.liferay.blogs.util.BlogsEntryAttachmentFileEntryUtil;
-import com.liferay.blogs.util.BlogsUtil;
 import com.liferay.blogs.util.comparator.EntryDisplayDateComparator;
 import com.liferay.blogs.util.comparator.EntryIdComparator;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.friendly.url.model.FriendlyURLEntry;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
-import com.liferay.portal.kernel.comment.CommentManagerUtil;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -73,6 +72,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.GroupSubscriptionCheckSubscriptionSender;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -83,10 +83,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 import com.liferay.portal.kernel.util.Time;
@@ -107,6 +105,7 @@ import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.service.TrashEntryLocalService;
+import com.liferay.upload.UniqueFileNameProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,6 +139,25 @@ import net.htmlparser.jericho.StartTag;
  * @author Zsolt Berentey
  */
 public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
+
+	@Override
+	public FileEntry addAttachmentFileEntry(
+			BlogsEntry blogsEntry, long userId, String fileName,
+			String mimeType, InputStream is)
+		throws PortalException {
+
+		Folder folder = addAttachmentsFolder(userId, blogsEntry.getGroupId());
+
+		String uniqueFileName = uniqueFileNameProvider.provide(
+			fileName,
+			curFileName -> _attachmentExists(
+				blogsEntry.getGroupId(), folder.getFolderId(), curFileName));
+
+		return PortletFileRepositoryUtil.addPortletFileEntry(
+			blogsEntry.getGroupId(), userId, BlogsEntry.class.getName(),
+			blogsEntry.getEntryId(), BlogsConstants.SERVICE_NAME,
+			folder.getFolderId(), is, uniqueFileName, mimeType, true);
+	}
 
 	@Override
 	public Folder addAttachmentsFolder(long userId, long groupId)
@@ -512,10 +530,13 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		Folder folder = addAttachmentsFolder(userId, groupId);
 
 		FileEntry originalFileEntry =
-			BlogsEntryAttachmentFileEntryUtil.addBlogsEntryAttachmentFileEntry(
-				groupId, userId, entryId, folder.getFolderId(),
-				imageSelector.getImageTitle(), imageSelector.getImageMimeType(),
-				imageBytes);
+			PortletFileRepositoryUtil.addPortletFileEntry(
+				groupId, userId, BlogsEntry.class.getName(), entryId,
+				BlogsConstants.SERVICE_NAME, folder.getFolderId(), imageBytes,
+				_getUniqueFileName(
+					groupId, imageSelector.getImageTitle(),
+					folder.getFolderId()),
+				imageSelector.getImageMimeType(), true);
 
 		return originalFileEntry.getFileEntryId();
 	}
@@ -1545,7 +1566,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 			if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
 				if (PropsValues.BLOGS_ENTRY_COMMENTS_ENABLED) {
-					CommentManagerUtil.restoreDiscussionFromTrash(
+					commentManager.restoreDiscussionFromTrash(
 						BlogsEntry.class.getName(), entryId);
 				}
 
@@ -1601,7 +1622,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 			if (status == WorkflowConstants.STATUS_IN_TRASH) {
 				if (PropsValues.BLOGS_ENTRY_COMMENTS_ENABLED) {
-					CommentManagerUtil.moveDiscussionToTrash(
+					commentManager.moveDiscussionToTrash(
 						BlogsEntry.class.getName(), entryId);
 				}
 
@@ -1612,7 +1633,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 			}
 			else if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
 				if (PropsValues.BLOGS_ENTRY_COMMENTS_ENABLED) {
-					CommentManagerUtil.restoreDiscussionFromTrash(
+					commentManager.restoreDiscussionFromTrash(
 						BlogsEntry.class.getName(), entryId);
 				}
 
@@ -1672,7 +1693,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		throws PortalException {
 
 		if (PropsValues.BLOGS_ENTRY_COMMENTS_ENABLED) {
-			CommentManagerUtil.addDiscussion(
+			commentManager.addDiscussion(
 				userId, groupId, BlogsEntry.class.getName(), entry.getEntryId(),
 				entry.getUserName());
 		}
@@ -1688,8 +1709,10 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		}
 
 		FileEntry processedImageFileEntry =
-			BlogsEntryAttachmentFileEntryUtil.addBlogsEntryAttachmentFileEntry(
-				groupId, userId, entryId, folderId, title, mimeType, bytes);
+			PortletFileRepositoryUtil.addPortletFileEntry(
+				groupId, userId, BlogsEntry.class.getName(), entryId,
+				BlogsConstants.SERVICE_NAME, folderId, bytes,
+				_getUniqueFileName(groupId, title, folderId), mimeType, true);
 
 		return processedImageFileEntry.getFileEntryId();
 	}
@@ -1738,7 +1761,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 	}
 
 	protected void deleteDiscussion(BlogsEntry entry) throws PortalException {
-		CommentManagerUtil.deleteDiscussion(
+		commentManager.deleteDiscussion(
 			BlogsEntry.class.getName(), entry.getEntryId());
 	}
 
@@ -1852,8 +1875,16 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		String entryURL = (String)workflowContext.get(
 			WorkflowConstants.CONTEXT_URL);
 
-		if (!entry.isApproved() || Validator.isNull(entryURL)) {
+		if (!entry.isApproved()) {
 			return;
+		}
+
+		if (Validator.isNull(entryURL)) {
+			String layoutFullURL = serviceContext.getLayoutFullURL();
+
+			entryURL = StringBundler.concat(
+				layoutFullURL, Portal.FRIENDLY_URL_SEPARATOR, "blogs",
+				StringPool.SLASH, String.valueOf(entry.getEntryId()));
 		}
 
 		BlogsGroupServiceSettings blogsGroupServiceSettings =
@@ -1897,7 +1928,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 		SubscriptionSender subscriptionSender =
 			new GroupSubscriptionCheckSubscriptionSender(
-				BlogsPermission.RESOURCE_NAME);
+				BlogsConstants.RESOURCE_NAME);
 
 		subscriptionSender.setClassPK(entry.getEntryId());
 		subscriptionSender.setClassName(entry.getModelClassName());
@@ -1906,10 +1937,23 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 			"[$BLOGS_ENTRY_CONTENT$]",
 			StringUtil.shorten(HtmlUtil.stripHtml(entry.getContent()), 500),
 			false);
+
+		String description = entry.getDescription();
+
+		if (Validator.isNotNull(description)) {
+			subscriptionSender.setContextAttribute(
+				"[$BLOGS_ENTRY_DESCRIPTION$]", description, false);
+		}
+		else {
+			subscriptionSender.setContextAttribute(
+				"[$BLOGS_ENTRY_DESCRIPTION$]",
+				StringUtil.shorten(HtmlUtil.stripHtml(entry.getContent()), 400),
+				false);
+		}
+
 		subscriptionSender.setContextAttributes(
 			"[$BLOGS_ENTRY_CREATE_DATE$]",
 			Time.getSimpleDate(entry.getCreateDate(), "yyyy/MM/dd"),
-			"[$BLOGS_ENTRY_DESCRIPTION$]", entry.getDescription(),
 			"[$BLOGS_ENTRY_STATUS_BY_USER_NAME$]", entry.getStatusByUserName(),
 			"[$BLOGS_ENTRY_TITLE$]", entryTitle,
 			"[$BLOGS_ENTRY_UPDATE_COMMENT$]",
@@ -2299,6 +2343,9 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 	@ServiceReference(type = ClassNameLocalService.class)
 	protected ClassNameLocalService classNameLocalService;
 
+	@ServiceReference(type = CommentManager.class)
+	protected CommentManager commentManager;
+
 	@ServiceReference(type = FriendlyURLEntryLocalService.class)
 	protected FriendlyURLEntryLocalService friendlyURLEntryLocalService;
 
@@ -2308,8 +2355,48 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 	@ServiceReference(type = TrashEntryLocalService.class)
 	protected TrashEntryLocalService trashEntryLocalService;
 
+	@ServiceReference(type = UniqueFileNameProvider.class)
+	protected UniqueFileNameProvider uniqueFileNameProvider;
+
 	@ServiceReference(type = UnsubscribeHelper.class)
 	protected UnsubscribeHelper unsubscribeHelper;
+
+	private boolean _attachmentExists(
+		long groupId, long folderId, String fileName) {
+
+		try {
+			if (PortletFileRepositoryUtil.getPortletFileEntry(
+					groupId, folderId, fileName) != null) {
+
+				return true;
+			}
+
+			return false;
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+
+			return false;
+		}
+	}
+
+	private FileEntry _fetchPortletFileEntry(
+		long groupId, String fileName, long folderId) {
+
+		try {
+			return PortletFileRepositoryUtil.getPortletFileEntry(
+				groupId, folderId, fileName);
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+
+			return null;
+		}
+	}
 
 	private String _getGroupDescriptiveName(Group group, Locale locale) {
 		try {
@@ -2325,6 +2412,40 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		return StringPool.BLANK;
 	}
 
+	private String _getUniqueFileName(
+			long groupId, String fileName, long folderId)
+		throws PortalException {
+
+		fileName = FileUtil.stripParentheticalSuffix(fileName);
+
+		FileEntry fileEntry = _fetchPortletFileEntry(
+			groupId, fileName, folderId);
+
+		if (fileEntry == null) {
+			return fileName;
+		}
+
+		int suffix = 1;
+
+		for (int i = 0; i < _UNIQUE_FILE_NAME_TRIES; i++) {
+			String curFileName = FileUtil.appendParentheticalSuffix(
+				fileName, String.valueOf(suffix));
+
+			fileEntry = _fetchPortletFileEntry(groupId, curFileName, folderId);
+
+			if (fileEntry == null) {
+				return curFileName;
+			}
+
+			suffix++;
+		}
+
+		throw new PortalException(
+			StringBundler.concat(
+				"Unable to get a unique file name for ", fileName,
+				" in folder ", String.valueOf(folderId)));
+	}
+
 	private String _getUniqueUrlTitle(BlogsEntry entry) throws PortalException {
 		return _getUniqueUrlTitle(entry, entry.getTitle());
 	}
@@ -2332,7 +2453,30 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 	private String _getUniqueUrlTitle(BlogsEntry entry, String newTitle)
 		throws PortalException {
 
-		String urlTitle = BlogsUtil.getUrlTitle(entry.getEntryId(), newTitle);
+		long entryId = entry.getEntryId();
+
+		String urlTitle = null;
+
+		if (newTitle == null) {
+			urlTitle = String.valueOf(entryId);
+		}
+		else {
+			urlTitle = StringUtil.toLowerCase(newTitle.trim());
+
+			if (Validator.isNull(urlTitle) || Validator.isNumber(urlTitle) ||
+				urlTitle.equals("rss")) {
+
+				urlTitle = String.valueOf(entryId);
+			}
+			else {
+				urlTitle =
+					FriendlyURLNormalizerUtil.normalizeWithPeriodsAndSlashes(
+						urlTitle);
+			}
+
+			urlTitle = ModelHintsUtil.trimString(
+				BlogsEntry.class.getName(), "urlTitle", urlTitle);
+		}
 
 		long classNameId = classNameLocalService.getClassNameId(
 			BlogsEntry.class);
@@ -2354,6 +2498,8 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 	private static final String _COVER_IMAGE_FOLDER_NAME = "Cover Image";
 
 	private static final String _SMALL_IMAGE_FOLDER_NAME = "Small Image";
+
+	private static final int _UNIQUE_FILE_NAME_TRIES = 50;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BlogsEntryLocalServiceImpl.class);

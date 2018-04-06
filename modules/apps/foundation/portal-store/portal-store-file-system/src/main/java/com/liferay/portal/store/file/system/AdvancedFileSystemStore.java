@@ -19,12 +19,12 @@ import com.liferay.document.library.kernel.exception.NoSuchFileException;
 import com.liferay.document.library.kernel.store.Store;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.convert.documentlibrary.FileSystemStoreRootDirException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.store.file.system.configuration.AdvancedFileSystemStoreConfiguration;
@@ -309,9 +309,7 @@ public class AdvancedFileSystemStore extends FileSystemStore {
 
 		String headVersionLabel = VERSION_DEFAULT;
 
-		for (int i = 0; i < versionLabels.length; i++) {
-			String versionLabelFragment = versionLabels[i];
-
+		for (String versionLabelFragment : versionLabels) {
 			int x = versionLabelFragment.lastIndexOf(CharPool.UNDERLINE);
 			int y = versionLabelFragment.lastIndexOf(CharPool.PERIOD);
 

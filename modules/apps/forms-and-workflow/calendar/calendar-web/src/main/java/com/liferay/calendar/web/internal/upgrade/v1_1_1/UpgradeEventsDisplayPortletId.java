@@ -28,14 +28,14 @@ import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.model.ResourcePermission;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
+import com.liferay.portal.kernel.upgrade.BaseUpgradePortletId;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * @author Marcellus Tavares
  */
-public class UpgradeEventsDisplayPortletId
-	extends com.liferay.portal.kernel.upgrade.BaseUpgradePortletId {
+public class UpgradeEventsDisplayPortletId extends BaseUpgradePortletId {
 
 	public UpgradeEventsDisplayPortletId(
 		PortletPreferencesLocalService portletPreferencesLocalService,
@@ -211,22 +211,22 @@ public class UpgradeEventsDisplayPortletId
 
 		portletPreferences.setPortletId(newPortletId);
 
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(12);
 
 		sb.append("<portlet-preferences>");
-		sb.append(String.format(_preferenceFormat, "defaultView", "agenda"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "defaultView", "agenda"));
 		sb.append(
 			String.format(
-				_preferenceFormat, "displaySchedulerHeader", "false"));
+				_PREFERENCE_FORMAT, "displaySchedulerHeader", "false"));
 		sb.append(
-			String.format(_preferenceFormat, "displaySchedulerOnly", "true"));
-		sb.append(String.format(_preferenceFormat, "eventsPerPage", "10"));
-		sb.append(String.format(_preferenceFormat, "maxDaysDisplayed", "1"));
-		sb.append(String.format(_preferenceFormat, "showAgendaView", "true"));
-		sb.append(String.format(_preferenceFormat, "showDayView", "false"));
-		sb.append(String.format(_preferenceFormat, "showMonthView", "false"));
-		sb.append(String.format(_preferenceFormat, "showWeekView", "false"));
-		sb.append(String.format(_preferenceFormat, "showUserEvents", "false"));
+			String.format(_PREFERENCE_FORMAT, "displaySchedulerOnly", "true"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "eventsPerPage", "10"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "maxDaysDisplayed", "1"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "showAgendaView", "true"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "showDayView", "false"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "showMonthView", "false"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "showWeekView", "false"));
+		sb.append(String.format(_PREFERENCE_FORMAT, "showUserEvents", "false"));
 		sb.append("</portlet-preferences>");
 
 		portletPreferences.setPreferences(sb.toString());
@@ -247,11 +247,11 @@ public class UpgradeEventsDisplayPortletId
 			oldRootPortletId, newRootPortletId, updateName);
 	}
 
+	private static final String _PREFERENCE_FORMAT =
+		"<preference><name>%s</name><value>%s</value></preference>";
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradeEventsDisplayPortletId.class);
-
-	private static final String _preferenceFormat =
-		"<preference><name>%s</name><value>%s</value></preference>";
 
 	private final PortletPreferencesLocalService
 		_portletPreferencesLocalService;

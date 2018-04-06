@@ -14,6 +14,7 @@
 
 package com.liferay.document.library.web.internal.display.context;
 
+import com.liferay.document.library.display.context.DLAdminDisplayContext;
 import com.liferay.document.library.display.context.DLDisplayContextFactory;
 import com.liferay.document.library.display.context.DLEditFileEntryDisplayContext;
 import com.liferay.document.library.display.context.DLMimeTypeDisplayContext;
@@ -28,6 +29,8 @@ import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFacto
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -38,6 +41,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +61,15 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  */
 @Component(immediate = true, service = DLDisplayContextProvider.class)
 public class DLDisplayContextProvider {
+
+	public DLAdminDisplayContext getDLAdminDisplayContext(
+		LiferayPortletRequest liferayPortletRequest,
+		LiferayPortletResponse liferayPortletResponse,
+		PortletURL currentURLObj) {
+
+		return new DefaultDLAdminDisplayContext(
+			liferayPortletRequest, liferayPortletResponse, currentURLObj);
+	}
 
 	public DLEditFileEntryDisplayContext getDLEditFileEntryDisplayContext(
 		HttpServletRequest request, HttpServletResponse response,
@@ -107,8 +121,7 @@ public class DLDisplayContextProvider {
 			WebKeys.THEME_DISPLAY);
 
 		ResourceBundle resourceBundle =
-			_resourceBundleLoader.loadResourceBundle(
-				themeDisplay.getLanguageId());
+			_resourceBundleLoader.loadResourceBundle(themeDisplay.getLocale());
 
 		DLViewFileEntryHistoryDisplayContext
 			dlViewFileEntryHistoryDisplayContext =
@@ -131,10 +144,9 @@ public class DLDisplayContextProvider {
 		return dlViewFileEntryHistoryDisplayContext;
 	}
 
-	public DLViewFileVersionDisplayContext
-		getDLViewFileVersionDisplayContext(
-			HttpServletRequest request, HttpServletResponse response,
-			FileShortcut fileShortcut) {
+	public DLViewFileVersionDisplayContext getDLViewFileVersionDisplayContext(
+		HttpServletRequest request, HttpServletResponse response,
+		FileShortcut fileShortcut) {
 
 		try {
 			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
@@ -169,10 +181,9 @@ public class DLDisplayContextProvider {
 		}
 	}
 
-	public DLViewFileVersionDisplayContext
-		getDLViewFileVersionDisplayContext(
-			HttpServletRequest request, HttpServletResponse response,
-			FileVersion fileVersion) {
+	public DLViewFileVersionDisplayContext getDLViewFileVersionDisplayContext(
+		HttpServletRequest request, HttpServletResponse response,
+		FileVersion fileVersion) {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);

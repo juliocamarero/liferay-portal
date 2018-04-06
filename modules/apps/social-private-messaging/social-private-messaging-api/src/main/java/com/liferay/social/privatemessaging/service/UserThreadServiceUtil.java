@@ -16,7 +16,8 @@ package com.liferay.social.privatemessaging.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -41,7 +42,7 @@ public class UserThreadServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.social.privatemessaging.service.impl.UserThreadServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
-	public static com.liferay.message.boards.kernel.model.MBMessage getLastThreadMessage(
+	public static com.liferay.message.boards.model.MBMessage getLastThreadMessage(
 		long mbThreadId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getLastThreadMessage(mbThreadId);
@@ -56,7 +57,7 @@ public class UserThreadServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static java.util.List<com.liferay.message.boards.kernel.model.MBMessage> getThreadMessages(
+	public static java.util.List<com.liferay.message.boards.model.MBMessage> getThreadMessages(
 		long mbThreadId, int start, int end, boolean ascending)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getThreadMessages(mbThreadId, start, end, ascending);
@@ -77,6 +78,16 @@ public class UserThreadServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<UserThreadService, UserThreadService> _serviceTracker =
-		ServiceTrackerFactory.open(UserThreadService.class);
+	private static ServiceTracker<UserThreadService, UserThreadService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(UserThreadService.class);
+
+		ServiceTracker<UserThreadService, UserThreadService> serviceTracker = new ServiceTracker<UserThreadService, UserThreadService>(bundle.getBundleContext(),
+				UserThreadService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

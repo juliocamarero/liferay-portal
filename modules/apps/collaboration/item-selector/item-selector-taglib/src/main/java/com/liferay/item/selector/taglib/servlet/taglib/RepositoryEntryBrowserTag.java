@@ -115,6 +115,10 @@ public class RepositoryEntryBrowserTag extends IncludeTag {
 		_showDragAndDropZone = showDragAndDropZone;
 	}
 
+	public void setShowSearch(boolean showSearch) {
+		_showSearch = showSearch;
+	}
+
 	public void setTabName(String tabName) {
 		_tabName = tabName;
 	}
@@ -133,12 +137,14 @@ public class RepositoryEntryBrowserTag extends IncludeTag {
 		_dlMimeTypeDisplayContext = null;
 		_extensions = new ArrayList<>();
 		_itemSelectedEventName = null;
+		_itemSelectorReturnTypeResolver = null;
 		_maxFileSize = UploadServletRequestConfigurationHelperUtil.getMaxSize();
 		_portletURL = null;
 		_repositoryEntries = new ArrayList<>();
 		_repositoryEntriesCount = 0;
 		_showBreadcrumb = false;
 		_showDragAndDropZone = true;
+		_showSearch = true;
 		_tabName = null;
 		_uploadURL = null;
 	}
@@ -236,6 +242,9 @@ public class RepositoryEntryBrowserTag extends IncludeTag {
 				"showDragAndDropZone",
 			_isShownDragAndDropZone());
 		request.setAttribute(
+			"liferay-item-selector:repository-entry-browser:showSearch",
+			_showSearch);
+		request.setAttribute(
 			"liferay-item-selector:repository-entry-browser:tabName", _tabName);
 		request.setAttribute(
 			"liferay-item-selector:repository-entry-browser:uploadURL",
@@ -272,6 +281,7 @@ public class RepositoryEntryBrowserTag extends IncludeTag {
 	private int _repositoryEntriesCount;
 	private boolean _showBreadcrumb;
 	private boolean _showDragAndDropZone = true;
+	private boolean _showSearch = true;
 	private String _tabName;
 	private PortletURL _uploadURL;
 

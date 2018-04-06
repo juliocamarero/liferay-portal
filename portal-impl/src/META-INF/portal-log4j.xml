@@ -860,6 +860,10 @@
 		<priority value="INFO" />
 	</category>
 
+	<category name="com.liferay.portal.upload.UploadServletRequestImpl">
+		<priority value="WARN" />
+	</category>
+
 	<category name="com.liferay.portal.util">
 		<priority value="ERROR" />
 	</category>
@@ -998,18 +1002,6 @@
 
 	<category name="com.liferay.portlet.mail">
 		<priority value="WARN" />
-	</category>
-
-	<category name="com.liferay.portlet.messageboards.service.impl.MBCategoryLocalServiceImpl">
-		<priority value="ERROR" />
-	</category>
-
-	<category name="com.liferay.portlet.messageboards.service.impl.MBMessageLocalServiceImpl">
-		<priority value="ERROR" />
-	</category>
-
-	<category name="com.liferay.portlet.messageboards.util.MBUtil">
-		<priority value="ERROR" />
 	</category>
 
 	<category name="com.liferay.portlet.portletconfiguration.action">

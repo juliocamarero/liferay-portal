@@ -19,7 +19,7 @@
 		<execute macro="DDLDataDefinition#addCP" />
 
 		<execute macro="DynamicDataMapping#addFieldViaJSON">
-			<var name="sourceJSON" >
+			<var name="sourceJSON">
 <![CDATA[
 {
 	"availableLanguageIds": [
@@ -603,7 +603,7 @@
 
 		<execute macro="DDLDataDefinition#selectCP" />
 
-		<execute macro="DDLList#save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<execute macro="Navigator#openURL" />
 

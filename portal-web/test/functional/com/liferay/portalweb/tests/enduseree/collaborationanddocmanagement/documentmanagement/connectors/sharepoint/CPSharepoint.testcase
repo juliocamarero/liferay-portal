@@ -1,4 +1,4 @@
-<definition component-name="portal-document-management-ee">
+<definition component-name="portal-document-management-ee" ignore="true">
 	<property name="cmis.repository.type" value="sharepoint2010" />
 	<property name="custom.properties" value="session.store.password=true${line.separator}company.security.auth.type=screenName" />
 	<property name="osgi.app.includes" value="sharepoint" />
@@ -19,16 +19,24 @@
 			<var name="userScreenName" value="test" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="Account Settings" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="Account Settings" />
 		</execute>
 
 		<execute macro="User#editDetailsViaMyAccount">
 			<var name="userScreenNameEdit" value="administrator" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="Account Settings" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="Account Settings" />
 		</execute>
 
 		<execute macro="User#editPasswordViaMyAccount">
@@ -84,16 +92,24 @@
 
 				<execute macro="DMDocument#tearDownCP" />
 
-				<execute macro="Page#gotoMyAccount">
-					<var name="portletName" value="Account Settings" />
+				<execute macro="Navigator#openURL" />
+
+				<execute macro="ProductMenu#gotoPortlet">
+					<var name="category" value="My Account" />
+					<var name="panel" value="User" />
+					<var name="portlet" value="Account Settings" />
 				</execute>
 
 				<execute macro="User#editDetailsViaMyAccount">
 					<var name="userScreenNameEdit" value="test" />
 				</execute>
 
-				<execute macro="Page#gotoMyAccount">
-					<var name="portletName" value="Account Settings" />
+				<execute macro="Navigator#openURL" />
+
+				<execute macro="ProductMenu#gotoPortlet">
+					<var name="category" value="My Account" />
+					<var name="panel" value="User" />
+					<var name="portlet" value="Account Settings" />
 				</execute>
 
 				<execute macro="User#editPasswordViaMyAccount">
@@ -129,12 +145,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Collaboration" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="Documents and Media" />
 			<var name="configurationName" value="Sharepoint OAuth2" />
+			<var name="configurationScope" value="System Scope" />
 		</execute>
 
 		<execute function="Click" locator1="Button#ADD_ENTRY" />
@@ -269,7 +283,7 @@
 
 		<execute function="Pause" locator1="5000" />
 
-		<execute macro="DMDocument#viewCheckedoutCP" >
+		<execute macro="DMDocument#viewCheckedoutCP">
 			<var name="dmRepositoryName" value="true" />
 		</execute>
 
@@ -297,7 +311,7 @@
 			<var name="dmDocumentTitle" value="Document_3.txt" />
 		</execute>
 
-		<execute macro="DMDocument#viewCheckedinCP" >
+		<execute macro="DMDocument#viewCheckedinCP">
 			<var name="dmDocumentVersionNumber" value="2.0" />
 			<var name="dmRepositoryName" value="true" />
 		</execute>
@@ -551,7 +565,7 @@
 			<var name="dmDocumentTitle" value="Document_1.txt" />
 		</execute>
 
-		<execute macro="DMDocument#viewCheckedoutCP" >
+		<execute macro="DMDocument#viewCheckedoutCP">
 			<var name="dmRepositoryName" value="true" />
 		</execute>
 
@@ -590,7 +604,7 @@
 			<var name="dmDocumentTitle" value="Document_1.txt" />
 		</execute>
 
-		<execute macro="DMDocument#viewCheckedoutCP" >
+		<execute macro="DMDocument#viewCheckedoutCP">
 			<var name="dmRepositoryName" value="true" />
 		</execute>
 	</command>
@@ -665,8 +679,8 @@
 			<var name="portlet" value="Documents and Media" />
 		</execute>
 
-		<execute macro="DMDocument#searchCP">
-			<var name="dmDocumentKeyword" value="Document_3.odt" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="Document_3.odt" />
 		</execute>
 
 		<execute macro="DMDocument#viewSearchResultsCP">
@@ -704,8 +718,8 @@
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 
-		<execute macro="DMNavigator#gotoEditDocument">
-			<var name="dmDocumentTitle" value="Document_1.xls" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="rowEntry" value="Document_1.xls" />
 		</execute>
 
 		<execute macro="DMDocument#editCmd">
@@ -736,7 +750,7 @@
 			<var name="dmDocumentTitle" value="Document_1_Edit.xls" />
 		</execute>
 
-		<execute macro="DMDocument#viewCheckedoutCP" >
+		<execute macro="DMDocument#viewCheckedoutCP">
 			<var name="dmRepositoryName" value="true" />
 		</execute>
 	</command>
@@ -753,8 +767,8 @@
 			<var name="dmDocumentTitle" value="Document_1.docx" />
 		</execute>
 
-		<execute macro="DMNavigator#gotoEditDocument">
-			<var name="dmDocumentTitle" value="Document_1.docx" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="rowEntry" value="Document_1.docx" />
 		</execute>
 
 		<execute macro="DMDocument#editCmd">
@@ -800,8 +814,8 @@
 			<var name="dmDocumentTitle" value="Document_3.docx" />
 		</execute>
 
-		<execute macro="DMNavigator#gotoEditDocument">
-			<var name="dmDocumentTitle" value="Document_3.docx" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="rowEntry" value="Document_3.docx" />
 		</execute>
 
 		<execute macro="DMDocument#editCmd">

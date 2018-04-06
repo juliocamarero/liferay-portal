@@ -14,6 +14,8 @@
 
 package com.liferay.portlet.exportimport.service.impl;
 
+import static com.liferay.exportimport.kernel.configuration.ExportImportConfigurationConstants.TYPE_PUBLISH_PORTLET_REMOTE;
+
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
@@ -285,10 +287,20 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			disableStaging(liveGroup, serviceContext);
 		}
 
+		UnicodeProperties typeSettingsProperties =
+			liveGroup.getTypeSettingsProperties();
+
 		boolean hasStagingGroup = liveGroup.hasStagingGroup();
 
 		if (!hasStagingGroup) {
-			serviceContext.setAttribute("staging", String.valueOf(true));
+			serviceContext.setAttribute("staging", Boolean.TRUE.toString());
+
+			String languageId = typeSettingsProperties.getProperty(
+				"languageId");
+
+			if (Validator.isNotNull(languageId)) {
+				serviceContext.setLanguageId(languageId);
+			}
 
 			addStagingGroup(userId, liveGroup, serviceContext);
 		}
@@ -296,9 +308,6 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		checkDefaultLayoutSetBranches(
 			userId, liveGroup, branchingPublic, branchingPrivate, false,
 			serviceContext);
-
-		UnicodeProperties typeSettingsProperties =
-			liveGroup.getTypeSettingsProperties();
 
 		typeSettingsProperties.setProperty(
 			"branchingPrivate", String.valueOf(branchingPrivate));
@@ -309,7 +318,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			typeSettingsProperties.setProperty(
 				"staged", Boolean.TRUE.toString());
 			typeSettingsProperties.setProperty(
-				"stagedRemotely", String.valueOf(false));
+				"stagedRemotely", Boolean.FALSE.toString());
 
 			setCommonStagingOptions(typeSettingsProperties, serviceContext);
 		}
@@ -456,8 +465,16 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		Locale siteDefaultLocale = LocaleThreadLocal.getSiteDefaultLocale();
 
 		try {
-			ExportImportThreadLocal.setLayoutImportInProcess(true);
-			ExportImportThreadLocal.setLayoutStagingInProcess(true);
+			if (exportImportConfiguration.getType() ==
+					TYPE_PUBLISH_PORTLET_REMOTE) {
+
+				ExportImportThreadLocal.setPortletImportInProcess(true);
+				ExportImportThreadLocal.setPortletStagingInProcess(true);
+			}
+			else {
+				ExportImportThreadLocal.setLayoutImportInProcess(true);
+				ExportImportThreadLocal.setLayoutStagingInProcess(true);
+			}
 
 			Folder folder = PortletFileRepositoryUtil.getPortletFolder(
 				stagingRequestId);
@@ -479,15 +496,32 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			LocaleThreadLocal.setSiteDefaultLocale(
 				PortalUtil.getSiteDefaultLocale(targetGroupId));
 
-			exportImportLocalService.importLayoutsDataDeletions(
-				exportImportConfiguration, file);
+			MissingReferences missingReferences = null;
 
-			MissingReferences missingReferences =
-				exportImportLocalService.validateImportLayoutsFile(
+			if (exportImportConfiguration.getType() ==
+					TYPE_PUBLISH_PORTLET_REMOTE) {
+
+				exportImportLocalService.importPortletDataDeletions(
 					exportImportConfiguration, file);
 
-			exportImportLocalService.importLayouts(
-				exportImportConfiguration, file);
+				missingReferences =
+					exportImportLocalService.validateImportPortletInfo(
+						exportImportConfiguration, file);
+
+				exportImportLocalService.importPortletInfo(
+					exportImportConfiguration, file);
+			}
+			else {
+				exportImportLocalService.importLayoutsDataDeletions(
+					exportImportConfiguration, file);
+
+				missingReferences =
+					exportImportLocalService.validateImportLayoutsFile(
+						exportImportConfiguration, file);
+
+				exportImportLocalService.importLayouts(
+					exportImportConfiguration, file);
+			}
 
 			return missingReferences;
 		}
@@ -498,8 +532,16 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 				ioe);
 		}
 		finally {
-			ExportImportThreadLocal.setLayoutImportInProcess(false);
-			ExportImportThreadLocal.setLayoutStagingInProcess(false);
+			if (exportImportConfiguration.getType() ==
+					TYPE_PUBLISH_PORTLET_REMOTE) {
+
+				ExportImportThreadLocal.setPortletImportInProcess(false);
+				ExportImportThreadLocal.setPortletStagingInProcess(false);
+			}
+			else {
+				ExportImportThreadLocal.setLayoutImportInProcess(false);
+				ExportImportThreadLocal.setLayoutStagingInProcess(false);
+			}
 
 			LocaleThreadLocal.setSiteDefaultLocale(siteDefaultLocale);
 

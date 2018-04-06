@@ -113,7 +113,7 @@ then
 
 	for PUBLIC_BRANCH in "${PUBLIC_BRANCHES[@]}"
 	do
-		SUBREPO_SEARCH="$(git -C ../.. grep "/${SUBREPO_NAME}.git" "refs/remotes/upstream/${PUBLIC_BRANCH}" -- '*.gitrepo' | grep ":modules/apps/" | tr '\t' ' ' | sed 's@.*/@@' | sed 's/\.git.*//')"
+		SUBREPO_SEARCH="$(git -C ../.. grep "/${SUBREPO_NAME}.git" "refs/remotes/upstream/${PUBLIC_BRANCH}" -- '*.gitrepo' | grep ":modules/" | tr '\t' ' ' | sed 's@.*/@@' | sed 's/\.git.*//')"
 
 		if [[ -z "${SUBREPO_SEARCH}" ]] || [[ "$(echo "${SUBREPOS[@]}" | grep "^${SUBREPO_SEARCH}\$")" ]]
 		then
@@ -132,7 +132,7 @@ else
 
 	for PUBLIC_BRANCH in "${PUBLIC_BRANCHES[@]}"
 	do
-		SUBREPO_SEARCH="$(git -C ../.. grep "git@github.com" "refs/remotes/upstream/${PUBLIC_BRANCH}" -- '*.gitrepo' | grep ":modules/apps/" | tr '\t' ' ' | sed 's@.*/@@' | sed 's/\.git.*//')"
+		SUBREPO_SEARCH="$(git -C ../.. grep "git@github.com" "refs/remotes/upstream/${PUBLIC_BRANCH}" -- '*.gitrepo' | grep ":modules/" | tr '\t' ' ' | sed 's@.*/@@' | sed 's/\.git.*//')"
 
 		if [[ -z "${SUBREPO_SEARCH}" ]] || [[ "$(echo "${ALL_SUBREPOS[@]}" | grep "^${SUBREPO_SEARCH}\$")" ]]
 		then

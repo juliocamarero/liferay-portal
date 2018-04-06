@@ -36,12 +36,21 @@ WorkflowDefinition workflowDefinition = (WorkflowDefinition)row.getObject();
 
 <liferay-portlet:actionURL name="revertWorkflowDefinition" var="revertWorkflowDefinitionURL">
 	<portlet:param name="redirect" value="<%= redirect %>" />
-	<portlet:param name="name" value="<%= workflowDefinition.getName() %>" />
-	<portlet:param name="version" value="<%= String.valueOf(workflowDefinition.getVersion()) %>" />
+	<portlet:param name="name" value="<%= currentWorkflowDefinition.getName() %>" />
+	<portlet:param name="version" value="<%= String.valueOf(currentWorkflowDefinition.getVersion()) %>" />
+	<portlet:param name="previousName" value="<%= workflowDefinition.getName() %>" />
+	<portlet:param name="previousVersion" value="<%= String.valueOf(workflowDefinition.getVersion()) %>" />
 </liferay-portlet:actionURL>
 
 <c:if test="<%= currentWorkflowDefinition.getVersion() != workflowDefinition.getVersion() %>">
-	<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" id='<%= "iconMenu_" + String.valueOf(workflowDefinition.getVersion()) %>' markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+	<liferay-ui:icon-menu
+		direction="left-side"
+		icon="<%= StringPool.BLANK %>"
+		id='<%= "iconMenu_" + String.valueOf(workflowDefinition.getVersion()) %>'
+		markupView="lexicon"
+		message="<%= StringPool.BLANK %>"
+		showWhenSingleIcon="<%= true %>"
+	>
 		<liferay-ui:icon
 			id='<%= "previewBeforeRevert" + String.valueOf(workflowDefinition.getVersion()) %>'
 			message="preview"
@@ -56,9 +65,9 @@ WorkflowDefinition workflowDefinition = (WorkflowDefinition)row.getObject();
 </c:if>
 
 <aui:script use="liferay-workflow-web">
-	var title = '<liferay-ui:message arguments="<%= new String[] {dateFormatTime.format(workflowDefinition.getModifiedDate()), workflowDefinitionDisplayContext.getUserName(workflowDefinition)} %>" key="preview" translateArguments="<%= false %>"/>';
+	var title = '<liferay-ui:message arguments="<%= new String[] {dateFormatTime.format(workflowDefinition.getModifiedDate()), workflowDefinitionDisplayContext.getUserName(workflowDefinition)} %>" key="preview" translateArguments="<%= false %>" />';
 
-	var previewBeforeRevert = A.rbind('previewBeforeRevert', Liferay.WorkflowWeb, '<%= viewURL %>', '<portlet:namespace />', title);
+	var previewBeforeRevertDialog = A.rbind('previewBeforeRevertDialog', Liferay.WorkflowWeb, '<%= viewURL %>', '<%= revertWorkflowDefinitionURL %>', title);
 
-	Liferay.delegateClick('<portlet:namespace />previewBeforeRevert<%= String.valueOf(workflowDefinition.getVersion()) %>', previewBeforeRevert);
+	Liferay.delegateClick('<portlet:namespace />previewBeforeRevert<%= String.valueOf(workflowDefinition.getVersion()) %>', previewBeforeRevertDialog);
 </aui:script>

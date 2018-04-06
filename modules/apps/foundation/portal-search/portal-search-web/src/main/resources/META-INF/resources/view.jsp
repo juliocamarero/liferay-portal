@@ -35,13 +35,16 @@ pageContext.setAttribute("portletURL", portletURL);
 	<liferay-portlet:renderURLParams varImpl="portletURL" />
 
 	<aui:fieldset>
-		<aui:input cssClass="search-input" inlineField="<%= true %>" label="" name="keywords" placeholder="search" size="30" title="search" type="text" value="<%= HtmlUtil.escapeAttribute(searchDisplayContext.getKeywords()) %>" />
+		<aui:input cssClass="search-input search-portlet-keywords-input" inlineField="<%= true %>" label="" name="keywords" placeholder="search" size="30" title="search" type="text" value="<%= HtmlUtil.escapeAttribute(searchDisplayContext.getKeywords()) %>" />
 
 		<%
 		String taglibOnClick = "Liferay.Util.focusFormField('#" + renderResponse.getNamespace() + "keywords');";
 		%>
 
-		<liferay-ui:quick-access-entry label="skip-to-search" onClick="<%= taglibOnClick %>" />
+		<liferay-ui:quick-access-entry
+			label="skip-to-search"
+			onClick="<%= taglibOnClick %>"
+		/>
 
 		<c:choose>
 			<c:when test="<%= searchDisplayContext.isSearchScopePreferenceLetTheUserChoose() %>">
@@ -59,7 +62,13 @@ pageContext.setAttribute("portletURL", portletURL);
 		</c:choose>
 
 		<aui:field-wrapper inlineField="<%= true %>">
-			<liferay-ui:icon cssClass="icon-monospaced" icon="search" markupView="lexicon" onClick='<%= renderResponse.getNamespace() + "search();" %>' url="javascript:;" />
+			<liferay-ui:icon
+				cssClass="icon-monospaced"
+				icon="search"
+				markupView="lexicon"
+				onClick='<%= renderResponse.getNamespace() + "search();" %>'
+				url="javascript:;"
+			/>
 		</aui:field-wrapper>
 	</aui:fieldset>
 

@@ -15,6 +15,7 @@
 package com.liferay.document.library.internal.exportimport.data.handler.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryMetadata;
 import com.liferay.document.library.kernel.model.DLFileEntryType;
@@ -26,12 +27,12 @@ import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
-import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManagerUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.test.util.lar.BaseStagedModelDataHandlerTestCase;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Repository;
@@ -44,8 +45,6 @@ import com.liferay.portal.kernel.service.RepositoryLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
@@ -53,7 +52,6 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.repository.portletrepository.PortletRepository;
 import com.liferay.portal.test.randomizerbumpers.TikaSafeRandomizerBumper;
@@ -75,16 +73,13 @@ import org.junit.runner.RunWith;
  * @author Mate Thurzo
  */
 @RunWith(Arquillian.class)
-@Sync
 public class FileEntryStagedModelDataHandlerTest
 	extends BaseStagedModelDataHandlerTestCase {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Test
 	public void testCompanyScopeDependencies() throws Exception {
@@ -97,6 +92,43 @@ public class FileEntryStagedModelDataHandlerTest
 		exportImportStagedModel(stagedModel);
 
 		validateCompanyDependenciesImport(dependentStagedModelsMap, liveGroup);
+	}
+
+	@Test
+	public void testExportImportCheckedOutFileEntryAfterInitialPublication()
+		throws Exception {
+
+		ExportImportThreadLocal.setPortletStagingInProcess(true);
+
+		try {
+			String fileName = "PDF_Test.pdf";
+
+			ServiceContext serviceContext =
+				ServiceContextTestUtil.getServiceContext(
+					liveGroup.getGroupId(), TestPropsValues.getUserId());
+
+			FileEntry fileEntry = DLAppLocalServiceUtil.addFileEntry(
+				TestPropsValues.getUserId(), liveGroup.getGroupId(),
+				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, fileName,
+				ContentTypes.APPLICATION_PDF,
+				FileUtil.getBytes(getClass(), "dependencies/" + fileName),
+				serviceContext);
+
+			DLFileEntryLocalServiceUtil.checkOutFileEntry(
+				TestPropsValues.getUserId(), fileEntry.getFileEntryId(),
+				serviceContext);
+
+			exportImportStagedModelFromLiveToStaging(fileEntry);
+
+			FileEntry stagingGroupFileEntry =
+				DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+					fileEntry.getUuid(), stagingGroup.getGroupId());
+
+			exportImportStagedModel(stagingGroupFileEntry);
+		}
+		finally {
+			ExportImportThreadLocal.setPortletStagingInProcess(false);
+		}
 	}
 
 	@Test

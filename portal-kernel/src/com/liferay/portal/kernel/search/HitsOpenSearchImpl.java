@@ -29,6 +29,7 @@ import com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletURL;
 
@@ -121,7 +122,9 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 				(com.liferay.portal.kernel.xml.Document)values[0];
 			Element root = (Element)values[1];
 
-			for (int i = 0; i < results.getDocs().length; i++) {
+			Document[] docs = results.getDocs();
+
+			for (int i = 0; i < docs.length; i++) {
 				Document result = results.doc(i);
 
 				String snippet = result.get(Field.SNIPPET);
@@ -162,8 +165,9 @@ public abstract class HitsOpenSearchImpl extends BaseOpenSearchImpl {
 
 				String[] tags = new String[0];
 
-				Field assetTagNamesField = result.getFields().get(
-					Field.ASSET_TAG_NAMES);
+				Map<String, Field> fieldsMap = result.getFields();
+
+				Field assetTagNamesField = fieldsMap.get(Field.ASSET_TAG_NAMES);
 
 				if (assetTagNamesField != null) {
 					tags = assetTagNamesField.getValues();

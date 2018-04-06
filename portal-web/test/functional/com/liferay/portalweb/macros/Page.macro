@@ -26,17 +26,18 @@
 			<var name="navTab" value="General" />
 		</execute>
 
-		<execute function="Click" locator1="SitePagesEditPage#FRIENDLY_URL_LOCALIZED">
-			<var name="key_friendlyUrlLocalized" value="${friendlyUrlLocalized}" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Friendly URL" />
+			<var name="locale" value="${friendlyUrlLocalized}" />
 		</execute>
 
 		<execute function="Type" locator1="SitePagesEditPage#FRIENDLY_URL_FIELD" value1="${localizedFriendlyURL}" />
 	</command>
 
 	<command name="addJavaScript">
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute macro="Navigator#gotoNavTab">
@@ -44,7 +45,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="JavaScript" />
+			<var name="panel" value="JavaScript" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="SitePages#JAVASCRIPT_LABEL" value1="Paste JavaScript code that is executed at the bottom of the page." />
@@ -60,7 +61,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="SEO" />
+			<var name="panel" value="SEO" />
 		</execute>
 
 		<var name="key_vocabularyName" value="${vocabularyName}" />
@@ -85,20 +86,15 @@
 	</command>
 
 	<command name="addPageTranslations">
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Navigation" />
-			<var name="panel" value="Site Administration" />
-			<var name="portlet" value="Site Pages" />
-		</execute>
-
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${page}" />
+			<var name="pageName" value="${page}" />
 		</execute>
 
-		<var name="key_pageTranslation" value="${pageTranslation}" />
-
-		<execute function="Click" locator1="SitePages#DETAILS_LANGUAGE_TRANSLATIONS" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Name" />
+			<var name="locale" value="${pageTranslation}" />
+		</execute>
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${pageTranslationName}" />
@@ -112,7 +108,7 @@
 
 		<execute function="Click" locator1="SitePagesEditPage#PAGE_TYPE_PANEL_COMPONENT_TREE_ARROW" />
 
-		<for list="${portletNameList}" param="portletName" >
+		<for list="${portletNameList}" param="portletName">
 			<var name="key_componentOrPortletName" value="${portletName}" />
 
 			<execute function="Click" locator1="SitePagesEditPage#PAGE_TYPE_PANEL_CHECKBOX" value1="${portletName}" />
@@ -122,9 +118,12 @@
 	</command>
 
 	<command name="assertCannotDeleteOnlyPage">
-		<execute macro="LexiconEntry#delete">
-			<var name="failure" value="You must have at least one page." />
-			<var name="rowEntry" value="${pageName}" />
+		<execute function="Click#waitForMenuToggleJSClick" locator1="SitePages#LIST_GROUP_ITEM_ELLIPSIS_ICON">
+			<var name="key_pageName" value="${pageName}" />
+		</execute>
+
+		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM">
+			<var name="key_menuItem" value="Delete" />
 		</execute>
 	</command>
 
@@ -154,6 +153,27 @@
 		<execute macro="PortletEntry#save" />
 	</command>
 
+	<command name="changeLayoutLogo">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#gotoPageMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="pageName" value="${page}" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Advanced" />
+		</execute>
+
+		<execute macro="Page#uploadFileForLogo">
+			<var name="logoFile" value="${logoFile}" />
+		</execute>
+	</command>
+
 	<command name="changeLogoViaPageCP">
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
@@ -166,32 +186,18 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Logo" />
+			<var name="panel" value="Logo" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#CHANGE_LOGO" value1="Change" />
-
-		<execute function="SelectFrame" locator1="SitePages#LOGO_UPLOAD_IMAGE_IFRAME" />
-
-		<execute function="AssertClick" locator1="SitePages#LOGO_UPLOAD_IMAGE_BUTTON" value1="Select" />
-
-		<execute function="SikuliUploadCommonFile" locator1="OS#FILE_DIALOG_BOX_FILE_NAME_FIELD_PNG" value1="${logoFile}" />
-
-		<execute function="Pause" locator1="5000" />
-
-		<execute macro="Button#clickDone" />
-
-		<execute function="Pause" locator1="5000" />
-
-		<execute function="SelectFrameTop" />
-
-		<execute macro="PortletEntry#save" />
+		<execute macro="Page#uploadFileForLogo">
+			<var name="logoFile" value="${logoFile}" />
+		</execute>
 	</command>
 
 	<command name="copyApplicationsFromPageToPage">
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Copy Applications" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="Message#INFO" value1="The applications in page ${pageName} will be replaced with the ones in the page you select below." />
@@ -207,8 +213,9 @@
 			<var name="navTab" value="General" />
 		</execute>
 
-		<execute function="Click#pauseClickAt" locator1="SitePagesEditPage#FRIENDLY_URL_LOCALIZED">
-			<var name="key_friendlyUrlLocalized" value="${friendlyUrlLocalized}" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Name" />
+			<var name="locale" value="${friendlyUrlLocalized}" />
 		</execute>
 
 		<execute function="Type" locator1="SitePagesEditPage#FRIENDLY_URL_FIELD" value1=" " />
@@ -241,7 +248,7 @@
 			</then>
 			<else>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Logo" />
+					<var name="panel" value="Logo" />
 				</execute>
 			</else>
 		</if>
@@ -355,9 +362,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute function="AssertElementPresent" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
@@ -408,18 +415,6 @@
 
 		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Manage">
 			<var name="key_menuItem" value="Manage" />
-		</execute>
-	</command>
-
-	<command name="gotoMyAccount">
-		<description message="Navigate to My Account > ${portletName}." />
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="My Account" />
-			<var name="panel" value="User" />
-			<var name="portlet" value="${portletName}" />
 		</execute>
 	</command>
 
@@ -507,7 +502,9 @@
 	</command>
 
 	<command name="openURLLocale">
-		<execute function="Open" locator1="${localizationPageURL}" />
+		<execute macro="Navigator#openSpecificURL">
+			<var name="url" value="${localizationPageURL}" />
+		</execute>
 
 		<execute function="AssertLocation" value1="${localizationPageURL}" />
 	</command>
@@ -557,13 +554,13 @@
 		</execute>
 
 		<while>
-			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER_ELLIPSIS">
-				<var name="key_rowNumber" value="2" />
+			<condition function="IsElementPresent" locator1="SitePages#LIST_GROUP_ITEM_ROW_ELLIPSIS">
+				<var name="key_index" value="2" />
 			</condition>
 
 			<then>
-				<execute function="Click#waitForMenuToggleJSClick" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER_ELLIPSIS">
-					<var name="key_rowNumber" value="2" />
+				<execute function="Click#waitForMenuToggleJSClick" locator1="SitePages#LIST_GROUP_ITEM_ROW_ELLIPSIS">
+					<var name="key_index" value="2" />
 				</execute>
 
 				<execute function="AssertClickNoError" locator1="MenuItem#ANY_MENU_ITEM" value1="Delete">
@@ -574,8 +571,8 @@
 			</then>
 		</while>
 
-		<execute function="AssertElementNotPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER_ELLIPSIS">
-			<var name="key_rowNumber" value="2" />
+		<execute function="AssertElementNotPresent" locator1="SitePages#LIST_GROUP_ITEM_ROW_ELLIPSIS">
+			<var name="key_index" value="2" />
 		</execute>
 	</command>
 
@@ -602,6 +599,26 @@
 		</if>
 	</command>
 
+	<command name="uploadFileForLogo">
+		<execute function="AssertClick" locator1="Button#CHANGE_LOGO" value1="Change" />
+
+		<execute function="SelectFrame" locator1="SitePages#LOGO_UPLOAD_IMAGE_IFRAME" />
+
+		<execute function="AssertClick" locator1="SitePages#LOGO_UPLOAD_IMAGE_BUTTON" value1="Select" />
+
+		<execute function="SikuliUploadCommonFile" locator1="OS#FILE_DIALOG_BOX_FILE_NAME_FIELD_PNG" value1="${logoFile}" />
+
+		<execute function="Pause" locator1="5000" />
+
+		<execute macro="Button#clickDone" />
+
+		<execute function="Pause" locator1="5000" />
+
+		<execute function="SelectFrameTop" />
+
+		<execute macro="PortletEntry#save" />
+	</command>
+
 	<command name="view">
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
@@ -613,8 +630,17 @@
 			<var name="privacy" value="${privacy}" />
 		</execute>
 
-		<execute function="AssertElementPresent" locator1="ContentRow#ENTRY_CONTENT_ENTRY" value1="${pageName}">
-			<var name="key_rowEntry" value="${pageName}" />
+		<if>
+			<isset var="depth" />
+			<then>
+				<execute macro="SitePages#expandPageTree">
+					<var name="depth" value="${depth}" />
+				</execute>
+			</then>
+		</if>
+
+		<execute function="AssertElementPresent" locator1="SitePages#LIST_GROUP_ITEM">
+			<var name="key_itemName" value="${pageName}" />
 		</execute>
 	</command>
 
@@ -681,13 +707,13 @@
 				<equals arg1="${siteTemplate}" arg2="Zoe Healthcare Theme" />
 				<then>
 					<execute function="AssertElementPresent" locator1="Home#SITE_NAME_LOGO" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_1" value1="${pageName}" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_2" value1="ABOUT" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_3" value1="CLINIC" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_4" value1="SERVICES" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_5" value1="HEARLTH PLANS" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_6" value1="LOCATION" />
-					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_7" value1="CONTACT US" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_1" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_2" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_3" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_4" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_5" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_6" />
+					<execute function="AssertElementPresent" locator1="Home#PAGE_TEMPLATE_7" />
 				</then>
 			</elseif>
 		</if>
@@ -696,9 +722,9 @@
 	<command name="viewDeletedPage">
 		<var name="key_page" value="${pageName}" />
 
-		<execute function="AssertElementNotPresent" locator1="Home#PAGE" value1="${pageName}" />
+		<execute function="AssertElementNotPresent" locator1="Home#PAGE" />
 
-		<execute function="AssertElementNotPresent" locator1="SitePages#PAGE_TREE_PAGE_LINK" value1="${pageName}">
+		<execute function="AssertElementNotPresent" locator1="SitePages#PAGE_TREE_PAGE_LINK">
 			<var name="key_page" value="${pageName}" />
 		</execute>
 	</command>
@@ -708,33 +734,34 @@
 	</command>
 
 	<command name="viewFriendlyURL">
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Navigation" />
-			<var name="panel" value="Site Administration" />
-			<var name="portlet" value="Site Pages" />
-		</execute>
-
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
-			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${pageName}" />
-		</execute>
-
-		<execute function="AssertTextEquals" locator1="SitePages#DETAILS_FRIENDLY_BASE_URL" value1="http://localhost:8080/web${siteFriendlyURL}" />
+		<execute function="AssertTextEquals" locator1="SitePages#DETAILS_FRIENDLY_BASE_URL" value1="${siteFriendlyURL}" />
 	</command>
 
 	<command name="viewFriendlyURLLanguageOptionsPG">
-		<for list="${currentLanguageList}" param="languageKey">
-			<execute function="AssertElementPresent" locator1="SitePagesEditPage#${languageKey}" />
+		<execute function="Click" locator1="Button#LOCALIZATION">
+			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
+
+		<for list="${currentLanguageList}" param="locale">
+			<execute function="AssertElementPresent" locator1="Translation#LOCALIZATION_NAME">
+				<var name="key_locale" value="${locale}" />
+			</execute>
 		</for>
 
 		<if>
 			<equals arg1="${assertUnavailableLanguages}" arg2="true" />
 			<then>
-				<for list="${unavailableLanguageList}" param="languageKey">
-					<execute function="AssertElementNotPresent" locator1="SitePagesEditPage#${languageKey}" />
+				<for list="${unavailableLanguageList}" param="locale">
+					<execute function="AssertElementNotPresent" locator1="Translation#LOCALIZATION_NAME">
+						<var name="key_locale" value="${locale}" />
+					</execute>
 				</for>
 			</then>
 		</if>
+
+		<execute function="Click" locator1="Button#LOCALIZATION">
+			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
 	</command>
 
 	<command name="viewInactiveRequestMessage">
@@ -779,16 +806,16 @@
 	</command>
 
 	<command name="viewNoDeletePagesAssociatedWithSiteTemplate">
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS">
-			<var name="key_rowEntry" value="${page}" />
+		<execute function="Click#waitForMenuToggleJSClick" locator1="SitePages#LIST_GROUP_ITEM_ELLIPSIS_ICON">
+			<var name="key_pageName" value="${page}" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="${menuItem}">
+		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM">
 			<var name="key_menuItem" value="${menuItem}" />
 		</execute>
 
-		<execute function="Check" locator1="ContentRow#ENTRY_CONTENT_ENTRY_CHECKBOX">
-			<var name="key_rowEntry" value="${page}" />
+		<execute function="Check" locator1="SitePages#LIST_GROUP_ITEM_CHECKBOX">
+			<var name="key_pageName" value="${page}" />
 		</execute>
 
 		<execute function="ClickNoError" locator1="Icon#DELETE" />
@@ -817,15 +844,15 @@
 			<var name="privacy" value="${privacy}" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="ContentRow#ENTRY_CONTENT_ENTRY" value1="${pageName}">
-			<var name="key_rowEntry" value="${pageName}" />
+		<execute function="AssertElementNotPresent" locator1="SitePages#LIST_GROUP_ITEM">
+			<var name="key_pageName" value="${pageName}" />
 		</execute>
 	</command>
 
 	<command name="viewNoPG">
 		<var name="key_pageName" value="${pageName}" />
 
-		<execute function="AssertElementNotPresent" locator1="Home#PAGE" value1="${pageName}" />
+		<execute function="AssertElementNotPresent" locator1="Home#PAGE" />
 	</command>
 
 	<command name="viewNoSelectCategory">
@@ -836,7 +863,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute function="AssertElementNotPresent" locator1="AssetCategorization#CATEGORY_SELECT">
@@ -903,17 +930,18 @@
 			<var name="portlet" value="${portlet}" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="${menuItem}" />
-			<var name="rowEntry" value="${page}" />
+			<var name="pageName" value="${page}" />
 		</execute>
-
-		<var name="key_defaultSiteLanguageKey" value="${defaultSiteLanguageKey}" />
 
 		<execute macro="Navigator#gotoSEOPanel" />
 
 		<execute function="AssertElementPresent" locator1="TextInput#SEO_HTML_TITLE" />
-		<execute function="AssertElementPresent" locator1="SitePagesEditPage#SEO_HTML_TITLE_META_TAGS" />
+
+		<execute function="AssertTextEquals#assertPartialText" locator1="Button#LOCALIZATION" value1="${defaultSiteLanguageKey}">
+			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
 	</command>
 
 	<command name="viewPageLockCheck">
@@ -935,16 +963,16 @@
 	</command>
 
 	<command name="viewPagesOrder">
-		<execute function="AssertTextEquals#assertPartialText" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER" value1="${pageName1}">
-			<var name="key_rowNumber" value="1" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="SitePages#LIST_GROUP_ITEM_ROW_ENTRY" value1="${pageName1}">
+			<var name="key_index" value="1" />
 		</execute>
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER" value1="${pageName2}">
-			<var name="key_rowNumber" value="2" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="SitePages#LIST_GROUP_ITEM_ROW_ENTRY" value1="${pageName2}">
+			<var name="key_index" value="2" />
 		</execute>
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="ContentRow#ENTRY_CONTENT_ROW_NUMBER" value1="${pageName3}">
-			<var name="key_rowNumber" value="3" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="SitePages#LIST_GROUP_ITEM_ROW_ENTRY" value1="${pageName3}">
+			<var name="key_index" value="3" />
 		</execute>
 	</command>
 
@@ -971,9 +999,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${page}" />
+			<var name="pageName" value="${page}" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="Message#ERROR_3" value1="Some page settings are unavailable because Inherit Changes is enabled. To change these settings, disable Inherit Changes under the General section." />
@@ -992,17 +1020,15 @@
 	</command>
 
 	<command name="viewPageTemplateTypeNotPresent">
-		<var name="key_pageName" value="${pageTemplateName}" />
-
-		<execute function="Click" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" />
-
-		<execute function="AssertTextNotPresent" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="${pageTemplateName}" />
+		<execute function="AssertElementNotPresent" locator1="Card#SPECIFIC_LARGE_TEXT">
+			<var name="key_cardText" value="${pageTemplateName}" />
+		</execute>
 	</command>
 
 	<command name="viewPageTemplateTypePresent">
-		<var name="key_pageName" value="${pageTemplateName}" />
-
-		<execute function="AssertElementPresent" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" />
+		<execute function="AssertElementPresent" locator1="Card#SPECIFIC_LARGE_TEXT">
+			<var name="key_cardText" value="${pageTemplateName}" />
+		</execute>
 	</command>
 
 	<command name="viewPanelPortletListCP">
@@ -1014,9 +1040,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<var name="key_componentName" value="${componentName}" />
@@ -1032,7 +1058,7 @@
 
 		<execute function="AssertChecked#assertCheckedNotVisible" locator1="SitePages#DETAILS_PAGE_TYPE_PANEL_CHECKBOX_INPUT" />
 
-		<for list="${portletNameList}" param="portletName" >
+		<for list="${portletNameList}" param="portletName">
 			<var name="key_componentOrPortletName" value="${portletName}" />
 
 			<execute function="AssertChecked#assertCheckedNotVisible" locator1="SitePages#DETAILS_PAGE_TYPE_PANEL_CHECKBOX_INPUT" />
@@ -1069,8 +1095,8 @@
 	</command>
 
 	<command name="viewSiteNameTranslationsPG">
-		<execute function="Click" locator1="Language#SELECT_LANGUAGE">
-			<var name="key_language" value="${language}" />
+		<execute macro="LanguagePortlet#selectLanguagePG">
+			<var name="locale" value="${locale}" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="Home#SITE_NAME" value1="${siteName}" />
@@ -1097,7 +1123,9 @@
 	</command>
 
 	<command name="viewTranslationsPG">
-		<execute function="Open" locator1="${sitePageURL}" />
+		<execute macro="Navigator#openSpecificURL">
+			<var name="url" value="${sitePageURL}" />
+		</execute>
 
 		<execute function="AssertLocation" value1="${sitePageURL}" />
 

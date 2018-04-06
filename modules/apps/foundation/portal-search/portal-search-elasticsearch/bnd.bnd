@@ -1,6 +1,6 @@
 Bundle-Name: Liferay Portal Search Elasticsearch
 Bundle-SymbolicName: com.liferay.portal.search.elasticsearch
-Bundle-Version: 2.1.22
+Bundle-Version: 3.0.0
 Export-Package: com.liferay.portal.search.elasticsearch.settings
 Import-Package:\
 	!com.carrotsearch.hppc.*,\
@@ -69,3 +69,4 @@ Import-Package:\
 	*
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Elasticsearch
+-dsannotations-options: inherit

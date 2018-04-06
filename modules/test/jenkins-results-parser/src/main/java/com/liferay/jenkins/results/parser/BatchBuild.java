@@ -16,9 +16,13 @@ package com.liferay.jenkins.results.parser;
 
 import java.io.IOException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -81,11 +85,10 @@ public class BatchBuild extends BaseBuild {
 		List<Element> failureElements = new ArrayList<>();
 		List<Element> upstreamJobFailureElements = new ArrayList<>();
 
-		for (Build failedDownstreamBuild :
-				downstreamBuildFailureMessages.keySet()) {
+		for (Map.Entry<Build, Element> entry :
+				downstreamBuildFailureMessages.entrySet()) {
 
-			Element failureElement = downstreamBuildFailureMessages.get(
-				failedDownstreamBuild);
+			Build failedDownstreamBuild = entry.getKey();
 
 			Element upstreamJobFailureElement =
 				failedDownstreamBuild.
@@ -94,6 +97,8 @@ public class BatchBuild extends BaseBuild {
 			if (upstreamJobFailureElement != null) {
 				upstreamJobFailureElements.add(upstreamJobFailureElement);
 			}
+
+			Element failureElement = entry.getValue();
 
 			if (failureElement == null) {
 				continue;
@@ -134,6 +139,71 @@ public class BatchBuild extends BaseBuild {
 	}
 
 	@Override
+	public Long getInvokedTime() {
+		if (invokedTime != null) {
+			return invokedTime;
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("\\s*\\[echo\\]\\s*");
+
+		sb.append(Pattern.quote(getJobName()));
+
+		String jobVariant = getJobVariant();
+
+		if ((jobVariant != null) && !jobVariant.isEmpty()) {
+			sb.append("/");
+
+			sb.append(Pattern.quote(jobVariant));
+		}
+
+		sb.append("\\s*invoked time: (?<invokedTime>[^\\n]*)");
+
+		Pattern pattern = Pattern.compile(sb.toString());
+
+		Build parentBuild = getParentBuild();
+
+		String parentConsoleText = parentBuild.getConsoleText();
+
+		for (String line : parentConsoleText.split("\n")) {
+			Matcher matcher = pattern.matcher(line);
+
+			if (!matcher.find()) {
+				continue;
+			}
+
+			Properties buildProperties = null;
+
+			try {
+				buildProperties = JenkinsResultsParserUtil.getBuildProperties();
+			}
+			catch (IOException ioe) {
+				throw new RuntimeException(
+					"Unable to get build properties", ioe);
+			}
+
+			SimpleDateFormat sdf = new SimpleDateFormat(
+				buildProperties.getProperty("jenkins.report.date.format"));
+
+			Date date = null;
+
+			try {
+				date = sdf.parse(matcher.group("invokedTime"));
+			}
+			catch (ParseException pe) {
+				throw new RuntimeException("Unable to get invoked time", pe);
+			}
+
+			invokedTime = date.getTime();
+
+			return invokedTime;
+		}
+
+		return getStartTime();
+	}
+
+	@Override
 	public String getJDK() {
 		return getEnvironment("java.jdk");
 	}
@@ -155,17 +225,33 @@ public class BatchBuild extends BaseBuild {
 
 		JSONObject testReportJSONObject = getTestReportJSONObject();
 
-		JSONArray childReportsJSONArray = testReportJSONObject.getJSONArray(
+		JSONArray childReportsJSONArray = testReportJSONObject.optJSONArray(
 			"childReports");
+
+		if (childReportsJSONArray == null) {
+			return Collections.emptyList();
+		}
 
 		for (int i = 0; i < childReportsJSONArray.length(); i++) {
 			JSONObject childReportJSONObject =
-				childReportsJSONArray.getJSONObject(i);
+				childReportsJSONArray.optJSONObject(i);
 
-			JSONObject childJSONObject = childReportJSONObject.getJSONObject(
+			if (childReportJSONObject == null) {
+				continue;
+			}
+
+			JSONObject childJSONObject = childReportJSONObject.optJSONObject(
 				"child");
 
-			String axisBuildURL = childJSONObject.getString("url");
+			if (childJSONObject == null) {
+				continue;
+			}
+
+			String axisBuildURL = childJSONObject.optString("url");
+
+			if (axisBuildURL == null) {
+				continue;
+			}
 
 			Matcher axisBuildURLMatcher = null;
 
@@ -182,14 +268,27 @@ public class BatchBuild extends BaseBuild {
 
 			String axisVariable = axisBuildURLMatcher.group("axisVariable");
 
-			JSONObject resultJSONObject = childReportJSONObject.getJSONObject(
+			JSONObject resultJSONObject = childReportJSONObject.optJSONObject(
 				"result");
+
+			if (resultJSONObject == null) {
+				continue;
+			}
 
 			JSONArray suitesJSONArray = resultJSONObject.getJSONArray("suites");
 
+			if (suitesJSONArray == null) {
+				continue;
+			}
+
+			AxisBuild axisBuild = getAxisBuild(axisVariable);
+
+			if (axisBuild == null) {
+				continue;
+			}
+
 			testResults.addAll(
-				TestResult.getTestResults(
-					getAxisBuild(axisVariable), suitesJSONArray, testStatus));
+				getTestResults(axisBuild, suitesJSONArray, testStatus));
 		}
 
 		return testResults;
@@ -379,7 +478,8 @@ public class BatchBuild extends BaseBuild {
 				for (TestResult testResult : getTestResults(null)) {
 					String testStatus = testResult.getStatus();
 
-					if (testStatus.equals("PASSED") ||
+					if (testStatus.equals("FIXED") ||
+						testStatus.equals("PASSED") ||
 						testStatus.equals("SKIPPED")) {
 
 						continue;

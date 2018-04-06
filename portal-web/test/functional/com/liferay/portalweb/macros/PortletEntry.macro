@@ -1,4 +1,14 @@
 <definition>
+	<command name="changeLocale">
+		<execute function="Click" locator1="Button#LOCALIZATION">
+			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
+
+		<execute function="Click" locator1="Translation#LOCALIZATION_NAME">
+			<var method="StringUtil#replace('${locale}', '-', '_')" name="key_locale" />
+		</execute>
+	</command>
+
 	<command name="clickEditFromEllipsis">
 		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
 
@@ -14,12 +24,9 @@
 	</command>
 
 	<command name="deleteViaMenuItem">
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS">
-			<var name="key_rowEntry" value="${rowEntry}" />
-		</execute>
-
-		<execute function="AssertClickNoError" locator1="MenuItem#ANY_MENU_ITEM" value1="Delete">
-			<var name="key_menuItem" value="Delete" />
+		<execute macro="LexiconEntry#gotoEntryMenuItemNoError">
+			<var name="menuItem" value="Delete" />
+			<var name="rowEntry" value="${rowEntry}" />
 		</execute>
 
 		<execute function="Confirm" value1="Are you sure you want to delete this? It will be deleted immediately." />
@@ -38,12 +45,21 @@
 	</command>
 
 	<command name="inputDescription">
+		<execute function="Click" locator1="TextArea#DESCRIPTION" />
+
 		<execute function="Type" locator1="TextArea#DESCRIPTION" value1="${description}" />
 	</command>
 
+	<command name="inputDescriptionTextInput">
+		<execute function="Click" locator1="TextInput#DESCRIPTION" />
+
+		<execute function="Type" locator1="TextInput#DESCRIPTION" value1="${description}" />
+	</command>
+
 	<command name="inputLocalizedName">
-		<execute function="Click" locator1="Language#SITE_NAME_TRANSLATION">
-			<var name="key_language" value="${language}" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Name" />
+			<var name="locale" value="${language}" />
 		</execute>
 
 		<execute macro="PortletEntry#inputName">
@@ -52,10 +68,14 @@
 	</command>
 
 	<command name="inputName">
+		<execute function="Click" locator1="TextInput#NAME" />
+
 		<execute function="Type" locator1="TextInput#NAME" value1="${name}" />
 	</command>
 
 	<command name="inputTitle">
+		<execute function="Click" locator1="TextInput#TITLE" />
+
 		<execute function="Type" locator1="TextInput#TITLE" value1="${title}" />
 	</command>
 
@@ -77,5 +97,39 @@
 		<execute macro="Button#clickSave" />
 
 		<execute macro="Alert#viewSuccessMessage" />
+	</command>
+
+	<command name="saveAsDraft">
+		<execute macro="Button#clickSaveAsDraft" />
+
+		<execute macro="Alert#viewSuccessMessage" />
+	</command>
+
+	<command name="update">
+		<execute macro="Button#clickUpdate" />
+
+		<execute macro="Alert#viewSuccessMessage" />
+	</command>
+
+	<command name="viewEmptyMessage">
+		<var method="StringUtil#toLowerCase('${entity}')" name="entity" />
+
+		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no ${entity}." />
+	</command>
+
+	<command name="viewLocale">
+		<execute function="AssertElementPresent" locator1="Translation#CURRENT_LOCALE">
+			<var name="key_locale" value="${locale}" />
+		</execute>
+	</command>
+
+	<command name="viewNoNavItemLink">
+		<execute function="AssertElementNotPresent" locator1="NavBar#NAV_ITEM_LINK" />
+	</command>
+
+	<command name="viewWorkflowStatus">
+		<execute function="AssertTextEquals" locator1="ContentRow#ENTRY_CONTENT_ENTRY_WORKFLOW_STATUS" value1="${workflowStatus}">
+			<var name="key_rowEntry" value="${rowEntry}" />
+		</execute>
 	</command>
 </definition>

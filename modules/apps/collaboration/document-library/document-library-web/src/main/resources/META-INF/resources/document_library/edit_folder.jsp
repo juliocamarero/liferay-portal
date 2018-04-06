@@ -53,6 +53,8 @@ if (workflowEnabled) {
 	workflowDefinitions = WorkflowDefinitionManagerUtil.getActiveWorkflowDefinitions(company.getCompanyId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 }
 
+String languageId = LanguageUtil.getLanguageId(request);
+
 String headerTitle = (folder == null) ? (rootFolder ? LanguageUtil.get(request, "home") : LanguageUtil.get(request, "new-folder")) : folder.getName();
 
 boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getInitParameter("portlet-title-based-navigation"));
@@ -66,7 +68,9 @@ if (portletTitleBasedNavigation) {
 %>
 
 <div <%= portletTitleBasedNavigation ? "class=\"container-fluid-1280\"" : StringPool.BLANK %>>
-	<liferay-util:buffer var="removeFileEntryTypeIcon">
+	<liferay-util:buffer
+		var="removeFileEntryTypeIcon"
+	>
 		<liferay-ui:icon
 			iconCssClass="icon-remove"
 			label="<%= true %>"
@@ -181,7 +185,9 @@ if (portletTitleBasedNavigation) {
 									/>
 
 									<c:if test="<%= workflowEnabled %>">
-										<liferay-ui:search-container-column-text name="workflow">
+										<liferay-ui:search-container-column-text
+											name="workflow"
+										>
 											<aui:select label="" name='<%= "workflowDefinition" + dlFileEntryType.getFileEntryTypeId() %>' title="workflow-definition">
 												<aui:option label="no-workflow" value="" />
 
@@ -202,7 +208,7 @@ if (portletTitleBasedNavigation) {
 													}
 												%>
 
-													<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+													<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 												<%
 												}
@@ -217,7 +223,9 @@ if (portletTitleBasedNavigation) {
 									</liferay-ui:search-container-column-text>
 								</liferay-ui:search-container-row>
 
-								<liferay-ui:search-iterator paginate="<%= false %>" />
+								<liferay-ui:search-iterator
+									paginate="<%= false %>"
+								/>
 							</liferay-ui:search-container>
 
 							<liferay-ui:icon
@@ -276,7 +284,7 @@ if (portletTitleBasedNavigation) {
 									}
 								%>
 
-									<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+									<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 								<%
 								}
@@ -289,7 +297,9 @@ if (portletTitleBasedNavigation) {
 			</c:if>
 
 			<c:if test="<%= (parentFolder == null) || parentFolder.isSupportsMetadata() %>">
-				<liferay-expando:custom-attributes-available className="<%= DLFolderConstants.getClassName() %>">
+				<liferay-expando:custom-attributes-available
+					className="<%= DLFolderConstants.getClassName() %>"
+				>
 					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 						<liferay-expando:custom-attribute-list
 							className="<%= DLFolderConstants.getClassName() %>"
@@ -311,14 +321,16 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>
 
-<liferay-util:buffer var="workflowDefinitionsBuffer">
+<liferay-util:buffer
+	var="workflowDefinitionsBuffer"
+>
 	<c:if test="<%= workflowEnabled %>">
 		<aui:select label="" name="LIFERAY_WORKFLOW_DEFINITION_FILE_ENTRY_TYPE" title="workflow-definition">
 			<aui:option label="no-workflow" value="" />
@@ -327,7 +339,7 @@ if (portletTitleBasedNavigation) {
 			for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
 			%>
 
-				<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+				<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 			<%
 			}

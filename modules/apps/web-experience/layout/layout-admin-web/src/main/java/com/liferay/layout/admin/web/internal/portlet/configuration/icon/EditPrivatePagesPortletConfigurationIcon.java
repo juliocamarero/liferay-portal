@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet.configuration.icon;
 
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -87,7 +87,9 @@ public class EditPrivatePagesPortletConfigurationIcon
 		LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 			new LayoutsAdminDisplayContext(liferayPortletRequest, null);
 
-		if (layoutsAdminDisplayContext.isPublicPages()) {
+		if (layoutsAdminDisplayContext.isPageTemplates() ||
+			layoutsAdminDisplayContext.isPublicPages()) {
+
 			return false;
 		}
 

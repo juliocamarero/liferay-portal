@@ -17,7 +17,7 @@
 <%@ include file="/blogs_admin/init.jsp" %>
 
 <%
-String navigation = ParamUtil.getString(request, "navigation", "entries");
+final String navigation = ParamUtil.getString(request, "navigation", "entries");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
@@ -25,33 +25,28 @@ portletURL.setParameter("mvcRenderCommandName", "/blogs/view");
 portletURL.setParameter("navigation", navigation);
 %>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<portlet:renderURL var="viewEntriesURL" />
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+				navigationItem -> {
+					navigationItem.setActive(navigation.equals("entries"));
+					navigationItem.setHref(renderResponse.createRenderURL());
+					navigationItem.setLabel(LanguageUtil.get(request, "entries"));
+				});
 
-		<aui:nav-item
-			href="<%= viewEntriesURL %>"
-			label="entries"
-			selected='<%= navigation.equals("entries") %>'
-		/>
-
-		<portlet:renderURL var="viewImagesURL">
-			<portlet:param name="navigation" value="images" />
-		</portlet:renderURL>
-
-		<aui:nav-item
-			href="<%= viewImagesURL %>"
-			label="images"
-			selected='<%= navigation.equals("images") %>'
-		/>
-	</aui:nav>
-
-	<aui:form action="<%= portletURL.toString() %>" name="searchFm">
-		<aui:nav-bar-search>
-			<liferay-ui:input-search markupView="lexicon" />
-		</aui:nav-bar-search>
-	</aui:form>
-</aui:nav-bar>
+				add(
+				navigationItem -> {
+					navigationItem.setActive(navigation.equals("images"));
+					navigationItem.setHref(renderResponse.createRenderURL(), "navigation", "images");
+					navigationItem.setLabel(LanguageUtil.get(request, "images"));
+				});
+			}
+		}
+	%>"
+/>
 
 <c:choose>
 	<c:when test='<%= navigation.equals("entries") %>'>

@@ -14,6 +14,7 @@
 
 package com.liferay.social.activities.web.internal.portlet.display.context.util;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.display.context.util.BaseRequestHelper;
 import com.liferay.portal.kernel.model.Group;
@@ -22,8 +23,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.RSSUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.rss.util.RSSUtil;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;

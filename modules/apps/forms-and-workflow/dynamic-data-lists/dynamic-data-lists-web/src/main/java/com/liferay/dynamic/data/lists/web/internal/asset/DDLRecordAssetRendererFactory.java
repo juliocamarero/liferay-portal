@@ -21,15 +21,15 @@ import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.dynamic.data.lists.constants.DDLActionKeys;
 import com.liferay.dynamic.data.lists.constants.DDLPortletKeys;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
+import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.lists.model.DDLRecordVersion;
 import com.liferay.dynamic.data.lists.service.DDLRecordLocalService;
 import com.liferay.dynamic.data.lists.service.DDLRecordVersionLocalService;
-import com.liferay.dynamic.data.lists.service.permission.DDLRecordPermission;
-import com.liferay.dynamic.data.lists.service.permission.DDLRecordSetPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.util.Portal;
 
 import javax.portlet.PortletRequest;
@@ -145,7 +145,7 @@ public class DDLRecordAssetRendererFactory
 			return false;
 		}
 
-		return DDLRecordSetPermission.contains(
+		return _ddlRecordSetModelResourcePermission.contains(
 			permissionChecker, classTypeId, DDLActionKeys.ADD_RECORD);
 	}
 
@@ -154,8 +154,10 @@ public class DDLRecordAssetRendererFactory
 			PermissionChecker permissionChecker, long classPK, String actionId)
 		throws Exception {
 
-		return DDLRecordPermission.contains(
-			permissionChecker, classPK, actionId);
+		DDLRecord record = _ddlRecordLocalService.getDDLRecord(classPK);
+
+		return _ddlRecordSetModelResourcePermission.contains(
+			permissionChecker, record.getRecordSetId(), actionId);
 	}
 
 	@Reference(
@@ -181,6 +183,13 @@ public class DDLRecordAssetRendererFactory
 	}
 
 	private DDLRecordLocalService _ddlRecordLocalService;
+
+	@Reference(
+		target = "(model.class.name=com.liferay.dynamic.data.lists.model.DDLRecordSet)"
+	)
+	private ModelResourcePermission<DDLRecordSet>
+		_ddlRecordSetModelResourcePermission;
+
 	private DDLRecordVersionLocalService _ddlRecordVersionLocalService;
 
 	@Reference

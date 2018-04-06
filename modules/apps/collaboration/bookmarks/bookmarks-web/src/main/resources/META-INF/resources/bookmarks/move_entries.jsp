@@ -27,7 +27,7 @@ List<BookmarksFolder> invalidMoveFolders = new ArrayList<BookmarksFolder>();
 List<BookmarksFolder> validMoveFolders = new ArrayList<BookmarksFolder>();
 
 for (BookmarksFolder curFolder : folders) {
-	boolean movePermission = BookmarksFolderPermissionChecker.contains(permissionChecker, curFolder, ActionKeys.UPDATE);
+	boolean movePermission = BookmarksFolderPermission.contains(permissionChecker, curFolder, ActionKeys.UPDATE);
 
 	if (movePermission) {
 		validMoveFolders.add(curFolder);
@@ -54,7 +54,7 @@ List<BookmarksEntry> validMoveEntries = new ArrayList<BookmarksEntry>();
 List<BookmarksEntry> invalidMoveEntries = new ArrayList<BookmarksEntry>();
 
 for (BookmarksEntry curEntry : entries) {
-	boolean movePermission = BookmarksEntryPermissionChecker.contains(permissionChecker, curEntry, ActionKeys.UPDATE);
+	boolean movePermission = BookmarksEntryPermission.contains(permissionChecker, curEntry, ActionKeys.UPDATE);
 
 	if (movePermission) {
 		validMoveEntries.add(curEntry);
@@ -109,7 +109,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="move-folder">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="folder-title">
 										<%= HtmlUtil.escape(folder.getName()) %>
@@ -140,7 +143,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="icon-warning-sign move-error move-folder">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="folder-title">
 										<%= HtmlUtil.escape(folder.getName()) %>
@@ -176,7 +182,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="move-file">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="file-title" title="<%= HtmlUtil.escapeAttribute(validMoveEntry.getName()) %>">
 										<%= HtmlUtil.escape(validMoveEntry.getName()) %>
@@ -207,7 +216,10 @@ if (portletTitleBasedNavigation) {
 							%>
 
 								<li class="icon-warning-sign move-error move-file">
-									<liferay-ui:icon icon="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+									<liferay-ui:icon
+										icon="<%= assetRenderer.getIconCssClass() %>"
+										markupView="lexicon"
+									/>
 
 									<span class="file-title" title="<%= HtmlUtil.escapeAttribute(invalidMoveEntry.getName()) %>">
 										<%= HtmlUtil.escape(invalidMoveEntry.getName()) %>
@@ -251,9 +263,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" value="move" />
+			<aui:button type="submit" value="move" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

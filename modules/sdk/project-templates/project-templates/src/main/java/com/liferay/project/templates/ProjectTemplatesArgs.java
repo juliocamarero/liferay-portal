@@ -18,6 +18,9 @@ import com.beust.jcommander.Parameter;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Andrea Di Giorgi
  */
@@ -28,8 +31,8 @@ public class ProjectTemplatesArgs {
 		_destinationDir = new File(System.getProperty("user.dir"));
 	}
 
-	public File getArchetypesDir() {
-		return _archetypesDir;
+	public List<File> getArchetypesDirs() {
+		return _archetypesDirs;
 	}
 
 	public String getAuthor() {
@@ -48,12 +51,20 @@ public class ProjectTemplatesArgs {
 		return _destinationDir;
 	}
 
+	public String getGroupId() {
+		return _groupId;
+	}
+
 	public String getHostBundleSymbolicName() {
 		return _hostBundleSymbolicName;
 	}
 
 	public String getHostBundleVersion() {
 		return _hostBundleVersion;
+	}
+
+	public String getLiferayVersion() {
+		return _liferayVersion;
 	}
 
 	public String getName() {
@@ -84,8 +95,12 @@ public class ProjectTemplatesArgs {
 		return _maven;
 	}
 
-	public void setArchetypesDir(File archetypesDir) {
-		_archetypesDir = archetypesDir;
+	public void setArchetypesDirs(List<File> archetypesDirs) {
+		_archetypesDirs = archetypesDirs;
+	}
+
+	public void setAuthor(String author) {
+		_author = author;
 	}
 
 	public void setClassName(String className) {
@@ -108,12 +123,20 @@ public class ProjectTemplatesArgs {
 		_gradle = gradle;
 	}
 
+	public void setGroupId(String groupId) {
+		_groupId = groupId;
+	}
+
 	public void setHostBundleSymbolicName(String hostBundleSymbolicName) {
 		_hostBundleSymbolicName = hostBundleSymbolicName;
 	}
 
 	public void setHostBundleVersion(String hostBundleVersion) {
 		_hostBundleVersion = hostBundleVersion;
+	}
+
+	public void setLiferayVersion(String version) {
+		_liferayVersion = version;
 	}
 
 	public void setMaven(boolean maven) {
@@ -144,8 +167,8 @@ public class ProjectTemplatesArgs {
 		return _list;
 	}
 
-	@Parameter(hidden = true, names = "--archetypes-dir")
-	private File _archetypesDir;
+	@Parameter(hidden = true, names = {"--archetypes-dir", "--archetypes-dirs"})
+	private List<File> _archetypesDirs = new ArrayList<>();
 
 	@Parameter(
 		description = "The name of the user associated with the code.",
@@ -185,6 +208,12 @@ public class ProjectTemplatesArgs {
 	private boolean _gradle = true;
 
 	@Parameter(
+		description = "The group ID to use in the project.",
+		names = "--group-id"
+	)
+	private String _groupId;
+
+	@Parameter(
 		description = "Print this message.", help = true,
 		names = {"-h", "--help"}
 	)
@@ -201,6 +230,12 @@ public class ProjectTemplatesArgs {
 		names = "--host-bundle-version"
 	)
 	private String _hostBundleVersion;
+
+	@Parameter(
+		description = "The version of Liferay to target when creating the project.",
+		names = "--liferayVersion"
+	)
+	private String _liferayVersion = "7.0";
 
 	@Parameter(
 		description = "Print the list of available project templates.",

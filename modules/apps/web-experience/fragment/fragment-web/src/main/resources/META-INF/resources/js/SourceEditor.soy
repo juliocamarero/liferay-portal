@@ -1,15 +1,28 @@
-{namespace SourceEditor}
+{namespace com.liferay.fragment.web.SourceEditor}
 
 /**
  * SourceEditor
  */
 {template .render}
 	{@param initialContent: string}
+	{@param spritemap: string}
 	{@param syntax: string}
+	{@param toolbarItems: list<[
+		handler: any,
+		icon: string,
+		title: string
+	]>}
 	{@param? _handleContentChanged: any}
 
 	<div class="source-editor">
-		{call AceEditor.render}
+		{call com.liferay.fragment.web.SourceEditorToolbar.render}
+			{param hidden: true /}
+			{param items: $toolbarItems /}
+			{param spritemap: $spritemap /}
+			{param syntax: $syntax /}
+		{/call}
+
+		{call com.liferay.fragment.web.AceEditor.render}
 			{param events: ['contentChanged': $_handleContentChanged] /}
 			{param initialContent: $initialContent /}
 			{param syntax: $syntax /}

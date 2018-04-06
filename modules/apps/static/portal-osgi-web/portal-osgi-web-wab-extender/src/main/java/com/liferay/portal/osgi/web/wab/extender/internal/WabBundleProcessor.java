@@ -14,17 +14,18 @@
 
 package com.liferay.portal.osgi.web.wab.extender.internal;
 
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ReflectionUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.osgi.web.servlet.JSPServletFactory;
+import com.liferay.portal.osgi.web.servlet.JSPTaglibHelper;
 import com.liferay.portal.osgi.web.servlet.context.helper.ServletContextHelperRegistration;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.FilterDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.ListenerDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.ServletDefinition;
 import com.liferay.portal.osgi.web.servlet.context.helper.definition.WebXMLDefinition;
-import com.liferay.portal.osgi.web.servlet.jsp.compiler.JspServlet;
 import com.liferay.portal.osgi.web.wab.extender.internal.adapter.FilterExceptionAdapter;
 import com.liferay.portal.osgi.web.wab.extender.internal.adapter.ModifiableServletContext;
 import com.liferay.portal.osgi.web.wab.extender.internal.adapter.ModifiableServletContextAdapter;
@@ -87,8 +88,13 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class WabBundleProcessor {
 
-	public WabBundleProcessor(Bundle bundle, Logger logger) {
+	public WabBundleProcessor(
+		Bundle bundle, JSPServletFactory jspServletFactory,
+		JSPTaglibHelper jspTaglibHelper, Logger logger) {
+
 		_bundle = bundle;
+		_jspServletFactory = jspServletFactory;
+		_jspTaglibHelper = jspTaglibHelper;
 		_logger = logger;
 
 		BundleWiring bundleWiring = _bundle.adapt(BundleWiring.class);
@@ -149,8 +155,9 @@ public class WabBundleProcessor {
 
 			ServletContext servletContext =
 				ModifiableServletContextAdapter.createInstance(
+					_bundle.getBundleContext(),
 					servletContextHelperRegistration.getServletContext(),
-					_bundle.getBundleContext(), webXMLDefinition, _logger);
+					_jspServletFactory, webXMLDefinition, _logger);
 
 			initServletContainerInitializers(_bundle, servletContext);
 
@@ -190,9 +197,10 @@ public class WabBundleProcessor {
 					servletContextHelperRegistration.getServletContext();
 
 				servletContext = ModifiableServletContextAdapter.createInstance(
-					newServletContext, attributes, listenerDefinitions,
+					_bundle.getBundleContext(), newServletContext,
+					_jspServletFactory, webXMLDefinition, listenerDefinitions,
 					filterRegistrationImpls, servletRegistrationImpls,
-					_bundle.getBundleContext(), webXMLDefinition, _logger);
+					attributes, _logger);
 
 				modifiableServletContext =
 					(ModifiableServletContext)servletContext;
@@ -780,7 +788,7 @@ public class WabBundleProcessor {
 
 		List<String> listenerClassNames = new ArrayList<>();
 
-		JspServlet.scanTLDs(_bundle, servletContext, listenerClassNames);
+		_jspTaglibHelper.scanTLDs(_bundle, servletContext, listenerClassNames);
 
 		for (String listenerClassName : listenerClassNames) {
 			try {
@@ -829,6 +837,8 @@ public class WabBundleProcessor {
 	private String _contextName;
 	private final Set<ServiceRegistration<Filter>> _filterServiceRegistrations =
 		new ConcurrentSkipListSet<>();
+	private final JSPServletFactory _jspServletFactory;
+	private final JSPTaglibHelper _jspTaglibHelper;
 	private final Set<ServiceRegistration<?>> _listenerServiceRegistrations =
 		new ConcurrentSkipListSet<>(
 			new ListenerServiceRegistrationComparator());

@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -31,10 +32,10 @@ import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.summary.SummaryBuilderFactory;
 import com.liferay.portal.search.web.constants.SearchPortletParameterNames;
+import com.liferay.portal.search.web.internal.facet.SearchFacetTracker;
 import com.liferay.portlet.portletconfiguration.util.ConfigurationRenderRequest;
 
 import javax.portlet.PortletPreferences;
@@ -232,7 +233,8 @@ public class SearchDisplayContextTest {
 			createPortal(themeDisplay, renderRequest), Mockito.mock(Html.class),
 			Mockito.mock(Language.class), facetedSearcherManager,
 			Mockito.mock(IndexSearchPropsValues.class), portletURLFactory,
-			Mockito.mock(SummaryBuilderFactory.class));
+			Mockito.mock(SummaryBuilderFactory.class),
+			new SearchFacetTracker());
 	}
 
 	protected ThemeDisplay createThemeDisplay() throws Exception {

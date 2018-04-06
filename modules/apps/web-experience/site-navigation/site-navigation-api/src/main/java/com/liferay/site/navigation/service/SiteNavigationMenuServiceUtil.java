@@ -16,7 +16,8 @@ package com.liferay.site.navigation.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -41,6 +42,14 @@ public class SiteNavigationMenuServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.site.navigation.service.impl.SiteNavigationMenuServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
+		long groupId, java.lang.String name, int type,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addSiteNavigationMenu(groupId, name, type, serviceContext);
+	}
+
 	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
 		long groupId, java.lang.String name,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -100,6 +109,15 @@ public class SiteNavigationMenuServiceUtil {
 	}
 
 	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
+		long siteNavigationMenuId, int type, boolean auto,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateSiteNavigationMenu(siteNavigationMenuId, type, auto,
+			serviceContext);
+	}
+
+	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
 		long siteNavigationMenuId, java.lang.String name,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -112,6 +130,17 @@ public class SiteNavigationMenuServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<SiteNavigationMenuService, SiteNavigationMenuService> _serviceTracker =
-		ServiceTrackerFactory.open(SiteNavigationMenuService.class);
+	private static ServiceTracker<SiteNavigationMenuService, SiteNavigationMenuService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(SiteNavigationMenuService.class);
+
+		ServiceTracker<SiteNavigationMenuService, SiteNavigationMenuService> serviceTracker =
+			new ServiceTracker<SiteNavigationMenuService, SiteNavigationMenuService>(bundle.getBundleContext(),
+				SiteNavigationMenuService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

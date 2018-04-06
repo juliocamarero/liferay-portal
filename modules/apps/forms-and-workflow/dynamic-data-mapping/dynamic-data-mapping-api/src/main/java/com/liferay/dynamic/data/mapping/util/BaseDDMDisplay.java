@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -39,11 +40,11 @@ import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -84,8 +85,36 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 	}
 
 	@Override
+	public DDMDisplayTabItem getDefaultTabItem() {
+		return new DDMDisplayTabItem() {
+
+			@Override
+			public String getTitle(
+				LiferayPortletRequest liferayPortletRequest,
+				LiferayPortletResponse liferayPortletResponse) {
+
+				String scopeTitle = ParamUtil.getString(
+					liferayPortletRequest, "scopeTitle");
+
+				if (Validator.isNull(scopeTitle)) {
+					return BaseDDMDisplay.this.getTitle(
+						liferayPortletRequest.getLocale());
+				}
+
+				return scopeTitle;
+			}
+
+		};
+	}
+
+	@Override
 	public String getDefaultTemplateLanguage() {
 		return TemplateConstants.LANG_TYPE_FTL;
+	}
+
+	@Override
+	public String getDescription(Locale locale) {
+		return null;
 	}
 
 	@Override
@@ -165,6 +194,11 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 	}
 
 	@Override
+	public List<DDMDisplayTabItem> getTabItems() {
+		return Arrays.asList(getDefaultTabItem());
+	}
+
+	@Override
 	public long[] getTemplateClassNameIds(long classNameId) {
 		if (classNameId > 0) {
 			return new long[] {classNameId};
@@ -211,8 +245,9 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 		String refererPortletName = ParamUtil.getString(
 			request, portletDisplay.getNamespace() + "refererPortletName");
 
-		if (Validator.isNull(refererPortletName)) {
-			groupId = PortalUtil.getScopeGroupId(request, refererPortletName);
+		if (Validator.isNotNull(refererPortletName)) {
+			groupId = PortalUtil.getScopeGroupId(
+				request, refererPortletName, true);
 		}
 
 		if (includeAncestorTemplates) {

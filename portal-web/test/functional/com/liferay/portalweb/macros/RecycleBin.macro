@@ -24,7 +24,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Recycle Bin" />
+			<var name="panel" value="Recycle Bin" />
 		</execute>
 
 		<execute function="Uncheck#uncheckToggleSwitchNoErrorNoAssert" locator1="Checkbox#ENABLE_RECYCLE_BIN" />
@@ -77,16 +77,13 @@
 
 		<execute function="AssertClick" locator1="RecycleBin#RECYCLE_BIN_TABLE_NAME" value1="${assetName}" />
 
-		<var name="key_assetName" value="${documentName}" />
+		<execute function="AssertTextEquals" locator1="RecycleBin#RECYCLE_BIN_FOLDER_DOCUMENT_NAME" value1="${documentName}">
+			<var name="key_assetName" value="${documentName}" />
+		</execute>
 
-		<execute function="AssertTextEquals" locator1="RecycleBin#RECYCLE_BIN_FOLDER_DOCUMENT_NAME" value1="${documentName}" />
-
-		<var name="key_rowEntry" value="${documentName}" />
-
-		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Restore">
-			<var name="key_menuItem" value="Restore" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Restore" />
+			<var name="rowEntry" value="${documentName}" />
 		</execute>
 
 		<execute function="SelectFrame" locator1="RecycleBin#RECYCLE_BIN_FOLDER_WARNING_IFRAME" />
@@ -131,7 +128,7 @@
 		<if>
 			<equals arg1="${multipleAssets}" arg2="true" />
 			<then>
-				<execute function="AssertElementNotPresent" locator1="Message#EMPTY_INFO" value1="The Recycle Bin is empty." />
+				<execute function="AssertElementNotPresent" locator1="Message#EMPTY_INFO" />
 			</then>
 			<else>
 				<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="The Recycle Bin is empty." />
@@ -190,12 +187,6 @@
 		<execute function="AssertElementNotPresent" locator1="RecycleBin#RECYCLE_BIN_TABLE_NAME" />
 	</command>
 
-	<command name="searchCP">
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="${assetName}" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
-	</command>
-
 	<command name="undoMoveToRecycleBin">
 		<execute function="AssertClick" locator1="Button#UNDO" value1="Undo" />
 	</command>
@@ -205,18 +196,23 @@
 
 		<if>
 			<condition function="IsElementPresent" locator1="RecycleBin#EMPTY_RECYCLE_BIN" />
-
 			<then>
 				<execute function="MouseOver" locator1="Icon#TOOLTIP" />
+
+				<var name="maxAgeField" value="1 month" />
+
 				<if>
-					<isset var="customMaxAgeMsg" />
+					<isset var="customMaxAge" />
 					<then>
-						<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_INFO" value1="${customMaxAgeMsg}" />
+						<var name="maxAgeField" value="${customMaxAge}" />
 					</then>
-					<else>
-						<execute function="AssertTextEquals" locator1="Message#RECYCLE_BIN_INFO" value1="The Recycle Bin shows all assets removed by users. Assets can be restored or permanently deleted.Entries that have been in the Recycle Bin for more than 1 month are automatically deleted." />
-					</else>
 				</if>
+
+				<execute macro="RecycleBin#viewRecycleBinMaxAge">
+					<var name="maxAgeField" value="${maxAgeField}" />
+				</execute>
+
+				<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_INFO" value1="The Recycle Bin shows all assets removed by users. Assets can be restored or permanently deleted." />
 			</then>
 		</if>
 
@@ -251,17 +247,17 @@
 
 		<execute function="Click" locator1="RecycleBin#RECYCLE_BIN_TABLE_ACTIONS" />
 
-		<execute function="AssertElementPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="Restore">
+		<execute function="AssertElementPresent" locator1="MenuItem#ANY_MENU_ITEM">
 			<var name="key_menuItem" value="Restore" />
 		</execute>
 
-		<execute function="AssertElementPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="Delete">
+		<execute function="AssertElementPresent" locator1="MenuItem#ANY_MENU_ITEM">
 			<var name="key_menuItem" value="Delete" />
 		</execute>
 	</command>
 
 	<command name="viewRecycleBinMaxAge">
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#INFO" value1="Entries that have been in the Recycle Bin for more than ${maxAgeField} minute are automatically deleted." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#RECYCLE_BIN_INFO" value1="Entries that have been in the Recycle Bin for more than ${maxAgeField} are automatically deleted." />
 	</command>
 
 	<command name="viewRecyclebinViaSiteSettingsCP">

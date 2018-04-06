@@ -36,7 +36,7 @@
 					<var name="workflowDefinitionTitle" value="Edited Workflow Definition" />
 				</execute>
 
-				<execute macro="Workflow#tearDownWorkflowDefinitionsViaWorkflowCP" />
+				<execute macro="Workflow#tearDownWorkflowDefinitions" />
 
 				<execute macro="Page#tearDownCP" />
 			</else>
@@ -257,7 +257,7 @@
 		</execute>
 
 		<execute macro="Workflow#reactivateInactiveWorkflowDefinition">
-			<var name="workflowDefinitionName" value="Single Approver" />
+			<var name="workflowDefinitionTitle" value="Single Approver" />
 		</execute>
 
 		<execute macro="Navigator#openURL" />
@@ -362,7 +362,7 @@
 			<var name="portlet" value="Workflow" />
 		</execute>
 
-		<execute macro="Workflow#deleteSpecificWorkflowDefinition">
+		<execute macro="Workflow#deleteWorkflowDefinition">
 			<var name="workflowDefinitionTitle" value="Workflow Definition Title" />
 		</execute>
 
@@ -401,13 +401,11 @@
 		</execute>
 
 		<execute macro="Workflow#reactivateInactiveWorkflowDefinition">
-			<var name="workflowDefinitionName" value="Single Approver" />
+			<var name="workflowDefinitionTitle" value="Single Approver" />
 		</execute>
 	</command>
 
-	<!-- LPS-68693 -->
-
-	<!-- <command name="DeleteCreateFormViaDDL" priority="3">
+	<command name="DeleteCreateFormViaDDL" priority="3">
 		<var name="kfFieldSetName" value="${kfFieldSetName}" />
 		<var name="kfProcessName" value="Kaleo Forms Process" />
 
@@ -540,11 +538,9 @@
 			<var name="kfProcessName" value="${kfProcessName}" />
 			<var name="workflowTask" value="create" />
 		</execute>
-	</command> -->
+	</command>
 
-	<!-- LPS-68693 -->
-
-	<!-- <command name="DeleteCreateFormViaKaleoFormsAdmin" priority="4">
+	<command name="DeleteCreateFormViaKaleoFormsAdmin" priority="4">
 		<var name="kfProcessName" value="Kaleo Forms Process" />
 
 		<execute macro="Navigator#openURL" />
@@ -643,11 +639,9 @@
 			<var name="kfFieldSetName" value="${kfFieldSetName}" />
 			<var name="kfFormName" value="Created Task Form" />
 		</execute>
-	</command> -->
+	</command>
 
-	<!-- LPS-68693 -->
-
-	<!-- <command name="DeleteEditFormViaKaleoFormsAdmin" priority="3">
+	<command name="DeleteEditFormViaKaleoFormsAdmin" priority="3">
 		<var name="kfProcessName" value="Kaleo Forms Process" />
 
 		<execute macro="Navigator#openURL" />
@@ -746,7 +740,7 @@
 			<var name="kfFieldSetName" value="${kfFieldSetName}" />
 			<var name="kfFormName" value="Created Task Form" />
 		</execute>
-	</command> -->
+	</command>
 
 	<command name="DeleteFieldSet" priority="4">
 		<execute macro="Navigator#openURL" />
@@ -779,9 +773,7 @@
 		<execute macro="KaleoFormsAdmin#deleteFieldSet" />
 	</command>
 
-	<!-- LPS-68693 -->
-
-	<!-- <command name="DeleteForm" priority="4">
+	<command name="DeleteForm" priority="4">
 		<var name="kfFieldSetName" value="${kfFieldSetName}" />
 		<var name="kfProcessDescription" value="Kaleo Forms Process Description" />
 		<var name="kfProcessName" value="Kaleo Forms Process" />
@@ -909,7 +901,7 @@
 			<var name="kfProcessName" value="${kfProcessName}" />
 			<var name="workflowTask" value="create" />
 		</execute>
-	</command> -->
+	</command>
 
 	<command name="DeleteProcess" priority="5">
 		<execute macro="Navigator#openURL" />
@@ -1072,8 +1064,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -1095,8 +1091,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -1152,8 +1152,8 @@
 			<var name="kfStatus" value="Pending" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#searchProcessRecords">
-			<var name="kfProcessSearchData" value="One" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="One" />
 		</execute>
 
 		<execute macro="KaleoFormsAdmin#deleteProcessRecord">
@@ -1251,7 +1251,7 @@
 			<var name="kfFormName" value="Created Task Form" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#editForm" >
+		<execute macro="KaleoFormsAdmin#editForm">
 			<var name="kfFormName" value="Created Task Form" />
 			<var name="kfFormNameEdit" value="Created Task Form Edit" />
 		</execute>
@@ -2166,9 +2166,7 @@
 
 		<execute macro="KaleoDesigner#addSourceXMLBasicDefinition" />
 
-		<execute macro="KaleoFormsAdmin#publishWorkflow">
-			<var name="workflowDefinitionTitleEdit" value="Edited Workflow Definition" />
-		</execute>
+		<execute macro="KaleoFormsAdmin#updateWorkflow" />
 
 		<execute macro="KaleoFormsAdmin#chooseWorkflow">
 			<var name="edit" value="true" />
@@ -2260,9 +2258,7 @@
 			<var name="nodeNodeLabel" value="update" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#publishWorkflow">
-			<var name="workflowDefinitionTitleEdit" value="Edited Workflow Definition" />
-		</execute>
+		<execute macro="KaleoFormsAdmin#updateWorkflow" />
 
 		<execute macro="KaleoFormsAdmin#chooseWorkflow">
 			<var name="edit" value="true" />
@@ -2383,9 +2379,7 @@
 			<var name="nodeNodeLabel" value="update" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#publishWorkflow">
-			<var name="workflowDefinitionTitleEdit" value="New Uploaded Definition Edit" />
-		</execute>
+		<execute macro="KaleoFormsAdmin#updateWorkflow" />
 
 		<execute macro="KaleoFormsAdmin#chooseWorkflow">
 			<var name="edit" value="true" />
@@ -2521,8 +2515,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -2544,8 +2542,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -2685,8 +2687,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -2708,8 +2714,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -2849,8 +2859,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -2872,8 +2886,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -3014,8 +3032,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -3037,8 +3059,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -3177,8 +3203,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -3200,8 +3230,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -3257,8 +3291,8 @@
 			<var name="kfStatus" value="Pending" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#searchProcessRecords">
-			<var name="kfProcessSearchData" value="One" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="One" />
 		</execute>
 
 		<execute macro="KaleoFormsAdmin#viewProcessRecordTable">
@@ -3271,8 +3305,8 @@
 			<var name="kfProcessFieldData" value="Two" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#searchProcessRecords">
-			<var name="kfProcessSearchData" value="Two" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="Two" />
 		</execute>
 
 		<execute macro="KaleoFormsAdmin#viewProcessRecordTable">
@@ -3285,8 +3319,8 @@
 			<var name="kfProcessFieldData" value="One" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#searchProcessRecords">
-			<var name="kfProcessSearchData" value="Hello" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="Hello" />
 		</execute>
 
 		<execute macro="KaleoFormsAdmin#viewProcessNoRecords">
@@ -3583,8 +3617,12 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#viewDefaultMyWorkflowTasksCP" />
@@ -3606,8 +3644,12 @@
 
 		<execute macro="KaleoFormsAdmin#saveProcessRecord" />
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="My Workflow Tasks" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="My Workflow Tasks" />
 		</execute>
 
 		<execute macro="Workflow#assignToMeTaskByActions">
@@ -3651,8 +3693,8 @@
 			<var name="kfProcessName" value="Kaleo Forms Process" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#searchProcessRecords">
-			<var name="kfProcessSearchData" value="One" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="One" />
 		</execute>
 
 		<execute macro="KaleoFormsAdmin#viewProcessRecordDetails">
@@ -3817,7 +3859,7 @@
 			<var name="workflowDefinitionTitle" value="Workflow Definition Title" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#saveAsDraftWorkflow" />
+		<execute macro="Workflow#saveDefinition" />
 
 		<execute macro="IFrame#closeFrame" />
 
@@ -3825,7 +3867,7 @@
 			<var name="workflowDefinitionTitle" value="Workflow Definition Title" />
 		</execute>
 
-		<execute macro="KaleoFormsAdmin#saveAsDraftWorkflow" />
+		<execute macro="Workflow#saveDefinition" />
 
 		<execute macro="IFrame#closeFrame" />
 

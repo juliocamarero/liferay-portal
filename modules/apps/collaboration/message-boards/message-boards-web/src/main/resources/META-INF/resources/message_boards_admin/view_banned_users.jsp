@@ -62,7 +62,11 @@ int totalBannedUsers = MBBanLocalServiceUtil.getBansCount(scopeGroupId);
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "unbanUser();" %>' icon="unlock" label="unban-user" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "unbanUser();" %>'
+			icon="unlock"
+			label="unban-user"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -89,12 +93,13 @@ int totalBannedUsers = MBBanLocalServiceUtil.getBansCount(scopeGroupId);
 				modelVar="ban"
 			>
 				<liferay-ui:search-container-column-user
-					cssClass="user-icon-lg"
 					showDetails="<%= false %>"
 					userId="<%= ban.getBanUserId() %>"
 				/>
 
-				<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+				<liferay-ui:search-container-column-text
+					colspan="<%= 2 %>"
+				>
 
 					<%
 					Date createDate = ban.getCreateDate();
@@ -107,7 +112,21 @@ int totalBannedUsers = MBBanLocalServiceUtil.getBansCount(scopeGroupId);
 					</h5>
 
 					<h4>
-						<%= HtmlUtil.escape(PortalUtil.getUserName(ban.getBanUserId(), StringPool.BLANK)) %>
+
+						<%
+						User bannedUser = UserLocalServiceUtil.fetchUser(ban.getBanUserId());
+						%>
+
+						<c:choose>
+							<c:when test="<%= (bannedUser != null) && bannedUser.isActive() %>">
+								<aui:a href="<%= bannedUser.getDisplayURL(themeDisplay) %>">
+									<%= HtmlUtil.escape(PortalUtil.getUserName(ban.getBanUserId(), StringPool.BLANK)) %>
+								</aui:a>
+							</c:when>
+							<c:otherwise>
+								<%= HtmlUtil.escape(PortalUtil.getUserName(ban.getBanUserId(), StringPool.BLANK)) %>
+							</c:otherwise>
+						</c:choose>
 					</h4>
 
 					<h5 class="text-default">
@@ -122,7 +141,10 @@ int totalBannedUsers = MBBanLocalServiceUtil.getBansCount(scopeGroupId);
 				/>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+			<liferay-ui:search-iterator
+				displayStyle="<%= displayStyle %>"
+				markupView="lexicon"
+			/>
 		</liferay-ui:search-container>
 	</aui:form>
 </div>

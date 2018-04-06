@@ -65,7 +65,9 @@ renderResponse.setTitle((userGroup == null) ? LanguageUtil.get(request, "new-use
 
 			<aui:input disabled="<%= !hasUserGroupUpdatePermission %>" name="description" />
 
-			<liferay-expando:custom-attributes-available className="<%= UserGroup.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= UserGroup.class.getName() %>"
+			>
 				<liferay-expando:custom-attribute-list
 					className="<%= UserGroup.class.getName() %>"
 					classPK="<%= userGroupId %>"
@@ -282,9 +284,9 @@ renderResponse.setTitle((userGroup == null) ? LanguageUtil.get(request, "new-use
 	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" disabled="<%= !hasUserGroupUpdatePermission %>" type="submit" />
+		<aui:button disabled="<%= !hasUserGroupUpdatePermission %>" type="submit" />
 
-		<aui:button cssClass="btn-lg" disabled="<%= !hasUserGroupUpdatePermission %>" href="<%= redirect %>" type="cancel" />
+		<aui:button disabled="<%= !hasUserGroupUpdatePermission %>" href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
 

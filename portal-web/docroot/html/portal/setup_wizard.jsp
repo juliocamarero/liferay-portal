@@ -46,7 +46,7 @@
 	</header>
 
 	<div id="content">
-		<div id="main-content">
+		<div class="sheet" id="main-content">
 
 			<%
 			UnicodeProperties unicodeProperties = (UnicodeProperties)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES);
@@ -213,7 +213,7 @@
 						</div>
 
 						<aui:button-row>
-							<aui:button cssClass="btn-lg" name="finishButton" type="submit" value="finish-configuration" />
+							<aui:button name="finishButton" type="submit" value="finish-configuration" />
 						</aui:button-row>
 					</aui:form>
 

@@ -19,6 +19,7 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+taglib uri="http://liferay.com/tld/clay" prefix="clay" %><%@
 taglib uri="http://liferay.com/tld/expando" prefix="liferay-expando" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
@@ -36,6 +37,7 @@ page import="com.liferay.application.list.constants.PanelCategoryKeys" %><%@
 page import="com.liferay.application.list.display.context.logic.PanelCategoryHelper" %><%@
 page import="com.liferay.expando.kernel.model.ExpandoBridge" %><%@
 page import="com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil" %><%@
+page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker" %><%@
@@ -106,7 +108,6 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortletKeys" %><%@
 page import="com.liferay.portal.kernel.util.StringBundler" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
@@ -115,7 +116,6 @@ page import="com.liferay.portal.model.impl.ResourceImpl" %><%@
 page import="com.liferay.portal.service.persistence.constants.UserGroupFinderConstants" %><%@
 page import="com.liferay.portal.util.PropsValues" %><%@
 page import="com.liferay.portal.util.WebAppPool" %><%@
-page import="com.liferay.portlet.display.template.PortletDisplayTemplateUtil" %><%@
 page import="com.liferay.portlet.rolesadmin.search.GroupRoleChecker" %><%@
 page import="com.liferay.portlet.rolesadmin.search.OrganizationRoleChecker" %><%@
 page import="com.liferay.portlet.rolesadmin.search.ResourceActionRowChecker" %><%@
@@ -134,7 +134,9 @@ page import="com.liferay.portlet.usersadmin.search.UserSearch" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserSearchTerms" %><%@
 page import="com.liferay.roles.admin.constants.RolesAdminPortletKeys" %><%@
 page import="com.liferay.roles.admin.kernel.util.RolesAdminUtil" %><%@
+page import="com.liferay.roles.admin.web.internal.display.context.RoleDisplayContext" %><%@
 page import="com.liferay.roles.admin.web.internal.search.RoleChecker" %><%@
+page import="com.liferay.roles.admin.web.internal.util.PortletDisplayTemplateUtil" %><%@
 page import="com.liferay.taglib.search.ResultRow" %><%@
 page import="com.liferay.users.admin.kernel.util.UsersAdmin" %><%@
 page import="com.liferay.users.admin.kernel.util.UsersAdminUtil" %>
@@ -172,6 +174,8 @@ if (permissionChecker.isCompanyAdmin()) {
 	filterManageableGroups = false;
 	filterManageableOrganizations = false;
 }
+
+RoleDisplayContext roleDisplayContext = new RoleDisplayContext(request, renderResponse);
 %>
 
 <%@ include file="/init-ext.jsp" %>
@@ -226,12 +230,7 @@ private StringBundler _getResourceHtmlId(String resource) {
 private boolean _isImpliedRole(Role role) {
 	String name = role.getName();
 
-	if (name.equals(RoleConstants.GUEST) ||
-		name.equals(RoleConstants.ORGANIZATION_USER) ||
-		name.equals(RoleConstants.OWNER) ||
-		name.equals(RoleConstants.SITE_MEMBER) ||
-		name.equals(RoleConstants.USER)) {
-
+	if (name.equals(RoleConstants.GUEST) || name.equals(RoleConstants.ORGANIZATION_USER) || name.equals(RoleConstants.OWNER) || name.equals(RoleConstants.SITE_MEMBER) || name.equals(RoleConstants.USER)) {
 		return true;
 	}
 

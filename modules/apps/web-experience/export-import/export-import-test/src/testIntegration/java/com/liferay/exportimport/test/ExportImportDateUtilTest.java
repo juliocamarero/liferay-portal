@@ -17,7 +17,8 @@ package com.liferay.exportimport.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.exportimport.kernel.lar.ExportImportDateUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
-import com.liferay.exportimport.lar.PortletDataContextImpl;
+import com.liferay.exportimport.lar.PermissionImporter;
+import com.liferay.portal.kernel.lock.LockManager;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
@@ -25,8 +26,6 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.PortletKeys;
@@ -34,6 +33,8 @@ import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.LayoutTestUtil;
+
+import java.lang.reflect.Constructor;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -43,24 +44,45 @@ import javax.portlet.PortletPreferences;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+
 /**
  * @author Mate Thurzo
  */
 @RunWith(Arquillian.class)
-@Sync
 public class ExportImportDateUtilTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		Bundle bundle = FrameworkUtil.getBundle(ExportImportDateUtilTest.class);
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		PermissionImporter permissionImporter = bundleContext.getService(
+			bundleContext.getServiceReference(PermissionImporter.class));
+
+		Class<?> clazz = permissionImporter.getClass();
+
+		ClassLoader classLoader = clazz.getClassLoader();
+
+		clazz = classLoader.loadClass(
+			"com.liferay.exportimport.internal.lar.PortletDataContextImpl");
+
+		_constructor = clazz.getConstructor(LockManager.class);
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -76,8 +98,8 @@ public class ExportImportDateUtilTest {
 
 	@Test
 	public void testGetLastPublishDateFromLastPublishDate() throws Exception {
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			null);
+		PortletDataContext portletDataContext =
+			(PortletDataContext)_constructor.newInstance((Object)null);
 
 		portletDataContext.setGroupId(_group.getGroupId());
 
@@ -102,8 +124,8 @@ public class ExportImportDateUtilTest {
 	public void testGetLastPublishDateNotFromLastPublishDate()
 		throws Exception {
 
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			null);
+		PortletDataContext portletDataContext =
+			(PortletDataContext)_constructor.newInstance((Object)null);
 
 		portletDataContext.setGroupId(_group.getGroupId());
 
@@ -127,8 +149,8 @@ public class ExportImportDateUtilTest {
 	public void testGetLastPublishDateWithoutPorltetLastPublishDate()
 		throws Exception {
 
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			null);
+		PortletDataContext portletDataContext =
+			(PortletDataContext)_constructor.newInstance((Object)null);
 
 		portletDataContext.setGroupId(_group.getGroupId());
 
@@ -146,8 +168,8 @@ public class ExportImportDateUtilTest {
 	public void testGetLastPublishDateWithoutPortletDataContextLastPublishDate()
 		throws Exception {
 
-		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			null);
+		PortletDataContext portletDataContext =
+			(PortletDataContext)_constructor.newInstance((Object)null);
 
 		portletDataContext.setGroupId(_group.getGroupId());
 
@@ -516,6 +538,8 @@ public class ExportImportDateUtilTest {
 
 		portletPreferences.store();
 	}
+
+	private static Constructor<?> _constructor;
 
 	@DeleteAfterTestRun
 	private Group _group;

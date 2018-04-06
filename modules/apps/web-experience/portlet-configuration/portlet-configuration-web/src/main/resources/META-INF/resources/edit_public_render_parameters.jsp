@@ -101,13 +101,16 @@ editPublicRenderParameterURL.setParameter("portletResource", portletResource);
 						</liferay-ui:search-container-column-text>
 					</liferay-ui:search-container-row>
 
-					<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
+					<liferay-ui:search-iterator
+						markupView="lexicon"
+						paginate="<%= false %>"
+					/>
 				</liferay-ui:search-container>
 			</div>
 		</div>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 		</aui:button-row>
 	</aui:form>
 </div>

@@ -83,7 +83,7 @@ public class LPKGTestUtil {
 			zipOutputStream.putNextEntry(
 				new ZipEntry("liferay-marketplace.properties"));
 
-			StringBundler sb = new StringBundler(11);
+			StringBundler sb = new StringBundler(13);
 
 			sb.append("bundles=");
 			sb.append(symbolicName);
@@ -91,8 +91,8 @@ public class LPKGTestUtil {
 			sb.append("category=Test\n");
 			sb.append("context-names=\n");
 			sb.append("description=Test\n");
-			sb.append("icon-url=https://www.liferay.com/web/guest");
-			sb.append("/marketplace/-/mp/asset/icon/71985553\n");
+			sb.append("icon-url=https://www.liferay.com/web/guest/marketplace");
+			sb.append("/-/mp/asset/icon/71985553\n");
 			sb.append("remote-app-id=Test\n");
 			sb.append("restart-required=false\n");
 			sb.append("title=");

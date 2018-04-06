@@ -21,7 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Manuel de la Peña
  */
-@ExtendedObjectClassDefinition(category = "foundation")
+@ExtendedObjectClassDefinition(category = "file-storage")
 @Meta.OCD(
 	id = "com.liferay.portal.store.file.system.configuration.AdvancedFileSystemStoreConfiguration",
 	localization = "content/Language",
@@ -31,7 +31,8 @@ public interface AdvancedFileSystemStoreConfiguration {
 
 	@Meta.AD(
 		deflt = "data/document_library",
-		description = "file-system-store-configuration-root-dir-description"
+		description = "file-system-store-configuration-root-dir-description",
+		name = "root-dir"
 	)
 	public String rootDir();
 

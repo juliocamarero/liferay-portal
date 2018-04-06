@@ -16,7 +16,8 @@ package com.liferay.blogs.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -41,6 +42,16 @@ public class BlogsEntryLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.blogs.service.impl.BlogsEntryLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.portal.kernel.repository.model.FileEntry addAttachmentFileEntry(
+		com.liferay.blogs.model.BlogsEntry blogsEntry, long userId,
+		java.lang.String fileName, java.lang.String mimeType,
+		java.io.InputStream is)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addAttachmentFileEntry(blogsEntry, userId, fileName,
+			mimeType, is);
+	}
+
 	public static com.liferay.portal.kernel.repository.model.Folder addAttachmentsFolder(
 		long userId, long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -829,6 +840,17 @@ public class BlogsEntryLocalServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<BlogsEntryLocalService, BlogsEntryLocalService> _serviceTracker =
-		ServiceTrackerFactory.open(BlogsEntryLocalService.class);
+	private static ServiceTracker<BlogsEntryLocalService, BlogsEntryLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(BlogsEntryLocalService.class);
+
+		ServiceTracker<BlogsEntryLocalService, BlogsEntryLocalService> serviceTracker =
+			new ServiceTracker<BlogsEntryLocalService, BlogsEntryLocalService>(bundle.getBundleContext(),
+				BlogsEntryLocalService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

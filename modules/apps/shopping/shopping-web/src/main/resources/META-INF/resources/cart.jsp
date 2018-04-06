@@ -321,7 +321,10 @@ boolean minQuantityMultiple = PrefsPropsUtil.getBoolean(company.getCompanyId(), 
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
+		<liferay-ui:search-iterator
+			markupView="lexicon"
+			paginate="<%= false %>"
+		/>
 	</liferay-ui:search-container>
 
 	<aui:fieldset-group markupView="lexicon">
@@ -400,7 +403,7 @@ boolean minQuantityMultiple = PrefsPropsUtil.getBoolean(company.getCompanyId(), 
 
 				<aui:field-wrapper label="coupon-discount">
 					<div class="alert alert-danger">
-						<%= currencyFormat.format(ShoppingUtil.calculateCouponDiscount(items, coupon)) %>
+						<%= currencyFormat.format(ShoppingUtil.calculateCouponDiscount(items, null, coupon)) %>
 					</div>
 				</aui:field-wrapper>
 			</c:if>
@@ -436,9 +439,9 @@ boolean minQuantityMultiple = PrefsPropsUtil.getBoolean(company.getCompanyId(), 
 	%>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" onClick='<%= renderResponse.getNamespace() + "updateCart();" %>' value="update-cart" />
+		<aui:button onClick='<%= renderResponse.getNamespace() + "updateCart();" %>' value="update-cart" />
 
-		<aui:button cssClass="btn-lg" disabled="<%= items.isEmpty() %>" onClick='<%= renderResponse.getNamespace() + "checkout();" %>' type="submit" value="checkout" />
+		<aui:button disabled="<%= items.isEmpty() %>" onClick='<%= renderResponse.getNamespace() + "checkout();" %>' type="submit" value="checkout" />
 	</aui:button-row>
 </aui:form>
 

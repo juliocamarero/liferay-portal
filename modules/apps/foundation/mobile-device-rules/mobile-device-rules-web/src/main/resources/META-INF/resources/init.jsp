@@ -19,6 +19,7 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+taglib uri="http://liferay.com/tld/clay" prefix="clay" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %><%@
@@ -26,7 +27,8 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.mobile.device.rules.action.ActionHandler" %><%@
+<%@ page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPNavigationItemList" %><%@
+page import="com.liferay.mobile.device.rules.action.ActionHandler" %><%@
 page import="com.liferay.mobile.device.rules.action.ActionHandlerManagerUtil" %><%@
 page import="com.liferay.mobile.device.rules.constants.MDRPortletKeys" %><%@
 page import="com.liferay.mobile.device.rules.exception.ActionTypeException" %><%@
@@ -40,23 +42,24 @@ page import="com.liferay.mobile.device.rules.model.MDRRuleGroup" %><%@
 page import="com.liferay.mobile.device.rules.model.MDRRuleGroupInstance" %><%@
 page import="com.liferay.mobile.device.rules.rule.RuleGroupProcessorUtil" %><%@
 page import="com.liferay.mobile.device.rules.rule.UnknownRuleHandlerException" %><%@
-page import="com.liferay.mobile.device.rules.rule.group.rule.SimpleRuleHandler" %><%@
 page import="com.liferay.mobile.device.rules.service.MDRActionLocalServiceUtil" %><%@
 page import="com.liferay.mobile.device.rules.service.MDRRuleGroupInstanceLocalServiceUtil" %><%@
 page import="com.liferay.mobile.device.rules.service.MDRRuleGroupInstanceServiceUtil" %><%@
 page import="com.liferay.mobile.device.rules.service.MDRRuleGroupLocalServiceUtil" %><%@
 page import="com.liferay.mobile.device.rules.service.MDRRuleLocalServiceUtil" %><%@
-page import="com.liferay.mobile.device.rules.service.permission.MDRPermission" %><%@
-page import="com.liferay.mobile.device.rules.service.permission.MDRRuleGroupInstancePermission" %><%@
-page import="com.liferay.mobile.device.rules.service.permission.MDRRuleGroupPermission" %><%@
 page import="com.liferay.mobile.device.rules.util.comparator.RuleCreateDateComparator" %><%@
 page import="com.liferay.mobile.device.rules.util.comparator.RuleGroupInstancePriorityComparator" %><%@
 page import="com.liferay.mobile.device.rules.web.internal.constants.MDRWebKeys" %><%@
 page import="com.liferay.mobile.device.rules.web.internal.display.context.MDRActionDisplayContext" %><%@
+page import="com.liferay.mobile.device.rules.web.internal.rule.group.rule.SimpleRuleHandler" %><%@
 page import="com.liferay.mobile.device.rules.web.internal.search.RuleGroupChecker" %><%@
 page import="com.liferay.mobile.device.rules.web.internal.search.RuleGroupDisplayTerms" %><%@
 page import="com.liferay.mobile.device.rules.web.internal.search.RuleGroupSearch" %><%@
 page import="com.liferay.mobile.device.rules.web.internal.search.RuleGroupSearchTerms" %><%@
+page import="com.liferay.mobile.device.rules.web.internal.security.permission.resource.MDRPermission" %><%@
+page import="com.liferay.mobile.device.rules.web.internal.security.permission.resource.MDRRuleGroupInstancePermission" %><%@
+page import="com.liferay.mobile.device.rules.web.internal.security.permission.resource.MDRRuleGroupPermission" %><%@
+page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
@@ -90,7 +93,6 @@ page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.OrderByComparator" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.SetUtil" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.UnicodeProperties" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
@@ -117,6 +119,9 @@ page import="javax.portlet.WindowState" %>
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
+
+portletDisplay.setShowExportImportIcon(false);
+portletDisplay.setShowStagingIcon(false);
 %>
 
 <%@ include file="/init-ext.jsp" %>

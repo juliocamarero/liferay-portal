@@ -45,6 +45,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>MOVE_AVAILABLE_TO_CURRENT</td>
+	<td>xpath=(//*[contains(@id,'${key_configuration}')] | //div[*[contains(@class,'${key_configuration}')]])//button[@title='Move selected items from Available to Current.']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>MOVE_CURRENT_TO_AVAILABLE</td>
+	<td>xpath=(//*[contains(@id,'${key_configuration}')] | //div[*[contains(@class,'${key_configuration}')]])//button[@title='Move selected items from Current to Available.']</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -104,22 +114,6 @@
 <tr>
 	<td>SETUP_DISPLAY_SETTINGS_DISPLAY_TEMPLATE_SELECT</td>
 	<td>//select[contains(@id,'displayStyle')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<!--SETUP_SOCIAL_BOOKMARKS-->
-<tr>
-	<td>SETUP_SOCIAL_BOOKMARKS_DISPLAY_STYLE_SELECT</td>
-	<td>//select[contains(@id,'socialBookmarksDisplayStyle')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SETUP_SOCIAL_BOOKMARKS_DISPLAY_POSITION_SELECT</td>
-	<td>//select[contains(@id,'socialBookmarksDisplayPosition')]</td>
 	<td></td>
 </tr>
 <tr>

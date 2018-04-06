@@ -79,7 +79,7 @@ AUI.add(
 						instance.on('*:cancelRule', A.bind(instance._handleCancelRule, instance));
 
 						instance._eventHandlers = [
-							boundingBox.delegate('click', A.bind(instance._handleAddRuleClick, instance), '.form-builder-rule-builder-add-rule-button-icon'),
+							A.one('body').delegate('click', A.bind(instance._handleAddRuleClick, instance), '.lfr-ddm-add-rule'),
 							boundingBox.delegate('click', A.bind(instance._handleEditCardClick, instance), '.rule-card-edit'),
 							boundingBox.delegate('click', A.bind(instance._handleDeleteCardClick, instance), '.rule-card-delete')
 						];
@@ -216,11 +216,14 @@ AUI.add(
 					renderRule: function(rule) {
 						var instance = this;
 
+						var formBuilder = instance.get('formBuilder');
+
 						if (!instance._ruleClasses) {
 							instance._ruleClasses = new Liferay.DDM.FormBuilderRenderRule(
 								{
 									boundingBox: instance.get('boundingBox'),
 									bubbleTargets: [instance],
+									builder: formBuilder,
 									contentBox: instance.get('contentBox'),
 									fields: instance.getFields(),
 									getDataProviders: instance._dataProviders,
@@ -252,8 +255,10 @@ AUI.add(
 					_fillDataProviders: function() {
 						var instance = this;
 
+						var formBuilder = instance.get('formBuilder');
+
 						var payload = {
-							bcp47LanguageId: themeDisplay.getBCP47LanguageId(),
+							languageId: formBuilder.get('defaultLanguageId'),
 							scopeGroupId: themeDisplay.getScopeGroupId()
 						};
 
@@ -388,10 +393,12 @@ AUI.add(
 					_getUserRoles: function() {
 						var instance = this;
 
+						var formBuilder = instance.get('formBuilder');
+
 						var roles = instance.get('roles');
 
 						var payload = {
-							bcp47LanguageId: themeDisplay.getBCP47LanguageId(),
+							languageId: formBuilder.get('defaultLanguageId'),
 							scopeGroupId: themeDisplay.getScopeGroupId()
 						};
 
@@ -417,12 +424,16 @@ AUI.add(
 						var instance = this;
 
 						instance.renderRule();
+
+						instance._hideAddRuleButton();
 					},
 
 					_handleCancelRule: function() {
 						var instance = this;
 
 						instance.syncUI();
+
+						instance._showAddRuleButton();
 					},
 
 					_handleDeleteCardClick: function(event) {
@@ -445,6 +456,8 @@ AUI.add(
 						instance._currentRuleId = ruleId;
 
 						instance.renderRule(instance.get('rules')[ruleId]);
+
+						instance._hideAddRuleButton();
 					},
 
 					_handleSaveRule: function(event) {
@@ -468,6 +481,14 @@ AUI.add(
 						instance.syncUI();
 
 						instance._currentRuleId = null;
+
+						instance._showAddRuleButton();
+					},
+
+					_hideAddRuleButton: function() {
+						var instance = this;
+
+						A.one('.lfr-ddm-add-rule').addClass('hide');
 					},
 
 					_onRulesChange: function(val) {
@@ -536,6 +557,12 @@ AUI.add(
 						);
 
 						return rules;
+					},
+
+					_showAddRuleButton: function() {
+						var instance = this;
+
+						A.one('.lfr-ddm-add-rule').removeClass('hide');
 					}
 				}
 			}

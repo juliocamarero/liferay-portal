@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.Deserializer;
 import com.liferay.portal.kernel.io.Serializer;
 
@@ -134,7 +135,9 @@ public class MethodKey implements Externalizable {
 
 		// Using the same hash algorithm as java.lang.reflect.Method
 
-		return _declaringClass.getName().hashCode() ^ _methodName.hashCode();
+		String declaringClassName = _declaringClass.getName();
+
+		return declaringClassName.hashCode() ^ _methodName.hashCode();
 	}
 
 	@Override
