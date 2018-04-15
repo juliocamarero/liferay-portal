@@ -15,6 +15,7 @@
 package com.liferay.meris.asset.category.demo.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalServiceUtil;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetVocabulary;
@@ -89,10 +90,12 @@ public class AssetCategoryMerisSegmentManagerTest {
 		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
 			_user.getModelClassName(), _user.getUserId());
 
-		AssetCategoryLocalServiceUtil.addAssetEntryAssetCategory(
-			assetEntry.getEntryId(), soccerAssetCategory.getCategoryId());
-		AssetCategoryLocalServiceUtil.addAssetEntryAssetCategory(
-			assetEntry.getEntryId(), tennisAssetCategory.getCategoryId());
+		AssetEntryAssetCategoryRelLocalServiceUtil.
+			addAssetEntryAssetCategoryRel(
+				assetEntry.getEntryId(), soccerAssetCategory.getCategoryId());
+		AssetEntryAssetCategoryRelLocalServiceUtil.
+			addAssetEntryAssetCategoryRel(
+				assetEntry.getEntryId(), tennisAssetCategory.getCategoryId());
 
 		_merisProfileId = String.valueOf(_user.getUserId());
 		_merisScopeId = String.valueOf(_group.getGroupId());
