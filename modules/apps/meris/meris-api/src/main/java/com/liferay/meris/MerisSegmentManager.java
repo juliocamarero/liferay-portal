@@ -27,7 +27,11 @@ import java.util.Map;
 public interface MerisSegmentManager
 	<S extends MerisSegment, P extends MerisProfile> {
 
-	public P getMerisProfile(String merisProfileId);
+	public S addMerisSegment(S segment);
+
+	public S deleteMerisSegment(String merisSegmentId);
+
+	public void deleteMerisSegments(String scopeId);
 
 	public List<P> getMerisProfiles(
 		String merisSegmentId, Map<String, Object> context, int start, int end,
@@ -46,5 +50,7 @@ public interface MerisSegmentManager
 	public boolean matches(
 		String merisProfileId, String merisSegmentId,
 		Map<String, Object> context);
+
+	public S updateMerisSegment(S segment);
 
 }

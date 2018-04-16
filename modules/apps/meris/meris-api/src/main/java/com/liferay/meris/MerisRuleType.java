@@ -24,6 +24,8 @@ public interface MerisRuleType {
 
 	public String getDescription(Locale locale);
 
+	public Object getMerisRuleTypeDefaultSetting(String key);
+
 	public Map<String, Object> getMerisRuleTypeDefaultSettings();
 
 	public String getMerisRuleTypeId();

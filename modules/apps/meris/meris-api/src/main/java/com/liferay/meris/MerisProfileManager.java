@@ -16,20 +16,26 @@ package com.liferay.meris;
 
 import aQute.bnd.annotation.ProviderType;
 
-import java.util.Map;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Eduardo Garcia
  */
 @ProviderType
-public interface MerisProfile {
+public interface MerisProfileManager <P extends MerisProfile> {
 
-	public Object getAttribute(String key);
+	public P addMerisProfile(P merisProfile);
 
-	public Map<String, Object> getAttributes();
+	public P deleteMerisProfile(String merisProfileId);
 
-	public String getMerisProfileId();
+	public void deleteMerisProfiles(String scopeId);
 
-	public String getScopeId();
+	public P getMerisProfile(String merisProfileId);
+
+	public List<P> getMerisProfiles(
+		String scopeId, int start, int end, Comparator<P> comparator);
+
+	public P updateMerisProfile(P merisProfile);
 
 }

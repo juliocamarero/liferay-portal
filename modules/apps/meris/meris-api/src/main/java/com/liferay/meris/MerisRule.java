@@ -31,6 +31,8 @@ public interface MerisRule {
 
 	public String getMerisRuleTypeId();
 
+	public Object getMerisRuleTypeSetting(String key);
+
 	public Map<String, Object> getMerisRuleTypeSettings();
 
 	public String getName(Locale locale);
