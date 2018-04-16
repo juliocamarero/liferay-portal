@@ -125,7 +125,7 @@ MailTemplatesHelper mailTemplatesHelper = new MailTemplatesHelper(wikiRequestHel
 				<liferay-ui:section>
 					<div class="container-fluid-1280">
 						<aui:fieldset-group markupView="lexicon">
-							<liferay-ui:rss-settings
+							<liferay-rss:rss-settings
 								delta="<%= GetterUtil.getInteger(wikiGroupServiceOverriddenConfiguration.rssDelta()) %>"
 								displayStyle="<%= wikiGroupServiceOverriddenConfiguration.rssDisplayStyle() %>"
 								enabled="<%= wikiGroupServiceOverriddenConfiguration.enableRss() %>"
@@ -139,6 +139,6 @@ MailTemplatesHelper mailTemplatesHelper = new MailTemplatesHelper(wikiRequestHel
 	</div>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>

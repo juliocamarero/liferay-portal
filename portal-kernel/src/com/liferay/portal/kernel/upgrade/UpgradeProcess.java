@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.upgrade;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.db.BaseDBProcess;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBInspector;
@@ -33,7 +34,6 @@ import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -80,6 +80,8 @@ public abstract class UpgradeProcess
 	public void upgrade() throws UpgradeException {
 		long start = System.currentTimeMillis();
 
+		String message = "Completed upgrade process ";
+
 		if (_log.isInfoEnabled()) {
 			_log.info("Upgrading " + ClassUtil.getClassName(this));
 		}
@@ -89,8 +91,10 @@ public abstract class UpgradeProcess
 
 			doUpgrade();
 		}
-		catch (Exception e) {
-			throw new UpgradeException(e);
+		catch (Throwable t) {
+			message = "Failed upgrade process ";
+
+			throw new UpgradeException(t);
 		}
 		finally {
 			connection = null;
@@ -98,14 +102,17 @@ public abstract class UpgradeProcess
 			if (_log.isInfoEnabled()) {
 				_log.info(
 					StringBundler.concat(
-						"Completed upgrade process ",
-						ClassUtil.getClassName(this), " in ",
+						message, ClassUtil.getClassName(this), " in ",
 						String.valueOf(System.currentTimeMillis() - start),
 						"ms"));
 			}
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #upgrade(UpgradeProcess)}
+	 */
+	@Deprecated
 	public void upgrade(Class<?> upgradeProcessClass) throws UpgradeException {
 		UpgradeProcess upgradeProcess = null;
 
@@ -345,9 +352,7 @@ public abstract class UpgradeProcess
 		throws Exception {
 
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
-			Field tableNameField = tableClass.getField("TABLE_NAME");
-
-			String tableName = (String)tableNameField.get(null);
+			String tableName = getTableName(tableClass);
 
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			DBInspector dbInspector = new DBInspector(connection);
@@ -434,7 +439,11 @@ public abstract class UpgradeProcess
 			}
 			catch (SQLException sqle) {
 				if (_log.isWarnEnabled()) {
-					_log.warn("Fallback to recreating the table", sqle);
+					_log.warn(
+						StringBundler.concat(
+							"Attempting to upgrade table ", tableName,
+							" by recreating the table due to: ",
+							sqle.getMessage()));
 				}
 
 				Field tableColumnsField = tableClass.getField("TABLE_COLUMNS");
@@ -447,6 +456,12 @@ public abstract class UpgradeProcess
 					tableName, (Object[][])tableColumnsField.get(null),
 					(String)tableSQLCreateField.get(null),
 					(String[])tableSQLAddIndexesField.get(null));
+
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Successfully recreated and upgraded table " +
+							tableName);
+				}
 			}
 		}
 	}
@@ -529,6 +544,12 @@ public abstract class UpgradeProcess
 		return _portalIndexesSQL.get(tableName);
 	}
 
+	protected String getTableName(Class<?> tableClass) throws Exception {
+		Field tableNameField = tableClass.getField("TABLE_NAME");
+
+		return (String)tableNameField.get(null);
+	}
+
 	protected long increment() {
 		DB db = DBManagerUtil.getDB();
 
@@ -545,6 +566,10 @@ public abstract class UpgradeProcess
 		DB db = DBManagerUtil.getDB();
 
 		return db.increment(name, size);
+	}
+
+	protected boolean isPortal62TableName(String tableName) {
+		return _portal62TableNames.contains(StringUtil.toLowerCase(tableName));
 	}
 
 	protected boolean isSupportsAlterColumnName() {
@@ -573,8 +598,7 @@ public abstract class UpgradeProcess
 
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link
-	 *             DBInspector#normalizeName(java.lang.String,
-	 *             DatabaseMetaData)}
+	 *             DBInspector#normalizeName(String, DatabaseMetaData)}
 	 */
 	@Deprecated
 	protected String normalizeName(
@@ -613,6 +637,55 @@ public abstract class UpgradeProcess
 
 	private static final Log _log = LogFactoryUtil.getLog(UpgradeProcess.class);
 
+	private static final Set<String> _portal62TableNames = new HashSet<>(
+		Arrays.asList(
+			"account_", "address", "announcementsdelivery",
+			"announcementsentry", "announcementsflag", "assetcategory",
+			"assetcategoryproperty", "assetentries_assetcategories",
+			"assetentries_assettags", "assetentry", "assetlink", "assettag",
+			"assettagstats", "assetvocabulary", "backgroundtask", "blogsentry",
+			"blogsstatsuser", "bookmarksentry", "bookmarksfolder",
+			"browsertracker", "calevent", "classname_", "clustergroup",
+			"company", "contact_", "counter", "country", "ddlrecord",
+			"ddlrecordset", "ddlrecordversion", "ddmcontent", "ddmstoragelink",
+			"ddmstructure", "ddmstructurelink", "ddmtemplate", "dlcontent",
+			"dlfileentry", "dlfileentrymetadata", "dlfileentrytype",
+			"dlfileentrytypes_dlfolders", "dlfilerank", "dlfileshortcut",
+			"dlfileversion", "dlfolder", "dlsyncevent", "emailaddress",
+			"expandocolumn", "expandorow", "expandotable", "expandovalue",
+			"exportimportconfiguration", "group_", "groups_orgs",
+			"groups_roles", "groups_usergroups", "image", "journalarticle",
+			"journalarticleimage", "journalarticleresource",
+			"journalcontentsearch", "journalfeed", "journalfolder",
+			"journalstructure", "journaltemplate", "layout", "layoutbranch",
+			"layoutfriendlyurl", "layoutprototype", "layoutrevision",
+			"layoutset", "layoutsetbranch", "layoutsetprototype", "listtype",
+			"lock_", "mbban", "mbcategory", "mbdiscussion", "mbmailinglist",
+			"mbmessage", "mbstatsuser", "mbthread", "mbthreadflag", "mdraction",
+			"mdrrule", "mdrrulegroup", "mdrulegroupinstance",
+			"membershiprequest", "organization_", "orggrouprole", "orglabor",
+			"passwordpolicy", "passwordpolicyrel", "passwordtracker", "phone",
+			"pluginsetting", "pollschoice", "pollsquestion", "pollsvote",
+			"portalpreferences", "portlet", "portletitem", "portletpreferences",
+			"ratingsentry", "ratingsstats", "recentlayoutbranch",
+			"recentlayoutrevision", "recentlayoutsetbranch", "region",
+			"release_", "repository", "repositoryentry", "resourceaction",
+			"resourceblock", "resourceblockpermission", "resourcepermission",
+			"resourcetypepermission", "role_", "servicecomponent",
+			"shoppingcart", "shoppingcategory", "shoppingcoupon",
+			"shoppingitem", "shoppingitemfield", "shoppingitemprice",
+			"shoppingorder", "shoppingorderitem", "socialactivity",
+			"socialactivityachievement", "socialactivitycounter",
+			"socialactivitylimit", "socialactivityset", "socialactivitysetting",
+			"socialrelation", "socialrequest", "subscription", "systemevent",
+			"team", "ticket", "trashentry", "trashversion",
+			"usernotificationdelivery", "user_", "usergroup",
+			"usergroupgrouprole", "usergrouprole", "usergroups_teams",
+			"useridmapper", "usernotificationevent", "users_groups",
+			"users_orgs", "users_roles", "users_teams", "users_usergroups",
+			"usertracker", "usertrackerpath", "virtualhost", "webdavprops",
+			"website", "wikinode", "wikipage", "wikipageresource",
+			"workflowdefinitionlink", "workflowinstancelink"));
 	private static final Map
 		<String, List<ObjectValuePair<String, IndexMetadata>>>
 			_portalIndexesSQL = new HashMap<>();

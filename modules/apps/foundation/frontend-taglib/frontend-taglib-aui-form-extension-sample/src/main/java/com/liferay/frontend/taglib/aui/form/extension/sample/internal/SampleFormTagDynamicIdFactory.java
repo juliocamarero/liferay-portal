@@ -14,10 +14,10 @@
 
 package com.liferay.frontend.taglib.aui.form.extension.sample.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.servlet.taglib.TagDynamicIdFactory;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +30,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Carlos Sierra Andrés
  */
 @Component(
-	immediate = true,
-	property = {"tagClassName=com.liferay.taglib.aui.FormTag"},
+	immediate = true, property = "tagClassName=com.liferay.taglib.aui.FormTag",
 	service = TagDynamicIdFactory.class
 )
 public class SampleFormTagDynamicIdFactory implements TagDynamicIdFactory {

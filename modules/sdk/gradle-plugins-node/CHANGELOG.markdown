@@ -182,6 +182,59 @@ the `node.global` property to `true` in the root project.
 - [LPS-75965]: The `downloadNode.nodeExeUrl` and `node.nodeExeUrl` properties
 are no longer available.
 
+## 4.0.1 - 2018-01-02
+
+### Fixed
+- [LPS-74904]: Fail the build if all retries configured in the
+`npmInstallRetries` property of an `ExecuteNodeTask` instance have been
+exhausted.
+
+## 4.0.2 - 2018-01-17
+
+*No changes.*
+
+## 4.1.0 - 2018-02-08
+
+### Added
+- [LPS-69802]: Add the task `npmPackageLock` to delete the NPM files and run
+`npm install` to install the dependencies declared in the project's
+`package.json` file, if present.
+
+## 4.2.0 - 2018-02-13
+
+### Added
+- [LPS-77996]: Add the property `nodeModulesDigestFile`. If this property is
+set, the digest is compared with the `node_modules` directory's digest. If they
+don't match, the `node_modules` directory is deleted before running
+`npm install`.
+
+## 4.3.0 - 2018-03-15
+
+### Added
+- [LPS-78741]: Add the property `useNpmCI` to the `NpmInstallTask`. If `true`,
+run `npm ci` instead of `npm install`.
+
+### Fixed
+- [LPS-73472]: Allow single `"bin"` values in the `package.json` files.
+
+## 4.3.1 - 2018-03-22
+
+### Fixed
+- [LPS-78741]: Do not run `npm install` if the `nodeModulesDigestFile` matches
+the `node_modules` directory's digest.
+
+## 4.3.2 - 2018-03-30
+
+### Changed
+- [LPS-78741]: Do not run `npm ci` if the `nodeModulesDigestFile` matches the
+`node_modules` directory's digest.
+
+## 4.3.3 - 2018-04-05
+
+### Fixed
+- [LPS-78741]: Fix the `npmPackageLock` task execution when the `npmInstall`
+task's `useNpmCI` property is set to `true`.
+
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
 [LPS-67573]: https://issues.liferay.com/browse/LPS-67573
@@ -200,6 +253,9 @@ are no longer available.
 [LPS-73070]: https://issues.liferay.com/browse/LPS-73070
 [LPS-73472]: https://issues.liferay.com/browse/LPS-73472
 [LPS-74770]: https://issues.liferay.com/browse/LPS-74770
+[LPS-74904]: https://issues.liferay.com/browse/LPS-74904
 [LPS-74933]: https://issues.liferay.com/browse/LPS-74933
 [LPS-75175]: https://issues.liferay.com/browse/LPS-75175
 [LPS-75965]: https://issues.liferay.com/browse/LPS-75965
+[LPS-77996]: https://issues.liferay.com/browse/LPS-77996
+[LPS-78741]: https://issues.liferay.com/browse/LPS-78741

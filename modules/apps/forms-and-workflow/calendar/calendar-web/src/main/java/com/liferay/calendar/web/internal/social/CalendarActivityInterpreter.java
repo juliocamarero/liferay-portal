@@ -15,19 +15,20 @@
 package com.liferay.calendar.web.internal.social;
 
 import com.liferay.calendar.constants.CalendarPortletKeys;
+import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.service.CalendarBookingLocalService;
-import com.liferay.calendar.service.permission.CalendarPermission;
 import com.liferay.calendar.social.CalendarActivityKeys;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.social.kernel.model.BaseSocialActivityInterpreter;
 import com.liferay.social.kernel.model.SocialActivity;
@@ -45,7 +46,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Marcellus Tavares
  */
 @Component(
-	property = {"javax.portlet.name=" + CalendarPortletKeys.CALENDAR},
+	property = "javax.portlet.name=" + CalendarPortletKeys.CALENDAR,
 	service = SocialActivityInterpreter.class
 )
 public class CalendarActivityInterpreter extends BaseSocialActivityInterpreter {
@@ -150,7 +151,7 @@ public class CalendarActivityInterpreter extends BaseSocialActivityInterpreter {
 			_calendarBookingLocalService.getCalendarBooking(
 				activity.getClassPK());
 
-		return CalendarPermission.contains(
+		return _calendarModelResourcePermission.contains(
 			permissionChecker, calendarBooking.getCalendarId(), actionId);
 	}
 
@@ -165,6 +166,11 @@ public class CalendarActivityInterpreter extends BaseSocialActivityInterpreter {
 		{CalendarBooking.class.getName()};
 
 	private CalendarBookingLocalService _calendarBookingLocalService;
+
+	@Reference(
+		target = "(model.class.name=com.liferay.calendar.model.Calendar)"
+	)
+	private ModelResourcePermission<Calendar> _calendarModelResourcePermission;
 
 	@Reference
 	private Http _http;

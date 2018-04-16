@@ -14,8 +14,8 @@
 
 package com.liferay.document.library.web.internal.display.context.logic;
 
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.util.DLUtil;
-import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.document.library.web.internal.display.context.util.DLRequestHelper;
 import com.liferay.document.library.web.internal.settings.DLPortletInstanceSettings;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -216,7 +216,7 @@ public class DLPortletInstanceSettingsHelper {
 	}
 
 	private String[] _getAllEntryColumns() {
-		String allEntryColumns = "name,size,status";
+		String allEntryColumns = "name,description,size,status";
 
 		if (PropsValues.DL_FILE_ENTRY_BUFFERED_INCREMENT_ENABLED) {
 			allEntryColumns += ",downloads";

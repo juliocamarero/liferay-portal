@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
@@ -58,7 +58,9 @@ public class CopyApplicationsMVCActionCommand extends BaseMVCActionCommand {
 		Layout layout = _layoutLocalService.getLayout(
 			groupId, privateLayout, layoutId);
 
-		if (!layout.getType().equals(LayoutConstants.TYPE_PORTLET)) {
+		String layoutType = layout.getType();
+
+		if (!layoutType.equals(LayoutConstants.TYPE_PORTLET)) {
 			return;
 		}
 

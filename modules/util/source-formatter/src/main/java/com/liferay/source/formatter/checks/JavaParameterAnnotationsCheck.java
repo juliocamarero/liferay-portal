@@ -15,8 +15,8 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.checks.util.SourceUtil;
@@ -116,12 +116,12 @@ public class JavaParameterAnnotationsCheck extends BaseJavaTermCheck {
 	private List<JavaParameter> _getJavaParameters(JavaTerm javaTerm) {
 		JavaSignature javaSignature = null;
 
-		if (javaTerm instanceof JavaConstructor) {
+		if (javaTerm.isJavaConstructor()) {
 			JavaConstructor javaConstructor = (JavaConstructor)javaTerm;
 
 			javaSignature = javaConstructor.getSignature();
 		}
-		else if (javaTerm instanceof JavaMethod) {
+		else if (javaTerm.isJavaMethod()) {
 			JavaMethod javaMethod = (JavaMethod)javaTerm;
 
 			javaSignature = javaMethod.getSignature();

@@ -14,15 +14,15 @@
 
 package com.liferay.wsrp.internal.proxy;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.wsrp.configuration.WSRPGroupServiceConfiguration;
 import com.liferay.wsrp.constants.WSRPPortletKeys;
 import com.liferay.wsrp.internal.axis.WSRPHTTPSender;
 import com.liferay.wsrp.internal.client.PasswordCallback;
-import com.liferay.wsrp.util.WSRPConfigurationUtil;
+import com.liferay.wsrp.internal.util.WSRPConfigurationUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

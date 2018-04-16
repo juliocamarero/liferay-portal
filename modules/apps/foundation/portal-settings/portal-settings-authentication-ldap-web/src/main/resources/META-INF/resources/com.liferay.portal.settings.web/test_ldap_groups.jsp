@@ -42,8 +42,7 @@ if (ldapContext == null) {
 	return;
 }
 
-if (Validator.isNull(ParamUtil.getString(request, "groupMappingGroupName")) ||
-	Validator.isNull(ParamUtil.getString(request, "groupMappingUser"))) {
+if (Validator.isNull(ParamUtil.getString(request, "groupMappingGroupName")) || Validator.isNull(ParamUtil.getString(request, "groupMappingUser"))) {
 %>
 
 	<liferay-ui:message key="please-map-each-of-the-group-properties-group-name-and-user-to-an-ldap-attribute" />
@@ -54,7 +53,7 @@ if (Validator.isNull(ParamUtil.getString(request, "groupMappingGroupName")) ||
 
 String groupFilter = ParamUtil.getString(request, "importGroupSearchFilter");
 
-if (!LDAPUtil.isValidFilter(groupFilter)) {
+if (!LDAPFilterValidatorUtil.isValidFilter(groupFilter)) {
 %>
 
 	<liferay-ui:message key="please-enter-a-valid-ldap-search-filter" />

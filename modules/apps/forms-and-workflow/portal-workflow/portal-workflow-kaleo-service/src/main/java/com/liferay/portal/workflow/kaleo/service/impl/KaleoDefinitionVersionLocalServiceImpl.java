@@ -15,7 +15,7 @@
 package com.liferay.portal.workflow.kaleo.service.impl;
 
 import com.liferay.exportimport.kernel.staging.StagingUtil;
-import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Junction;
@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowException;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinitionVersion;
 import com.liferay.portal.workflow.kaleo.service.base.KaleoDefinitionVersionLocalServiceBaseImpl;
 import com.liferay.portal.workflow.kaleo.util.comparator.KaleoDefinitionVersionIdComparator;
@@ -162,6 +163,25 @@ public class KaleoDefinitionVersionLocalServiceImpl
 	}
 
 	@Override
+	public void deleteKaleoDefinitionVersions(long companyId, String name)
+		throws PortalException {
+
+		List<KaleoDefinitionVersion> kaleoDefinitionVersions =
+			getKaleoDefinitionVersions(companyId, name);
+
+		deleteKaleoDefinitionVersions(kaleoDefinitionVersions);
+	}
+
+	@Override
+	public KaleoDefinitionVersion fetchLatestKaleoDefinitionVersion(
+			long companyId, String name)
+		throws PortalException {
+
+		return kaleoDefinitionVersionPersistence.fetchByC_N_First(
+			companyId, name, new KaleoDefinitionVersionIdComparator(false));
+	}
+
+	@Override
 	public KaleoDefinitionVersion fetchLatestKaleoDefinitionVersion(
 			long companyId, String name,
 			OrderByComparator<KaleoDefinitionVersion> orderByComparator)
@@ -172,6 +192,15 @@ public class KaleoDefinitionVersionLocalServiceImpl
 				companyId, name, orderByComparator);
 
 		return kaleoDefinitionVersion;
+	}
+
+	@Override
+	public KaleoDefinitionVersion getFirstKaleoDefinitionVersion(
+			long companyId, String name)
+		throws PortalException {
+
+		return kaleoDefinitionVersionPersistence.findByC_N_First(
+			companyId, name, new KaleoDefinitionVersionIdComparator(true));
 	}
 
 	@Override
@@ -238,8 +267,18 @@ public class KaleoDefinitionVersionLocalServiceImpl
 			long companyId, String name)
 		throws PortalException {
 
-		return kaleoDefinitionVersionPersistence.findByC_N_Last(
-			companyId, name, null);
+		return kaleoDefinitionVersionPersistence.findByC_N_First(
+			companyId, name, new KaleoDefinitionVersionIdComparator(false));
+	}
+
+	@Override
+	public List<KaleoDefinitionVersion> getLatestKaleoDefinitionVersions(
+		long companyId, int start, int end,
+		OrderByComparator<KaleoDefinitionVersion> orderByComparator) {
+
+		return getLatestKaleoDefinitionVersions(
+			companyId, null, WorkflowConstants.STATUS_ANY, start, end,
+			orderByComparator);
 	}
 
 	@Override
@@ -284,7 +323,7 @@ public class KaleoDefinitionVersionLocalServiceImpl
 
 		Junction junction = RestrictionsFactoryUtil.disjunction();
 
-		for (String keyword : CustomSQLUtil.keywords(keywords)) {
+		for (String keyword : _customSQL.keywords(keywords)) {
 			junction.add(RestrictionsFactoryUtil.ilike("name", keyword));
 			junction.add(RestrictionsFactoryUtil.ilike("title", keyword));
 		}
@@ -334,5 +373,8 @@ public class KaleoDefinitionVersionLocalServiceImpl
 
 		return kaleoDefinitionVersionIds;
 	}
+
+	@ServiceReference(type = CustomSQL.class)
+	private CustomSQL _customSQL;
 
 }

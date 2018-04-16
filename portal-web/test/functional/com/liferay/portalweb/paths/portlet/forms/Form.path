@@ -15,22 +15,22 @@
 </tr>
 <tr>
 	<td>SAVE_FORM_BUTTON</td>
-	<td>//div[@class='button-holder ddl-form-builder-buttons']//button[contains(.,'Save Form') and not (contains(@class,'disabled'))]</td>
+	<td>//button[contains(.,'Save Form') and not (contains(@class,'disabled'))]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SAVE_FORM_BUTTON_LOCALIZED</td>
-	<td>//div[@class='button-holder ddl-form-builder-buttons']//button[contains(.,'${key_saveButton}') and not (contains(@class,'disabled'))]</td>
+	<td>//div[contains(@class,'button-holder')]//button[contains(.,'${key_saveButton}') and not (contains(@class,'disabled'))]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SAVE_BUTTON_DISABLED</td>
-	<td>//div[@class='button-holder ddl-form-builder-buttons']//button[contains(.,'Save') and contains(@class,'disabled')]</td>
+	<td>//div[@class='button-holder']//button[contains(.,'Save') and contains(@class,'disabled')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SAVE_BUTTON_DROPDOWN</td>
-	<td>//div[@class='button-holder ddl-form-builder-buttons']//button[contains(@id,'submitToggle')]</td>
+	<td>//div[@class='button-holder']//button[contains(@id,'submitToggle')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 </tr>
 <tr>
 	<td>FORM_PAGE</td>
-	<td>//ul[contains(@class,'multi-step-progress-bar')]//li/div[contains(.,'${key_formPageName}')]</td>
+	<td>//ol[contains(@class,'multi-step-nav')]//li/div[contains(.,'${key_formPageName}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -71,7 +71,7 @@
 </tr>
 <tr>
 	<td>ALT_PAGINATION_SUCCESS_PAGE</td>
-	<td>//div[contains(@class,'form-builder-pagination')]//li[@class='pagination-success-page']</td>
+	<td>//div[contains(@class,'form-builder-pagination')]//li[contains(@class,'pagination-success-page')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -82,27 +82,27 @@
 <!--PAGE_CONTROLS-->
 <tr>
 	<td>PAGE_CONTROLS_ELLIPSIS_ICON</td>
-	<td>//a[@class='form-builder-controls-trigger']</td>
+	<td>//div[@class='form-builder-controls-trigger']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PAGE_CONTROLS_ADD_NEW_PAGE</td>
-	<td>//li[@class='form-builder-page-manager-add-last-position' and contains(text(),'Add New Page')]</td>
+	<td>//li[contains(@class,'dropdown-item')]//a[text()='Add New Page']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PAGE_CONTROLS_ADD_SUCCESS_PAGE</td>
-	<td>//li[@class='form-builder-page-manager-add-success-page' and contains(text(),'Add Success Page')]</td>
+	<td>//li[contains(@class,'dropdown-item')]//a[text()='Add Success Page']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PAGE_CONTROLS_DELETE_CURRENT_PAGE</td>
-	<td>//li[@class='form-builder-page-manager-delete-page' and contains(text(),'Delete Current Page')]</td>
+	<td>//li[contains(@class,'dropdown-item')]//a[text()='Delete Current Page']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PAGE_CONTROLS_SWITCH_PAGINATION_MODE</td>
-	<td>//li[@class='form-builder-page-manager-switch-mode' and contains(text(),'Switch Pagination Mode')]</td>
+	<td>//li[contains(@class,'dropdown-item')]//a[text()='Switch Pagination Mode']</td>
 	<td></td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@
 </tr>
 <tr>
 	<td>ADD_COLUMN_LINE</td>
-	<td>xpath=(//div[@class='layout-row-container-row'][${key_rowNumber}]//div[contains(@class,'layout-builder-resize-col') and contains(@class,'dd-drop')])[${key_columnLineNumber}]</td>
+	<td>xpath=(//div[@class='layout-row-container-row'][${key_rowNumber}]//div[contains(@class,'layout-builder-resize-col-breakpoint-line')])[${key_columnLineNumber}]</td>
 	<td></td>
 </tr>
 <tr>
@@ -134,12 +134,17 @@
 <!--ADD_FIELD-->
 <tr>
 	<td>ADD_FIELD</td>
-	<td>//div[contains(@class,'col col-md-${key_columnSize}')]//button[contains(@class,'add-button-large')]/span</td>
+	<td>//div[contains(@class,'col col-md-${key_columnSize}')]//button[contains(@class,'add-button-large')]/span | //div[contains(@class,'portlet-forms')]//button[contains(@class,'ddm-add-field')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ADD_FIELD_TYPE</td>
-	<td>//a[contains(@class,'field-type')]/div/h4[contains(.,'${key_fieldType}')] | //li[contains(@class,'field-type')]/div/h4[contains(.,'${key_fieldType}')]</td>
+	<td>//a[contains(@class,'field-type')]/div/h4[contains(.,'${key_fieldType}')] | //li[contains(@class,'field-type')]/div/h4[contains(.,'${key_fieldType}')] | //div[contains(@class,'list-group-body')]//div/h4[contains(.,'${key_fieldType}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_FIELD_POSITION</td>
+	<td>//div[contains(@class,'yui3-dd-drop') and contains(@class,'col-empty')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -181,7 +186,7 @@
 </tr>
 <tr>
 	<td>PUBLISH_URL_FORM_PAGE</td>
-	<td>//div[contains(@class,'form-builder-app')]</td>
+	<td>//div[contains(@class,'ddm-form-basic-info')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -244,17 +249,27 @@
 </tr>
 <tr>
 	<td>SIDEBAR_PROPERTIES_TAB</td>
-	<td>//a[contains(@class,'tab') and .='properties'] | //a[contains(@class,'tab') and .='Properties']</td>
+	<td>//a[contains(@class,'tab') and .='Properties']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SIDEBAR_BASIC_TAB</td>
-	<td>//a[contains(@class,'tab') and .='basic'] | //a[contains(@class,'tab') and .='Basic']</td>
+	<td>//a[contains(@class,'tab') and .='Basic']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SIDEBAR_ELEMENTS_TAB</td>
+	<td>//a[contains(@class,'tab') and .='Elements']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SIDEBAR_ELEMENT_SETS_TAB</td>
+	<td>//a[contains(@class,'tab') and .='Element Sets']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SIDEBAR_ELLIPSIS</td>
-	<td>//div[contains(@class,'sidebar-header')]//*[contains(@class,'lexicon-icon-ellipsis-v')]</td>
+	<td>//div[contains(@class,'sidebar-header')]//a[*[contains(@class,'lexicon-icon-ellipsis-v')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -269,7 +284,7 @@
 </tr>
 <tr>
 	<td>SIDEBAR_CLOSE</td>
-	<td>//div[contains(@class,'sidebar-header')]//a[contains(@class,'close')]</td>
+	<td>//div[contains(@class,'open') and contains(@class,'form-builder-sidebar')]//div[contains(@class,'sidebar-header')]//a[contains(@class,'close')]</td>
 	<td></td>
 </tr>
 <!--DATA_PROVIDER_OUTPUT_PARAMETER-->
@@ -315,12 +330,12 @@
 </tr>
 <tr>
 	<td>DATA_PROVIDER_OUTPUT_PARAMETER_TYPE_FIELD_OPTIONS_LIST</td>
-	<td>//div[contains(@data-fieldname,'outputParameters')]//div[contains(@class,'select-field')]//ul[@class='results-chosen']//li[contains(.,'${key_outputParameterType}')]</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]//div[contains(@class,'select-field')]//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_outputParameterType}')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>DATA_PROVIDER_OUTPUT_PARAMETER_TYPE_FIELD_OPTIONS_LIST_2</td>
-	<td>//div[contains(@data-fieldname,'outputParameters')]/../following-sibling::div//div[contains(@class,'select-field')]//ul[@class='results-chosen']//li[contains(.,'${key_outputParameterType}')]</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]/../following-sibling::div//div[contains(@class,'select-field')]//ul[contains(@class,'results-chosen')]//li[contains(.,'${key_outputParameterType}')]</td>
 	<td></td>
 </tr>
 <tr>

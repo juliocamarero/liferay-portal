@@ -25,7 +25,7 @@ String displayStyle = journalDisplayContext.getDisplayStyle();
 	searchContainer="<%= journalDisplayContext.getCommentsSearchContainer() %>"
 >
 	<liferay-ui:search-container-row
-		className="com.liferay.message.boards.kernel.model.MBMessage"
+		className="com.liferay.message.boards.model.MBMessage"
 		cssClass="entry-display-style selectable"
 		modelVar="mbMessage"
 	>
@@ -102,5 +102,8 @@ String displayStyle = journalDisplayContext.getDisplayStyle();
 		</c:choose>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+	<liferay-ui:search-iterator
+		displayStyle="<%= displayStyle %>"
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>

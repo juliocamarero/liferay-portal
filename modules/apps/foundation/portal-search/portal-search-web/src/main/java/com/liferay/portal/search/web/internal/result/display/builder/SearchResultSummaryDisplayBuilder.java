@@ -19,6 +19,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.summary.Summary;
@@ -382,7 +382,7 @@ public class SearchResultSummaryDisplayBuilder {
 			return;
 		}
 
-		SearchResultImage searchResultsImage = new SearchResultImage() {
+		SearchResultImage searchResultImage = new SearchResultImage() {
 
 			@Override
 			public String getClassName() {
@@ -413,7 +413,7 @@ public class SearchResultSummaryDisplayBuilder {
 
 		_searchResultImageContributorsStream.forEach(
 			searchResultImageContributor -> {
-				searchResultImageContributor.contribute(searchResultsImage);
+				searchResultImageContributor.contribute(searchResultImage);
 			});
 	}
 

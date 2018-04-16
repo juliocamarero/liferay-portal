@@ -15,12 +15,12 @@
 </tr>
 <tr>
 	<td>RESULT</td>
-	<td>//div[@class='drop-chosen']//ul/li[//text()='${key_option}']</td>
+	<td>//div[@class='drop-chosen']//ul//li[//text()='${key_option}']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SEARCH_FIELD</td>
-	<td>//input[@class='drop-chosen-search']</td>
+	<td>//input[contains(@class,'drop-chosen-search')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -30,7 +30,7 @@
 </tr>
 <tr>
 	<td>TRIGGER</td>
-	<td>//*[name()='svg'][contains(@class,'icon-caret-double')]</td>
+	<td>//a[*[name()='svg'][contains(@class,'icon-caret-double')]]</td>
 	<td></td>
 </tr>
 <!--FILTER-->

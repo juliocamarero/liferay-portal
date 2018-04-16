@@ -8,6 +8,21 @@
 		</execute>
 	</command>
 
+	<command name="changeFieldType">
+		<execute function="Click" locator1="FormFields#CHANGE_FIELD_TYPE_BUTTON" />
+
+		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${selectOption}">
+			<var name="key_menuItem" value="${selectOption}" />
+		</execute>
+	</command>
+
+	<command name="deleteGridOptionsRow">
+		<execute function="Click" locator1="FormFields#GRID_OPTIONS_OPTION_DELETE_ROW_BUTTON">
+			<var name="key_gridField" value="${gridField}" />
+			<var name="key_rowNumber" value="${rowNumber}" />
+		</execute>
+	</command>
+
 	<command name="deleteOptionsRow">
 		<var name="key_rowNumber" value="${rowNumber}" />
 
@@ -15,8 +30,30 @@
 	</command>
 
 	<command name="disableCheckbox">
-		<execute function="Uncheck" locator1="FormFields#CHECKBOX">
+		<if>
+			<condition function="IsChecked" locator1="FormFields#CHECKBOX">
+				<var name="key_fieldName" value="${fieldName}" />
+			</condition>
+
+			<then>
+				<execute function="Click" locator1="FormFields#CHECKBOX_LABEL">
+					<var name="key_fieldName" value="${fieldName}" />
+				</execute>
+			</then>
+		</if>
+
+		<execute macro="FormFields#viewCheckboxNotChecked">
+			<var name="fieldName" value="${fieldName}" />
+		</execute>
+	</command>
+
+	<command name="disableSwitcher">
+		<execute function="Click" locator1="FormFields#SWITCHER">
 			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
+
+		<execute macro="FormFields#viewCheckboxNotChecked">
+			<var name="fieldName" value="${fieldName}" />
 		</execute>
 	</command>
 
@@ -78,7 +115,7 @@
 	</command>
 
 	<command name="editParagraphBody">
-		<execute function="Type" locator1="FormFields#PARAGRAPH_BODY_TEXT_FIELD" value1="${fieldValue}" />
+		<execute function="Type#clickAtType" locator1="FormFields#PARAGRAPH_BODY_TEXT_FIELD" value1="${fieldValue}" />
 	</command>
 
 	<command name="editPassword">
@@ -138,14 +175,44 @@
 	</command>
 
 	<command name="enableCheckbox">
-		<execute function="Check" locator1="FormFields#CHECKBOX">
-			<var name="key_fieldName" value="${fieldName}" />
+		<if>
+			<condition function="IsNotChecked" locator1="FormFields#CHECKBOX">
+				<var name="key_fieldName" value="${fieldName}" />
+			</condition>
+
+			<then>
+				<execute function="Click" locator1="FormFields#CHECKBOX_LABEL">
+					<var name="key_fieldName" value="${fieldName}" />
+				</execute>
+			</then>
+		</if>
+
+		<execute macro="FormFields#viewCheckboxChecked">
+			<var name="fieldName" value="${fieldName}" />
 		</execute>
 	</command>
 
 	<command name="enableSwitcher">
 		<execute function="Click" locator1="FormFields#SWITCHER">
 			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
+
+		<execute macro="FormFields#viewSwitcherChecked">
+			<var name="fieldName" value="${fieldName}" />
+		</execute>
+	</command>
+
+	<command name="getFieldName" returns="fieldName">
+		<var method="selenium#getElementValue(FormFields#FIELD_NAME_EDIT)" name="fieldName" />
+
+		<return name="fieldName" value="${fieldName}" />
+	</command>
+
+	<command name="moveGridOptionsRow">
+		<execute function="DragAndDrop" locator1="FormFields#GRID_OPTIONS_DRAG_ICON_1" locator2="FormFields#GRID_OPTIONS_DRAG_ICON_2" value1="">
+			<var name="key_gridField" value="${gridField}" />
+			<var name="key_rowNumber1" value="${rowNumberStart}" />
+			<var name="key_rowNumber2" value="${rowNumberEnd}" />
 		</execute>
 	</command>
 
@@ -172,17 +239,22 @@
 	</command>
 
 	<command name="removeSelectOptionViaDropdown">
-		<var name="key_fieldName" value="${fieldName}" />
+		<execute function="Click" locator1="FormFields#SELECT_FIELD">
+			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
 
-		<execute function="Click" locator1="FormFields#SELECT_FIELD" />
+		<execute macro="FormFields#disableCheckbox">
+			<var name="fieldName" value="${selectOption}" />
+		</execute>
 
-		<var name="key_selectOption" value="${selectOption}" />
+		<execute function="Click" locator1="FormFields#SELECT_FIELD">
+			<var name="key_fieldName" value="${fieldName}" />
+		</execute>
 
-		<execute function="Uncheck" locator1="FormFields#SELECT_FIELD_OPTIONS_LIST_CHECKBOX" />
-
-		<execute function="Click" locator1="FormFields#SELECT_FIELD" />
-
-		<execute function="AssertNotVisible" locator1="FormFields#SELECT_FIELD_MULTIPLE_OPTION" value1="${selectOption}" />
+		<execute function="AssertNotVisible" locator1="FormFields#SELECT_FIELD_MULTIPLE_OPTION" value1="${selectOption}">
+			<var name="key_fieldName" value="${fieldName}" />
+			<var name="key_selectOption" value="${selectOption}" />
+		</execute>
 	</command>
 
 	<command name="selectAutoCompleteOption">
@@ -192,7 +264,7 @@
 	</command>
 
 	<command name="selectCheckboxOption">
-		<execute function="Click" locator1="FormFields#CHECKBOX_OPTION">
+		<execute function="Click" locator1="FormFields#CHECKBOX_OPTION_LABEL">
 			<var name="key_checkboxOption" value="${checkboxOption}" />
 			<var name="key_fieldName" value="${fieldName}" />
 		</execute>
@@ -229,7 +301,7 @@
 	</command>
 
 	<command name="selectRadioOption">
-		<execute function="Click" locator1="FormFields#RADIO_OPTION">
+		<execute function="Click" locator1="FormFields#RADIO_OPTION_LABEL">
 			<var name="key_fieldName" value="${fieldName}" />
 			<var name="key_radioOption" value="${radioOption}" />
 		</execute>
@@ -261,9 +333,9 @@
 		<execute function="Click" locator1="FormFields#SELECT_FIELD" />
 
 		<for list="${selectOptionsList}" param="selectOption">
-			<var name="key_selectOption" value="${selectOption}" />
-
-			<execute function="Check" locator1="FormFields#SELECT_FIELD_OPTIONS_LIST_CHECKBOX" />
+			<execute macro="FormFields#enableCheckbox">
+				<var name="fieldName" value="${selectOption}" />
+			</execute>
 		</for>
 
 		<execute macro="FormFields#viewSelectMultipleOptions">
@@ -284,8 +356,9 @@
 	</command>
 
 	<command name="selectTextFieldLineOption">
-		<execute function="Click" locator1="FormFields#TEXT_FIELD_LINE_OPTION">
-			<var name="key_textFieldLineOption" value="${textFieldLineOption}" />
+		<execute macro="FormFields#selectRadioOption">
+			<var name="fieldName" value="displayStyle" />
+			<var name="radioOption" value="${textFieldLineOption}" />
 		</execute>
 	</command>
 
@@ -310,20 +383,19 @@
 	</command>
 
 	<command name="viewCheckboxChecked">
-		<execute function="AssertChecked" locator1="FormFields#CHECKBOX">
+		<execute function="AssertChecked#assertCheckedNotVisible" locator1="FormFields#CHECKBOX">
 			<var name="key_fieldName" value="${fieldName}" />
 		</execute>
 	</command>
 
 	<command name="viewCheckboxLabel">
 		<execute function="AssertTextEquals#assertText" locator1="FormFields#CHECKBOX_LABEL" value1="${fieldLabel}">
-			<var name="key_fieldLabel" value="${fieldLabel}" />
 			<var name="key_fieldName" value="${fieldName}" />
 		</execute>
 	</command>
 
 	<command name="viewCheckboxNotChecked">
-		<execute function="AssertNotChecked" locator1="FormFields#CHECKBOX">
+		<execute function="AssertNotChecked#assertNotCheckedNotVisible" locator1="FormFields#CHECKBOX">
 			<var name="key_fieldName" value="${fieldName}" />
 		</execute>
 	</command>
@@ -405,6 +477,21 @@
 		<execute function="AssertTextEquals" locator1="Message#ERROR_SPECIFIC_FORM_FIELD_REQUIRED" value1="${fieldValidationErrorMessage}" />
 	</command>
 
+	<command name="viewGridOptionNotPresent">
+		<execute macro="FormFields#viewGridOptionsFieldValue">
+			<var name="fieldValue" value="" />
+			<var name="key_gridField" value="${gridField}" />
+			<var name="key_rowNumber" value="${rowNumber}" />
+		</execute>
+	</command>
+
+	<command name="viewGridOptionsFieldValue">
+		<execute function="AssertTextEquals" locator1="FormFields#GRID_OPTIONS_OPTION_VALUE_FIELD" value1="${fieldValue}">
+			<var name="key_gridField" value="${gridField}" />
+			<var name="key_rowNumber" value="${rowNumber}" />
+		</execute>
+	</command>
+
 	<command name="viewMultilineTextValue">
 		<execute function="AssertTextEquals" locator1="FormFields#TEXT_MULTILINE_FIELD" value1="${fieldValue}">
 			<var name="key_fieldName" value="${fieldName}" />
@@ -477,7 +564,7 @@
 		<var name="key_fieldName" value="${fieldName}" />
 		<var name="key_radioOption" value="${fieldValue}" />
 
-		<execute function="AssertTextEquals" locator1="FormFields#RADIO_OPTION_CHECKED" value1="${fieldValue}" />
+		<execute function="AssertElementPresent" locator1="FormFields#RADIO_OPTION_CHECKED" />
 	</command>
 
 	<command name="viewRepeatableFieldHelpText">
@@ -569,7 +656,7 @@
 
 		<var name="key_selectOption" value="${selectOption}" />
 
-		<execute function="AssertElementPresent" locator1="FormFields#SELECT_FIELD_OPTIONS_LIST" value1="${selectOption}" />
+		<execute function="AssertElementPresent" locator1="FormFields#SELECT_FIELD_OPTIONS_LIST" />
 	</command>
 
 	<command name="viewSelectOptionsRowFieldValue">
@@ -588,6 +675,12 @@
 		<var name="key_fieldName" value="${fieldName}" />
 
 		<execute function="AssertElementPresent" locator1="FormFields#SWITCHER" />
+	</command>
+
+	<command name="viewSwitcherChecked">
+		<execute macro="FormFields#viewCheckboxChecked">
+			<var name="fieldName" value="${fieldName}" />
+		</execute>
 	</command>
 
 	<command name="viewSwitcherLabel">

@@ -9,18 +9,25 @@ import PortletBase from './PortletBase.es';
  * on scroll events to improve page load performance.
  *
  * @extends {Component}
+ * @review
  */
+
 class DynamicInlineScroll extends PortletBase {
+
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
+
 	created() {
 		this.eventHandler_ = new EventHandler();
 	}
 
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
+
 	attached() {
 		let {rootNode} = this;
 
@@ -38,7 +45,9 @@ class DynamicInlineScroll extends PortletBase {
 
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
+
 	detached() {
 		super.detached();
 
@@ -47,11 +56,12 @@ class DynamicInlineScroll extends PortletBase {
 
 	/**
 	 * Dynamically adds list item elements to the dropdown menu.
-	 *
 	 * @param {element} listElement Dom node of the list element.
 	 * @param {number} pageIndex Index of page with an inline-scroller.
 	 * @protected
+	 * @review
 	 */
+
 	addListItem_(listElement, pageIndex) {
 		const listItem = document.createElement('li');
 
@@ -72,30 +82,34 @@ class DynamicInlineScroll extends PortletBase {
 
 	/**
 	 * Returns the href attribute value for each
-	 *
 	 * @param {number} pageIndex Index of page
 	 * @protected
 	 * @return {string} String value of href
+	 * @review
 	 */
+
 	getHREF_(pageIndex) {
 		const {curParam, formName, jsCall, namespace, url, urlAnchor} = this;
 
-		if (this.url !== null) {
-			return `${url}${namespace}${curParam}=${pageIndex}${urlAnchor}`;
-		}
-
-		return `javascript:document.${formName}.${namespace}${curParam}.value = "${
+		let href = `javascript:document.${formName}.${namespace}${curParam}.value = "${
 			pageIndex
 		}; ${jsCall}`;
+
+		if (this.url !== null) {
+			href = `${url}${namespace}${curParam}=${pageIndex}${urlAnchor}`;
+		}
+
+		return href;
 	}
 
 	/**
 	 * Returns the value of the parameter passed in as a Number object
-	 *
 	 * @param {string|!Object} val The string or Object to be converted to a number
 	 * @protected
 	 * @return {number} Number value of parameter
+	 * @review
 	 */
+
 	getNumber_(val) {
 		return Number(val);
 	}
@@ -103,22 +117,20 @@ class DynamicInlineScroll extends PortletBase {
 	/**
 	 * Handles click event of dynmaically added list item and submits search
 	 * container form.
-	 *
 	 * @param {Event} event The click event of the dynamically added list item.
 	 * @protected
+	 * @review
 	 */
+
 	handleListItemClick_(event) {
 		if (this.forcePost) {
 			event.preventDefault();
 
 			const {curParam, namespace, randomNamespace} = this;
 
-			const form = document.getElementById(
-				randomNamespace + namespace + 'pageIteratorFm'
-			);
+			const form = document.getElementById(randomNamespace + namespace + 'pageIteratorFm');
 
-			form.elements[namespace + curParam].value =
-				event.currentTarget.textContent;
+			form.elements[namespace + curParam].value = event.currentTarget.textContent;
 
 			form.submit();
 		}
@@ -127,11 +139,12 @@ class DynamicInlineScroll extends PortletBase {
 	/**
 	 * An event triggered when a dropdown menu with an inline-scroller is scrolled.
 	 * Dynamically adds list item elements to the dropdown menu as it is scrolled down.
-	 *
 	 * @param {Event} event The scroll event triggered by scrolling a dropdown menu
 	 * with an inline-scroller
 	 * @protected
+	 * @review
 	 */
+
 	onScroll_(event) {
 		const {cur, initialPages, pages} = this;
 		const {target} = event;
@@ -146,7 +159,8 @@ class DynamicInlineScroll extends PortletBase {
 
 			if (pageIndexCurrent === 0) {
 				pageIndex = initialPages;
-			} else {
+			}
+			else {
 				pageIndex = pageIndexCurrent + initialPages;
 			}
 		}
@@ -169,49 +183,60 @@ class DynamicInlineScroll extends PortletBase {
 /**
  * State definition.
  * @ignore
+ * @review
  * @static
  * @type {!Object}
  */
+
 DynamicInlineScroll.STATE = {
+
 	/**
 	 * Current page
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	cur: {
 		setter: 'getNumber_',
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * URL parameter for current page
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	curParam: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * Forces a form post when a page on the dropdown menu is clicked
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {boolean}
 	 */
+
 	forcePost: {
-		validator: core.isBoolean,
+		validator: core.isBoolean
 	},
 
 	/**
 	 * Form name
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	formName: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
@@ -219,73 +244,87 @@ DynamicInlineScroll.STATE = {
 	 * page load
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	initialPages: {
 		setter: 'getNumber_',
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * JavaScript call
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	jsCall: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * Namespace
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	namespace: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * Total number of pages
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	pages: {
 		setter: 'getNumber_',
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * Random namespace
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	randomNamespace: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * URL
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	url: {
-		validator: core.isString,
+		validator: core.isString
 	},
 
 	/**
 	 * URL anchor
 	 * @instance
 	 * @memberof DynamicInlineScroll
+	 * @review
 	 * @type {string}
 	 */
+
 	urlAnchor: {
-		validator: core.isString,
-	},
+		validator: core.isString
+	}
 };
 
 export default DynamicInlineScroll;

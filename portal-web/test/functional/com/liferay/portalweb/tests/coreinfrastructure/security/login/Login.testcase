@@ -76,7 +76,7 @@
 		</execute>
 	</command>
 
-	<command name="FacebookSSOSmoke" priority="4">
+	<command ignore="true" name="FacebookSSOSmoke" priority="4">
 		<property name="test.name.skip.portal.instance" value="Login#FacebookSSOSmoke" />
 
 		<var method="TestPropsUtil#get('facebook.application.id')" name="facebookApplicationID" />
@@ -98,7 +98,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Authentication" />
+			<var name="panel" value="Authentication" />
 		</execute>
 
 		<execute macro="PortalSettingsNavigator#gotoAuthenticationFacebook" />
@@ -125,7 +125,7 @@
 		</execute>
 	</command>
 
-	<command name="GoogleSSOSmoke" priority="4">
+	<command ignore="true" name="GoogleSSOSmoke" priority="4">
 		<property name="test.name.skip.portal.instance" value="Login#GoogleSSOSmoke" />
 
 		<var method="TestPropsUtil#get('google.client.id')" name="googleClientID" />
@@ -147,7 +147,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Authentication" />
+			<var name="panel" value="Authentication" />
 		</execute>
 
 		<execute macro="PortalSettingsNavigator#gotoAuthenticationGoogle" />
@@ -193,7 +193,41 @@
 		<execute macro="Smoke#viewWelcomePage" />
 	</command>
 
-	<command name="OpenIDSmoke" priority="4">
+	<command name="LoginWithSpanishOnlyEnabledLocale" priority="5">
+		<description message="This is a use case for LPS-72398." />
+
+		<property name="test.name.skip.portal.instance" value="Login#LoginWithSpanishOnlyEnabledLocale" />
+
+		<execute macro="User#firstLoginPG" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Configuration" />
+			<var name="panel" value="Control Panel" />
+			<var name="portlet" value="Instance Settings" />
+		</execute>
+
+		<execute macro="PortalSettings#configureCurrentLanguagesCP">
+			<var name="currentPortalLanguages" value="Spanish (Spain)" />
+		</execute>
+
+		<execute macro="User#logoutPG" />
+
+		<execute macro="Portlet#shutdownServer" />
+
+		<execute macro="Portlet#startServer">
+			<var name="deleteLiferayHome" value="false" />
+		</execute>
+
+		<execute macro="Portlet#assertServerStartup" />
+
+		<execute macro="User#loginPG">
+			<var name="localization" value="ES" />
+			<var name="password" value="test" />
+			<var name="userEmailAddress" value="test@liferay.com" />
+		</execute>
+	</command>
+
+	<command ignore="true" name="OpenIDSmoke" priority="4">
 		<property name="test.name.skip.portal.instance" value="Login#OpenIDSmoke" />
 
 		<var method="TestPropsUtil#get('openid.password')" name="openIDPassword" />
@@ -208,7 +242,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Authentication" />
+			<var name="panel" value="Authentication" />
 		</execute>
 
 		<execute macro="PortalSettingsNavigator#gotoAuthenticationOpenID" />
@@ -233,7 +267,7 @@
 		</execute>
 	</command>
 
-	<command name="OpenSSOSmoke" priority="5">
+	<command ignore="true" name="OpenSSOSmoke" priority="5">
 		<property name="openam.enabled" value="true" />
 		<property name="test.name.skip.portal.instance" value="Login#OpenSSOSmoke" />
 
@@ -281,7 +315,7 @@
 		<execute function="Pause" locator1="30000" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Authentication" />
+			<var name="panel" value="Authentication" />
 		</execute>
 
 		<execute macro="PortalSettingsNavigator#gotoAuthenticationOpenSSO" />
@@ -316,16 +350,14 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="SystemSettings#gotoCategory">
-			<var name="category" value="Foundation" />
-		</execute>
-
-		<execute macro="SystemSettings#viewConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="SSO" />
 			<var name="configurationName" value="Token Based SSO" />
+			<var name="configurationScope" value="System Scope" />
 		</execute>
 
-		<execute macro="SystemSettings#enableSetting">
-			<var name="checkboxSetting" value="ENABLED_CHECKBOX" />
+		<execute macro="FormFields#enableCheckbox">
+			<var name="fieldName" value="enabled" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />

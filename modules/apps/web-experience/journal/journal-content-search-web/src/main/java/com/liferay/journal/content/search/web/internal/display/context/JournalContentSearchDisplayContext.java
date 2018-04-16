@@ -18,6 +18,7 @@ import com.liferay.journal.content.search.web.configuration.JournalContentSearch
 import com.liferay.journal.content.search.web.internal.constants.JournalContentSearchWebKeys;
 import com.liferay.journal.content.search.web.internal.util.ContentHits;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -34,7 +35,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.summary.Summary;
@@ -150,10 +150,6 @@ public class JournalContentSearchDisplayContext {
 	}
 
 	public Summary getSummary(Document document) throws Exception {
-		if (_summary != null) {
-			return _summary;
-		}
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -174,9 +170,7 @@ public class JournalContentSearchDisplayContext {
 		summaryBuilder.setMaxContentLength(summary.getMaxContentLength());
 		summaryBuilder.setTitle(summary.getTitle());
 
-		_summary = summaryBuilder.build();
-
-		return _summary;
+		return summaryBuilder.build();
 	}
 
 	private Hits _hits;
@@ -187,7 +181,6 @@ public class JournalContentSearchDisplayContext {
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
-	private Summary _summary;
 	private final SummaryBuilderFactory _summaryBuilderFactory;
 
 }

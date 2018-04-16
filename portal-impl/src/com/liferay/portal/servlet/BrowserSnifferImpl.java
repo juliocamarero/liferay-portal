@@ -15,12 +15,12 @@
 package com.liferay.portal.servlet;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.servlet.BrowserMetadata;
 import com.liferay.portal.kernel.servlet.BrowserSniffer;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -323,7 +323,24 @@ public class BrowserSnifferImpl implements BrowserSniffer {
 
 			String minor = userAgent.substring(minorStart, minorEnd);
 
-			return major.concat(StringPool.PERIOD).concat(minor);
+			String version = major.concat(StringPool.PERIOD).concat(minor);
+
+			if (leading.equals("trident")) {
+				if (version.equals("7.0")) {
+					version = "11.0";
+				}
+				else if (version.equals("6.0")) {
+					version = "10.0";
+				}
+				else if (version.equals("5.0")) {
+					version = "9.0";
+				}
+				else if (version.equals("4.0")) {
+					version = "8.0";
+				}
+			}
+
+			return version;
 		}
 
 		return StringPool.BLANK;
@@ -391,11 +408,12 @@ public class BrowserSnifferImpl implements BrowserSniffer {
 		return browserMetadata.isIe();
 	}
 
-	protected static String[] revisionLeadings = {"rv", "it", "ra", "ie"};
+	protected static String[] revisionLeadings =
+		{"rv", "it", "ra", "trident", "ie"};
 	protected static char[] revisionSeparators =
 		{CharPool.BACK_SLASH, CharPool.COLON, CharPool.SLASH, CharPool.SPACE};
 	protected static String[] versionLeadings =
-		{"edge", "chrome", "firefox", "version", "minefield"};
+		{"edge", "chrome", "firefox", "version", "minefield", "trident"};
 	protected static char[] versionSeparators =
 		{CharPool.BACK_SLASH, CharPool.SLASH};
 

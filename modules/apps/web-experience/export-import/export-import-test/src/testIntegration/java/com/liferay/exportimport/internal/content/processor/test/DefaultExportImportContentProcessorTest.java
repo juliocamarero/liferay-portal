@@ -17,6 +17,7 @@ package com.liferay.exportimport.internal.content.processor.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
+import com.liferay.document.library.kernel.service.DLAppHelperLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessorRegistryUtil;
@@ -34,6 +35,7 @@ import com.liferay.exportimport.test.util.TestUserIdStrategy;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -49,30 +51,36 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.randomizerbumpers.NumericStringRandomizerBumper;
+import com.liferay.portal.kernel.test.randomizerbumpers.UniqueStringRandomizerBumper;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.test.randomizerbumpers.FriendlyURLRandomizerBumper;
 import com.liferay.portal.test.randomizerbumpers.TikaSafeRandomizerBumper;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.PortalImpl;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.test.LayoutTestUtil;
+import com.liferay.registry.Filter;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.io.File;
 import java.io.InputStream;
@@ -86,14 +94,17 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -101,20 +112,39 @@ import org.junit.runner.RunWith;
 
 /**
  * @author Michael Bowerman
+ * @author Gergely Mathe
  */
 @RunWith(Arquillian.class)
-@Sync
 public class DefaultExportImportContentProcessorTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
+
+	@BeforeClass
+	public static void setUpClass() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append("(&(content.processor.type=LayoutReferences)(objectClass=");
+		sb.append(ExportImportContentProcessor.class.getName());
+		sb.append("))");
+
+		Filter filter = registry.getFilter(sb.toString());
+
+		_serviceTracker = registry.trackServices(filter);
+
+		_serviceTracker.open();
+	}
 
 	@Before
 	public void setUp() throws Exception {
+		_defaultLocale = LocaleUtil.getDefault();
+		_nonDefaultLocale = getNonDefaultLocale();
+
+		_externalGroup = GroupTestUtil.addGroup();
 		_liveGroup = GroupTestUtil.addGroup();
 		_stagingGroup = GroupTestUtil.addGroup();
 
@@ -156,8 +186,8 @@ public class DefaultExportImportContentProcessorTest {
 
 		_portletDataContextExport.setExportDataRootElement(rootElement);
 
-		_stagingPrivateLayout = LayoutTestUtil.addLayout(_stagingGroup, true);
-		_stagingPublicLayout = LayoutTestUtil.addLayout(_stagingGroup, false);
+		_stagingPrivateLayout = addMultiLocaleLayout(_stagingGroup, true);
+		_stagingPublicLayout = addMultiLocaleLayout(_stagingGroup, false);
 
 		_portletDataContextExport.setPlid(_stagingPublicLayout.getPlid());
 
@@ -177,8 +207,11 @@ public class DefaultExportImportContentProcessorTest {
 		_portletDataContextImport.setMissingReferencesElement(
 			missingReferencesElement);
 
-		_livePrivateLayout = LayoutTestUtil.addLayout(_liveGroup, true);
-		_livePublicLayout = LayoutTestUtil.addLayout(_liveGroup, false);
+		_livePrivateLayout = addMultiLocaleLayout(_liveGroup, true);
+		_livePublicLayout = addMultiLocaleLayout(_liveGroup, false);
+
+		_externalPrivateLayout = addMultiLocaleLayout(_externalGroup, true);
+		_externalPublicLayout = addMultiLocaleLayout(_externalGroup, false);
 
 		Map<Long, Long> layoutPlids =
 			(Map<Long, Long>)_portletDataContextImport.getNewPrimaryKeysMap(
@@ -202,6 +235,9 @@ public class DefaultExportImportContentProcessorTest {
 		_exportImportContentProcessor =
 			ExportImportContentProcessorRegistryUtil.
 				getExportImportContentProcessor(String.class.getName());
+
+		_layoutReferencesExportImportContentProcessor =
+			_serviceTracker.getService();
 	}
 
 	@Test
@@ -226,14 +262,16 @@ public class DefaultExportImportContentProcessorTest {
 			String exportedUrl = exportedURLs[i];
 			String url = urls.get(i);
 
-			Assert.assertFalse(exportedUrl.matches("[?&]t="));
+			Assert.assertFalse(exportedUrl, exportedUrl.matches("[?&]t="));
 
 			if (url.contains("/documents/") && url.contains("?")) {
-				Assert.assertTrue(exportedUrl.contains("width=100&height=100"));
+				Assert.assertTrue(
+					exportedUrl, exportedUrl.contains("width=100&height=100"));
 			}
 
 			if (url.contains("/documents/") && url.contains("mustkeep")) {
-				Assert.assertTrue(exportedUrl.contains("mustkeep"));
+				Assert.assertTrue(
+					exportedUrl, exportedUrl.contains("mustkeep"));
 			}
 		}
 	}
@@ -255,7 +293,7 @@ public class DefaultExportImportContentProcessorTest {
 			true);
 
 		for (String url : urls) {
-			Assert.assertFalse(content.contains(url));
+			Assert.assertFalse(content, content.contains(url));
 		}
 
 		TestReaderWriter testReaderWriter =
@@ -278,6 +316,7 @@ public class DefaultExportImportContentProcessorTest {
 		for (String entry : testReaderWriter.getEntries()) {
 			if (entry.contains(DLFileEntryConstants.getClassName())) {
 				Assert.assertTrue(
+					content,
 					content.contains("[$dl-reference=" + entry + "$]"));
 
 				count++;
@@ -325,7 +364,8 @@ public class DefaultExportImportContentProcessorTest {
 		portalUtil.setPortal(portalImpl);
 
 		Portal originalPortal = ReflectionTestUtil.getAndSetFieldValue(
-			_exportImportContentProcessor, "_portal", portalImpl);
+			_layoutReferencesExportImportContentProcessor, "_portal",
+			portalImpl);
 
 		_oldLayoutFriendlyURLPrivateUserServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
@@ -335,7 +375,8 @@ public class DefaultExportImportContentProcessorTest {
 				"LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING"),
 			"/en");
 
-		Class<?> clazz = _exportImportContentProcessor.getClass();
+		Class<?> clazz =
+			_layoutReferencesExportImportContentProcessor.getClass();
 
 		setFinalStaticField(
 			clazz.getDeclaredField("_PRIVATE_USER_SERVLET_MAPPING"), "/en/");
@@ -351,23 +392,31 @@ public class DefaultExportImportContentProcessorTest {
 			true);
 
 		Assert.assertFalse(
+			content,
 			content.contains(VirtualLayoutConstants.CANONICAL_URL_SEPARATOR));
 		Assert.assertFalse(
+			content,
 			content.contains(GroupConstants.CONTROL_PANEL_FRIENDLY_URL));
 		Assert.assertFalse(
+			content,
 			content.contains(PropsValues.CONTROL_PANEL_LAYOUT_FRIENDLY_URL));
 		Assert.assertFalse(
+			content,
 			content.contains(
 				PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING));
 		Assert.assertFalse(
+			content,
 			content.contains(
 				PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING));
 		Assert.assertTrue(
+			content,
 			content.contains(
 				"@data_handler_group_friendly_url@@" +
 					_stagingGroup.getFriendlyURL() + "@"));
-		Assert.assertFalse(content.contains(PortalUtil.getPathContext()));
-		Assert.assertFalse(content.contains("/en/en"));
+		Assert.assertTrue(
+			content, content.contains("@data_handler_path_context@/en@"));
+		Assert.assertFalse(
+			content, content.contains("@data_handler_path_context@/de@"));
 
 		setFinalStaticField(
 			PropsValues.class.getDeclaredField(
@@ -382,7 +431,8 @@ public class DefaultExportImportContentProcessorTest {
 		portalUtil.setPortal(new PortalImpl());
 
 		ReflectionTestUtil.setFieldValue(
-			_exportImportContentProcessor, "_portal", originalPortal);
+			_layoutReferencesExportImportContentProcessor, "_portal",
+			originalPortal);
 	}
 
 	@Test
@@ -395,7 +445,8 @@ public class DefaultExportImportContentProcessorTest {
 				"LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING"),
 			"/en");
 
-		Class<?> clazz = _exportImportContentProcessor.getClass();
+		Class<?> clazz =
+			_layoutReferencesExportImportContentProcessor.getClass();
 
 		setFinalStaticField(
 			clazz.getDeclaredField("_PRIVATE_USER_SERVLET_MAPPING"), "/en/");
@@ -411,22 +462,28 @@ public class DefaultExportImportContentProcessorTest {
 			true);
 
 		Assert.assertFalse(
+			content,
 			content.contains(VirtualLayoutConstants.CANONICAL_URL_SEPARATOR));
 		Assert.assertFalse(
+			content,
 			content.contains(GroupConstants.CONTROL_PANEL_FRIENDLY_URL));
 		Assert.assertFalse(
+			content,
 			content.contains(PropsValues.CONTROL_PANEL_LAYOUT_FRIENDLY_URL));
 		Assert.assertFalse(
+			content,
 			content.contains(
 				PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING));
 		Assert.assertFalse(
+			content,
 			content.contains(
 				PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING));
 		Assert.assertTrue(
+			content,
 			content.contains(
 				"@data_handler_group_friendly_url@@" +
 					_stagingGroup.getFriendlyURL() + "@"));
-		Assert.assertFalse(content.contains("/en/en"));
+		Assert.assertFalse(content, content.contains("/en/en"));
 
 		setFinalStaticField(
 			PropsValues.class.getDeclaredField(
@@ -501,34 +558,47 @@ public class DefaultExportImportContentProcessorTest {
 	}
 
 	@Test
-	public void testImportDLReferences() throws Exception {
-		Element referrerStagedModelElement =
-			_portletDataContextExport.getExportDataElement(
-				_referrerStagedModel);
+	public void testImportDLReferences1() throws Exception {
+		doTestImportDLReferences(false);
+	}
 
-		String referrerStagedModelPath = ExportImportPathUtil.getModelPath(
-			_referrerStagedModel);
+	@Test
+	public void testImportDLReferences2() throws Exception {
+		doTestImportDLReferences(true);
+	}
 
-		referrerStagedModelElement.addAttribute(
-			"path", referrerStagedModelPath);
+	@Test
+	public void testImportDLReferencesFileEntryDeleted() throws Exception {
+		DLAppHelperLocalServiceUtil.deleteFileEntry(_fileEntry);
 
-		String content = replaceParameters(
-			getContent("dl_references.txt"), _fileEntry);
+		doTestImportDLReferences(false);
+	}
 
-		content = _exportImportContentProcessor.replaceExportContentReferences(
-			_portletDataContextExport, _referrerStagedModel, content, true,
-			true);
+	@Test
+	public void testImportDLReferencesFileEntryInTrash1() throws Exception {
+		DLAppHelperLocalServiceUtil.moveFileEntryToTrash(
+			TestPropsValues.getUserId(), _fileEntry);
 
-		_portletDataContextImport.setScopeGroupId(_fileEntry.getGroupId());
+		doTestImportDLReferences(false);
+	}
 
-		content = _exportImportContentProcessor.replaceImportContentReferences(
-			_portletDataContextImport, _referrerStagedModel, content);
+	@Test
+	public void testImportDLReferencesFileEntryInTrash2() throws Exception {
+		DLAppHelperLocalServiceUtil.moveFileEntryToTrash(
+			TestPropsValues.getUserId(), _fileEntry);
 
-		Assert.assertFalse(content.contains("[$dl-reference="));
+		doTestImportDLReferences(true);
 	}
 
 	@Test
 	public void testImportLayoutReferences() throws Exception {
+		doTestImportLayoutReferences();
+	}
+
+	@Test
+	public void testImportLayoutReferencesOnExternalGroupWithDifferentUUID()
+		throws Exception {
+
 		String content = replaceParameters(
 			getContent("layout_references.txt"), _fileEntry);
 
@@ -538,19 +608,50 @@ public class DefaultExportImportContentProcessorTest {
 		content = _exportImportContentProcessor.replaceExportContentReferences(
 			_portletDataContextExport, _referrerStagedModel, content, true,
 			false);
+
+		UUID randomUUID = UUID.randomUUID();
+
+		String uuidString = randomUUID.toString();
+
+		content = StringUtil.replace(
+			content, _externalGroup.getUuid(), uuidString);
+
 		content = _exportImportContentProcessor.replaceImportContentReferences(
 			_portletDataContextImport, _referrerStagedModel, content);
 
+		Assert.assertTrue(
+			"The imported content should contain the friendly URL of the " +
+				"external group (\"" + _externalGroup.getFriendlyURL() +
+					"\"), but it does not:\n" + content,
+			content.contains(_externalGroup.getFriendlyURL()));
+
 		Assert.assertFalse(
-			content.contains("@data_handler_group_friendly_url@"));
-		Assert.assertFalse(content.contains("@data_handler_path_context@"));
+			"The imported content should not contain any @ variables, but it " +
+				"does:\n" + content,
+			content.contains(StringPool.AT));
+
 		Assert.assertFalse(
-			content.contains("@data_handler_private_group_servlet_mapping@"));
+			content, content.contains("data_handler_group_friendly_url"));
 		Assert.assertFalse(
-			content.contains("@data_handler_private_user_servlet_mapping@"));
+			content, content.contains("data_handler_path_context"));
 		Assert.assertFalse(
-			content.contains("@data_handler_public_servlet_mapping@"));
-		Assert.assertFalse(content.contains("@data_handler_site_admin_url@"));
+			content,
+			content.contains("data_handler_private_group_servlet_mapping"));
+		Assert.assertFalse(
+			content,
+			content.contains("data_handler_private_user_servlet_mapping"));
+		Assert.assertFalse(
+			content, content.contains("data_handler_public_servlet_mapping"));
+		Assert.assertFalse(
+			content, content.contains("data_handler_site_admin_url"));
+	}
+
+	@Test
+	public void testImportLayoutReferencesOnSameGroup() throws Exception {
+		_portletDataContextImport.setGroupId(_stagingGroup.getGroupId());
+		_portletDataContextImport.setScopeGroupId(_stagingGroup.getGroupId());
+
+		doTestImportLayoutReferences();
 	}
 
 	@Test
@@ -663,10 +764,34 @@ public class DefaultExportImportContentProcessorTest {
 		portalUtil.setPortal(new PortalImpl());
 	}
 
+	protected Layout addMultiLocaleLayout(Group group, boolean privateLayout)
+		throws Exception {
+
+		Map<Locale, String> nameMap = new HashMap<>();
+		Map<Locale, String> firendlyURLMap = new HashMap<>();
+
+		for (Locale locale : new Locale[] {_defaultLocale, _nonDefaultLocale}) {
+			String name = RandomTestUtil.randomString(
+				FriendlyURLRandomizerBumper.INSTANCE,
+				NumericStringRandomizerBumper.INSTANCE,
+				UniqueStringRandomizerBumper.INSTANCE);
+
+			String friendlyURL =
+				StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
+
+			nameMap.put(locale, name);
+
+			firendlyURLMap.put(locale, friendlyURL);
+		}
+
+		return LayoutTestUtil.addLayout(
+			group.getGroupId(), privateLayout, nameMap, firendlyURLMap);
+	}
+
 	protected void assertLinksToLayouts(
 		String content, Layout layout, long groupId) {
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(9);
 
 		sb.append(StringPool.OPEN_BRACKET);
 		sb.append(layout.getLayoutId());
@@ -699,7 +824,90 @@ public class DefaultExportImportContentProcessorTest {
 
 		sb.append(StringPool.CLOSE_BRACKET);
 
-		Assert.assertTrue(content.contains(sb.toString()));
+		Assert.assertTrue(content, content.contains(sb.toString()));
+	}
+
+	protected void doTestImportDLReferences(boolean deleteFileEntryBeforeImport)
+		throws Exception {
+
+		Element referrerStagedModelElement =
+			_portletDataContextExport.getExportDataElement(
+				_referrerStagedModel);
+
+		String referrerStagedModelPath = ExportImportPathUtil.getModelPath(
+			_referrerStagedModel);
+
+		referrerStagedModelElement.addAttribute(
+			"path", referrerStagedModelPath);
+
+		String content = replaceParameters(
+			getContent("dl_references.txt"), _fileEntry);
+
+		content = _exportImportContentProcessor.replaceExportContentReferences(
+			_portletDataContextExport, _referrerStagedModel, content, true,
+			true);
+
+		_portletDataContextImport.setScopeGroupId(_fileEntry.getGroupId());
+
+		if (deleteFileEntryBeforeImport) {
+			DLAppLocalServiceUtil.deleteFileEntry(_fileEntry.getFileEntryId());
+		}
+
+		content = _exportImportContentProcessor.replaceImportContentReferences(
+			_portletDataContextImport, _referrerStagedModel, content);
+
+		Assert.assertFalse(content, content.contains("[$dl-reference="));
+	}
+
+	protected void doTestImportLayoutReferences() throws Exception {
+		String content = replaceParameters(
+			getContent("layout_references.txt"), _fileEntry);
+
+		_exportImportContentProcessor.validateContentReferences(
+			_stagingGroup.getGroupId(), content);
+
+		content = _exportImportContentProcessor.replaceExportContentReferences(
+			_portletDataContextExport, _referrerStagedModel, content, true,
+			false);
+		content = _exportImportContentProcessor.replaceImportContentReferences(
+			_portletDataContextImport, _referrerStagedModel, content);
+
+		Assert.assertFalse(
+			content, content.contains("data_handler_group_friendly_url"));
+		Assert.assertFalse(
+			content, content.contains("data_handler_path_context"));
+		Assert.assertFalse(
+			content,
+			content.contains("data_handler_private_group_servlet_mapping"));
+		Assert.assertFalse(
+			content,
+			content.contains("data_handler_private_user_servlet_mapping"));
+		Assert.assertFalse(
+			content, content.contains("data_handler_public_servlet_mapping"));
+		Assert.assertFalse(
+			content, content.contains("data_handler_site_admin_url"));
+	}
+
+	protected String duplicateLinesWithParamNames(
+		String content, String[] findParams, String[] addParams) {
+
+		if (StringUtil.indexOfAny(content, findParams) <= -1) {
+			return content;
+		}
+
+		List<String> urls = ListUtil.toList(StringUtil.splitLines(content));
+
+		List<String> outURLs = new ArrayList<>();
+
+		for (String url : urls) {
+			outURLs.add(url);
+
+			if (StringUtil.indexOfAny(url, findParams) > -1) {
+				outURLs.add(StringUtil.replace(url, findParams, addParams));
+			}
+		}
+
+		return StringUtil.merge(outURLs, StringPool.NEW_LINE);
 	}
 
 	protected void exportImportLayouts(boolean privateLayout) throws Exception {
@@ -743,6 +951,16 @@ public class DefaultExportImportContentProcessorTest {
 		return scanner.next();
 	}
 
+	protected Locale getNonDefaultLocale() throws Exception {
+		for (Locale locale : _locales) {
+			if (!locale.equals(_defaultLocale)) {
+				return locale;
+			}
+		}
+
+		throw new Exception("Could not find a non-default locale");
+	}
+
 	protected List<String> getURLs(String content) {
 		Matcher matcher = _pattern.matcher(StringPool.BLANK);
 
@@ -759,6 +977,12 @@ public class DefaultExportImportContentProcessorTest {
 		}
 
 		return urls;
+	}
+
+	protected String replaceExternalGroupFriendlyURLs(String content) {
+		return duplicateLinesWithParamNames(
+			content, _GROUP_FRIENDLY_URL_VARIABLES,
+			_EXTERNAL_GROUP_FRIENDLY_URL_VARIABLES);
 	}
 
 	protected String replaceLinksToLayoutsParameters(
@@ -778,19 +1002,41 @@ public class DefaultExportImportContentProcessorTest {
 			});
 	}
 
+	protected String replaceMultiLocaleLayoutFriendlyURLs(String content) {
+		return duplicateLinesWithParamNames(
+			content, _MULTI_LOCALE_LAYOUT_VARIABLES,
+			_NON_DEFAULT_MULTI_LOCALE_LAYOUT_VARIABLES);
+	}
+
 	protected String replaceParameters(String content, FileEntry fileEntry) {
 		Company company = CompanyLocalServiceUtil.fetchCompany(
 			fileEntry.getCompanyId());
+
+		content = replaceExternalGroupFriendlyURLs(content);
+		content = replaceMultiLocaleLayoutFriendlyURLs(content);
+
+		Map<Locale, String> livePublicLayoutFriendlyURLMap =
+			_livePublicLayout.getFriendlyURLMap();
+		Map<Locale, String> stagingPrivateLayoutFriendlyURLMap =
+			_stagingPrivateLayout.getFriendlyURLMap();
+		Map<Locale, String> stagingPublicLayoutFriendlyURLMap =
+			_stagingPublicLayout.getFriendlyURLMap();
 
 		content = StringUtil.replace(
 			content,
 			new String[] {
 				"[$CANONICAL_URL_SEPARATOR$]", "[$CONTROL_PANEL_FRIENDLY_URL$]",
 				"[$CONTROL_PANEL_LAYOUT_FRIENDLY_URL$]",
+				"[$EXTERNAL_GROUP_FRIENDLY_URL$]",
+				"[$EXTERNAL_PRIVATE_LAYOUT_FRIENDLY_URL$]",
+				"[$EXTERNAL_PUBLIC_LAYOUT_FRIENDLY_URL$]",
 				"[$GROUP_FRIENDLY_URL$]", "[$GROUP_ID$]", "[$IMAGE_ID$]",
 				"[$LIVE_GROUP_FRIENDLY_URL$]", "[$LIVE_GROUP_ID$]",
-				"[$LIVE_PUBLIC_LAYOUT_FRIENDLY_URL$]", "[$PATH_CONTEXT$]",
-				"[$PATH_FRIENDLY_URL_PRIVATE_GROUP$]",
+				"[$LIVE_PUBLIC_LAYOUT_FRIENDLY_URL$]",
+				"[$NON_DEFAULT_LIVE_PUBLIC_LAYOUT_FRIENDLY_URL$]",
+				"[$NON_DEFAULT_PRIVATE_LAYOUT_FRIENDLY_URL$]",
+				"[$NON_DEFAULT_PUBLIC_LAYOUT_FRIENDLY_URL$]",
+				"[$PATH_CONTEXT$]", "[$PATH_FRIENDLY_URL_PRIVATE_GROUP$]",
 				"[$PATH_FRIENDLY_URL_PRIVATE_USER$]",
 				"[$PATH_FRIENDLY_URL_PUBLIC$]",
 				"[$PRIVATE_LAYOUT_FRIENDLY_URL$]",
@@ -801,12 +1047,19 @@ public class DefaultExportImportContentProcessorTest {
 				VirtualLayoutConstants.CANONICAL_URL_SEPARATOR,
 				GroupConstants.CONTROL_PANEL_FRIENDLY_URL,
 				PropsValues.CONTROL_PANEL_LAYOUT_FRIENDLY_URL,
+				_externalGroup.getFriendlyURL(),
+				_externalPrivateLayout.getFriendlyURL(),
+				_externalPublicLayout.getFriendlyURL(),
 				_stagingGroup.getFriendlyURL(),
 				String.valueOf(fileEntry.getGroupId()),
 				String.valueOf(fileEntry.getFileEntryId()),
 				_liveGroup.getFriendlyURL(),
 				String.valueOf(_liveGroup.getGroupId()),
-				_livePublicLayout.getFriendlyURL(), PortalUtil.getPathContext(),
+				_livePublicLayout.getFriendlyURL(),
+				livePublicLayoutFriendlyURLMap.get(_nonDefaultLocale),
+				stagingPrivateLayoutFriendlyURLMap.get(_nonDefaultLocale),
+				stagingPublicLayoutFriendlyURLMap.get(_nonDefaultLocale),
+				PortalUtil.getPathContext(),
 				PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING,
 				PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING,
 				PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING,
@@ -904,16 +1157,53 @@ public class DefaultExportImportContentProcessorTest {
 			entriesStream.anyMatch(entry -> entry.endsWith(expected)));
 	}
 
-	private static String _oldLayoutFriendlyURLPrivateUserServletMapping;
+	private static final String[] _EXTERNAL_GROUP_FRIENDLY_URL_VARIABLES = {
+		"[$EXTERNAL_GROUP_FRIENDLY_URL$]",
+		"[$EXTERNAL_PRIVATE_LAYOUT_FRIENDLY_URL$]",
+		"[$EXTERNAL_PUBLIC_LAYOUT_FRIENDLY_URL$]"
+	};
 
+	private static final String[] _GROUP_FRIENDLY_URL_VARIABLES = {
+		"[$GROUP_FRIENDLY_URL$]", "[$PRIVATE_LAYOUT_FRIENDLY_URL$]",
+		"[$PUBLIC_LAYOUT_FRIENDLY_URL$]"
+	};
+
+	private static final String[] _MULTI_LOCALE_LAYOUT_VARIABLES = {
+		"[$LIVE_PUBLIC_LAYOUT_FRIENDLY_URL$]",
+		"[$PRIVATE_LAYOUT_FRIENDLY_URL$]", "[$PUBLIC_LAYOUT_FRIENDLY_URL$]"
+	};
+
+	private static final String[] _NON_DEFAULT_MULTI_LOCALE_LAYOUT_VARIABLES = {
+		"[$NON_DEFAULT_LIVE_PUBLIC_LAYOUT_FRIENDLY_URL$]",
+		"[$NON_DEFAULT_PRIVATE_LAYOUT_FRIENDLY_URL$]",
+		"[$NON_DEFAULT_PUBLIC_LAYOUT_FRIENDLY_URL$]"
+	};
+
+	private static final Locale[] _locales =
+		{LocaleUtil.US, LocaleUtil.GERMANY, LocaleUtil.SPAIN};
+	private static String _oldLayoutFriendlyURLPrivateUserServletMapping;
+	private static ServiceTracker
+		<ExportImportContentProcessor,
+			ExportImportContentProcessor> _serviceTracker;
+
+	private Locale _defaultLocale;
 	private ExportImportContentProcessor<String> _exportImportContentProcessor;
+
+	@DeleteAfterTestRun
+	private Group _externalGroup;
+
+	private Layout _externalPrivateLayout;
+	private Layout _externalPublicLayout;
 	private FileEntry _fileEntry;
+	private ExportImportContentProcessor<String>
+		_layoutReferencesExportImportContentProcessor;
 
 	@DeleteAfterTestRun
 	private Group _liveGroup;
 
 	private Layout _livePrivateLayout;
 	private Layout _livePublicLayout;
+	private Locale _nonDefaultLocale;
 	private final Pattern _pattern = Pattern.compile("href=|\\{|\\[");
 	private PortletDataContext _portletDataContextExport;
 	private PortletDataContext _portletDataContextImport;

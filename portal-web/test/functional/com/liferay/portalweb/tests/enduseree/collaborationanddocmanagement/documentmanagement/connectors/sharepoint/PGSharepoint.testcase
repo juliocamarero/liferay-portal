@@ -1,4 +1,4 @@
-<definition component-name="portal-document-management-ee">
+<definition component-name="portal-document-management-ee" ignore="true">
 	<property name="cmis.repository.type" value="sharepoint2010" />
 	<property name="custom.properties" value="session.store.password=true${line.separator}company.security.auth.type=screenName${line.separator}default.layout.template.id=1_column" />
 	<property name="osgi.app.includes" value="sharepoint" />
@@ -19,16 +19,24 @@
 			<var name="userScreenName" value="test" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="Account Settings" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="Account Settings" />
 		</execute>
 
 		<execute macro="User#editDetailsViaMyAccount">
 			<var name="userScreenNameEdit" value="administrator" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="Account Settings" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="Account Settings" />
 		</execute>
 
 		<execute macro="User#editPasswordViaMyAccount">
@@ -52,6 +60,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Documents and Media Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Documents and Media Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -100,16 +116,24 @@
 
 				<execute macro="DMDocument#tearDownCP" />
 
-				<execute macro="Page#gotoMyAccount">
-					<var name="portletName" value="Account Settings" />
+				<execute macro="Navigator#openURL" />
+
+				<execute macro="ProductMenu#gotoPortlet">
+					<var name="category" value="My Account" />
+					<var name="panel" value="User" />
+					<var name="portlet" value="Account Settings" />
 				</execute>
 
 				<execute macro="User#editDetailsViaMyAccount">
 					<var name="userScreenNameEdit" value="test" />
 				</execute>
 
-				<execute macro="Page#gotoMyAccount">
-					<var name="portletName" value="Account Settings" />
+				<execute macro="Navigator#openURL" />
+
+				<execute macro="ProductMenu#gotoPortlet">
+					<var name="category" value="My Account" />
+					<var name="panel" value="User" />
+					<var name="portlet" value="Account Settings" />
 				</execute>
 
 				<execute macro="User#editPasswordViaMyAccount">

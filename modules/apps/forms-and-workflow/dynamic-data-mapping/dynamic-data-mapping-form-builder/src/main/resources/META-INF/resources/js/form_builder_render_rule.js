@@ -8,6 +8,10 @@ AUI.add(
 		var FormBuilderRenderRule = A.Component.create(
 			{
 				ATTRS: {
+					builder: {
+						value: {}
+					},
+
 					fields: {
 						value: []
 					},
@@ -26,6 +30,10 @@ AUI.add(
 
 					roles: {
 						value: []
+					},
+
+					ruleStored: {
+						value: false
 					},
 
 					strings: {
@@ -67,9 +75,12 @@ AUI.add(
 
 						instance._conditions = {};
 
+						var builder = instance.get('builder');
+
 						instance._actionFactory = new Liferay.DDM.FormBuilderActionFactory(
 							{
 								bubbleTargets: [instance],
+								builder: builder,
 								fields: instance.get('fields'),
 								getDataProviders: instance.get('getDataProviders'),
 								pages: instance.get('pages')
@@ -88,6 +99,8 @@ AUI.add(
 						boundingBox.delegate('click', A.bind(instance._handleCancelClick, instance), '.form-builder-rule-settings-cancel');
 						boundingBox.delegate('click', A.bind(instance._handleDeleteActionClick, instance), '.action-card-delete');
 						boundingBox.delegate('click', A.bind(instance._handleSaveClick, instance), '.form-builder-rule-settings-save');
+
+						A.one('body').delegate('click', A.bind(instance._handleFormBuilderClick, instance), '#' + Liferay.DDM.Settings.portletNamespace + 'showForm');
 
 						instance.after(instance._toggleDeleteActionButton, instance, '_addAction');
 						instance.after(instance._validateRule, instance, '_addCondition');
@@ -152,6 +165,8 @@ AUI.add(
 						instance._renderActions(rule.actions);
 
 						instance._validateRule();
+
+						instance.set('ruleStored', false);
 
 						instance._updateLogicOperatorEnableState();
 
@@ -461,6 +476,8 @@ AUI.add(
 						instance.fire(
 							'cancelRule'
 						);
+
+						instance.set('ruleStored', true);
 					},
 
 					_handleDeleteActionClick: function(event) {
@@ -495,6 +512,29 @@ AUI.add(
 						instance._validateRule();
 					},
 
+					_handleFormBuilderClick: function() {
+						var instance = this;
+
+						var actions = {};
+						var conditions = {};
+						var logicalOperator = '';
+
+						if (!instance.get('ruleStored')) {
+							actions = instance._getActions();
+							conditions = instance._getConditions();
+							logicalOperator = instance.get('logicOperator');
+						}
+
+						instance.fire(
+							'saveRuleDraft',
+							{
+								actions: actions,
+								conditions: conditions,
+								'logical-operator': logicalOperator
+							}
+						);
+					},
+
 					_handleSaveClick: function() {
 						var instance = this;
 
@@ -510,6 +550,8 @@ AUI.add(
 								'logical-operator': instance.get('logicOperator')
 							}
 						);
+
+						instance.set('ruleStored', true);
 					},
 
 					_isButtonEnabled: function() {

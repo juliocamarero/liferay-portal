@@ -16,7 +16,10 @@
 				<then>
 					<pathconvert pathsep="," property="plugin.war" setonempty="false">
 						<path>
-							<fileset dir="plugins/marketplace" includes="@{plugin}*.war" />
+							<fileset
+								dir="plugins/marketplace"
+								includes="@{plugin}*.war"
+							/>
 						</path>
 					</pathconvert>
 
@@ -48,7 +51,10 @@
 				<else>
 					<pathconvert pathsep="," property="plugin.build.path" setonempty="false">
 						<path>
-							<fileset dir="${project.dir}/modules" includes="**/@{plugin}/build.gradle,**/@{plugin}/build.xml" />
+							<fileset
+								dir="${project.dir}/modules"
+								includes="**/@{plugin}/build.gradle,**/@{plugin}/build.xml"
+							/>
 						</path>
 					</pathconvert>
 
@@ -69,6 +75,71 @@
 					<fail message="Unable to locate plugin @{plugin}" />
 				</then>
 			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="set-plugins-build-properties">
+		<sequential>
+			<get-auto-deploy-dir />
+
+			<if>
+				<equals arg1="${app.server.type}" arg2="tomcat" />
+				<then>
+					<if>
+						<equals arg1="${liferay.portal.bundle}" arg2="6.1.20" />
+						<then>
+							<property name="lp.plugins.app.server.dir" value="${app.server.parent.dir}/tomcat-7.0.27" />
+						</then>
+						<elseif>
+							<or>
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.0" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.1" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.2" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.3" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.1" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.2" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.3" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.4" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.5" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.6" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.7" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.8" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.9" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.10" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.11" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.12" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.13" />
+							</or>
+							<then>
+								<property name="lp.plugins.app.server.dir" value="${app.server.parent.dir}/tomcat-7.0.42" />
+							</then>
+						</elseif>
+						<elseif>
+							<or>
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.4" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.5" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.14" />
+								<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.15" />
+							</or>
+							<then>
+								<property name="lp.plugins.app.server.dir" value="${app.server.parent.dir}/tomcat-7.0.62" />
+							</then>
+						</elseif>
+					</if>
+				</then>
+			</if>
+
+			<condition else="${app.server.dir}" property="lp.plugins.app.server.dir" value="${lp.plugins.app.server.dir}">
+				<isset property="lp.plugins.app.server.dir" />
+			</condition>
+
+			<echo append="true" file="${lp.plugins.dir}/build.${user.name}.properties">app.server.parent.dir=${app.server.parent.dir}
+app.server.type=${app.server.type}
+app.server.${app.server.type}.dir=${lp.plugins.app.server.dir}
+
+auto.deploy.dir=${auto.deploy.dir}
+
+liferay.home=${liferay.home}</echo>
 		</sequential>
 	</macrodef>
 
@@ -111,7 +182,10 @@
 
 							<get-auto-deploy-dir />
 
-							<copy file="plugins/marketplace/${marketplace.app}" todir="${auto.deploy.dir}" />
+							<copy
+								file="plugins/marketplace/${marketplace.app}"
+								todir="${auto.deploy.dir}"
+							/>
 						</then>
 					</elseif>
 				</if>
@@ -122,75 +196,7 @@
 	<target name="deploy-simple-server-plugins">
 		<get-auto-deploy-dir />
 
-		<if>
-			<equals arg1="${app.server.type}" arg2="jboss" />
-			<then>
-				<echo file="${lp.plugins.dir}/build.${user.name}.properties">app.server.parent.dir=${app.server.parent.dir}
-app.server.type=${app.server.type}
-app.server.jboss.dir=${app.server.dir}
-
-auto.deploy.dir=${auto.deploy.dir}
-
-liferay.home=${liferay.home}</echo>
-			</then>
-			<else>
-				<echo file="${lp.plugins.dir}/build.${user.name}.properties">app.server.parent.dir=${app.server.parent.dir}
-app.server.type=${app.server.type}
-
-auto.deploy.dir=${auto.deploy.dir}
-
-liferay.home=${liferay.home}</echo>
-			</else>
-		</if>
-
-		<if>
-			<equals arg1="${liferay.portal.bundle}" arg2="6.1.20" />
-			<then>
-				<echo append="true" file="${lp.plugins.dir}/build.${user.name}.properties">
-
-app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
-			</then>
-		</if>
-
-		<if>
-			<or>
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.0" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.1" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.2" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.3" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.1" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.2" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.3" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.4" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.5" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.6" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.7" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.8" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.9" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.10" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.11" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.12" />
-				<equals arg1="${liferay.portal.bundle}" arg2="6.2.10.13" />
-			</or>
-			<then>
-				<echo append="true" file="${lp.plugins.dir}/build.${user.name}.properties">
-
-app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42</echo>
-			</then>
-			<elseif>
-				<or>
-					<equals arg1="@{liferay.portal.bundle}" arg2="6.2.4" />
-					<equals arg1="@{liferay.portal.bundle}" arg2="6.2.5" />
-					<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.14" />
-					<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.15" />
-				</or>
-				<then>
-					<echo append="true" file="${lp.plugins.dir}/build.${user.name}.properties">
-
-app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.62</echo>
-				</then>
-			</elseif>
-		</if>
+		<set-plugins-build-properties />
 
 		<for list="${plugins.includes}" param="plugin">
 			<sequential>
@@ -213,11 +219,7 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.62</echo>
 						<if>
 							<isset property="portlet.properties.@{plugin}" />
 							<then>
-								<propertycopy
-									from="portlet.properties.@{plugin}"
-									name="portlet.properties"
-									override="true"
-								/>
+								<propertycopy from="portlet.properties.@{plugin}" name="portlet.properties" override="true" />
 
 								<if>
 									<available file="${plugin.path}/docroot/WEB-INF/src" />
@@ -282,7 +284,10 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.62</echo>
 
 								<get-auto-deploy-dir />
 
-								<copy file="${plugin.war}" todir="${auto.deploy.dir}" />
+								<copy
+									file="${plugin.war}"
+									todir="${auto.deploy.dir}"
+								/>
 
 								<var name="plugin.war" unset="true" />
 							</then>
@@ -308,11 +313,19 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.62</echo>
 						<if>
 							<equals arg1="@{plugin}" arg2="cas-web" />
 							<then>
-								<move todir="${app.server.dir}/webapps">
-									<fileset dir="${app.server.dir}/webapps">
+								<move
+									todir="${app.server.dir}/webapps"
+								>
+									<fileset
+										dir="${app.server.dir}/webapps"
+									>
 										<include name="cas-web-*.war" />
 									</fileset>
-									<mapper from="*" to="cas-web.war" type="glob" />
+									<mapper
+										from="*"
+										to="cas-web.war"
+										type="glob"
+									/>
 								</move>
 							</then>
 						</if>
@@ -357,17 +370,6 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.62</echo>
 			</else>
 		</if>
 
-		<get-auto-deploy-dir />
-
-		<echo file="${lp.plugins.dir}/build.${user.name}.properties">app.server.parent.dir=${app.server.parent.dir}
-app.server.type=${app.server.type}
-
-auto.deploy.dir=${auto.deploy.dir}
-
-liferay.home=${liferay.home}
-
-plugins.includes=${test.plugin}</echo>
-
 		<ant dir="${lp.plugins.dir}/${test.plugin.type}/${test.plugin}" inheritAll="false" target="clean" />
 
 		<if>
@@ -390,6 +392,8 @@ plugins.includes=${test.plugin}</echo>
 				<fail>Use "ant test-plugin-group -Dtest.plugin.group.index=0".</fail>
 			</then>
 		</if>
+
+		<set-plugins-build-properties />
 
 		<property file="${project.dir}/test.plugin.names.properties" />
 
@@ -415,7 +419,10 @@ plugins.includes=${test.plugin}</echo>
 		<if>
 			<available file="plugins-compile-failure" />
 			<then>
-				<loadfile property="failed.plugins" srcFile="plugins-compile-failure" />
+				<loadfile
+					property="failed.plugins"
+					srcFile="plugins-compile-failure"
+				/>
 
 				<beanshell>
 					<![CDATA[

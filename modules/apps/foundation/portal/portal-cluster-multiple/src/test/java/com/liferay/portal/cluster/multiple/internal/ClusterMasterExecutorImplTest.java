@@ -14,6 +14,7 @@
 
 package com.liferay.portal.cluster.multiple.internal;
 
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.cluster.multiple.configuration.ClusterExecutorConfiguration;
 import com.liferay.portal.kernel.cluster.Address;
 import com.liferay.portal.kernel.cluster.ClusterEvent;
@@ -35,7 +36,6 @@ import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.Props;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
@@ -209,7 +209,8 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 		clusterMasterExecutorImpl.deactivate();
 
-		Assert.assertTrue(clusterEventListeners.isEmpty());
+		Assert.assertTrue(
+			clusterEventListeners.toString(), clusterEventListeners.isEmpty());
 
 		// Test 2, destory when cluster link is disabled
 
@@ -277,7 +278,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
-			Assert.assertTrue(logRecords.isEmpty());
+			Assert.assertTrue(logRecords.toString(), logRecords.isEmpty());
 		}
 
 		// Test 3, execute with exception
@@ -407,7 +408,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 				isMasterTokenAcquiredNotified());
 	}
 
-	@AdviseWith(adviceClasses = {ClusterExecutorAdvice.class})
+	@AdviseWith(adviceClasses = ClusterExecutorAdvice.class)
 	@NewEnv(type = NewEnv.Type.CLASSLOADER)
 	@Test
 	public void testGetMasterClusterNodeIdRetry() throws Exception {
@@ -501,7 +502,8 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 
 					List<LogRecord> logRecords = captureHandler.getLogRecords();
 
-					Assert.assertTrue(logRecords.isEmpty());
+					Assert.assertTrue(
+						logRecords.toString(), logRecords.isEmpty());
 				}
 			}
 
@@ -575,7 +577,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		Assert.assertFalse(clusterMasterExecutorImpl.isMaster());
 	}
 
-	@AdviseWith(adviceClasses = {SPIUtilAdvice.class})
+	@AdviseWith(adviceClasses = SPIUtilAdvice.class)
 	@NewEnv(type = NewEnv.Type.CLASSLOADER)
 	@Test
 	public void testMisc() {

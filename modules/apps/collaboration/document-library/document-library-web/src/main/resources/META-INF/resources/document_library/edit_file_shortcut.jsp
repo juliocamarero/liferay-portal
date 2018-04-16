@@ -109,7 +109,7 @@ if (portletTitleBasedNavigation) {
 				String toGroupName = StringPool.BLANK;
 
 				if (toGroup != null) {
-					toGroupName = HtmlUtil.escape(toGroup.getDescriptiveName(locale));
+					toGroupName = toGroup.getDescriptiveName(locale);
 				}
 				%>
 
@@ -124,7 +124,7 @@ if (portletTitleBasedNavigation) {
 				%>
 
 				<div class="form-group">
-					<aui:input label="document" name="toFileEntryTitle" type="resource" value="<%= toFileEntryTitle %>" />
+					<aui:input label="document" name="toFileEntryTitle" type="resource" value="<%= HtmlUtil.unescape(toFileEntryTitle) %>" />
 
 					<aui:button disabled="<%= (toGroup == null) %>" name="selectToFileEntryButton" value="select" />
 				</div>
@@ -140,9 +140,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>
@@ -175,7 +175,7 @@ if (portletTitleBasedNavigation) {
 					document.<portlet:namespace />fm.<portlet:namespace />toGroupId.value = event.groupid;
 					document.<portlet:namespace />fm.<portlet:namespace />toFileEntryId.value = 0;
 
-					document.getElementById('<portlet:namespace />toGroupName').value = _.escape(event.groupdescriptivename);
+					document.getElementById('<portlet:namespace />toGroupName').value = event.groupdescriptivename;
 
 					Liferay.Util.toggleDisabled('#<portlet:namespace />selectToFileEntryButton', false);
 				}

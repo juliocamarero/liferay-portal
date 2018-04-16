@@ -17,8 +17,6 @@
 <%@ include file="/message_boards/init.jsp" %>
 
 <%
-String redirect = ParamUtil.getString(request, "redirect");
-
 MBCategory category = (MBCategory)request.getAttribute(WebKeys.MESSAGE_BOARDS_CATEGORY);
 
 long categoryId = MBUtil.getCategoryId(request, category);
@@ -82,19 +80,18 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 	portletURL="<%= restoreTrashEntriesURL %>"
 />
 
-<%
-MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDisplayContext(request, response, categoryId);
-%>
-
-<c:if test="<%= !mbListDisplayContext.isShowRecentPosts() %>">
-	<liferay-util:include page="/message_boards_admin/nav.jsp" servletContext="<%= application %>">
-		<liferay-util:param name="navItemSelected" value="threads" />
-		<liferay-util:param name="showSearchFm" value="<%= Boolean.TRUE.toString() %>" />
-	</liferay-util:include>
-</c:if>
+<liferay-util:include page="/message_boards_admin/nav.jsp" servletContext="<%= application %>">
+	<liferay-util:param name="navItemSelected" value="threads" />
+</liferay-util:include>
 
 <%
-SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, SearchContainer.DEFAULT_DELTA, portletURL, null, "there-are-no-threads-nor-categories");
+MBAdminListDisplayContext mbAdminListDisplayContext = mbDisplayContextProvider.getMbAdminListDisplayContext(request, response, categoryId);
+
+int entriesDelta = mbAdminListDisplayContext.getEntriesDelta();
+
+SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, entriesDelta, portletURL, null, "there-are-no-threads-or-categories");
+
+mbAdminListDisplayContext.setEntriesDelta(searchContainer);
 
 searchContainer.setId("mbEntries");
 searchContainer.setOrderByCol(orderByCol);
@@ -112,7 +109,7 @@ else {
 	entriesChecker.setRememberCheckBoxStateURLRegex("mbCategoryId=" + categoryId);
 }
 
-mbListDisplayContext.populateResultsAndTotal(searchContainer);
+mbAdminListDisplayContext.populateResultsAndTotal(searchContainer);
 %>
 
 <liferay-frontend:management-bar
@@ -126,6 +123,10 @@ mbListDisplayContext.populateResultsAndTotal(searchContainer);
 			portletURL="<%= searchContainer.getIteratorURL() %>"
 			selectedDisplayStyle="descriptive"
 		/>
+
+		<c:if test="<%= !mbAdminListDisplayContext.isShowSearch() %>">
+			<liferay-util:include page="/message_boards_admin/add_button.jsp" servletContext="<%= application %>" />
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<portlet:renderURL var="viewEntriesHomeURL">
@@ -152,81 +153,58 @@ mbListDisplayContext.populateResultsAndTotal(searchContainer);
 			orderColumns='<%= new String[] {"modified-date", "title"} %>'
 			portletURL="<%= portletURL %>"
 		/>
+
+		<liferay-portlet:renderURL varImpl="searchURL">
+			<portlet:param name="mvcRenderCommandName" value="/message_boards_admin/search" />
+		</liferay-portlet:renderURL>
+
+		<li>
+			<aui:form action="<%= searchURL %>" name="searchFm">
+				<liferay-portlet:renderURLParams varImpl="searchURL" />
+				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+				<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
+				<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
+
+				<liferay-ui:input-search
+					markupView="lexicon"
+				/>
+			</aui:form>
+		</li>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>' icon='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>' label='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>'
+			icon='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>'
+			label='<%= trashHelper.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>'
+		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "lockEntries();" %>' icon="lock" label="lock" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "lockEntries();" %>'
+			icon="lock"
+			label="lock"
+		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "unlockEntries();" %>' icon="unlock" label="unlock" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "unlockEntries();" %>'
+			icon="unlock"
+			label="unlock"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
 <%
-request.setAttribute("view.jsp-displayStyle", "descriptive");
 request.setAttribute("view.jsp-entriesSearchContainer", searchContainer);
 %>
 
-<c:choose>
-	<c:when test="<%= mbListDisplayContext.isShowRecentPosts() %>">
-		<div class="container-fluid-1280">
+<liferay-util:include page="/message_boards_admin/view_entries.jsp" servletContext="<%= application %>" />
 
-			<%
-			long groupThreadsUserId = ParamUtil.getLong(request, "groupThreadsUserId");
-
-			if (groupThreadsUserId > 0) {
-				portletURL.setParameter("groupThreadsUserId", String.valueOf(groupThreadsUserId));
-			}
-			%>
-
-			<c:if test="<%= groupThreadsUserId > 0 %>">
-				<div class="alert alert-info">
-					<liferay-ui:message key="filter-by-user" />: <%= HtmlUtil.escape(PortalUtil.getUserName(groupThreadsUserId, StringPool.BLANK)) %>
-				</div>
-			</c:if>
-
-			<c:if test="<%= enableRSS %>">
-				<liferay-ui:rss
-					delta="<%= rssDelta %>"
-					displayStyle="<%= rssDisplayStyle %>"
-					feedType="<%= rssFeedType %>"
-					message="rss"
-					url="<%= MBUtil.getRSSURL(plid, 0, 0, groupThreadsUserId, themeDisplay) %>"
-				/>
-			</c:if>
-		</div>
-
-		<liferay-util:include page='<%= "/message_boards_admin/view_entries.jsp" %>' servletContext="<%= application %>">
-			<liferay-util:param name="showBreadcrumb" value="<%= Boolean.FALSE.toString() %>" />
-		</liferay-util:include>
-
-		<%
-		portletDisplay.setShowBackIcon(true);
-		portletDisplay.setURLBack(redirect);
-
-		renderResponse.setTitle(LanguageUtil.get(request, "recent-posts"));
-
-		PortalUtil.setPageSubtitle(LanguageUtil.get(request, StringUtil.replace("recent-posts", CharPool.UNDERLINE, CharPool.DASH)), request);
-		%>
-
-	</c:when>
-	<c:otherwise>
-		<liferay-util:include page="/message_boards_admin/view_entries.jsp" servletContext="<%= application %>" />
-
-		<%
-		if (category != null) {
-			PortalUtil.setPageSubtitle(category.getName(), request);
-			PortalUtil.setPageDescription(category.getDescription(), request);
-		}
-		%>
-
-	</c:otherwise>
-</c:choose>
-
-<c:if test="<%= !mbListDisplayContext.isShowSearch() && !mbListDisplayContext.isShowRecentPosts() %>">
-	<liferay-util:include page="/message_boards_admin/add_button.jsp" servletContext="<%= application %>" />
-</c:if>
+<%
+if (category != null) {
+	PortalUtil.setPageSubtitle(category.getName(), request);
+	PortalUtil.setPageDescription(category.getDescription(), request);
+}
+%>
 
 <aui:script>
 	function <portlet:namespace />deleteEntries() {

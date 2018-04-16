@@ -14,20 +14,29 @@
 
 package com.liferay.journal.content.web.internal.portlet;
 
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.journal.constants.JournalContentPortletKeys;
 import com.liferay.journal.constants.JournalWebKeys;
+import com.liferay.journal.content.web.internal.constants.JournalContentWebKeys;
+import com.liferay.journal.content.web.internal.display.context.JournalContentDisplayContext;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.journal.util.ExportArticleHelper;
 import com.liferay.journal.util.JournalContent;
-import com.liferay.journal.web.util.ExportArticleUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -155,8 +164,28 @@ public class JournalContentPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		renderRequest.setAttribute(
 			JournalWebKeys.JOURNAL_CONTENT, _journalContent);
+
+		try {
+			JournalContentDisplayContext journalContentDisplayContext =
+				JournalContentDisplayContext.create(
+					renderRequest, renderResponse,
+					themeDisplay.getPortletDisplay(), _CLASS_NAME_ID,
+					_ddmTemplateModelResourcePermission);
+
+			renderRequest.setAttribute(
+				JournalContentWebKeys.JOURNAL_CONTENT_DISPLAY_CONTEXT,
+				journalContentDisplayContext);
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe);
+			}
+		}
 
 		super.render(renderRequest, renderResponse);
 	}
@@ -196,57 +225,61 @@ public class JournalContentPortlet extends MVCPortlet {
 					allowedExtensions,
 					"enable" + StringUtil.toUpperCase(targetExtension))) {
 
-				_exportArticleUtil.sendFile(
+				_exportArticleHelper.sendFile(
 					targetExtension, resourceRequest, resourceResponse);
 			}
 		}
 		else {
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)resourceRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
 			resourceRequest.setAttribute(
 				JournalWebKeys.JOURNAL_CONTENT, _journalContent);
+
+			try {
+				JournalContentDisplayContext journalContentDisplayContext =
+					JournalContentDisplayContext.create(
+						resourceRequest, resourceResponse,
+						themeDisplay.getPortletDisplay(), _CLASS_NAME_ID,
+						_ddmTemplateModelResourcePermission);
+
+				resourceRequest.setAttribute(
+					JournalContentWebKeys.JOURNAL_CONTENT_DISPLAY_CONTEXT,
+					journalContentDisplayContext);
+			}
+			catch (PortalException pe) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(pe);
+				}
+			}
 
 			super.serveResource(resourceRequest, resourceResponse);
 		}
 	}
 
-	@Reference(unbind = "-")
-	protected void setExportArticleUtil(ExportArticleUtil exportArticleUtil) {
-		_exportArticleUtil = exportArticleUtil;
-	}
+	private static final long _CLASS_NAME_ID = PortalUtil.getClassNameId(
+		DDMStructure.class);
 
-	@Reference(unbind = "-")
-	protected void setJournalContent(JournalContent journalContent) {
-		_journalContent = journalContent;
-	}
+	private static final Log _log = LogFactoryUtil.getLog(
+		JournalContentPortlet.class);
 
-	@Reference(unbind = "-")
-	protected void setJournalContentSearchLocal(
-		JournalArticleLocalService journalArticleLocalService) {
+	@Reference(
+		target = "(model.class.name=com.liferay.dynamic.data.mapping.model.DDMTemplate)"
+	)
+	private ModelResourcePermission<DDMTemplate>
+		_ddmTemplateModelResourcePermission;
 
-		_journalArticleLocalService = journalArticleLocalService;
-	}
+	@Reference
+	private ExportArticleHelper _exportArticleHelper;
 
-	@Reference(unbind = "-")
-	protected void setTrashEntryService(TrashEntryService trashEntryService) {
-		_trashEntryService = trashEntryService;
-	}
-
-	protected void unsetExportArticleUtil(ExportArticleUtil exportArticleUtil) {
-		_exportArticleUtil = exportArticleUtil;
-	}
-
-	protected void unsetJournalContent(JournalContent journalContent) {
-		_journalContent = null;
-	}
-
-	protected void unsetJournalContentSearchLocal(
-		JournalArticleLocalService journalArticleLocalService) {
-
-		_journalArticleLocalService = null;
-	}
-
-	private ExportArticleUtil _exportArticleUtil;
+	@Reference
 	private JournalArticleLocalService _journalArticleLocalService;
+
+	@Reference
 	private JournalContent _journalContent;
+
+	@Reference
 	private TrashEntryService _trashEntryService;
 
 }

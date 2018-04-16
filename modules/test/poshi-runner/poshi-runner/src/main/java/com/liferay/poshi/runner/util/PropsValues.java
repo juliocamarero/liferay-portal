@@ -22,6 +22,9 @@ public class PropsValues {
 	public static final String ACCESSIBILITY_STANDARDS_JSON = PropsUtil.get(
 		"accessibility.standards.json");
 
+	public static final String BROWSER_CHROME_BIN_ARGS = PropsUtil.get(
+		"browser.chrome.bin.args");
+
 	public static final String BROWSER_COMMANDS_DIR_NAME = PropsUtil.get(
 		"browser.commands.dir.name");
 
@@ -144,6 +147,9 @@ public class PropsValues {
 
 	public static final String SELENIUM_EXECUTABLE_DIR_NAME = PropsUtil.get(
 		"selenium.executable.dir.name");
+
+	public static final String SELENIUM_GECKO_DRIVER_EXECUTABLE = PropsUtil.get(
+		"selenium.gecko.driver.executable");
 
 	public static final String SELENIUM_HOST = PropsUtil.get("selenium.host");
 

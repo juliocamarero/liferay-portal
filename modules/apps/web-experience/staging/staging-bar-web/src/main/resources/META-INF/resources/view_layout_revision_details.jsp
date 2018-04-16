@@ -184,12 +184,16 @@ else {
 	</c:if>
 
 	<%
-	request.setAttribute(StagingProcessesWebKeys.BRANCHING_ENABLED, String.valueOf(true));
+	request.setAttribute(StagingProcessesWebKeys.BRANCHING_ENABLED, Boolean.TRUE.toString());
 	request.setAttribute("view_layout_revision_details.jsp-hasWorkflowTask", String.valueOf(hasWorkflowTask));
 	request.setAttribute("view_layout_revision_details.jsp-layoutRevision", layoutRevision);
 	%>
 
-	<liferay-staging:menu cssClass="branching-enabled col-md-4" layoutSetBranchId="<%= layoutRevision.getLayoutSetBranchId() %>" onlyActions="<%= true %>" />
+	<liferay-staging:menu
+		cssClass="branching-enabled col-md-4"
+		layoutSetBranchId="<%= layoutRevision.getLayoutSetBranchId() %>"
+		onlyActions="<%= true %>"
+	/>
 
 	<li class="control-menu-nav-item">
 		<div class="dropdown hidden-xs">
@@ -279,11 +283,15 @@ else {
 	);
 </aui:script>
 
-<liferay-util:buffer var="pageVariationsHelpIcon">
+<liferay-util:buffer
+	var="pageVariationsHelpIcon"
+>
 	<liferay-ui:icon-help message="page-variations-help" />
 </liferay-util:buffer>
 
-<liferay-util:buffer var="sitePagesVariationsHelpIcon">
+<liferay-util:buffer
+	var="sitePagesVariationsHelpIcon"
+>
 	<liferay-ui:icon-help message="pages-variations-help" />
 </liferay-util:buffer>
 

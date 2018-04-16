@@ -16,16 +16,15 @@
 
 <%@ include file="/init.jsp" %>
 
-<%
-renderResponse.setTitle(LanguageUtil.get(request, "pages"));
-%>
-
 <liferay-ui:success key='<%= portletDisplay.getPortletName() + "layoutAdded" %>' message='<%= LanguageUtil.get(resourceBundle, "the-page-was-created-succesfully") %>' />
 <liferay-ui:success key='<%= portletDisplay.getPortletName() + "layoutUpdated" %>' message='<%= LanguageUtil.get(resourceBundle, "the-page-was-updated-succesfully") %>' />
 
-<aui:nav-bar markupView="lexicon">
-	<liferay-util:include page="/navigation_tabs.jsp" servletContext="<%= application %>" />
-</aui:nav-bar>
+<liferay-ui:error exception="<%= GroupInheritContentException.class %>" message="this-page-cannot-be-deleted-and-cannot-have-child-pages-because-it-is-associated-to-a-site-template" />
+
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= layoutsAdminDisplayContext.getNavigationItems() %>"
+/>
 
 <liferay-ui:error exception="<%= LayoutTypeException.class %>">
 
@@ -49,6 +48,17 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 			portletURL="<%= layoutsAdminDisplayContext.getPortletURL() %>"
 			selectedDisplayStyle="<%= layoutsAdminDisplayContext.getDisplayStyle() %>"
 		/>
+
+		<c:if test="<%= layoutsAdminDisplayContext.isShowAddRootLayoutButton() %>">
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					title='<%= LanguageUtil.get(request, "select-template") %>'
+					url="<%= layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL() %>"
+				/>
+			</liferay-frontend:add-menu>
+		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
@@ -66,7 +76,12 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedPages" label="delete" />
+		<liferay-frontend:management-bar-button
+			href="javascript:;"
+			icon="trash"
+			id="deleteSelectedPages"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -86,12 +101,13 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 			context.put("pathThemeImages", themeDisplay.getPathThemeImages());
 			context.put("portletNamespace", renderResponse.getNamespace());
 			context.put("searchContainerId", "pages");
+			context.put("siteNavigationMenuNames", layoutsAdminDisplayContext.getAutoSiteNavigationMenuNames());
 			%>
 
 			<soy:template-renderer
 				context="<%= context %>"
-				module="layout-admin-web/js/Layout.es"
-				templateNamespace="Layout.render"
+				module="layout-admin-web/js/miller_columns/Layout.es"
+				templateNamespace="com.liferay.layout.admin.web.Layout.render"
 			/>
 		</c:when>
 		<c:otherwise>
@@ -127,17 +143,14 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 					/>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="<%= layoutsAdminDisplayContext.getDisplayStyle() %>" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="<%= layoutsAdminDisplayContext.getDisplayStyle() %>"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</c:otherwise>
 	</c:choose>
 </aui:form>
-
-<c:if test="<%= layoutsAdminDisplayContext.isShowAddRootLayoutButton() %>">
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "page") %>' url="<%= layoutsAdminDisplayContext.getAddLayoutURL() %>" />
-	</liferay-frontend:add-menu>
-</c:if>
 
 <aui:script sandbox="<%= true %>">
 	$('#<portlet:namespace />deleteSelectedPages').on(

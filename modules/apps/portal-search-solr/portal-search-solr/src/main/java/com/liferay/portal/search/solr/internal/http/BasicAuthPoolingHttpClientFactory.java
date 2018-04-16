@@ -14,8 +14,8 @@
 
 package com.liferay.portal.search.solr.internal.http;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.solr.configuration.SolrHttpClientFactoryConfiguration;
 import com.liferay.portal.search.solr.http.HttpClientFactory;
@@ -46,8 +46,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  */
 @Component(
 	configurationPid = "com.liferay.portal.search.solr.configuration.SolrHttpClientFactoryConfiguration",
-	immediate = true, property = {"type=BASIC"},
-	service = HttpClientFactory.class
+	immediate = true, property = "type=BASIC", service = HttpClientFactory.class
 )
 public class BasicAuthPoolingHttpClientFactory
 	extends BasePoolingHttpClientFactory {

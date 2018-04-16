@@ -27,6 +27,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="ADT Test Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="ADT Test Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 	</set-up>
 
@@ -50,7 +58,7 @@
 	</tear-down>
 
 	<command name="AddRSSADTViaPortletConfiguration" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Content and Application Templates,RSS" />
 
 		<execute macro="Navigator#gotoSitePage">
@@ -67,7 +75,7 @@
 			<var name="portletOption" value="Configuration" />
 		</execute>
 
-		<execute macro="RSS#addFeed">
+		<execute macro="RSSPortlet#addFeed">
 			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Latimes > Technology News" />
 			<var name="feedType" value="file" />
@@ -95,7 +103,7 @@
 			<var name="siteName" value="Test Site Name" />
 		</execute>
 
-		<execute macro="RSS#waitForRSSLoad" />
+		<execute macro="RSSPortlet#waitForRSSLoad" />
 
 		<execute macro="ApplicationDisplayTemplates#selectPortletADT">
 			<var name="templateName" value="RSS Test ADT" />
@@ -106,9 +114,9 @@
 			<var name="siteName" value="Test Site Name" />
 		</execute>
 
-		<execute macro="RSS#waitForRSSLoad" />
+		<execute macro="RSSPortlet#waitForRSSLoad" />
 
-		<execute macro="RSS#viewCustomADT">
+		<execute macro="RSSPortlet#viewCustomADT">
 			<var name="feedContentTitle" value="Technology" />
 		</execute>
 	</command>
@@ -130,7 +138,7 @@
 			<var name="portletOption" value="Configuration" />
 		</execute>
 
-		<execute macro="RSS#addFeed">
+		<execute macro="RSSPortlet#addFeed">
 			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Latimes > Technology News" />
 			<var name="feedType" value="file" />
@@ -164,7 +172,7 @@
 			<var name="siteName" value="Test Site Name" />
 		</execute>
 
-		<execute macro="RSS#viewCorruptScript" />
+		<execute macro="RSSPortlet#viewCorruptScript" />
 	</command>
 
 	<command name="AddRSSADTWithScript" priority="3">
@@ -184,7 +192,7 @@
 			<var name="portletOption" value="Configuration" />
 		</execute>
 
-		<execute macro="RSS#addFeed">
+		<execute macro="RSSPortlet#addFeed">
 			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Technology" />
 			<var name="feedType" value="file" />
@@ -218,7 +226,7 @@
 			<var name="siteName" value="Test Site Name" />
 		</execute>
 
-		<execute macro="RSS#viewNavigationDisplayFeedTitle">
+		<execute macro="RSSPortlet#viewNavigationDisplayFeedTitle">
 			<var name="feedTitle" value="Technology" />
 			<var name="navigationNullADT" value="true" />
 		</execute>
@@ -267,7 +275,7 @@
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#configureDisplaySettings">
-			<var name="displaySettings" value="Comments,Comment Ratings,Enable Social Bookmarks,Flags,Print,Ratings,Related Assets" />
+			<var name="displaySettings" value="Comments,Comment Ratings,Flags,Print,Ratings,Related Assets" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -296,7 +304,7 @@
 	</command>
 
 	<command name="ADTBreadcrumb" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Breadcrumb,Content and Application Templates" />
 
 		<execute macro="Navigator#gotoSitePage">
@@ -529,10 +537,26 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="ADT Test Page 2" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="ADT Test Page 2" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="ADT Test Page 3" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="ADT Test Page 3" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -696,6 +720,14 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Blogs Test Page" />
+			<var name="sitePageType" value="Layout" />
+		</execute>
+
+		<execute macro="SitePages#configurePage">
+			<var name="columnName" value="1 Column" />
+			<var name="pageName" value="Blogs Test Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">

@@ -6,7 +6,7 @@
 	</command>
 
 	<command name="addPollCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputTitle">
 			<var name="title" value="${pollsQuestionTitle}" />
@@ -58,7 +58,7 @@
 			<isset var="permissions" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Permissions" />
+					<var name="panel" value="Permissions" />
 				</execute>
 
 				<var name="key_permissionsViewRole" value="${permissionsViewRole}" />
@@ -71,7 +71,7 @@
 	</command>
 
 	<command name="addPollCPWithExpirationDate">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputTitle">
 			<var name="title" value="${pollsQuestionTitle}" />
@@ -130,7 +130,7 @@
 			<isset var="permissions" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Permissions" />
+					<var name="panel" value="Permissions" />
 				</execute>
 
 				<var name="key_permissionsViewRole" value="${permissionsViewRole}" />
@@ -147,7 +147,7 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputTitle">
 			<var name="title" value="${pollsQuestionTitle}" />
@@ -214,7 +214,7 @@
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="Polls#POLL_QUESTION" value1="What is your favorite Liferay portlet?" />
 
-		<for list="${pollsQuestionChoiceList}" param="questionChoiceList" >
+		<for list="${pollsQuestionChoiceList}" param="questionChoiceList">
 			<var name="key_pollsQuestionChoice" value="${questionChoiceList}" />
 
 			<execute function="AssertElementNotPresent" locator1="Polls#POLL_QUESTION_CHOICE" />
@@ -243,7 +243,7 @@
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="Polls#POLL_QUESTION" value1="${pollsQuestion}" />
 
-		<for list="${pollsQuestionChoiceList}" param="questionChoiceList" >
+		<for list="${pollsQuestionChoiceList}" param="questionChoiceList">
 			<var name="key_pollsQuestionChoice" value="${questionChoiceList}" />
 
 			<execute function="AssertTextPresent" locator1="Polls#POLL_QUESTION_CHOICE" value1="${questionChoiceList}" />

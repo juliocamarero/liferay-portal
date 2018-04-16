@@ -1,3 +1,11 @@
+%display-portlet-topper {
+	@include media-query(sm) {
+		opacity: 1;
+
+		@include transform(translateY(-97%));
+	}
+}
+
 .portlet {
 	margin-bottom: 10px;
 	position: relative;
@@ -21,6 +29,10 @@
 
 			top: 0;
 		}
+
+		&.open {
+			@extend %display-portlet-topper;
+		}
 	}
 }
 
@@ -35,11 +47,7 @@
 		}
 
 		> .portlet-topper {
-			@include media-query(sm) {
-				opacity: 1;
-
-				@include transform(translateY(-97%));
-			}
+			@extend %display-portlet-topper;
 		}
 	}
 }
@@ -95,9 +103,12 @@
 
 .portlet-topper-toolbar {
 	margin-bottom: 0;
-	margin-right: -10px;
 	margin-top: 0;
 	padding-left: 0;
+
+	&:last-of-type {
+		margin-right: -10px;
+	}
 
 	> a, > span > a, .lfr-icon-menu > a {
 		color: $portlet-topper-link-color;

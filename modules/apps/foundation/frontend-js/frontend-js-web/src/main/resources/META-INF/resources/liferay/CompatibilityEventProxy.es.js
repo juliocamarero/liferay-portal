@@ -7,12 +7,16 @@ import {core} from 'metal';
  * This class adds compatibility for YUI events, re-emitting events
  * according to YUI naming and adding the capability of adding targets
  * to bubble events to them.
- *
+ * @review
  */
+
 class CompatibilityEventProxy extends State {
+
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
+
 	constructor(config, element) {
 		super(config, element);
 
@@ -25,10 +29,11 @@ class CompatibilityEventProxy extends State {
 
 	/**
 	 * Registers another EventTarget as a bubble target.
-	 *
 	 * @param  {!Object} target YUI component where events will be emited to
 	 * @private
+	 * @review
 	 */
+
 	addTarget(target) {
 		this.eventTargets_.push(target);
 	}
@@ -36,11 +41,12 @@ class CompatibilityEventProxy extends State {
 	/**
 	 * Check if the event is an attribute modification event and addapt
 	 * the eventName.
-	 *
 	 * @param  {!String} eventName
 	 * @private
 	 * @return {String} Adapted event name
+	 * @review
 	 */
+
 	checkAttributeEvent_(eventName) {
 		return eventName.replace(
 			this.adaptedEvents.match,
@@ -50,90 +56,107 @@ class CompatibilityEventProxy extends State {
 
 	/**
 	 * Emit the event adapted to yui
-	 *
 	 * @param  {!String} eventName
 	 * @param  {!Event} event
 	 * @private
+	 * @review
 	 */
+
 	emitCompatibleEvents_(eventName, event) {
-		this.eventTargets_.forEach(target => {
-			if (target.fire) {
-				let prefixedEventName = this.namespace
-					? this.namespace + ':' + eventName
-					: eventName;
-				let yuiEvent = target._yuievt.events[prefixedEventName];
+		this.eventTargets_.forEach(
+			target => {
+				if (target.fire) {
+					let prefixedEventName = this.namespace ?
+						this.namespace + ':' + eventName :
+						eventName;
+					let yuiEvent = target._yuievt.events[prefixedEventName];
 
-				if (core.isObject(event)) {
-					try {
-						event.target = this.host;
-					} catch (err) {}
-				}
+					if (core.isObject(event)) {
+						try {
+							event.target = this.host;
+						}
+						catch (e) {
+						}
+					}
 
-				let emitFacadeReference;
+					let emitFacadeReference;
 
-				if (!this.emitFacade && yuiEvent) {
-					emitFacadeReference = yuiEvent.emitFacade;
-					yuiEvent.emitFacade = false;
-				}
+					if (!this.emitFacade && yuiEvent) {
+						emitFacadeReference = yuiEvent.emitFacade;
+						yuiEvent.emitFacade = false;
+					}
 
-				target.fire(prefixedEventName, event);
+					target.fire(prefixedEventName, event);
 
-				if (!this.emitFacade && yuiEvent) {
-					yuiEvent.emitFacade = emitFacadeReference;
+					if (!this.emitFacade && yuiEvent) {
+						yuiEvent.emitFacade = emitFacadeReference;
+					}
 				}
 			}
-		});
+		);
 	}
 
 	/**
 	 * Configuration to emit yui-based events to maintain
 	 * backwards compatibility.
-	 *
 	 * @private
+	 * @review
 	 */
+
 	startCompatibility_() {
-		this.host.on('*', (event, eventFacade) => {
-			if (!eventFacade) {
-				eventFacade = event;
-			}
+		this.host.on(
+			'*',
+			(event, eventFacade) => {
+				if (!eventFacade) {
+					eventFacade = event;
+				}
 
-			let compatibleEvent = this.checkAttributeEvent_(eventFacade.type);
+				let compatibleEvent = this.checkAttributeEvent_(eventFacade.type);
 
-			if (compatibleEvent !== eventFacade.type) {
-				eventFacade.type = compatibleEvent;
-				this.host.emit(compatibleEvent, event, eventFacade);
-			} else if (this.eventTargets_.length > 0) {
-				this.emitCompatibleEvents_(compatibleEvent, event);
+				if (compatibleEvent !== eventFacade.type) {
+					eventFacade.type = compatibleEvent;
+					this.host.emit(compatibleEvent, event, eventFacade);
+				}
+				else if (this.eventTargets_.length > 0) {
+					this.emitCompatibleEvents_(compatibleEvent, event);
+				}
 			}
-		});
+		);
 	}
 }
 
 /**
  * State definition.
  * @ignore
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
+
 CompatibilityEventProxy.STATE = {
+
 	/**
 	 * Regex for replace event names to YUI adapted names.
+	 * @review
 	 * @type {Object}
 	 */
+
 	adaptedEvents: {
 		value: {
 			match: /(.*)(Changed)$/,
-			replace: '$1Change',
-		},
+			replace: '$1Change'
+		}
 	},
 
 	/**
 	 * Indicates if event facade should be emited to the target
+	 * @review
 	 * @type {String}
 	 */
+
 	emitFacade: {
-		value: false,
-	},
+		value: false
+	}
 };
 
 export default CompatibilityEventProxy;

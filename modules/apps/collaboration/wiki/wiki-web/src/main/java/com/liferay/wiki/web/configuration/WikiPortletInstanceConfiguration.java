@@ -22,11 +22,11 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Iván Zaera
  */
 @ExtendedObjectClassDefinition(
-	category = "collaboration",
+	category = "wiki",
 	scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
 )
 @Meta.OCD(
-	id = "com.liferay.wiki.configuration.WikiPortletInstanceConfiguration",
+	id = "com.liferay.wiki.web.configuration.WikiPortletInstanceConfiguration",
 	localization = "content/Language",
 	name = "wiki-portlet-instance-configuration-name"
 )

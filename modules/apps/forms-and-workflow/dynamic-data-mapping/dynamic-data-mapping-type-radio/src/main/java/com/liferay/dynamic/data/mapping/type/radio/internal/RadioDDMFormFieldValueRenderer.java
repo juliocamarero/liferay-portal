@@ -19,7 +19,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 
 import java.util.Locale;
 
@@ -29,7 +29,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Renato Rego
  */
-@Component(immediate = true, property = {"ddm.form.field.type.name=radio"})
+@Component(immediate = true, property = "ddm.form.field.type.name=radio")
 public class RadioDDMFormFieldValueRenderer
 	implements DDMFormFieldValueRenderer {
 

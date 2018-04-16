@@ -119,7 +119,12 @@ else {
 					<aui:icon cssClass="icon-monospaced sidenav-close text-default visible-xs-inline-block" image="times" markupView="lexicon" url="javascript:;" />
 				</div>
 
-				<liferay-ui:tabs cssClass="navbar-no-collapse" names="details,versions" refresh="<%= false %>" type="dropdown">
+				<liferay-ui:tabs
+					cssClass="navbar-no-collapse"
+					names="details,versions"
+					refresh="<%= false %>"
+					type="dropdown"
+				>
 					<liferay-ui:section>
 						<div class="sidebar-body">
 							<h3 class="version">
@@ -170,73 +175,70 @@ else {
 			<aui:input name="languageId" type="hidden" value="<%= languageId %>" />
 			<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />
 
-			<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
+			<div class="lfr-form-content">
+				<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
 
-			<liferay-ui:error exception="<%= FileSizeException.class %>">
-				<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(DLValidatorUtil.getMaxAllowableSize(), locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
-			</liferay-ui:error>
+				<liferay-ui:error exception="<%= FileSizeException.class %>">
+					<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(DLValidatorUtil.getMaxAllowableSize(), locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
+				</liferay-ui:error>
 
-			<liferay-ui:error exception="<%= StorageFieldRequiredException.class %>" message="please-fill-out-all-required-fields" />
+				<liferay-ui:error exception="<%= StorageFieldRequiredException.class %>" message="please-fill-out-all-required-fields" />
 
-			<c:if test="<%= !translating && !ddlDisplayContext.isFormView() %>">
-				<aui:translation-manager
-					availableLocales="<%= availableLocales %>"
-					changeableDefaultLanguage="<%= changeableDefaultLanguage %>"
-					defaultLanguageId="<%= defaultLanguageId %>"
-					id="translationManager"
-				/>
-			</c:if>
+				<c:if test="<%= !translating && !ddlDisplayContext.isFormView() %>">
+					<aui:translation-manager availableLocales="<%= availableLocales %>" changeableDefaultLanguage="<%= changeableDefaultLanguage %>" defaultLanguageId="<%= defaultLanguageId %>" id="translationManager" />
+				</c:if>
 
-			<%
-			long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
+				<%
+				long classNameId = PortalUtil.getClassNameId(DDMStructure.class);
 
-			long classPK = recordSet.getDDMStructureId();
+				long classPK = recordSet.getDDMStructureId();
 
-			if (formDDMTemplateId > 0) {
-				classNameId = PortalUtil.getClassNameId(DDMTemplate.class);
+				if (formDDMTemplateId > 0) {
+					classNameId = PortalUtil.getClassNameId(DDMTemplate.class);
 
-				classPK = formDDMTemplateId;
-			}
-			%>
+					classPK = formDDMTemplateId;
+				}
+				%>
 
-			<c:choose>
-				<c:when test="<%= ddlDisplayContext.isFormView() %>">
-					<liferay-ddm:html
-						classNameId="<%= classNameId %>"
-						classPK="<%= classPK %>"
-						ddmFormValues="<%= ddmFormValues %>"
-						repeatable="<%= translating ? false : true %>"
-						requestedLocale="<%= LocaleUtil.fromLanguageId(languageId) %>"
-					/>
-				</c:when>
-				<c:otherwise>
-					<aui:fieldset-group markupView="lexicon">
-						<aui:fieldset>
-							<liferay-ddm:html
-								classNameId="<%= classNameId %>"
-								classPK="<%= classPK %>"
-								ddmFormValues="<%= ddmFormValues %>"
-								repeatable="<%= translating ? false : true %>"
-								requestedLocale="<%= LocaleUtil.fromLanguageId(languageId) %>"
-							/>
-						</aui:fieldset>
-					</aui:fieldset-group>
-				</c:otherwise>
-			</c:choose>
+				<c:choose>
+					<c:when test="<%= ddlDisplayContext.isFormView() %>">
+						<liferay-ddm:html
+							classNameId="<%= classNameId %>"
+							classPK="<%= classPK %>"
+							ddmFormValues="<%= ddmFormValues %>"
+							repeatable="<%= translating ? false : true %>"
+							requestedLocale="<%= LocaleUtil.fromLanguageId(languageId) %>"
+						/>
+					</c:when>
+					<c:otherwise>
+						<aui:fieldset-group markupView="lexicon">
+							<aui:fieldset>
+								<liferay-ddm:html
+									classNameId="<%= classNameId %>"
+									classPK="<%= classPK %>"
+									ddmFormValues="<%= ddmFormValues %>"
+									repeatable="<%= translating ? false : true %>"
+									requestedLocale="<%= LocaleUtil.fromLanguageId(languageId) %>"
+								/>
+							</aui:fieldset>
+						</aui:fieldset-group>
+					</c:otherwise>
+				</c:choose>
 
-			<%
-			boolean pending = false;
+				<%
+				boolean pending = false;
 
-			if (recordVersion != null) {
-				pending = recordVersion.isPending();
-			}
-			%>
+				if (recordVersion != null) {
+					pending = recordVersion.isPending();
+				}
+				%>
 
-			<c:if test="<%= pending %>">
-				<div class="alert alert-info">
-					<liferay-ui:message key="there-is-a-publication-workflow-in-process" />
-				</div>
-			</c:if>
+				<c:if test="<%= pending %>">
+					<div class="alert alert-info">
+						<liferay-ui:message key="there-is-a-publication-workflow-in-process" />
+					</div>
+				</c:if>
+			</div>
 
 			<aui:button-row>
 
@@ -259,15 +261,15 @@ else {
 				%>
 
 				<c:if test="<%= ddlDisplayContext.isShowSaveRecordButton() %>">
-					<aui:button cssClass="btn-lg" name="saveButton" onClick='<%= renderResponse.getNamespace() + "setWorkflowAction(true);" %>' primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
+					<aui:button name="saveButton" onClick='<%= renderResponse.getNamespace() + "setWorkflowAction(true);" %>' primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
 				</c:if>
 
 				<c:if test="<%= ddlDisplayContext.isShowPublishRecordButton() %>">
-					<aui:button cssClass="btn-lg" disabled="<%= pending %>" name="publishButton" onClick='<%= renderResponse.getNamespace() + "setWorkflowAction(false);" %>' type="submit" value="<%= publishButtonLabel %>" />
+					<aui:button disabled="<%= pending %>" name="publishButton" onClick='<%= renderResponse.getNamespace() + "setWorkflowAction(false);" %>' type="submit" value="<%= publishButtonLabel %>" />
 				</c:if>
 
 				<c:if test="<%= ddlDisplayContext.isShowCancelButton() %>">
-					<aui:button cssClass="btn-lg" href="<%= redirect %>" name="cancelButton" type="cancel" />
+					<aui:button href="<%= redirect %>" name="cancelButton" type="cancel" />
 				</c:if>
 			</aui:button-row>
 		</aui:form>

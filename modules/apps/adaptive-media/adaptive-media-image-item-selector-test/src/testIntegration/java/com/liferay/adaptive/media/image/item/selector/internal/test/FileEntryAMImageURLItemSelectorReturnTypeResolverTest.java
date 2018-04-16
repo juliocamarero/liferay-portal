@@ -21,6 +21,7 @@ import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.item.selector.ItemSelectorReturnTypeResolver;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -29,8 +30,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
@@ -38,11 +37,9 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.test.ServiceTestUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.registry.Registry;
-import com.liferay.registry.RegistryUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,26 +57,16 @@ import org.junit.runner.RunWith;
  * @author Sergio González
  */
 @RunWith(Arquillian.class)
-@Sync
 public class FileEntryAMImageURLItemSelectorReturnTypeResolverTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	public void setUp() throws Exception {
-		_amImageConfigurationHelper = _getService(
-			AMImageConfigurationHelper.class);
-		_dlAppLocalService = _getService(DLAppLocalService.class);
-
 		_group = GroupTestUtil.addGroup();
-
-		_itemSelectorReturnTypeResolver = _getService(
-			ItemSelectorReturnTypeResolver.class, _RESOLVER_FILTER);
 
 		ServiceTestUtil.setUser(TestPropsValues.getUser());
 
@@ -608,7 +595,7 @@ public class FileEntryAMImageURLItemSelectorReturnTypeResolverTest {
 
 		String srcSource = sourceJSONObject.getString("src");
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("/o/adaptive-media/image/");
 		sb.append(fileEntryId);
@@ -616,8 +603,7 @@ public class FileEntryAMImageURLItemSelectorReturnTypeResolverTest {
 		sb.append(originalConfigurationEntryUuid);
 		sb.append("/");
 		sb.append(title);
-		sb.append(", ");
-		sb.append("/o/adaptive-media/image/");
+		sb.append(", /o/adaptive-media/image/");
 		sb.append(fileEntryId);
 		sb.append("/");
 		sb.append(hdConfigurationEntryUuid);
@@ -647,40 +633,18 @@ public class FileEntryAMImageURLItemSelectorReturnTypeResolverTest {
 				"/resolver/test/dependencies/image.jpg");
 	}
 
-	private <T> T _getService(Class<T> clazz) {
-		try {
-			Registry registry = RegistryUtil.getRegistry();
-
-			return registry.getService(clazz);
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private <T> T _getService(Class<T> clazz, String filter) {
-		try {
-			Registry registry = RegistryUtil.getRegistry();
-
-			Collection<T> services = registry.getServices(clazz, filter);
-
-			return services.iterator().next();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static final String _RESOLVER_FILTER =
-		"(objectClass=com.liferay.adaptive.media.image.item.selector." +
-			"internal.FileEntryAMImageURLItemSelectorReturnTypeResolver)";
-
+	@Inject
 	private AMImageConfigurationHelper _amImageConfigurationHelper;
+
+	@Inject
 	private DLAppLocalService _dlAppLocalService;
 
 	@DeleteAfterTestRun
 	private Group _group;
 
+	@Inject(
+		filter = "(objectClass=com.liferay.adaptive.media.image.item.selector.internal.FileEntryAMImageURLItemSelectorReturnTypeResolver)"
+	)
 	private ItemSelectorReturnTypeResolver _itemSelectorReturnTypeResolver;
 
 }

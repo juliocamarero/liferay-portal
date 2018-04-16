@@ -51,14 +51,7 @@ if (Validator.isNotNull(script)) {
 >
 	<liferay-ui:section>
 		<div id="<portlet:namespace />formBuilderTab">
-			<aui:translation-manager
-				availableLocales="<%= availableLocales %>"
-				changeableDefaultLanguage="<%= changeableDefaultLanguage %>"
-				defaultLanguageId="<%= defaultLanguageId %>"
-				id="translationManager"
-				initialize="<%= false %>"
-				readOnly="<%= false %>"
-			/>
+			<aui:translation-manager availableLocales="<%= availableLocales %>" changeableDefaultLanguage="<%= changeableDefaultLanguage %>" defaultLanguageId="<%= defaultLanguageId %>" id="translationManager" initialize="<%= false %>" readOnly="<%= false %>" />
 
 			<div class="diagram-builder form-builder" id="<portlet:namespace />formBuilder">
 				<div class="diagram-builder-content" id="<portlet:namespace />formBuilderContent">
@@ -170,7 +163,15 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales(themeDisplay.getS
 	};
 
 	var isViewTabActive = function() {
-		return !A.one('#<portlet:namespace />formBuilderTab').ancestor().hasClass('hide');
+		var formBuilderTab = A.one('#<portlet:namespace />formBuilderTab');
+
+		if (!formBuilderTab) {
+			return false;
+		}
+
+		var ancestor = formBuilderTab.ancestor();
+
+		return !ancestor.hasClass('hide');
 	};
 
 	var reloadFormBuilderData = function(content) {

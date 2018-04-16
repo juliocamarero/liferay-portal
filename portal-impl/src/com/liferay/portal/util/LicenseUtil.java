@@ -16,6 +16,7 @@ package com.liferay.portal.util;
 
 import com.liferay.petra.encryptor.Encryptor;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONObjectImpl;
 import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterNode;
@@ -41,7 +42,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -468,7 +468,9 @@ public class LicenseUtil {
 
 		jsonObject.put("key", _encryptedSymmetricKey);
 
-		return jsonObject.toString().getBytes(StringPool.UTF8);
+		String jsonObjectString = jsonObject.toString();
+
+		return jsonObjectString.getBytes(StringPool.UTF8);
 	}
 
 	private static Set<String> _getIPAddresses() {

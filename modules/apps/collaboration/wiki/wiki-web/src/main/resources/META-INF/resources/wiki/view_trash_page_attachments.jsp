@@ -19,19 +19,6 @@
 <%
 WikiPage wikiPage = (WikiPage)request.getAttribute(WikiWebKeys.WIKI_PAGE);
 WikiNode node = (WikiNode)request.getAttribute(WikiWebKeys.WIKI_NODE);
-
-PortletURL portletURL = renderResponse.createActionURL();
-
-portletURL.setParameter("nodeId", String.valueOf(wikiPage.getNodeId()));
-portletURL.setParameter("title", wikiPage.getTitle());
-
-portletURL.setParameter(ActionRequest.ACTION_NAME, "/wiki/view");
-
-PortalUtil.addPortletBreadcrumbEntry(request, wikiPage.getTitle(), portletURL.toString());
-
-portletURL.setParameter(ActionRequest.ACTION_NAME, "/wiki/view_page_attachments");
-
-PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "attachments"), portletURL.toString());
 %>
 
 <portlet:actionURL name="/wiki/edit_page_attachment" var="undoTrashURL">
@@ -39,9 +26,11 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "attachm
 </portlet:actionURL>
 
 <div class="container-fluid-1280">
-	<liferay-trash:undo portletURL="<%= undoTrashURL %>" />
+	<liferay-trash:undo
+		portletURL="<%= undoTrashURL %>"
+	/>
 
-	<c:if test="<%= WikiNodePermissionChecker.contains(permissionChecker, node.getNodeId(), ActionKeys.ADD_ATTACHMENT) %>">
+	<c:if test="<%= WikiNodePermission.contains(permissionChecker, node, ActionKeys.ADD_ATTACHMENT) %>">
 		<portlet:actionURL name="/wiki/edit_page_attachment" var="emptyTrashURL">
 			<portlet:param name="nodeId" value="<%= String.valueOf(wikiPage.getNodeId()) %>" />
 			<portlet:param name="title" value="<%= wikiPage.getTitle() %>" />

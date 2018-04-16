@@ -15,7 +15,7 @@
 package com.liferay.rss.web.internal.portlet.validator;
 
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.rss.web.constants.RSSPortletKeys;
+import com.liferay.rss.constants.RSSPortletKeys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Brian Wing Shun Chan
  */
 @Component(
-	immediate = true, property = {"javax.portlet.name=" + RSSPortletKeys.RSS}
+	immediate = true, property = "javax.portlet.name=" + RSSPortletKeys.RSS
 )
 public class RSSPreferencesValidator implements PreferencesValidator {
 

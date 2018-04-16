@@ -25,15 +25,11 @@ SearchContainer entriesSearchContainer = (SearchContainer)request.getAttribute("
 
 long groupThreadsUserId = ParamUtil.getLong(request, "groupThreadsUserId");
 
-boolean showBreadcrumb = ParamUtil.getBoolean(request, "showBreadcrumb", true);
-
 PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
 
 if (groupThreadsUserId > 0) {
 	portletURL.setParameter("groupThreadsUserId", String.valueOf(groupThreadsUserId));
 }
-
-boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getInitParameter("portlet-title-based-navigation"));
 %>
 
 <div class="container-fluid-1280 view-entries-container">
@@ -41,13 +37,11 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 
 		<%
 		long parentCategoryId = category.getParentCategoryId();
-		String parentCategoryName = LanguageUtil.get(request, "message-boards-home");
 
 		if (!category.isRoot()) {
 			MBCategory parentCategory = MBCategoryLocalServiceUtil.getCategory(parentCategoryId);
 
 			parentCategoryId = parentCategory.getCategoryId();
-			parentCategoryName = parentCategory.getName();
 		}
 		%>
 
@@ -64,29 +58,24 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 		</portlet:renderURL>
 
 		<%
-		if (portletTitleBasedNavigation) {
-			portletDisplay.setShowBackIcon(true);
-			portletDisplay.setURLBack(backURL.toString());
+		portletDisplay.setShowBackIcon(true);
+		portletDisplay.setURLBack(backURL.toString());
 
-			renderResponse.setTitle(category.getName());
-		}
+		renderResponse.setTitle(category.getName());
 		%>
 
 	</c:if>
 
-	<c:if test="<%= showBreadcrumb %>">
+	<%
+	MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
+	%>
 
-		<%
-		MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
-		%>
-
-		<liferay-ui:breadcrumb
-			showCurrentGroup="<%= false %>"
-			showGuestGroup="<%= false %>"
-			showLayout="<%= false %>"
-			showParentGroups="<%= false %>"
-		/>
-	</c:if>
+	<liferay-ui:breadcrumb
+		showCurrentGroup="<%= false %>"
+		showGuestGroup="<%= false %>"
+		showLayout="<%= false %>"
+		showParentGroups="<%= false %>"
+	/>
 
 	<aui:form action="<%= portletURL.toString() %>" method="get" name="fm">
 		<aui:input name="<%= Constants.CMD %>" type="hidden" />
@@ -119,7 +108,9 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 							toggleRowChecker="<%= true %>"
 						/>
 
-						<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+						<liferay-ui:search-container-column-text
+							colspan="<%= 2 %>"
+						>
 							<h4>
 								<aui:a href="<%= rowURL.toString() %>">
 									<%= curCategory.getName() %>
@@ -155,33 +146,33 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 						if (message == null) {
 							_log.error("Thread requires missing root message id " + thread.getRootMessageId());
 
-							message = new MBMessageImpl();
-
 							row.setSkip(true);
 						}
 
-						message = message.toEscapedModel();
+						if (message != null) {
+							message = message.toEscapedModel();
 
-						row.setBold(!MBThreadFlagLocalServiceUtil.hasThreadFlag(themeDisplay.getUserId(), thread));
-						row.setPrimaryKey(String.valueOf(thread.getThreadId()));
-						row.setRestricted(!MBMessagePermission.contains(permissionChecker, message, ActionKeys.VIEW));
+							row.setPrimaryKey(String.valueOf(thread.getThreadId()));
+							row.setRestricted(!MBMessagePermission.contains(permissionChecker, message, ActionKeys.VIEW));
+						}
 						%>
 
 						<liferay-portlet:renderURL varImpl="rowURL">
 							<portlet:param name="mvcRenderCommandName" value="/message_boards/view_message" />
-							<portlet:param name="messageId" value="<%= String.valueOf(message.getMessageId()) %>" />
+							<portlet:param name="messageId" value="<%= (message != null) ? String.valueOf(message.getMessageId()) : String.valueOf(MBMessageConstants.DEFAULT_PARENT_MESSAGE_ID) %>" />
 						</liferay-portlet:renderURL>
 
 						<liferay-ui:search-container-column-text>
 							<liferay-ui:user-portrait
-								cssClass="user-icon-lg"
 								userId="<%= thread.getLastPostByUserId() %>"
 							/>
 						</liferay-ui:search-container-column-text>
 
-						<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+						<liferay-ui:search-container-column-text
+							colspan="<%= 2 %>"
+						>
 							<c:choose>
-								<c:when test="<%= thread.getMessageCount() == 1 %>">
+								<c:when test="<%= ((message != null) && (thread.getMessageCount() == 1)) %>">
 
 									<%
 									String messageUserName = "anonymous";
@@ -221,7 +212,16 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 
 							<h4>
 								<aui:a href="<%= rowURL.toString() %>">
-									<%= message.getSubject() %>
+									<c:if test="<%= (message != null) %>">
+										<c:choose>
+											<c:when test="<%= !MBThreadFlagLocalServiceUtil.hasThreadFlag(themeDisplay.getUserId(), thread) %>">
+												<strong><%= message.getSubject() %></strong>
+											</c:when>
+											<c:otherwise>
+												<%= message.getSubject() %>
+											</c:otherwise>
+										</c:choose>
+									</c:if>
 								</aui:a>
 
 								<%
@@ -237,19 +237,17 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 								</c:if>
 							</h4>
 
-							<c:if test="<%= portletTitleBasedNavigation || !message.isApproved() %>">
-								<span class="h6">
-									<aui:workflow-status bean="<%= message %>" markupView="lexicon" model="<%= MBMessage.class %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= message.getStatus() %>" />
-								</span>
-							</c:if>
+							<span class="h6">
+								<aui:workflow-status bean="<%= message %>" markupView="lexicon" model="<%= MBMessage.class %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= message.getStatus() %>" />
+							</span>
 
 							<%
-							int messageCount = thread.getMessageCount();
+							int repliesCount = Math.max(thread.getMessageCount() - 1, 0);
 							int viewCount = thread.getViewCount();
 							%>
 
 							<span class="h6 text-default">
-								<liferay-ui:message arguments="<%= messageCount %>" key='<%= messageCount == 1 ? "x-post" : "x-posts" %>' />
+								<liferay-ui:message arguments="<%= repliesCount %>" key='<%= repliesCount == 1 ? "x-reply" : "x-replies" %>' />
 							</span>
 							<span class="h6 text-default">
 								<liferay-ui:message arguments="<%= viewCount %>" key='<%= viewCount == 1 ? "x-view" : "x-views" %>' />
@@ -279,14 +277,20 @@ boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getIni
 						row.setObject(new Object[] {message});
 						%>
 
-						<liferay-ui:search-container-column-jsp
-							path="/message_boards/message_action.jsp"
-						/>
+						<c:if test="<%= (message != null) %>">
+							<liferay-ui:search-container-column-jsp
+								path="/message_boards/message_action.jsp"
+							/>
+						</c:if>
 					</c:otherwise>
 				</c:choose>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator displayStyle='<%= GetterUtil.getString(request.getAttribute("view.jsp-displayStyle")) %>' markupView="lexicon" resultRowSplitter="<%= new MBResultRowSplitter() %>" />
+			<liferay-ui:search-iterator
+				displayStyle="descriptive"
+				markupView="lexicon"
+				resultRowSplitter="<%= new MBResultRowSplitter() %>"
+			/>
 		</liferay-ui:search-container>
 	</aui:form>
 </div>

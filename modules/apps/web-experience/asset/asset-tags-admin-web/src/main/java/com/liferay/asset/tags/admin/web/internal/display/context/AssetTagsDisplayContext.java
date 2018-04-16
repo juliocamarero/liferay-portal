@@ -19,6 +19,11 @@ import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
 import com.liferay.asset.tags.constants.AssetTagsAdminPortletKeys;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -33,7 +38,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -44,7 +49,10 @@ import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -64,6 +72,32 @@ public class AssetTagsDisplayContext {
 		_request = request;
 	}
 
+	public DropdownItemList getActionItemsDropdownItemList() {
+		return new DropdownItemList(_request) {
+			{
+				add(
+					dropdownItem -> {
+						dropdownItem.setHref(
+							"javascript:" + _renderResponse.getNamespace() +
+								"mergeTags();");
+						dropdownItem.setIcon("change");
+						dropdownItem.setLabel("merge");
+						dropdownItem.setQuickAction(true);
+					});
+
+				add(
+					dropdownItem -> {
+						dropdownItem.setHref(
+							"javascript:" + _renderResponse.getNamespace() +
+								"deleteTags();");
+						dropdownItem.setIcon("trash");
+						dropdownItem.setLabel("delete");
+						dropdownItem.setQuickAction(true);
+					});
+			}
+		};
+	}
+
 	public String getAssetTitle() {
 		AssetTag tag = getTag();
 
@@ -72,6 +106,29 @@ public class AssetTagsDisplayContext {
 		}
 
 		return tag.getName();
+	}
+
+	public String getClearResultsURL() {
+		PortletURL clearResultsURL = _renderResponse.createRenderURL();
+
+		clearResultsURL.setParameter("orderByCol", getOrderByCol());
+		clearResultsURL.setParameter("orderByType", getOrderByType());
+
+		return clearResultsURL.toString();
+	}
+
+	public CreationMenu getCreationMenu() {
+		return new CreationMenu(_request) {
+			{
+				addPrimaryDropdownItem(
+					dropdownItem -> {
+						dropdownItem.setHref(
+							_renderResponse.createRenderURL(), "mvcPath",
+							"/edit_tag.jsp");
+						dropdownItem.setLabel("add-tag");
+					});
+			}
+		};
 	}
 
 	public String getDisplayStyle() {
@@ -89,6 +146,19 @@ public class AssetTagsDisplayContext {
 		return _displayStyle;
 	}
 
+	public DropdownItemList getFilterItemsDropdownItemList() {
+		return new DropdownItemList(_request) {
+			{
+				addGroup(
+					dropdownGroupItem -> {
+						dropdownGroupItem.setDropdownItemList(
+							_getOrderByDropdownItemList());
+						dropdownGroupItem.setLabel("order-by");
+					});
+			}
+		};
+	}
+
 	public long getFullTagsCount(AssetTag tag) {
 		int[] statuses = {
 			WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_PENDING,
@@ -99,8 +169,9 @@ public class AssetTagsDisplayContext {
 			WebKeys.THEME_DISPLAY);
 
 		return AssetEntryLocalServiceUtil.searchCount(
-			tag.getCompanyId(), null, themeDisplay.getUserId(), null, 0, null,
-			null, null, null, tag.getName(), true, true, statuses, false);
+			tag.getCompanyId(), new long[] {themeDisplay.getScopeGroupId()},
+			themeDisplay.getUserId(), null, 0, null, null, null, null,
+			tag.getName(), true, true, statuses, false);
 	}
 
 	public String getKeywords() {
@@ -138,6 +209,20 @@ public class AssetTagsDisplayContext {
 		return _mergeTagNames;
 	}
 
+	public NavigationItemList getNavigationItems() {
+		return new NavigationItemList(_request) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(
+							_renderResponse.createRenderURL());
+						navigationItem.setLabel("tags");
+					});
+			}
+		};
+	}
+
 	public String getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -156,6 +241,27 @@ public class AssetTagsDisplayContext {
 		_orderByType = ParamUtil.getString(_request, "orderByType", "asc");
 
 		return _orderByType;
+	}
+
+	public String getSearchActionURL() {
+		PortletURL searchTagURL = _renderResponse.createRenderURL();
+
+		searchTagURL.setParameter("orderByCol", getOrderByCol());
+		searchTagURL.setParameter("orderByType", getOrderByType());
+
+		return searchTagURL.toString();
+	}
+
+	public String getSortingURL() {
+		PortletURL sortingURL = _renderResponse.createRenderURL();
+
+		sortingURL.setParameter("keywords", getKeywords());
+		sortingURL.setParameter("orderByCol", getOrderByCol());
+		sortingURL.setParameter(
+			"orderByType",
+			Objects.equals(getOrderByType(), "asc") ? "desc" : "asc");
+
+		return sortingURL.toString();
 	}
 
 	public AssetTag getTag() {
@@ -197,16 +303,7 @@ public class AssetTagsDisplayContext {
 
 		String keywords = getKeywords();
 
-		if (Validator.isNull(keywords)) {
-			if (isShowAddButton()) {
-				tagsSearchContainer.setEmptyResultsMessage(
-					"there-are-no-tags.-you-can-add-a-tag-by-clicking-the-" +
-						"plus-button-on-the-bottom-right-corner");
-				tagsSearchContainer.setEmptyResultsMessageCssClass(
-					"taglib-empty-result-message-header-has-plus-btn");
-			}
-		}
-		else {
+		if (Validator.isNotNull(keywords)) {
 			tagsSearchContainer.setSearch(true);
 		}
 
@@ -289,14 +386,26 @@ public class AssetTagsDisplayContext {
 		return _tagsSearchContainer;
 	}
 
-	public boolean isDisabledTagsManagementBar() throws PortalException {
+	public int getTotalItems() throws PortalException {
 		SearchContainer tagsSearchContainer = getTagsSearchContainer();
 
-		if (tagsSearchContainer.getTotal() <= 0) {
-			return true;
-		}
+		return tagsSearchContainer.getTotal();
+	}
 
-		return false;
+	public ViewTypeItemList getViewTypeItemList() {
+		PortletURL portletURL = _renderResponse.createActionURL();
+
+		portletURL.setParameter(
+			ActionRequest.ACTION_NAME, "changeDisplayStyle");
+		portletURL.setParameter("redirect", PortalUtil.getCurrentURL(_request));
+
+		return new ViewTypeItemList(_request, portletURL, getDisplayStyle()) {
+			{
+				addCardViewTypeItem();
+				addListViewTypeItem();
+				addTableViewTypeItem();
+			}
+		};
 	}
 
 	public boolean isShowAddButton() {
@@ -315,7 +424,7 @@ public class AssetTagsDisplayContext {
 		return false;
 	}
 
-	public boolean isShowTagsSearch() throws PortalException {
+	public boolean isShowSearch() throws PortalException {
 		if (Validator.isNotNull(getKeywords())) {
 			return true;
 		}
@@ -327,6 +436,29 @@ public class AssetTagsDisplayContext {
 		}
 
 		return false;
+	}
+
+	private DropdownItemList _getOrderByDropdownItemList() {
+		return new DropdownItemList(_request) {
+			{
+				add(
+					dropdownItem -> {
+						dropdownItem.setHref(
+							_renderResponse.createRenderURL(), "keywords",
+							getKeywords(), "orderByCol", "name", "orderByType",
+							getOrderByType());
+						dropdownItem.setLabel("name");
+					});
+				add(
+					dropdownItem -> {
+						dropdownItem.setHref(
+							_renderResponse.createRenderURL(), "keywords",
+							getKeywords(), "orderByCol", "usages",
+							"orderByType", getOrderByType());
+						dropdownItem.setLabel("usages");
+					});
+			}
+		};
 	}
 
 	private String _displayStyle;

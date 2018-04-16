@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.search.facet.util.RangeParserUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch.facet.FacetProcessor;
 
 import org.elasticsearch.action.search.SearchRequestBuilder;
 
@@ -35,7 +34,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"class.name=com.liferay.portal.kernel.search.facet.RangeFacet"}
+	property = "class.name=com.liferay.portal.kernel.search.facet.RangeFacet"
 )
 public class RangeFacetProcessor
 	implements FacetProcessor<SearchRequestBuilder> {

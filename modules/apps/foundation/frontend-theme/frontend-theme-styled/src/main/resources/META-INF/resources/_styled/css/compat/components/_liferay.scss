@@ -16,6 +16,21 @@
 		border-bottom: 2px solid #65B6F0;
 	}
 
+	.product-menu.sidebar {
+		.sidebar-header {
+			padding-bottom: 1rem;
+			padding-top: 1rem;
+		}
+	}
+
+	.product-menu.sidebar .sidebar-body, .lfr-has-simulation-panel .lfr-simulation-device {
+		top: 4.0625rem;
+	}
+
+	.product-menu .add-application-panel .panel-body {
+		padding-bottom: 0.01rem;
+	}
+
 	.lfr-page-layouts.row .list-unstyled {
 		display: flex;
 		flex-wrap: wrap;
@@ -41,21 +56,43 @@
 
 	.input-group.search-bar {
 		.search-field {
-			display: inline-flex;
+			display: flex;
+
+			&:first-child {
+				flex-grow: 1;
+			}
 
 			.btn {
-				margin: 0;
+				margin-top: 0;
 			}
+
+			.form-group {
+				margin-bottom: 0;
+			}
+
+			.search-bar-input {
+				@include border-right-radius(0);
+			}
+
+			~ .search-field {
+				margin-left: -$input-border-right-width;
+			}
+		}
+
+		.search-select {
+			@include border-radius(0);
+
+			width: 100%;
 		}
 	}
 
-	// Modals
+	/* ---------- Modals ---------- */
 
 	.dialog-with-footer .button-holder.dialog-footer {
 		background-color: $modal-content-bg;
 	}
 
-	// Friendly URL
+	/* ---------- Friendly URL ---------- */
 
 	.lfr-friendly-url-input-group.input-group {
 		.input-group-addon {
@@ -68,7 +105,7 @@
 		}
 	}
 
-	// Forms builder
+	/* ---------- Forms builder ---------- */
 
 	#settings .lfr-ddm-form-page {
 		margin-top: 0;
@@ -113,5 +150,14 @@
 	.layout-row-container-row .layout-builder-move-cut-button.layout-builder-move-cut-row-button {
 		right: 30px;
 		top: -22px;
+	}
+
+	/* ---------- Portlet forms ---------- */
+
+	.portal-popup, .portlet-forms-admin {
+		.asset-icon .sticker .lexicon-icon {
+			height: 100%;
+			width: 1em;
+		}
 	}
 }

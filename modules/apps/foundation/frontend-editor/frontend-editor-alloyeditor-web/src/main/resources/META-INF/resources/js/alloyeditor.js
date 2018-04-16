@@ -5,20 +5,10 @@ AUI.add(
 	function(A) {
 		var Do = A.Do;
 		var Lang = A.Lang;
-		var UA = A.UA;
-
-		var contentFilter = new CKEDITOR.filter(
-			{
-				$1: {
-					attributes: ['alt', 'aria-*', 'height', 'href', 'src', 'width'],
-					classes: false,
-					elements: CKEDITOR.dtd,
-					styles: false
-				}
-			}
-		);
 
 		var KEY_ENTER = 13;
+
+		var UA = A.UA;
 
 		var LiferayAlloyEditor = A.Component.create(
 			{
@@ -98,7 +88,7 @@ AUI.add(
 
 						var nativeEditor = instance.getNativeEditor();
 
-						nativeEditor.on('paste', instance._onPaste, instance);
+						nativeEditor.on('error', instance._onError, instance);
 						nativeEditor.on('instanceReady', instance._onInstanceReady, instance);
 
 						if (instance.get('onBlurMethod')) {
@@ -211,6 +201,8 @@ AUI.add(
 					_afterGet: function(attrName) {
 						var instance = this;
 
+						var alterReturn;
+
 						if (attrName === 'form') {
 							var parentForm = instance._parentForm;
 
@@ -220,23 +212,25 @@ AUI.add(
 								instance._parentForm = parentForm;
 							}
 
-							return new Do.AlterReturn(
+							alterReturn = new Do.AlterReturn(
 								'Return ancestor parent form',
 								parentForm
 							);
 						}
 						else if (attrName === 'name') {
-							return new Do.AlterReturn(
+							alterReturn = new Do.AlterReturn(
 								'Return editor namespace',
 								instance.get('namespace')
 							);
 						}
 						else if (attrName === 'type') {
-							return new Do.AlterReturn(
+							alterReturn = new Do.AlterReturn(
 								'Return editor node name',
 								instance._srcNode.get('nodeName')
 							);
 						}
+
+						return alterReturn;
 					},
 
 					_afterVal: function(value) {
@@ -308,6 +302,22 @@ AUI.add(
 						}
 					},
 
+					_onError: function(event) {
+						new Liferay.Notification(
+							{
+								closeable: true,
+								delay: {
+									hide: 5000,
+									show: 0
+								},
+								duration: 500,
+								message: event.data,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						).render();
+					},
+
 					_onFocus: function(event) {
 						var instance = this;
 
@@ -323,10 +333,8 @@ AUI.add(
 
 						setTimeout(
 							function() {
-								if (activeElement) {
-									nativeEditor.focusManager.blur(true);
-									activeElement.focus();
-								}
+								nativeEditor.focusManager.blur(true);
+								activeElement.focus();
 							},
 							100
 						);
@@ -335,13 +343,17 @@ AUI.add(
 					_onInstanceReady: function() {
 						var instance = this;
 
-						instance.instanceReady = true;
-
-						window[instance.get('namespace')].instanceReady = true;
+						var editorNamespace = instance.get('namespace');
 
 						if (instance.customDataProcessorLoaded || !instance.get('useCustomDataProcessor')) {
 							instance._initializeData();
 						}
+
+						instance.instanceReady = true;
+
+						window[editorNamespace].instanceReady = true;
+
+						Liferay.component(editorNamespace, window[editorNamespace]);
 
 						// LPS-73775
 
@@ -352,10 +364,13 @@ AUI.add(
 						if (UA.edge && parseInt(UA.edge, 10) >= 14) {
 							A.soon(
 								function() {
-									var nativeEditor = instance.getNativeEditor();
+									if (document.activeElement && document.activeElement !== document.body) {
+										var nativeEditor = instance.getNativeEditor();
 
-									nativeEditor.once('focus', A.bind('_onFocusFix', instance, document.activeElement, nativeEditor));
-									nativeEditor.focus();
+										nativeEditor.once('focus', A.bind('_onFocusFix', instance, document.activeElement, nativeEditor));
+
+										nativeEditor.focus();
+									}
 								}
 							);
 						}
@@ -384,18 +399,6 @@ AUI.add(
 						}
 					},
 
-					_onPaste: function(event) {
-						var fragment = CKEDITOR.htmlParser.fragment.fromHtml(event.data.dataValue);
-
-						var writer = new CKEDITOR.htmlParser.basicWriter();
-
-						contentFilter.applyTo(fragment);
-
-						fragment.writeHtml(writer);
-
-						event.data.dataValue = writer.getHtml();
-					},
-
 					_validateEditorMethod: function(method) {
 						return Lang.isString(method) || Lang.isFunction(method);
 					}
@@ -407,6 +410,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-component', 'liferay-portlet-base', 'timers']
+		requires: ['aui-component', 'liferay-notification', 'liferay-portlet-base', 'timers']
 	}
 );

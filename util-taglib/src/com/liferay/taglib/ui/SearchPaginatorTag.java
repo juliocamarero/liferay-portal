@@ -14,7 +14,7 @@
 
 package com.liferay.taglib.ui;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +40,7 @@ public class SearchPaginatorTag<R> extends SearchFormTag<R> {
 	protected void cleanUp() {
 		super.cleanUp();
 
+		_id = null;
 		_markupView = StringPool.BLANK;
 		_type = "regular";
 	}

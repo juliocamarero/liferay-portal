@@ -17,9 +17,10 @@ package com.liferay.project.templates;
 import aQute.bnd.main.bnd;
 
 import com.liferay.maven.executor.MavenExecutor;
+import com.liferay.project.templates.internal.Archetyper;
 import com.liferay.project.templates.internal.util.FileUtil;
 import com.liferay.project.templates.internal.util.Validator;
-import com.liferay.project.templates.internal.util.WorkspaceUtil;
+import com.liferay.project.templates.util.DirectoryComparator;
 import com.liferay.project.templates.util.FileTestUtil;
 import com.liferay.project.templates.util.StringTestUtil;
 
@@ -132,10 +133,7 @@ public class ProjectTemplatesTest {
 			"mvc-portlet", "hello-world-portlet", "com.test",
 			"-DclassName=HelloWorld", "-Dpackage=hello.world.portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/hello.world.portlet-1.0.0.jar",
-			"target/hello-world-portlet-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -156,10 +154,7 @@ public class ProjectTemplatesTest {
 			"activator", "bar-activator", "com.test",
 			"-DclassName=BarActivator", "-Dpackage=bar.activator");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/bar.activator-1.0.0.jar",
-			"target/bar-activator-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -187,9 +182,7 @@ public class ProjectTemplatesTest {
 		File mavenProjectDir = _buildTemplateWithMaven(
 			"api", "foo", "com.test", "-DclassName=Foo", "-Dpackage=foo");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo-1.0.0.jar",
-			"target/foo-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -234,9 +227,7 @@ public class ProjectTemplatesTest {
 			"content-targeting-report", "foo-bar", "com.test",
 			"-DclassName=FooBar", "-Dpackage=foo.bar");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.bar-1.0.0.jar",
-			"target/foo-bar-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -264,9 +255,7 @@ public class ProjectTemplatesTest {
 			"content-targeting-rule", "foo-bar", "com.test",
 			"-DclassName=FooBar", "-Dpackage=foo.bar");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.bar-1.0.0.jar",
-			"target/foo-bar-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -297,9 +286,7 @@ public class ProjectTemplatesTest {
 			"content-targeting-tracking-action", "foo-bar", "com.test",
 			"-DclassName=FooBar", "-Dpackage=foo.bar");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.bar-1.0.0.jar",
-			"target/foo-bar-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -330,9 +317,7 @@ public class ProjectTemplatesTest {
 			"control-menu-entry", "foo-bar", "com.test", "-DclassName=FooBar",
 			"-Dpackage=foo.bar");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.bar-1.0.0.jar",
-			"target/foo-bar-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -378,9 +363,7 @@ public class ProjectTemplatesTest {
 			"form-field", "foobar", "com.test", "-DclassName=Foobar",
 			"-Dpackage=foobar");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foobar-1.0.0.jar",
-			"target/foobar-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -407,9 +390,7 @@ public class ProjectTemplatesTest {
 			"-DhostBundleSymbolicName=com.liferay.login.web",
 			"-DhostBundleVersion=1.0.0", "-Dpackage=loginhook");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/loginhook-1.0.0.jar",
-			"target/loginhook-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -504,9 +485,7 @@ public class ProjectTemplatesTest {
 		_createNewFiles(
 			"src/main/resources/.gitkeep", gradleProjectDir, mavenProjectDir);
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.war",
-			"target/foo-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -701,9 +680,7 @@ public class ProjectTemplatesTest {
 			"panel-app", "gradle.test", "com.test", "-DclassName=Foo",
 			"-Dpackage=gradle.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/gradle.test-1.0.0.jar", "target/gradle.test-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -744,9 +721,7 @@ public class ProjectTemplatesTest {
 			"portlet", "foo.test", "com.test", "-DclassName=Foo",
 			"-Dpackage=foo.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.test-1.0.0.jar",
-			"target/foo.test-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -771,9 +746,7 @@ public class ProjectTemplatesTest {
 			"portlet-configuration-icon", "icontest", "com.test",
 			"-DclassName=Icontest", "-Dpackage=blade.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/blade.test-1.0.0.jar", "target/icontest-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -811,10 +784,7 @@ public class ProjectTemplatesTest {
 			"portlet-provider", "provider.test", "com.test",
 			"-DclassName=ProviderTest", "-Dpackage=provider.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/provider.test-1.0.0.jar",
-			"target/provider.test-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -839,9 +809,7 @@ public class ProjectTemplatesTest {
 			"portlet-toolbar-contributor", "toolbartest", "com.test",
 			"-DclassName=Toolbartest", "-Dpackage=blade.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/blade.test-1.0.0.jar", "target/toolbartest-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -873,9 +841,7 @@ public class ProjectTemplatesTest {
 			"portlet", "portlet", "com.test", "-DclassName=Portlet",
 			"-Dpackage=portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/portlet-1.0.0.jar",
-			"target/portlet-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -918,9 +884,7 @@ public class ProjectTemplatesTest {
 					"CXFEndpointPublisherConfiguration-cxf.properties",
 			"contextPath=/my-rest");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/my.rest-1.0.0.jar",
-			"target/my-rest-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -950,10 +914,7 @@ public class ProjectTemplatesTest {
 
 		_writeServiceClass(mavenProjectDir);
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/servicepreaction-1.0.0.jar",
-			"target/servicepreaction-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1031,15 +992,12 @@ public class ProjectTemplatesTest {
 
 		_executeGradle(gradleProjectDir, _GRADLE_TASK_PATH_BUILD);
 
-		File gradleBundleFile = _testExists(
-			gradleProjectDir, "build/libs/servicepreaction-1.0.0.jar");
+		_testExists(gradleProjectDir, "build/libs/servicepreaction-1.0.0.jar");
 
 		_executeGradle(workspaceDir, ":modules:servicepreaction:build");
 
-		File workspaceBundleFile = _testExists(
+		_testExists(
 			workspaceProjectDir, "build/libs/servicepreaction-1.0.0.jar");
-
-		_testBundlesDiff(gradleBundleFile, workspaceBundleFile);
 	}
 
 	@Test
@@ -1068,10 +1026,7 @@ public class ProjectTemplatesTest {
 			"-DserviceWrapperClass=" +
 				"com.liferay.portal.kernel.service.UserLocalServiceWrapper");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/serviceoverride-1.0.0.jar",
-			"target/serviceoverride-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1097,15 +1052,12 @@ public class ProjectTemplatesTest {
 
 		_executeGradle(gradleProjectDir, _GRADLE_TASK_PATH_BUILD);
 
-		File gradleBundleFile = _testExists(
-			gradleProjectDir, "build/libs/serviceoverride-1.0.0.jar");
+		_testExists(gradleProjectDir, "build/libs/serviceoverride-1.0.0.jar");
 
 		_executeGradle(workspaceDir, ":modules:serviceoverride:build");
 
-		File workspaceBundleFile = _testExists(
+		_testExists(
 			workspaceProjectDir, "build/libs/serviceoverride-1.0.0.jar");
-
-		_testBundlesDiff(gradleBundleFile, workspaceBundleFile);
 	}
 
 	@Test
@@ -1130,10 +1082,7 @@ public class ProjectTemplatesTest {
 			"simulation-panel-entry", "simulator", "com.test",
 			"-DclassName=Simulator", "-Dpackage=test.simulator");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/test.simulator-1.0.0.jar",
-			"target/simulator-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1177,6 +1126,8 @@ public class ProjectTemplatesTest {
 			gradleProjectDir,
 			"src/main/resources/META-INF/resources/View.es.js");
 
+		_testNotExists(gradleProjectDir, "gulpfile.js");
+
 		_testContains(
 			gradleProjectDir, "build.gradle",
 			"apply plugin: \"com.liferay.plugin\"");
@@ -1198,8 +1149,7 @@ public class ProjectTemplatesTest {
 			"soy-portlet", "foo", "com.test", "-DclassName=Foo",
 			"-Dpackage=com.liferay.test");
 
-		String gradleBundleFileName = "build/libs/com.liferay.test-1.0.0.jar";
-		String mavenBundleFileName = "target/foo-1.0.0.jar";
+		_testExists(mavenProjectDir, "gulpfile.js");
 
 		File mavenPackageJsonFile = new File(mavenProjectDir, "package.json");
 
@@ -1211,14 +1161,14 @@ public class ProjectTemplatesTest {
 			mavenPackageJsonPath,
 			mavenPackageJSON.getBytes(StandardCharsets.UTF_8));
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, gradleBundleFileName,
-			mavenBundleFileName);
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 
-		_testContainsJarEntry(
-			new File(gradleProjectDir, gradleBundleFileName), "package.json");
-		_testContainsJarEntry(
-			new File(mavenProjectDir, mavenBundleFileName), "package.json");
+		File gradleJarFile = new File(
+			gradleProjectDir, "build/libs/com.liferay.test-1.0.0.jar");
+		File mavenJarFile = new File(mavenProjectDir, "target/foo-1.0.0.jar");
+
+		_testContainsJarEntry(gradleJarFile, "package.json");
+		_testContainsJarEntry(mavenJarFile, "package.json");
 	}
 
 	@Test
@@ -1249,9 +1199,7 @@ public class ProjectTemplatesTest {
 			"spring-mvc-portlet", "foo", "com.test", "-DclassName=Foo",
 			"-Dpackage=foo");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.war",
-			"target/foo-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 
 		ZipFile zipFile = null;
 
@@ -1306,9 +1254,7 @@ public class ProjectTemplatesTest {
 			"spring-mvc-portlet", "foo", "com.test", "-DclassName=Foo",
 			"-Dpackage=com.liferay.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.war",
-			"target/foo-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1330,9 +1276,7 @@ public class ProjectTemplatesTest {
 			"spring-mvc-portlet", "portlet", "com.test", "-DclassName=Portlet",
 			"-Dpackage=portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/portlet.war",
-			"target/portlet-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1355,9 +1299,7 @@ public class ProjectTemplatesTest {
 			"spring-mvc-portlet", "portlet-portlet", "com.test",
 			"-DclassName=Portlet", "-Dpackage=portlet.portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/portlet-portlet.war",
-			"target/portlet-portlet-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1382,9 +1324,7 @@ public class ProjectTemplatesTest {
 			"template-context-contributor", "blade-test", "com.test",
 			"-DclassName=BladeTest", "-Dpackage=blade.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/blade.test-1.0.0.jar", "target/blade-test-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1416,9 +1356,7 @@ public class ProjectTemplatesTest {
 			mavenProjectDir, "pom.xml",
 			"com.liferay.portal.tools.theme.builder");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/theme-test.war",
-			"target/theme-test-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1429,9 +1367,7 @@ public class ProjectTemplatesTest {
 
 		_testContains(
 			gradleProjectDir, "bnd.bnd",
-			"Liferay-Theme-Contributor-Type: foo-bar");
-		_testContains(
-			gradleProjectDir, "bnd.bnd",
+			"Liferay-Theme-Contributor-Type: foo-bar",
 			"Web-ContextPath: /foo-bar-theme-contributor");
 		_testNotContains(
 			gradleProjectDir, "bnd.bnd",
@@ -1452,10 +1388,7 @@ public class ProjectTemplatesTest {
 			mavenProjectDir, "bnd.bnd",
 			"-plugin.sass: com.liferay.ant.bnd.sass.SassAnalyzerPlugin");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/my.contributor.custom-1.0.0.jar",
-			"target/my-contributor-custom-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1465,9 +1398,7 @@ public class ProjectTemplatesTest {
 
 		_testContains(
 			gradleProjectDir, "bnd.bnd",
-			"Liferay-Theme-Contributor-Type: my-contributor-default");
-		_testContains(
-			gradleProjectDir, "bnd.bnd",
+			"Liferay-Theme-Contributor-Type: my-contributor-default",
 			"Web-ContextPath: /my-contributor-default-theme-contributor");
 	}
 
@@ -1539,9 +1470,7 @@ public class ProjectTemplatesTest {
 
 		_testContains(mavenProjectDir, "pom.xml");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/WarHook.war",
-			"target/WarHook-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1569,9 +1498,7 @@ public class ProjectTemplatesTest {
 			mavenProjectDir, "pom.xml", "maven-war-plugin",
 			"com.liferay.css.builder");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/WarMVCPortlet.war",
-			"target/WarMVCPortlet-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1602,9 +1529,7 @@ public class ProjectTemplatesTest {
 			"war-mvc-portlet", "WarMVCPortlet", "com.liferay.test",
 			"-DclassName=WarMVCPortlet", "-Dpackage=com.liferay.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/WarMVCPortlet.war",
-			"target/WarMVCPortlet-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1630,9 +1555,7 @@ public class ProjectTemplatesTest {
 			"war-mvc-portlet", "WarMVCPortlet", "warmvcportlet",
 			"-DclassName=WarMVCPortlet", "-Dpackage=WarMVCPortlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/WarMVCPortlet.war",
-			"target/WarMVCPortlet-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1658,9 +1581,7 @@ public class ProjectTemplatesTest {
 			"war-mvc-portlet", "WarMVC-portlet", "warmvc.portlet",
 			"-DclassName=WarMVCPortlet", "-Dpackage=WarMVC.portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/WarMVC-portlet.war",
-			"target/WarMVC-portlet-1.0.0.war");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1695,9 +1616,7 @@ public class ProjectTemplatesTest {
 			"mvc-portlet", "barfoo", "com.test", "-DclassName=Barfoo",
 			"-Dpackage=foo.bar");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo.bar-1.0.0.jar",
-			"target/barfoo-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
@@ -1810,14 +1729,39 @@ public class ProjectTemplatesTest {
 		File mavenModulesDir = new File(mavenWorkspaceProjectDir, "modules");
 
 		_buildTemplateWithMaven(
-			mavenModulesDir, "mvc-portlet", "foo-portlet", "com.test",
-			"-DclassName=Foo", "-Dpackage=foo.portlet");
+			mavenWorkspaceProjectDir.getParentFile(), mavenModulesDir,
+			"mvc-portlet", "foo-portlet", "com.test", "-DclassName=Foo",
+			"-Dpackage=foo.portlet", "-DprojectType=workspace");
 
-		_buildProjects(
-			gradleWorkspaceProjectDir, mavenWorkspaceProjectDir,
-			"modules/foo-portlet/build/libs/foo.portlet-1.0.0.jar",
-			"modules/foo-portlet/target/foo-portlet-1.0.0.jar",
+		_executeGradle(
+			gradleWorkspaceProjectDir,
 			":modules:foo-portlet" + _GRADLE_TASK_PATH_BUILD);
+
+		_testExists(
+			gradleModulesDir, "foo-portlet/build/libs/foo.portlet-1.0.0.jar");
+
+		_executeMaven(mavenModulesDir, _MAVEN_GOAL_PACKAGE);
+
+		_testExists(
+			mavenModulesDir, "foo-portlet/target/foo-portlet-1.0.0.jar");
+	}
+
+	@Test
+	public void testBuildTemplateWorkspaceWithVersion() throws Exception {
+		File workspaceProjectDir = _buildTemplateWithMaven(
+			WorkspaceUtil.WORKSPACE, "withportlet", "com.test",
+			"-DliferayVersion=7.1");
+
+		_testContains(
+			workspaceProjectDir, "pom.xml", "<liferay.workspace.bundle.url>",
+			"liferay.com/portal/7.1.0-");
+
+		workspaceProjectDir = _buildTemplateWithGradle(
+			WorkspaceUtil.WORKSPACE, "withportlet", "--liferayVersion", "7.1");
+
+		_testContains(
+			workspaceProjectDir, "gradle.properties", true,
+			".*liferay.workspace.bundle.url=.*liferay.com/portal/7.1.0-.*");
 	}
 
 	@Test
@@ -1848,41 +1792,92 @@ public class ProjectTemplatesTest {
 		Assert.assertEquals(expectedTemplates, ProjectTemplates.getTemplates());
 	}
 
+	@Test
+	public void testListTemplatesWithCustomArchetypesDir() throws Exception {
+		File archetypesDir = FileUtil.getJarFile(ProjectTemplatesTest.class);
+
+		Path templateFilePath = FileTestUtil.getFile(
+			archetypesDir.toPath(), "*.jar");
+
+		Assert.assertNotNull(templateFilePath);
+
+		File customArchetypesDir = temporaryFolder.newFolder();
+
+		Path customArchetypesDirPath = customArchetypesDir.toPath();
+
+		String fileName = String.valueOf(templateFilePath.getFileName());
+
+		String suffix = fileName.substring(fileName.indexOf('-'));
+
+		Files.copy(
+			templateFilePath,
+			customArchetypesDirPath.resolve(
+				"custom.name.project.templates.foo.bar-" + suffix));
+
+		List<File> customArchetypesDirs = new ArrayList<>();
+
+		customArchetypesDirs.add(customArchetypesDir);
+
+		Map<String, String> customTemplatesMap = ProjectTemplates.getTemplates(
+			customArchetypesDirs);
+
+		Map<String, String> templatesMap = ProjectTemplates.getTemplates();
+
+		Assert.assertEquals(customTemplatesMap.size(), templatesMap.size() + 1);
+	}
+
 	@Rule
 	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
 	private static void _buildProjects(
-			File gradleProjectDir, File mavenProjectDir,
-			String gradleBundleFileName, String mavenBundleFileName)
+			File gradleProjectDir, File mavenProjectDir)
 		throws Exception {
 
+		File gradleOutputDir = new File(gradleProjectDir, "build/libs");
+		File mavenOutputDir = new File(mavenProjectDir, "target");
+
 		_buildProjects(
-			gradleProjectDir, mavenProjectDir, gradleBundleFileName,
-			mavenBundleFileName, _GRADLE_TASK_PATH_BUILD);
+			gradleProjectDir, mavenProjectDir, gradleOutputDir, mavenOutputDir,
+			_GRADLE_TASK_PATH_BUILD);
 	}
 
 	private static void _buildProjects(
-			File gradleProjectDir, File mavenProjectDir,
-			String gradleBundleFileName, String mavenBundleFileName,
-			String... gradleTaskPath)
+			File gradleProjectDir, File mavenProjectDir, File gradleOutputDir,
+			File mavenOutputDir, String... gradleTaskPath)
 		throws Exception {
 
 		_executeGradle(gradleProjectDir, gradleTaskPath);
 
-		File gradleBundleFile = _testExists(
-			gradleProjectDir, gradleBundleFileName);
+		Path gradleOutputPath = FileTestUtil.getFile(
+			gradleOutputDir.toPath(), _OUTPUT_FILENAME_GLOB_REGEX, 1);
+
+		Assert.assertNotNull(gradleOutputPath);
+
+		Assert.assertTrue(Files.exists(gradleOutputPath));
+
+		File gradleOutputFile = gradleOutputPath.toFile();
+
+		String gradleOutputFileName = gradleOutputFile.getName();
 
 		_executeMaven(mavenProjectDir, _MAVEN_GOAL_PACKAGE);
 
-		File mavenBundleFile = _testExists(
-			mavenProjectDir, mavenBundleFileName);
+		Path mavenOutputPath = FileTestUtil.getFile(
+			mavenOutputDir.toPath(), _OUTPUT_FILENAME_GLOB_REGEX, 1);
+
+		Assert.assertNotNull(mavenOutputPath);
+
+		Assert.assertTrue(Files.exists(mavenOutputPath));
+
+		File mavenOutputFile = mavenOutputPath.toFile();
+
+		String mavenOutputFileName = mavenOutputFile.getName();
 
 		try {
-			if (gradleBundleFileName.endsWith(".jar")) {
-				_testBundlesDiff(gradleBundleFile, mavenBundleFile);
+			if (gradleOutputFileName.endsWith(".jar")) {
+				_testBundlesDiff(gradleOutputFile, mavenOutputFile);
 			}
-			else if (gradleBundleFileName.endsWith(".war")) {
-				_testWarsDiff(gradleBundleFile, mavenBundleFile);
+			else if (gradleOutputFileName.endsWith(".war")) {
+				_testWarsDiff(gradleOutputFile, mavenOutputFile);
 			}
 		}
 		catch (Throwable t) {
@@ -1890,11 +1885,11 @@ public class ProjectTemplatesTest {
 				Path dirPath = Paths.get("build");
 
 				Files.copy(
-					gradleBundleFile.toPath(),
-					dirPath.resolve(gradleBundleFileName));
+					gradleOutputFile.toPath(),
+					dirPath.resolve(gradleOutputFileName));
 				Files.copy(
-					mavenBundleFile.toPath(),
-					dirPath.resolve(mavenBundleFileName));
+					mavenOutputFile.toPath(),
+					dirPath.resolve(mavenOutputFileName));
 			}
 
 			throw t;
@@ -2003,8 +1998,8 @@ public class ProjectTemplatesTest {
 	}
 
 	private static File _buildTemplateWithMaven(
-			File destinationDir, String template, String name, String groupId,
-			String... args)
+			File parentDir, File destinationDir, String template, String name,
+			String groupId, String... args)
 		throws Exception {
 
 		List<String> completeArgs = new ArrayList<>();
@@ -2030,10 +2025,19 @@ public class ProjectTemplatesTest {
 		completeArgs.add("-DgroupId=" + groupId);
 		completeArgs.add("-DartifactId=" + name);
 		completeArgs.add("-Dversion=1.0.0");
-		completeArgs.add("-DprojectType=standalone");
+
+		boolean projectTypeSet = false;
 
 		for (String arg : args) {
 			completeArgs.add(arg);
+
+			if (arg.startsWith("-DprojectType=")) {
+				projectTypeSet = true;
+			}
+		}
+
+		if (!projectTypeSet) {
+			completeArgs.add("-DprojectType=standalone");
 		}
 
 		_executeMaven(destinationDir, completeArgs.toArray(new String[0]));
@@ -2045,6 +2049,10 @@ public class ProjectTemplatesTest {
 		_testNotExists(projectDir, "gradlew.bat");
 		_testNotExists(projectDir, "gradle/wrapper/gradle-wrapper.jar");
 		_testNotExists(projectDir, "gradle/wrapper/gradle-wrapper.properties");
+
+		_testArchetyper(
+			parentDir, destinationDir, projectDir, name, groupId, template,
+			completeArgs);
 
 		return projectDir;
 	}
@@ -2151,6 +2159,116 @@ public class ProjectTemplatesTest {
 		Assert.assertEquals(result.output, 0, result.exitCode);
 	}
 
+	private static void _testArchetyper(
+			File parentDir, File destinationDir, File projectDir, String name,
+			String groupId, String template, List<String> args)
+		throws Exception {
+
+		String author = System.getProperty("user.name");
+		String className = name;
+		String contributorType = null;
+		String hostBundleSymbolicName = null;
+		String hostBundleVersion = null;
+		String packageName = name.replace('-', '.');
+		String service = null;
+		String version = "7.0";
+
+		for (String arg : args) {
+			int pos = arg.indexOf('=');
+
+			if (pos == -1) {
+				continue;
+			}
+
+			String key = arg.substring(2, pos);
+			String value = arg.substring(pos + 1);
+
+			if (key.equals("author")) {
+				author = value;
+			}
+			else if (key.equals("className")) {
+				className = value;
+			}
+			else if (key.equals("contributorType")) {
+				contributorType = value;
+			}
+			else if (key.equals("hostBundleSymbolicName")) {
+				hostBundleSymbolicName = value;
+			}
+			else if (key.equals("hostBundleVersion")) {
+				hostBundleVersion = value;
+			}
+			else if (key.equals("package")) {
+				packageName = value;
+			}
+			else if (key.equals("serviceClass")) {
+				service = value;
+			}
+			else if (key.equals("serviceWrapperClass")) {
+				service = value;
+			}
+			else if (key.equals("liferayVersion")) {
+				version = value;
+			}
+		}
+
+		File archetypesDir = FileUtil.getJarFile(ProjectTemplatesTest.class);
+
+		File archetyperDestinationDir = null;
+
+		if (parentDir.equals(destinationDir)) {
+			archetyperDestinationDir = new File(
+				destinationDir.getParentFile(), "archetyper");
+		}
+		else {
+			Path destinationDirPath = destinationDir.toPath();
+			Path parentDirPath = parentDir.toPath();
+
+			Path archetyperPath = parentDirPath.resolveSibling("archetyper");
+			Path relativePath = parentDirPath.relativize(destinationDirPath);
+
+			Path archetyperDestinationPath = archetyperPath.resolve(
+				relativePath);
+
+			archetyperDestinationDir = archetyperDestinationPath.toFile();
+		}
+
+		ProjectTemplatesArgs projectTemplatesArgs = new ProjectTemplatesArgs();
+
+		List<File> archetypesDirs = Arrays.asList(archetypesDir);
+
+		projectTemplatesArgs.setArchetypesDirs(archetypesDirs);
+		projectTemplatesArgs.setAuthor(author);
+		projectTemplatesArgs.setClassName(className);
+		projectTemplatesArgs.setContributorType(contributorType);
+		projectTemplatesArgs.setDestinationDir(archetyperDestinationDir);
+		projectTemplatesArgs.setGradle(false);
+		projectTemplatesArgs.setGroupId(groupId);
+		projectTemplatesArgs.setHostBundleSymbolicName(hostBundleSymbolicName);
+		projectTemplatesArgs.setHostBundleVersion(hostBundleVersion);
+		projectTemplatesArgs.setLiferayVersion(version);
+		projectTemplatesArgs.setMaven(true);
+		projectTemplatesArgs.setName(name);
+		projectTemplatesArgs.setPackageName(packageName);
+		projectTemplatesArgs.setService(service);
+		projectTemplatesArgs.setTemplate(template);
+
+		Archetyper archetyper = new Archetyper();
+
+		archetyper.generateProject(
+			projectTemplatesArgs, archetyperDestinationDir);
+
+		File archetyperProjectDir = new File(archetyperDestinationDir, name);
+
+		DirectoryComparator directoryComparator = new DirectoryComparator(
+			projectDir, archetyperProjectDir);
+
+		List<String> differences = directoryComparator.getDifferences();
+
+		Assert.assertTrue(
+			"Found differences " + differences, differences.isEmpty());
+	}
+
 	private static void _testBundlesDiff(File bundleFile1, File bundleFile2)
 		throws Exception {
 
@@ -2226,6 +2344,29 @@ public class ProjectTemplatesTest {
 			File dir, String fileName, boolean regex, String... strings)
 		throws IOException {
 
+		return _testContainsOrNot(dir, fileName, regex, true, strings);
+	}
+
+	private static File _testContains(
+			File dir, String fileName, String... strings)
+		throws IOException {
+
+		return _testContains(dir, fileName, false, strings);
+	}
+
+	private static void _testContainsJarEntry(File file, String name)
+		throws IOException {
+
+		try (JarFile jarFile = new JarFile(file)) {
+			Assert.assertNotNull(jarFile.getJarEntry(name));
+		}
+	}
+
+	private static File _testContainsOrNot(
+			File dir, String fileName, boolean regex, boolean contains,
+			String... strings)
+		throws IOException {
+
 		File file = _testExists(dir, fileName);
 
 		String content = FileUtil.read(file.toPath());
@@ -2245,25 +2386,15 @@ public class ProjectTemplatesTest {
 				found = content.contains(s);
 			}
 
-			Assert.assertTrue("Not found in " + fileName + ": " + s, found);
+			if (contains) {
+				Assert.assertTrue("Not found in " + fileName + ": " + s, found);
+			}
+			else {
+				Assert.assertFalse("Found in " + fileName + ": " + s, found);
+			}
 		}
 
 		return file;
-	}
-
-	private static File _testContains(
-			File dir, String fileName, String... strings)
-		throws IOException {
-
-		return _testContains(dir, fileName, false, strings);
-	}
-
-	private static void _testContainsJarEntry(File file, String name)
-		throws IOException {
-
-		try (JarFile jarFile = new JarFile(file)) {
-			Assert.assertNotNull(jarFile.getJarEntry(name));
-		}
 	}
 
 	private static File _testEquals(
@@ -2303,29 +2434,7 @@ public class ProjectTemplatesTest {
 			File dir, String fileName, boolean regex, String... strings)
 		throws IOException {
 
-		File file = _testExists(dir, fileName);
-
-		String content = FileUtil.read(file.toPath());
-
-		for (String s : strings) {
-			boolean found;
-
-			if (regex) {
-				Pattern pattern = Pattern.compile(
-					s, Pattern.DOTALL | Pattern.MULTILINE);
-
-				Matcher matcher = pattern.matcher(content);
-
-				found = matcher.matches();
-			}
-			else {
-				found = content.contains(s);
-			}
-
-			Assert.assertFalse("Found in " + fileName + ": " + s, found);
-		}
-
-		return file;
+		return _testContainsOrNot(dir, fileName, regex, false, strings);
 	}
 
 	private static File _testNotContains(
@@ -2399,8 +2508,10 @@ public class ProjectTemplatesTest {
 				zipFile1 = new ZipFile(warFile1);
 				zipFile2 = new ZipFile(warFile2);
 
-				for (String change : changed.keySet()) {
-					ZipArchiveEntry[] zipArchiveEntries = changed.get(change);
+				for (Map.Entry<String, ZipArchiveEntry[]> entry :
+						changed.entrySet()) {
+
+					ZipArchiveEntry[] zipArchiveEntries = entry.getValue();
 
 					ZipArchiveEntry zipArchiveEntry1 = zipArchiveEntries[0];
 					ZipArchiveEntry zipArchiveEntry2 = zipArchiveEntries[0];
@@ -2525,7 +2636,7 @@ public class ProjectTemplatesTest {
 		File destinationDir = temporaryFolder.newFolder("maven");
 
 		return _buildTemplateWithMaven(
-			destinationDir, template, name, groupId, args);
+			destinationDir, destinationDir, template, name, groupId, args);
 	}
 
 	private File _buildWorkspace() throws Exception {
@@ -2540,16 +2651,86 @@ public class ProjectTemplatesTest {
 			String bootstrapRequire)
 		throws Exception {
 
-		File projectDir = _buildTemplateWithGradle(template, name);
+		File gradleProjectDir = _buildTemplateWithGradle(template, name);
+
+		_testNotContains(
+			gradleProjectDir, "src/main/resources/META-INF/resources/init.jsp",
+			"<%@ page import=\"" + packageName + ".constants." + className +
+				"WebKeys\" %>");
+		_testNotContains(
+			gradleProjectDir, "src/main/resources/META-INF/resources/view.jsp",
+			"<aui:script require=\"<%= bootstrapRequire %>\">",
+			bootstrapRequire);
+
+		String packagePath = packageName.replaceAll("\\.", "\\/");
+
+		_testNotContains(
+			gradleProjectDir,
+			"src/main/java/" + packagePath + "/portlet/" + className +
+				"Portlet.java",
+			"import " + packageName + ".constants." + className + "WebKeys;");
+
+		_testNotExists(
+			gradleProjectDir,
+			"src/main/java/" + packagePath + "/constants/" + className +
+				"WebKeys.java");
+
+		File tempDir = gradleProjectDir.getParentFile();
+
+		FileUtil.deleteDir(tempDir.toPath());
+
+		gradleProjectDir = _buildTemplateWithGradle(
+			template, name, "--liferayVersion", "7.1");
 
 		_testContains(
-			projectDir, "src/main/resources/META-INF/resources/init.jsp",
+			gradleProjectDir, "package.json",
+			"build/resources/main/META-INF/resources");
+
+		_testNotContains(
+			gradleProjectDir, "package.json",
+			"target/classes/META-INF/resources");
+
+		_testNotContains(
+			gradleProjectDir, ".npmbundlerrc",
+			"target/classes/META-INF/resources");
+
+		File mavenProjectDir = _buildTemplateWithMaven(
+			template, name, "com.test", "-DclassName=" + className,
+			"-Dpackage=" + packageName, "-DliferayVersion=7.1");
+
+		_testContains(
+			mavenProjectDir, "package.json",
+			"target/classes/META-INF/resources");
+
+		_testNotContains(
+			mavenProjectDir, "package.json",
+			"build/resources/main/META-INF/resources");
+
+		_testContains(
+			mavenProjectDir, ".npmbundlerrc",
+			"target/classes/META-INF/resources");
+
+		_testContains(
+			gradleProjectDir, "src/main/resources/META-INF/resources/init.jsp",
 			"<%@ page import=\"" + packageName + ".constants." + className +
 				"WebKeys\" %>");
 		_testContains(
-			projectDir, "src/main/resources/META-INF/resources/view.jsp",
+			gradleProjectDir, "src/main/resources/META-INF/resources/view.jsp",
 			"<aui:script require=\"<%= bootstrapRequire %>\">",
 			bootstrapRequire);
+
+		_testContains(
+			gradleProjectDir,
+			"src/main/java/" + packagePath + "/portlet/" + className +
+				"Portlet.java",
+			"import " + packageName + ".constants." + className + "WebKeys;");
+
+		_testExists(
+			gradleProjectDir,
+			"src/main/java/" + packagePath + "/constants/" + className +
+				"WebKeys.java");
+
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	private File _testBuildTemplatePortlet(
@@ -2580,9 +2761,7 @@ public class ProjectTemplatesTest {
 		File mavenProjectDir = _buildTemplateWithMaven(
 			template, "foo", "com.test", "-DclassName=Foo", "-Dpackage=foo");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/foo-1.0.0.jar",
-			"target/foo-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 
 		return gradleProjectDir;
 	}
@@ -2614,9 +2793,7 @@ public class ProjectTemplatesTest {
 			template, "foo", "com.test", "-DclassName=Foo",
 			"-Dpackage=com.liferay.test");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/com.liferay.test-1.0.0.jar", "target/foo-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 
 		return gradleProjectDir;
 	}
@@ -2647,9 +2824,7 @@ public class ProjectTemplatesTest {
 			template, "portlet", "com.test", "-DclassName=Portlet",
 			"-Dpackage=portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir, "build/libs/portlet-1.0.0.jar",
-			"target/portlet-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 
 		return gradleProjectDir;
 	}
@@ -2681,10 +2856,7 @@ public class ProjectTemplatesTest {
 			template, "portlet-portlet", "com.test", "-DclassName=Portlet",
 			"-Dpackage=portlet.portlet");
 
-		_buildProjects(
-			gradleProjectDir, mavenProjectDir,
-			"build/libs/portlet.portlet-1.0.0.jar",
-			"target/portlet-portlet-1.0.0.jar");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 
 		return gradleProjectDir;
 	}
@@ -2851,21 +3023,18 @@ public class ProjectTemplatesTest {
 
 		_executeGradle(gradleProjectDir, _GRADLE_TASK_PATH_BUILD);
 
-		File gradleBundleFile = _testExists(gradleProjectDir, jarFilePath);
+		_testExists(gradleProjectDir, jarFilePath);
 
 		_executeGradle(workspaceDir, ":modules:" + name + ":build");
 
-		File workspaceBundleFile = _testExists(
-			workspaceProjectDir, jarFilePath);
-
-		_testBundlesDiff(gradleBundleFile, workspaceBundleFile);
+		_testExists(workspaceProjectDir, jarFilePath);
 	}
 
 	private static final String _BUNDLES_DIFF_IGNORES = StringTestUtil.merge(
 		Arrays.asList(
-			"*.js.map", "*pom.properties", "*pom.xml", "Archiver-Version",
-			"Build-Jdk", "Built-By", "Javac-Debug", "Javac-Deprecation",
-			"Javac-Encoding"),
+			"*.js.map", "*pom.properties", "*pom.xml", "*package.json",
+			"Archiver-Version", "Build-Jdk", "Built-By", "Javac-Debug",
+			"Javac-Deprecation", "Javac-Encoding"),
 		',');
 
 	private static final String _FREEMARKER_PORTLET_VIEW_FTL_PREFIX =
@@ -2892,6 +3061,8 @@ public class ProjectTemplatesTest {
 		"mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.jar",
 		".mvn/wrapper/maven-wrapper.properties"
 	};
+
+	private static final String _OUTPUT_FILENAME_GLOB_REGEX = "*.{jar,war}";
 
 	private static final String _REPOSITORY_CDN_URL =
 		"https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups" +

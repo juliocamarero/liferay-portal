@@ -15,9 +15,9 @@
 package com.liferay.push.notifications.sender.microsoft.internal;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.push.notifications.constants.PushNotificationsConstants;
 import com.liferay.push.notifications.sender.PushNotificationsSender;
 
@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.aerogear.windows.mpns.MPNS;
+import org.jboss.aerogear.windows.mpns.MpnsNotificationBuilder;
 import org.jboss.aerogear.windows.mpns.MpnsService;
 import org.jboss.aerogear.windows.mpns.MpnsServiceBuilder;
 import org.jboss.aerogear.windows.mpns.notifications.TileNotification;
@@ -40,7 +41,7 @@ import org.osgi.service.component.annotations.Deactivate;
  */
 @Component(
 	immediate = true,
-	property = {"platform=" + MicrosoftPushNotificationsSender.PLATFORM}
+	property = "platform=" + MicrosoftPushNotificationsSender.PLATFORM
 )
 public class MicrosoftPushNotificationsSender
 	implements PushNotificationsSender {
@@ -98,7 +99,10 @@ public class MicrosoftPushNotificationsSender
 	protected TileNotification buildTileNotification(
 		String from, String body, String attributes) {
 
-		TileNotification.Builder builder = MPNS.newNotification().tile();
+		MpnsNotificationBuilder mpnsNotificationBuilder =
+			MPNS.newNotification();
+
+		TileNotification.Builder builder = mpnsNotificationBuilder.tile();
 
 		builder.backContent(body);
 		builder.backTitle(from);
@@ -112,7 +116,10 @@ public class MicrosoftPushNotificationsSender
 	protected ToastNotification buildToastNotification(
 		String from, String body, String attributes) {
 
-		ToastNotification.Builder builder = MPNS.newNotification().toast();
+		MpnsNotificationBuilder mpnsNotificationBuilder =
+			MPNS.newNotification();
+
+		ToastNotification.Builder builder = mpnsNotificationBuilder.toast();
 
 		builder.parameter(attributes);
 		builder.subtitle(body);

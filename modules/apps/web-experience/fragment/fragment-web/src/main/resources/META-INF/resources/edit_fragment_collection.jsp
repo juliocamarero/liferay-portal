@@ -25,30 +25,35 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 %>
 
-<portlet:actionURL name="editFragmentCollection" var="editFragmentCollectionURL">
-	<portlet:param name="mvcPath" value="/edit_fragment_collection.jsp" />
+<portlet:actionURL name="/fragment/edit_fragment_collection" var="editFragmentCollectionURL">
+	<portlet:param name="mvcRenderCommandName" value="/fragment/edit_fragment_collection" />
 </portlet:actionURL>
 
-<aui:form action="<%= editFragmentCollectionURL %>" cssClass="container-fluid-1280" name="fm">
+<liferay-frontend:edit-form
+	action="<%= editFragmentCollectionURL %>"
+	name="fm"
+>
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="fragmentCollectionId" type="hidden" value="<%= fragmentDisplayContext.getFragmentCollectionId() %>" />
 
-	<liferay-ui:error exception="<%= DuplicateFragmentCollectionException.class %>" message="please-enter-a-unique-name" />
-	<liferay-ui:error exception="<%= FragmentCollectionNameException.class %>" message="please-enter-a-valid-name" />
+	<liferay-frontend:edit-form-body>
+		<liferay-ui:error exception="<%= DuplicateFragmentCollectionException.class %>" message="please-enter-a-unique-name" />
+		<liferay-ui:error exception="<%= FragmentCollectionNameException.class %>" message="please-enter-a-valid-name" />
 
-	<aui:model-context bean="<%= fragmentDisplayContext.getFragmentCollection() %>" model="<%= FragmentCollection.class %>" />
+		<aui:model-context bean="<%= fragmentDisplayContext.getFragmentCollection() %>" model="<%= FragmentCollection.class %>" />
 
-	<aui:fieldset-group markupView="lexicon">
-		<aui:fieldset>
-			<aui:input autoFocus="<%= true %>" label="name" name="name" placeholder="name" />
+		<liferay-frontend:fieldset-group>
+			<liferay-frontend:fieldset>
+				<aui:input autoFocus="<%= true %>" label="name" name="name" placeholder="name" />
 
-			<aui:input name="description" placeholder="description" />
-		</aui:fieldset>
-	</aui:fieldset-group>
+				<aui:input name="description" placeholder="description" />
+			</liferay-frontend:fieldset>
+		</liferay-frontend:fieldset-group>
+	</liferay-frontend:edit-form-body>
 
-	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+	<liferay-frontend:edit-form-footer>
+		<aui:button type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
-	</aui:button-row>
-</aui:form>
+		<aui:button href="<%= redirect %>" type="cancel" />
+	</liferay-frontend:edit-form-footer>
+</liferay-frontend:edit-form>

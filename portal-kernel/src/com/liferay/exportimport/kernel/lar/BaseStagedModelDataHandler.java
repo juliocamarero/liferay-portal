@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.comment.DiscussionStagingHandler;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -140,6 +141,12 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 				PortletDataContextFactoryUtil.clonePortletDataContext(
 					portletDataContext),
 				new TransientValue<T>(stagedModel), t);
+
+			if ((t instanceof SystemException) &&
+				(t.getCause() instanceof PortletDataException)) {
+
+				throw (PortletDataException)t.getCause();
+			}
 
 			PortletDataException pde = new PortletDataException(t);
 
@@ -419,6 +426,12 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 					portletDataContext),
 				new TransientValue<T>(stagedModel), t);
 
+			if ((t instanceof SystemException) &&
+				(t.getCause() instanceof PortletDataException)) {
+
+				throw (PortletDataException)t.getCause();
+			}
+
 			throw new PortletDataException(t);
 		}
 	}
@@ -531,7 +544,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 
 		List<AssetCategory> assetCategories =
 			AssetCategoryLocalServiceUtil.getCategories(
-				ExportImportClassedModelUtil.getClassName(stagedModel),
+				ExportImportClassedModelUtil.getClassNameId(stagedModel),
 				ExportImportClassedModelUtil.getClassPK(stagedModel));
 
 		for (AssetCategory assetCategory : assetCategories) {
@@ -546,7 +559,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 		throws PortletDataException {
 
 		List<AssetTag> assetTags = AssetTagLocalServiceUtil.getTags(
-			ExportImportClassedModelUtil.getClassName(stagedModel),
+			ExportImportClassedModelUtil.getClassNameId(stagedModel),
 			ExportImportClassedModelUtil.getClassPK(stagedModel));
 
 		for (AssetTag assetTag : assetTags) {
@@ -857,16 +870,12 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
-		if (!portletDataContext.isInitialPublication() &&
-			(stagedModel instanceof WorkflowedModel)) {
+		if (stagedModel instanceof TrashedModel) {
+			TrashedModel trashedModel = (TrashedModel)stagedModel;
 
-			WorkflowedModel workflowedModel = (WorkflowedModel)stagedModel;
-
-			if (!ArrayUtil.contains(
-					getExportableStatuses(), workflowedModel.getStatus())) {
-
+			if (trashedModel.isInTrash()) {
 				PortletDataException pde = new PortletDataException(
-					PortletDataException.STATUS_UNAVAILABLE);
+					PortletDataException.STATUS_IN_TRASH);
 
 				pde.setStagedModelDisplayName(getDisplayName(stagedModel));
 				pde.setStagedModelClassName(stagedModel.getModelClassName());
@@ -877,12 +886,16 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			}
 		}
 
-		if (stagedModel instanceof TrashedModel) {
-			TrashedModel trashedModel = (TrashedModel)stagedModel;
+		if (!portletDataContext.isInitialPublication() &&
+			(stagedModel instanceof WorkflowedModel)) {
 
-			if (trashedModel.isInTrash()) {
+			WorkflowedModel workflowedModel = (WorkflowedModel)stagedModel;
+
+			if (!ArrayUtil.contains(
+					getExportableStatuses(), workflowedModel.getStatus())) {
+
 				PortletDataException pde = new PortletDataException(
-					PortletDataException.STATUS_IN_TRASH);
+					PortletDataException.STATUS_UNAVAILABLE);
 
 				pde.setStagedModelDisplayName(getDisplayName(stagedModel));
 				pde.setStagedModelClassName(stagedModel.getModelClassName());

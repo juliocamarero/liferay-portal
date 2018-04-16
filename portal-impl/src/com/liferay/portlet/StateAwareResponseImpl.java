@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PublicRenderParameter;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletQNameUtil;
@@ -53,7 +54,9 @@ public abstract class StateAwareResponseImpl
 		Portlet portlet = getPortlet();
 
 		if (portlet != null) {
-			return portlet.getPortletApp().getDefaultNamespace();
+			PortletApp portletApp = portlet.getPortletApp();
+
+			return portletApp.getDefaultNamespace();
 		}
 		else {
 			return XMLConstants.NULL_NS_URI;
@@ -274,20 +277,6 @@ public abstract class StateAwareResponseImpl
 		_calledSetRenderParameter = true;
 	}
 
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #init(PortletRequestImpl,
-	 *             HttpServletResponse, User, Layout)}
-	 */
-	@Deprecated
-	protected void init(
-			PortletRequestImpl portletRequestImpl, HttpServletResponse response,
-			String portletName, User user, Layout layout,
-			WindowState windowState, PortletMode portletMode)
-		throws PortletModeException, WindowStateException {
-
-		init(portletRequestImpl, response, user, layout, true);
-	}
-
 	protected void init(
 			PortletRequestImpl portletRequestImpl, HttpServletResponse response,
 			User user, Layout layout, boolean setWindowStateAndPortletMode)
@@ -313,12 +302,34 @@ public abstract class StateAwareResponseImpl
 	}
 
 	protected void reset() {
-		_calledSetRenderParameter = false;
 		_events.clear();
 		_params.clear();
+
+		try {
+			setPortletMode(PortletMode.VIEW);
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to reset portlet mode to VIEW", e);
+			}
+		}
+
 		_portletMode = null;
+
 		_redirectLocation = null;
+
+		try {
+			setWindowState(WindowState.NORMAL);
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to reset window state to NORMAL", e);
+			}
+		}
+
 		_windowState = null;
+
+		_calledSetRenderParameter = false;
 	}
 
 	protected boolean setPublicRenderParameter(String name, String[] values) {

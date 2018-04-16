@@ -25,15 +25,21 @@ String type = ParamUtil.getString(request, "type");
 
 SiteNavigationMenuItemType siteNavigationMenuItemType = siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(type);
 
+PortletURL addURL = siteNavigationMenuItemType.getAddURL(renderRequest, renderResponse);
+
+if (addURL == null) {
+	addURL = renderResponse.createActionURL();
+
+	addURL.setParameter(ActionRequest.ACTION_NAME, "/navigation_menu/add_site_navigation_menu_item");
+}
+
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
 renderResponse.setTitle(LanguageUtil.format(request, "add-x", siteNavigationMenuItemType.getLabel(locale)));
 %>
 
-<portlet:actionURL name="/navigation_menu/add_site_navigation_menu_item" var="addSiteNavigationMenuItemURL" />
-
-<aui:form action="<%= addSiteNavigationMenuItemURL %>" cssClass="container-fluid-1280">
+<aui:form action="<%= addURL.toString() %>" cssClass="container-fluid-1280">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="siteNavigationMenuId" type="hidden" value="<%= siteNavigationMenuId %>" />
 	<aui:input name="type" type="hidden" value="<%= type %>" />
@@ -49,8 +55,8 @@ renderResponse.setTitle(LanguageUtil.format(request, "add-x", siteNavigationMenu
 	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" value="add" />
+		<aui:button type="submit" value="add" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+		<aui:button type="cancel" />
 	</aui:button-row>
 </aui:form>

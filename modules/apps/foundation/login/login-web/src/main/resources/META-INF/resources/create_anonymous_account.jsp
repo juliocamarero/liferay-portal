@@ -76,13 +76,15 @@
 			<c:if test="<%= captchaConfiguration.createAccountCaptchaEnabled() %>">
 				<portlet:resourceURL id="/login/captcha" var="captchaURL" />
 
-				<liferay-captcha:captcha url="<%= captchaURL %>" />
+				<liferay-captcha:captcha
+					url="<%= captchaURL %>"
+				/>
 			</c:if>
 		</aui:col>
 	</aui:fieldset>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>
 

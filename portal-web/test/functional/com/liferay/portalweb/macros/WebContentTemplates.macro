@@ -5,7 +5,7 @@
 		<execute function="Type#clickAtType" locator1="TextInput#NAME" value1="${templateName}" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Details" />
+			<var name="panel" value="Details" />
 		</execute>
 
 		<if>
@@ -34,7 +34,7 @@
 		</if>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Details" />
+			<var name="panel" value="Details" />
 		</execute>
 
 		<if>
@@ -77,7 +77,9 @@
 	</command>
 
 	<command name="addNullCP">
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="LexiconEntry#gotoAdd" />
 
@@ -91,12 +93,9 @@
 	</command>
 
 	<command name="addRoleViewPermissions">
-		<var name="key_rowEntry" value="${templateName}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Permissions">
-			<var name="key_menuItem" value="Permissions" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Permissions" />
+			<var name="rowEntry" value="${templateName}" />
 		</execute>
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
@@ -111,7 +110,7 @@
 
 	<command name="addStructure">
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Details" />
+			<var name="panel" value="Details" />
 		</execute>
 
 		<execute function="AssertClick" locator1="DDMEditTemplate#DETAILS_SELECT_STRUCTURE" value1="Select" />
@@ -144,7 +143,9 @@
 	</command>
 
 	<command name="advancedSearchCP">
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<var name="key_ddlTemplateName" value="${templateName}" />
 
@@ -164,7 +165,9 @@
 		<if>
 			<isset var="templateDescription" />
 			<then>
-				<execute function="Type" locator1="TextInput#DESCRIPTION" value1="${templateDescription}" />
+				<execute macro="PortletEntry#inputDescriptionTextInput">
+					<var name="description" value="${templateDescription}" />
+				</execute>
 			</then>
 		</if>
 
@@ -175,7 +178,9 @@
 	</command>
 
 	<command name="deleteCP">
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<var name="key_ddlTemplateName" value="${templateName}" />
 
@@ -202,7 +207,6 @@
 
 	<command name="localizeTemplateName">
 		<var name="key_ddlTemplateName" value="${templateName}" />
-		<var name="key_localizationName" value="${localization1NameKey}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -212,7 +216,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute function="AssertTextEquals" locator1="DDMSelectTemplate#TEMPLATE_TABLE_NAME" value1="${templateName}" />
 
@@ -222,24 +228,24 @@
 
 		<execute function="AssertTextEquals" locator1="TextInput#NAME" value1="${templateName}" />
 
-		<execute function="Click" locator1="Translation#LOCALIZATION_NAME" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Name" />
+			<var name="locale" value="${locale}" />
+		</execute>
 
 		<execute function="Type#clickAtType" locator1="TextInput#NAME" value1="${localization1Name}" />
 
 		<if>
-			<isset var="localization2NameKey" />
+			<isset var="locale2" />
 			<then>
-				<var name="key_localizationName" value="${localization2NameKey}" />
-
-				<execute function="Click" locator1="Translation#LOCALIZATION_NAME" />
+				<execute macro="PortletEntry#changeLocale">
+					<var name="fieldName" value="Name" />
+					<var name="locale" value="${locale2}" />
+				</execute>
 
 				<execute function="Type#clickAtType" locator1="TextInput#NAME" value1="${localization2Name}" />
 			</then>
 		</if>
-	</command>
-
-	<command name="save">
-		<execute function="AssertClick" locator1="DDMEditTemplate#SAVE_BUTTON" value1="Save" />
 	</command>
 
 	<command name="tearDownCP">
@@ -251,11 +257,13 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
-		<execute function="Type" locator1="DDMSelectTemplate#TOOLBAR_SEARCH_FIELD" value1="2" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="2" />
+		</execute>
 
 		<while>
 			<condition function="IsElementNotPresent" locator1="Message#EMPTY_INFO" />
@@ -270,9 +278,9 @@
 			</then>
 		</while>
 
-		<execute function="Type" locator1="DDMSelectTemplate#TOOLBAR_SEARCH_FIELD" value1="Template" />
-
-		<execute function="Click" locator1="Icon#BASIC_SEARCH" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="Template" />
+		</execute>
 
 		<while>
 			<condition function="IsElementNotPresent" locator1="Message#EMPTY_INFO" />
@@ -293,7 +301,9 @@
 	</command>
 
 	<command name="viewCP">
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<var name="key_ddlTemplateName" value="${templateName}" />
 
@@ -335,7 +345,7 @@
 				<execute function="AssertTextEquals" locator1="TextInput#NAME" value1="${templateName}" />
 
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Details" />
+					<var name="panel" value="Details" />
 				</execute>
 
 				<execute function="AssertTextEquals" locator1="TextArea#DESCRIPTION" value1="${templateDescription}" />

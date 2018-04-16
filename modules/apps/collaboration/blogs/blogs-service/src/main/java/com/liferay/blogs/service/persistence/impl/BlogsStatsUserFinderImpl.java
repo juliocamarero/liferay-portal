@@ -18,7 +18,8 @@ import com.liferay.blogs.model.BlogsStatsUser;
 import com.liferay.blogs.model.impl.BlogsStatsUserImpl;
 import com.liferay.blogs.service.persistence.BlogsStatsUserFinder;
 import com.liferay.blogs.service.persistence.BlogsStatsUserUtil;
-import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -27,8 +28,8 @@ import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,8 +67,7 @@ public class BlogsStatsUserFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(
-				getClass(), COUNT_BY_ORGANIZATION_IDS);
+			String sql = _customSQL.get(getClass(), COUNT_BY_ORGANIZATION_IDS);
 
 			sql = StringUtil.replace(
 				sql, "[$ORGANIZATION_ID$]",
@@ -79,9 +79,7 @@ public class BlogsStatsUserFinderImpl
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			for (int i = 0; i < organizationIds.size(); i++) {
-				Long organizationId = organizationIds.get(i);
-
+			for (Long organizationId : organizationIds) {
 				qPos.add(organizationId);
 			}
 
@@ -114,7 +112,7 @@ public class BlogsStatsUserFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(getClass(), FIND_BY_GROUP_IDS);
+			String sql = _customSQL.get(getClass(), FIND_BY_GROUP_IDS);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
@@ -181,13 +179,12 @@ public class BlogsStatsUserFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(
-				getClass(), FIND_BY_ORGANIZATION_IDS);
+			String sql = _customSQL.get(getClass(), FIND_BY_ORGANIZATION_IDS);
 
 			sql = StringUtil.replace(
 				sql, "[$ORGANIZATION_ID$]",
 				getOrganizationIds(organizationIds));
-			sql = CustomSQLUtil.replaceOrderBy(sql, obc);
+			sql = _customSQL.replaceOrderBy(sql, obc);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
@@ -195,9 +192,7 @@ public class BlogsStatsUserFinderImpl
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			for (int i = 0; i < organizationIds.size(); i++) {
-				Long organizationId = organizationIds.get(i);
-
+			for (Long organizationId : organizationIds) {
 				qPos.add(organizationId);
 			}
 
@@ -229,5 +224,8 @@ public class BlogsStatsUserFinderImpl
 
 		return sb.toString();
 	}
+
+	@ServiceReference(type = CustomSQL.class)
+	private CustomSQL _customSQL;
 
 }

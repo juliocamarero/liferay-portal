@@ -16,6 +16,7 @@ package com.liferay.journal.service.permission;
 
 import com.liferay.dynamic.data.mapping.util.DDMStructurePermissionSupport;
 import com.liferay.dynamic.data.mapping.util.DDMTemplatePermissionSupport;
+import com.liferay.journal.constants.JournalConstants;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -24,19 +25,19 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.journal.model.JournalArticle"}
+	property = "model.class.name=com.liferay.journal.model.JournalArticle"
 )
 public class JournalDDMPermissionSupport
 	implements DDMStructurePermissionSupport, DDMTemplatePermissionSupport {
 
 	@Override
 	public String getResourceName() {
-		return JournalPermission.RESOURCE_NAME;
+		return JournalConstants.RESOURCE_NAME;
 	}
 
 	@Override
 	public String getResourceName(long classNameId) {
-		return JournalPermission.RESOURCE_NAME;
+		return JournalConstants.RESOURCE_NAME;
 	}
 
 }

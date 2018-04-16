@@ -17,54 +17,104 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String redirect = fragmentDisplayContext.getEditFragmentEntryRedirect();
-
 FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(redirect);
+portletDisplay.setURLBack(fragmentDisplayContext.getEditFragmentEntryRedirect());
 
-renderResponse.setTitle(fragmentDisplayContext.getFragmentEntryTitle());
+String title = fragmentDisplayContext.getFragmentEntryTitle();
+
+if (WorkflowConstants.STATUS_DRAFT == fragmentEntry.getStatus()) {
+	title = fragmentDisplayContext.getFragmentEntryTitle() + " (" + LanguageUtil.get(request, WorkflowConstants.getStatusLabel(fragmentEntry.getStatus())) + ")";
+}
+
+renderResponse.setTitle(title);
 %>
 
-<aui:nav-bar markupView="lexicon">
-	<portlet:renderURL var="mainURL" />
+<div class="nav-bar-container">
+	<div class="navbar navbar-default">
+		<div class="container">
+			<div class="navbar navbar-collapse-absolute navbar-expand-md navbar-underline navigation-bar navigation-bar-light">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<aui:a cssClass="active nav-link" href="<%= currentURL %>" label="code" />
+					</li>
+				</ul>
+			</div>
 
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item href="<%= mainURL.toString() %>" label="code" selected="<%= true %>" />
-	</aui:nav>
-</aui:nav-bar>
+			<div class="mt-1 pull-right">
+				<c:if test="<%= WorkflowConstants.STATUS_DRAFT == fragmentEntry.getStatus() %>">
+					<button class="btn btn-default" onclick="<%= "submitForm(document.querySelector('#" + renderResponse.getNamespace() + "fm'));" %>">
+						<span class="lfr-btn-label">
+							<liferay-ui:message key="save-as-draft" />
+						</span>
+					</button>
+				</c:if>
 
-<portlet:actionURL name="editFragmentEntry" var="editFragmentEntryURL">
-	<portlet:param name="mvcPath" value="/edit_fragment_entry.jsp" />
-</portlet:actionURL>
+				<button class="btn btn-primary" id="<portlet:namespace />publishButton">
+					<span class="lfr-btn-label">
+						<liferay-ui:message key="publish" />
+					</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 
-<aui:form action="<%= editFragmentEntryURL %>" cssClass="container-fluid-1280" enctype="multipart/form-data" method="post" name="fm">
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+<liferay-ui:error exception="<%= FragmentEntryContentException.class %>">
+
+	<%
+	FragmentEntryContentException fece = (FragmentEntryContentException)errorException;
+	%>
+
+	<c:choose>
+		<c:when test="<%= Validator.isNotNull(fece.getMessage()) %>">
+			<%= fece.getMessage() %>
+		</c:when>
+		<c:otherwise>
+			<liferay-ui:message key="fragment-html-is-invalid" />
+		</c:otherwise>
+	</c:choose>
+</liferay-ui:error>
+
+<portlet:actionURL name="/fragment/edit_fragment_entry" var="editFragmentEntryURL" />
+
+<aui:form action="<%= editFragmentEntryURL %>" enctype="multipart/form-data" method="post" name="fm">
+	<aui:input name="redirect" type="hidden" value="<%= fragmentDisplayContext.getEditFragmentEntryRedirect() %>" />
 	<aui:input name="fragmentEntryId" type="hidden" value="<%= fragmentDisplayContext.getFragmentEntryId() %>" />
 	<aui:input name="fragmentCollectionId" type="hidden" value="<%= fragmentDisplayContext.getFragmentCollectionId() %>" />
 	<aui:input name="cssContent" type="hidden" value="" />
 	<aui:input name="htmlContent" type="hidden" value="" />
 	<aui:input name="jsContent" type="hidden" value="" />
+	<aui:input name="status" type="hidden" value="<%= fragmentEntry.getStatus() %>" />
 
 	<aui:model-context bean="<%= fragmentEntry %>" model="<%= FragmentEntry.class %>" />
 
 	<aui:input autoFocus="<%= false %>" name="name" placeholder="name" type="hidden" />
 
 	<div id="<portlet:namespace />fragmentEditor"></div>
-
-	<aui:button-row cssClass="fragment-submit-buttons">
-		<aui:button cssClass="btn btn-lg" type="submit" />
-	</aui:button-row>
 </aui:form>
 
-<aui:script require="fragment-web/js/FragmentEditor">
+<%
+Layout renderLayout = LayoutLocalServiceUtil.fetchFirstLayout(themeDisplay.getScopeGroupId(), false, 0);
+%>
+
+<liferay-portlet:renderURL plid="<%= renderLayout.getPlid() %>" var="renderFragmentEntryURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="mvcRenderCommandName" value="/fragment/render_fragment_entry" />
+	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
+</liferay-portlet:renderURL>
+
+<liferay-portlet:renderURL plid="<%= renderLayout.getPlid() %>" var="previewFragmentEntryURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="mvcRenderCommandName" value="/fragment/preview_fragment_entry" />
+</liferay-portlet:renderURL>
+
+<aui:script require="fragment-web/js/FragmentEditor.es as FragmentEditor, metal-dom/src/all/dom as dom">
 	var cssInput = document.getElementById('<portlet:namespace />cssContent');
 	var htmlInput = document.getElementById('<portlet:namespace />htmlContent');
 	var jsInput = document.getElementById('<portlet:namespace />jsContent');
 	var wrapper = document.getElementById('<portlet:namespace />fragmentEditor');
 
-	var fragmentEditor = new fragmentWebJsFragmentEditor.default(
+	var fragmentEditor = new FragmentEditor.default(
 		{
 			events: {
 				contentChanged: function(event) {
@@ -73,17 +123,52 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentEntryTitle());
 					jsInput.value = event.js;
 				}
 			},
-			initialCSS: '<%= HtmlUtil.escapeJS((fragmentEntry != null) ? fragmentEntry.getCss() : StringPool.BLANK) %>',
-			initialHTML: '<%= HtmlUtil.escapeJS((fragmentEntry != null) ? fragmentEntry.getHtml() : StringPool.BLANK) %>',
-			initialJS: '<%= HtmlUtil.escapeJS((fragmentEntry != null) ? fragmentEntry.getJs() : StringPool.BLANK) %>',
+			initialCSS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getCssContent()) %>',
+			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
+			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
 			namespace: '<portlet:namespace />',
+			previewFragmentEntryURL: '<%= previewFragmentEntryURL %>',
+			renderFragmentEntryURL: '<%= renderFragmentEntryURL %>',
 			spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
 		},
 		wrapper
 	);
 
+	var publishButtonClickHandler = dom.delegate(
+		document.body,
+		'click',
+		'#<portlet:namespace />publishButton',
+		function(event) {
+			event.preventDefault();
+
+			dom.toElement('#<portlet:namespace />status').value = '<%= WorkflowConstants.STATUS_APPROVED %>';
+
+			if (!fragmentEditor.isHtmlValid()) {
+				AUI().use('liferay-alert', () => {
+					new Liferay.Alert(
+						{
+							delay: {
+								hide: 500,
+								show: 0
+							},
+							duration: 500,
+							icon: 'exclamation-circle',
+							message: '<liferay-ui:message key="fragment-html-is-invalid" />',
+							type: 'danger'
+						}
+					).render();
+				});
+
+				return;
+			}
+
+			submitForm(document.querySelector('#<portlet:namespace />fm'));
+		}
+	);
+
 	function destroyFragmentEditor () {
 		fragmentEditor.dispose();
+		publishButtonClickHandler.removeListener();
 
 		Liferay.detach('destroyPortlet', destroyFragmentEditor);
 	}

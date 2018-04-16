@@ -3,11 +3,13 @@ AUI.add(
 	function(A) {
 		var CSS_PREFIX = A.getClassName('form', 'builder', 'field', 'settings', 'sidebar');
 
-		var TPL_LOADING = '<div class="loading-icon loading-icon-lg"></div>';
+		var TPL_LOADING = '<div class="loading-animation"></div>';
 
 		var TPL_NAVBAR_WRAPER = '<nav class="navbar navbar-default navbar-no-collapse"></nav>';
 
 		var FieldTypes = Liferay.DDM.Renderer.FieldTypes;
+
+		var Lang = A.Lang;
 
 		var FormBuilderFieldsSettingsSidebar = A.Component.create(
 			{
@@ -154,6 +156,21 @@ AUI.add(
 						return (settingsForm && settingsForm.hasFocus()) || instance._containsNode(activeElement) || instance._isFieldNode(activeElement);
 					},
 
+					updateFieldName: function(field) {
+						Liferay.DDM.FormBuilderUtil.visitLayout(
+							field.get('context.settingsContext').pages,
+							function(settingsFormFieldContext) {
+								var fieldName = settingsFormFieldContext.fieldName;
+
+								if (fieldName == 'name') {
+									settingsFormFieldContext.value = field.get('context.fieldName');
+								}
+							}
+						);
+
+						field.set('context.name', field.get('context.fieldName'));
+					},
+
 					_addFieldTypesInToolbar: function() {
 						var instance = this;
 
@@ -224,10 +241,14 @@ AUI.add(
 					_changeFieldTypeMenu: function(fieldType) {
 						var instance = this;
 
+						instance._showLoading();
+
+						instance._disableSidebarHeader();
+
 						A.one('#field-type-menu-content').html(instance._getFieldTypeMenuLayout(fieldType));
 					},
 
-					_configureSideBar: function() {
+					_configureSideBar: function(field) {
 						var instance = this;
 
 						var settingsForm = instance.settingsForm;
@@ -241,13 +262,19 @@ AUI.add(
 							function() {
 								settingsFormContainer.one('.navbar-nav').wrap(TPL_NAVBAR_WRAPER);
 
-								settingsForm.getFirstPageField().focus();
-
 								instance._bindSettingsFormEvents();
 							}
 						);
 
+						instance._removeLoading();
+
+						instance._enableSidebarHeader();
+
 						settingsForm.render();
+
+						instance._setFocusToFirstPageField(settingsForm);
+
+						delete field.newField;
 					},
 
 					_containsNode: function(node) {
@@ -269,16 +296,53 @@ AUI.add(
 						return toolbar;
 					},
 
+					_disableSidebarHeader: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						contentBox.all('.sidebar .sidebar-header .dropdown .dropdown-toggle.nav-link').addClass('disabled');
+					},
+
+					_enableSidebarHeader: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						contentBox.all('.sidebar .sidebar-header .dropdown .dropdown-toggle.nav-link').removeClass('disabled');
+					},
+
 					_getFieldTypeMenuLayout: function(fieldType) {
 						var instance = this;
 
-						return Liferay.Util.getLexiconIconTpl(fieldType.get('icon')) + '<span>' + fieldType.get('label') + '</span>' + Liferay.Util.getLexiconIconTpl('caret-bottom');
+						return '<div>' + Liferay.Util.getLexiconIconTpl(fieldType.get('icon')) + '</div><span>' + fieldType.get('label') + '</span>' + Liferay.Util.getLexiconIconTpl('caret-bottom');
 					},
 
 					_isFieldNode: function(node) {
 						var instance = this;
 
 						return node.ancestorsByClassName('.ddm-form-field-container').size();
+					},
+
+					_isSameType: function(previousSettingsFormFieldContext, currentSettingsFormFieldContext) {
+						return (typeof currentSettingsFormFieldContext.value === typeof previousSettingsFormFieldContext.value);
+					},
+
+					_isValueEmpty: function(settingsFormFieldContextValue) {
+						if (Lang.isString(settingsFormFieldContextValue)) {
+							return settingsFormFieldContextValue.trim() === '';
+						}
+						else if (Lang.isArray(settingsFormFieldContextValue)) {
+							return settingsFormFieldContextValue.length === 0;
+						}
+						else if (Lang.isObject(settingsFormFieldContextValue)) {
+							return A.Object.isEmpty(settingsFormFieldContextValue);
+						}
+						else if (Lang.isBoolean(settingsFormFieldContextValue)) {
+							return false;
+						}
+
+						return true;
 					},
 
 					_loadFieldSettingsForm: function(field) {
@@ -288,17 +352,13 @@ AUI.add(
 							function(settingsForm) {
 								instance.settingsForm = settingsForm;
 
-								instance._configureSideBar();
+								instance._configureSideBar(field);
 
-								settingsForm.evaluate(
-									function() {
-										instance._removeLoading();
-
-										instance._setFocusToFirstPageField(settingsForm);
-									}
-								);
+								settingsForm.evaluate();
 
 								field.set('context.settingsContext', settingsForm.get('context'));
+
+								instance.updateFieldName(field);
 
 								field.saveSettings();
 
@@ -332,12 +392,24 @@ AUI.add(
 										var previousFieldLocalizable = previousSettingsFormFieldContext.localizable;
 										var previousFieldName = previousSettingsFormFieldContext.fieldName;
 
-										if (fieldName === previousFieldName) {
-											settingsFormFieldContext.value = previousSettingsFormFieldContext.value;
-											settingsFormFieldContext.dataType = previousSettingsFormFieldContext.dataType;
-
-											if (fieldLocalizable == previousFieldLocalizable) {
+										if (!(fieldName === 'type') && (fieldName === previousFieldName)) {
+											if (fieldLocalizable && previousFieldLocalizable) {
 												settingsFormFieldContext.localizedValue = previousSettingsFormFieldContext.localizedValue;
+											}
+											if (instance._isSameType(previousSettingsFormFieldContext, settingsFormFieldContext)) {
+												if (!instance._isValueEmpty(previousSettingsFormFieldContext.value)) {
+													settingsFormFieldContext.value = previousSettingsFormFieldContext.value;
+													settingsFormFieldContext.dataType = previousSettingsFormFieldContext.dataType;
+												}
+											}
+											else if (settingsFormFieldContext.localizedValue) {
+												var settingsFormFieldContextLocalizedValueKeys = Object.keys(settingsFormFieldContext.localizedValue);
+
+												settingsFormFieldContextLocalizedValueKeys.forEach(
+													function(key, index) {
+														settingsFormFieldContext.localizedValue[key] = settingsFormFieldContext.value;
+													}
+												);
 											}
 										}
 									}
@@ -351,9 +423,12 @@ AUI.add(
 					_removeLoading: function() {
 						var instance = this;
 
-						var boundingBox = instance.get('boundingBox');
+						var contentBox = instance.get('contentBox');
+						var loading = contentBox.one('.loading-animation');
 
-						boundingBox.removeClass('loading-data');
+						if (loading) {
+							loading.remove();
+						}
 					},
 
 					_saveCurrentContext: function() {
@@ -395,14 +470,11 @@ AUI.add(
 					_showLoading: function() {
 						var instance = this;
 
-						var boundingBox = instance.get('boundingBox');
 						var contentBox = instance.get('contentBox');
 
-						if (!contentBox.one('.loading-icon')) {
+						if (!contentBox.one('.loading-animation')) {
 							contentBox.append(TPL_LOADING);
 						}
-
-						boundingBox.addClass('loading-data');
 					},
 
 					_updateField: function(previousField, field, column) {

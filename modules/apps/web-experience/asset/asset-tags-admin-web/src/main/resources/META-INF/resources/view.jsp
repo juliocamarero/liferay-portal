@@ -16,63 +16,28 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-portlet:renderURL varImpl="portletURL">
-	<liferay-portlet:param name="keywords" value="<%= assetTagsDisplayContext.getKeywords() %>" />
-</liferay-portlet:renderURL>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= assetTagsDisplayContext.getNavigationItems() %>"
+/>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<portlet:renderURL var="mainURL" />
-
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item href="<%= mainURL.toString() %>" label="tags" selected="<%= true %>" />
-	</aui:nav>
-
-	<c:if test="<%= assetTagsDisplayContext.isShowTagsSearch() %>">
-		<aui:nav-bar-search>
-			<aui:form action="<%= portletURL %>" name="searchFm">
-				<liferay-ui:input-search markupView="lexicon" />
-			</aui:form>
-		</aui:nav-bar-search>
-	</c:if>
-</aui:nav-bar>
-
-<liferay-frontend:management-bar
-	disabled="<%= assetTagsDisplayContext.isDisabledTagsManagementBar() %>"
-	includeCheckBox="<%= true %>"
+<clay:management-toolbar
+	actionItems="<%= assetTagsDisplayContext.getActionItemsDropdownItemList() %>"
+	clearResultsURL="<%= assetTagsDisplayContext.getClearResultsURL() %>"
+	componentId="assetTagsManagementToolbar"
+	creationMenu="<%= assetTagsDisplayContext.isShowAddButton() ? assetTagsDisplayContext.getCreationMenu() : null %>"
+	disabled="<%= assetTagsDisplayContext.getTotalItems() == 0 %>"
+	filterItems="<%= assetTagsDisplayContext.getFilterItemsDropdownItemList() %>"
+	namespace="<%= renderResponse.getNamespace() %>"
+	searchActionURL="<%= assetTagsDisplayContext.getSearchActionURL() %>"
 	searchContainerId="assetTags"
->
-	<liferay-frontend:management-bar-filters>
-		<liferay-frontend:management-bar-navigation
-			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= renderResponse.createRenderURL() %>"
-		/>
-
-		<liferay-frontend:management-bar-sort
-			orderByCol="<%= assetTagsDisplayContext.getOrderByCol() %>"
-			orderByType="<%= assetTagsDisplayContext.getOrderByType() %>"
-			orderColumns='<%= new String[] {"name", "usages"} %>'
-			portletURL="<%= portletURL %>"
-		/>
-	</liferay-frontend:management-bar-filters>
-
-	<liferay-frontend:management-bar-buttons>
-		<liferay-portlet:actionURL name="changeDisplayStyle" varImpl="changeDisplayStyleURL">
-			<portlet:param name="redirect" value="<%= currentURL %>" />
-		</liferay-portlet:actionURL>
-
-		<liferay-frontend:management-bar-display-buttons
-			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
-			portletURL="<%= changeDisplayStyleURL %>"
-			selectedDisplayStyle="<%= assetTagsDisplayContext.getDisplayStyle() %>"
-		/>
-	</liferay-frontend:management-bar-buttons>
-
-	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href="javascript:;" icon="change" id="mergeSelectedTags" label="merge" />
-
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedTags" label="delete" />
-	</liferay-frontend:management-bar-action-buttons>
-</liferay-frontend:management-bar>
+	searchFormName="searchFm"
+	showSearch="<%= assetTagsDisplayContext.isShowSearch() %>"
+	sortingOrder="<%= assetTagsDisplayContext.getOrderByType() %>"
+	sortingURL="<%= assetTagsDisplayContext.getSortingURL() %>"
+	totalItems="<%= assetTagsDisplayContext.getTotalItems() %>"
+	viewTypes="<%= assetTagsDisplayContext.getViewTypeItemList() %>"
+/>
 
 <portlet:actionURL name="deleteTag" var="deleteTagURL">
 	<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -156,45 +121,31 @@
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= assetTagsDisplayContext.getDisplayStyle() %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= assetTagsDisplayContext.getDisplayStyle() %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 
-<c:if test="<%= assetTagsDisplayContext.isShowAddButton() %>">
-	<portlet:renderURL var="editTagURL">
-		<portlet:param name="mvcPath" value="/edit_tag.jsp" />
-	</portlet:renderURL>
+<aui:script>
+	function <portlet:namespace />mergeTags() {
+		<portlet:renderURL var="mergeURL">
+			<portlet:param name="mvcPath" value="/merge_tag.jsp" />
+			<portlet:param name="mergeTagIds" value="[$MERGE_TAGS_IDS$]" />
+		</portlet:renderURL>
 
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-tag") %>' url="<%= editTagURL.toString() %>" />
-	</liferay-frontend:add-menu>
-</c:if>
+		let mergeURL = '<%= mergeURL %>';
 
-<aui:script sandbox="<%= true %>">
-	var Util = Liferay.Util;
+		location.href = mergeURL.replace(
+			escape('[$MERGE_TAGS_IDS$]'),
+			Liferay.Util.listCheckedExcept(document.querySelector('#<portlet:namespace />fm'), '<portlet:namespace />allRowIds')
+		);
+	}
 
-	var form = $(document.<portlet:namespace />fm);
-
-	$('#<portlet:namespace />deleteSelectedTags').on(
-		'click',
-		function() {
-			if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
-				submitForm(form);
-			}
+	function <portlet:namespace/>deleteTags() {
+		if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
+			submitForm(form);
 		}
-	);
-
-	$('#<portlet:namespace />mergeSelectedTags').on(
-		'click',
-		function() {
-			<portlet:renderURL var="mergeURL">
-				<portlet:param name="mvcPath" value="/merge_tag.jsp" />
-				<portlet:param name="mergeTagIds" value="[$MERGE_TAGS_IDS$]" />
-			</portlet:renderURL>
-
-			var mergeURL = '<%= mergeURL %>';
-
-			location.href = mergeURL.replace(escape('[$MERGE_TAGS_IDS$]'), Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		}
-	);
+	}
 </aui:script>

@@ -19,6 +19,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>LOCALIZATION_BUTTON</td>
+	<td>//button[contains(@id,'DDMFormPortlet')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>LOCALIZATION_OPTION</td>
+	<td>//div[contains(@class,'menu-open')]//a[//span[contains(.,'${key_locale}')]]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SELECT_FORM</td>
 	<td>//span[contains(@class,'taglib-text') and contains(.,'Select Form')]</td>
 	<td></td>
@@ -30,12 +40,12 @@
 </tr>
 <tr>
 	<td>FORM_PAGE_ACTIVE</td>
-	<td>//ul[contains(@class,'pagination-content')]//li[@class='active']/a[contains(.,'${key_formPageName}')] | //ul[contains(@class,'multi-step-progress-bar')]/li[@class='active' and contains(.,'${key_formPageName}')]/div[@class='progress-bar-title']</td>
+	<td>//ol[contains(@class,'multi-step-nav')]//li[contains(@class,'active')]/div[contains(.,'${key_formPageName}')] | //ol[contains(@class,'multi-step-nav')]//li[contains(@class,'complete')]/div[contains(.,'${key_formPageName}')] | //ul[contains(@class,'multi-step-progress-bar')]/li[contains(@class,'active')]//div[contains(.,'${key_formPageName}') and contains(@class,'multi-step-indicator-label')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>FORM_PAGE_INACTIVE</td>
-	<td>//ul[contains(@class,'pagination-content')]//li[contains(.,'${key_formPageName}')] | //ul[contains(@class,'multi-step-progress-bar')]/li[not(contains(@class,'active')) and contains(.,'${key_formPageName}')]/div[@class='progress-bar-title']</td>
+	<td>//ol[contains(@class,'multi-step-nav')]//li[not(contains(@class,'active'))]/div[contains(.,'${key_formPageName}')] | //ol[contains(@class,'multi-step-nav')]//li[not(contains(@class,'complete'))]/div[contains(.,'${key_formPageName}')] | //ul[contains(@class,'multi-step-progress-bar')]/li[not(contains(@class,'active'))]//div[contains(.,'${key_formPageName}') and contains(@class,'multi-step-indicator-label')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -53,7 +63,6 @@
 	<td>//div[contains(@class,'basic-info')]//h5[contains(.,'${key_successPageDescription}')]</td>
 	<td></td>
 </tr>
-
 </tbody>
 </table>
 </body>

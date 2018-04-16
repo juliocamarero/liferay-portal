@@ -138,7 +138,15 @@ public class LayoutPageTemplateEntryPersistenceTest {
 
 		newLayoutPageTemplateEntry.setLayoutPageTemplateCollectionId(RandomTestUtil.nextLong());
 
+		newLayoutPageTemplateEntry.setClassNameId(RandomTestUtil.nextLong());
+
+		newLayoutPageTemplateEntry.setClassTypeId(RandomTestUtil.nextLong());
+
 		newLayoutPageTemplateEntry.setName(RandomTestUtil.randomString());
+
+		newLayoutPageTemplateEntry.setHtmlPreviewEntryId(RandomTestUtil.nextLong());
+
+		newLayoutPageTemplateEntry.setDefaultTemplate(RandomTestUtil.randomBoolean());
 
 		_layoutPageTemplateEntries.add(_persistence.update(
 				newLayoutPageTemplateEntry));
@@ -163,8 +171,16 @@ public class LayoutPageTemplateEntryPersistenceTest {
 			Time.getShortTimestamp(newLayoutPageTemplateEntry.getModifiedDate()));
 		Assert.assertEquals(existingLayoutPageTemplateEntry.getLayoutPageTemplateCollectionId(),
 			newLayoutPageTemplateEntry.getLayoutPageTemplateCollectionId());
+		Assert.assertEquals(existingLayoutPageTemplateEntry.getClassNameId(),
+			newLayoutPageTemplateEntry.getClassNameId());
+		Assert.assertEquals(existingLayoutPageTemplateEntry.getClassTypeId(),
+			newLayoutPageTemplateEntry.getClassTypeId());
 		Assert.assertEquals(existingLayoutPageTemplateEntry.getName(),
 			newLayoutPageTemplateEntry.getName());
+		Assert.assertEquals(existingLayoutPageTemplateEntry.getHtmlPreviewEntryId(),
+			newLayoutPageTemplateEntry.getHtmlPreviewEntryId());
+		Assert.assertEquals(existingLayoutPageTemplateEntry.getDefaultTemplate(),
+			newLayoutPageTemplateEntry.getDefaultTemplate());
 	}
 
 	@Test
@@ -202,6 +218,14 @@ public class LayoutPageTemplateEntryPersistenceTest {
 	}
 
 	@Test
+	public void testCountByG_C_D() throws Exception {
+		_persistence.countByG_C_D(RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean());
+
+		_persistence.countByG_C_D(0L, 0L, RandomTestUtil.randomBoolean());
+	}
+
+	@Test
 	public void testFindByPrimaryKeyExisting() throws Exception {
 		LayoutPageTemplateEntry newLayoutPageTemplateEntry = addLayoutPageTemplateEntry();
 
@@ -235,7 +259,8 @@ public class LayoutPageTemplateEntryPersistenceTest {
 			"layoutPageTemplateEntryId", true, "groupId", true, "companyId",
 			true, "userId", true, "userName", true, "createDate", true,
 			"modifiedDate", true, "layoutPageTemplateCollectionId", true,
-			"name", true);
+			"classNameId", true, "classTypeId", true, "name", true,
+			"htmlPreviewEntryId", true, "defaultTemplate", true);
 	}
 
 	@Test
@@ -481,7 +506,15 @@ public class LayoutPageTemplateEntryPersistenceTest {
 
 		layoutPageTemplateEntry.setLayoutPageTemplateCollectionId(RandomTestUtil.nextLong());
 
+		layoutPageTemplateEntry.setClassNameId(RandomTestUtil.nextLong());
+
+		layoutPageTemplateEntry.setClassTypeId(RandomTestUtil.nextLong());
+
 		layoutPageTemplateEntry.setName(RandomTestUtil.randomString());
+
+		layoutPageTemplateEntry.setHtmlPreviewEntryId(RandomTestUtil.nextLong());
+
+		layoutPageTemplateEntry.setDefaultTemplate(RandomTestUtil.randomBoolean());
 
 		_layoutPageTemplateEntries.add(_persistence.update(
 				layoutPageTemplateEntry));

@@ -574,11 +574,11 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferencesList.toString(), 1,
 			portletPreferencesList.size());
 
-		PortletPreferencesImpl portletPreferenesImpl =
+		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesImplTestUtil.toPortletPreferencesImpl(
 				portletPreferencesList.get(0));
 
-		assertOwner(_layout.getGroup(), portletPreferenesImpl);
+		assertOwner(_layout.getGroup(), portletPreferencesImpl);
 	}
 
 	@Test
@@ -813,11 +813,11 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferencesList.toString(), 1,
 			portletPreferencesList.size());
 
-		PortletPreferencesImpl portletPreferenesImpl =
+		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesImplTestUtil.toPortletPreferencesImpl(
 				portletPreferencesList.get(0));
 
-		assertOwner(_layout, portletPreferenesImpl);
+		assertOwner(_layout, portletPreferencesImpl);
 	}
 
 	@Test
@@ -1147,11 +1147,11 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferencesList.toString(), 1,
 			portletPreferencesList.size());
 
-		PortletPreferencesImpl portletPreferenesImpl =
+		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesImplTestUtil.toPortletPreferencesImpl(
 				portletPreferencesList.get(0));
 
-		assertOwner(_layout, portletPreferenesImpl);
+		assertOwner(_layout, portletPreferencesImpl);
 
 		Group group = GroupTestUtil.addGroup();
 
@@ -1431,7 +1431,8 @@ public class PortletPreferencesLocalServiceTest {
 		Map<String, String[]> portletPreferencesMap =
 			portletPreferencesImpl.getMap();
 
-		Assert.assertTrue(portletPreferencesMap.isEmpty());
+		Assert.assertTrue(
+			portletPreferencesMap.toString(), portletPreferencesMap.isEmpty());
 	}
 
 	protected void assertOwner(
@@ -1465,7 +1466,9 @@ public class PortletPreferencesLocalServiceTest {
 		Map<String, String[]> strictPortletPreferencesMap =
 			strictPortletPreferencesImpl.getMap();
 
-		Assert.assertTrue(strictPortletPreferencesMap.isEmpty());
+		Assert.assertTrue(
+			strictPortletPreferencesMap.toString(),
+			strictPortletPreferencesMap.isEmpty());
 	}
 
 	protected void assertValues(
@@ -1479,7 +1482,8 @@ public class PortletPreferencesLocalServiceTest {
 		Map<String, String[]> portletPreferencesMap =
 			portletPreferencesImpl.getMap();
 
-		Assert.assertFalse(portletPreferencesMap.isEmpty());
+		Assert.assertFalse(
+			portletPreferencesMap.toString(), portletPreferencesMap.isEmpty());
 		Assert.assertArrayEquals(values, portletPreferencesMap.get(name));
 	}
 

@@ -14,6 +14,7 @@
 
 package com.liferay.frontend.editor.alloyeditor.web.internal.editor.configuration;
 
+import com.liferay.frontend.editor.alloyeditor.web.internal.constants.AlloyEditorConstants;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigContributor;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -40,7 +41,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Sergio González
  */
 @Component(
-	property = {"editor.name=alloyeditor_creole"},
+	property = "editor.name=alloyeditor_creole",
 	service = EditorConfigContributor.class
 )
 public class AlloyEditorCreoleConfigContributor
@@ -63,7 +64,8 @@ public class AlloyEditorCreoleConfigContributor
 
 		Map<String, String> fileBrowserParams =
 			(Map<String, String>)inputEditorTaglibAttributes.get(
-				"liferay-ui:input-editor:fileBrowserParams");
+				AlloyEditorConstants.ATTRIBUTE_NAMESPACE +
+					":fileBrowserParams");
 
 		if (fileBrowserParams != null) {
 			String attachmentURLPrefix = fileBrowserParams.get(
@@ -81,7 +83,7 @@ public class AlloyEditorCreoleConfigContributor
 		linkEditJSONObject.put("appendProtocol", false);
 		linkEditJSONObject.put("showTargetSelector", false);
 
-		buttonCfgJSONObject.put("linkEdit", linkEditJSONObject);
+		buttonCfgJSONObject.put("linkEditBrowse", linkEditJSONObject);
 
 		jsonObject.put("buttonCfg", buttonCfgJSONObject);
 
@@ -277,7 +279,7 @@ public class AlloyEditorCreoleConfigContributor
 
 		linkEditJSONObject.put("cfg", cfgJSONObject);
 
-		linkEditJSONObject.put("name", "linkEdit");
+		linkEditJSONObject.put("name", "linkEditBrowse");
 
 		linkButtonsJSONArray.put(linkEditJSONObject);
 
@@ -318,7 +320,7 @@ public class AlloyEditorCreoleConfigContributor
 		jsonArray.put("italic");
 		jsonArray.put("ul");
 		jsonArray.put("ol");
-		jsonArray.put("link");
+		jsonArray.put("linkBrowse");
 		jsonArray.put("removeFormat");
 
 		jsonObject.put("buttons", jsonArray);

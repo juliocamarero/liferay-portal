@@ -14,6 +14,7 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.exception.LayoutFriendlyURLException;
 import com.liferay.portal.kernel.exception.LayoutFriendlyURLsException;
@@ -51,7 +52,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.comparator.LayoutPriorityComparator;
@@ -242,7 +242,9 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 				firstLayout = true;
 			}
 			else {
-				long firstLayoutId = layouts.get(0).getLayoutId();
+				Layout layout = layouts.get(0);
+
+				long firstLayoutId = layout.getLayoutId();
 
 				if (firstLayoutId == layoutId) {
 					firstLayout = true;
@@ -546,7 +548,9 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 			// You can only reach this point if there are more than two layouts
 			// at the root level because of the descendant check
 
-			long firstLayoutId = layouts.get(0).getLayoutId();
+			Layout firstLayout = layouts.get(0);
+
+			long firstLayoutId = firstLayout.getLayoutId();
 
 			if (firstLayoutId == layoutId) {
 				Layout secondLayout = layouts.get(1);

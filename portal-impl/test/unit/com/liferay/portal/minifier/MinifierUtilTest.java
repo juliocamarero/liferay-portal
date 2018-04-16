@@ -14,13 +14,47 @@
 
 package com.liferay.portal.minifier;
 
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+
+import org.mockito.Mockito;
 
 /**
  * @author Iván Zaera Avellón
  */
-public class MinifierUtilTest {
+public class MinifierUtilTest extends Mockito {
+
+	@Before
+	public void setUp() {
+		Registry registry = mock(Registry.class);
+
+		when(
+			registry.setRegistry(any(Registry.class))
+		).thenReturn(
+			registry
+		);
+
+		when(
+			registry.getRegistry()
+		).thenReturn(
+			registry
+		);
+
+		ServiceTracker serviceTracker = mock(ServiceTracker.class);
+
+		when(
+			registry.trackServices(any(Class.class))
+		).thenReturn(
+			serviceTracker
+		);
+
+		RegistryUtil.setRegistry(registry);
+	}
 
 	@Test
 	public void testProcessMinifiedCssWithMultipleOps() {
@@ -28,6 +62,15 @@ public class MinifierUtilTest {
 			"margin: calc(10px+50%*2/3);");
 
 		Assert.assertEquals("margin:calc(10px + 50% * 2 / 3);", minifiedCss);
+	}
+
+	@Test
+	public void testProcessMinifiedCssWithNegativeNumbers() {
+		String minifiedCss = MinifierUtil.minifyCss(
+			"left: calc(-1px + -1px - -1px * -1px / -1px - 1px);");
+
+		Assert.assertEquals(
+			"left:calc(-1px + -1px - -1px * -1px / -1px - 1px);", minifiedCss);
 	}
 
 	@Test

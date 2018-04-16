@@ -17,6 +17,7 @@ package com.liferay.sync.service.impl;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
@@ -30,14 +31,14 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.sync.constants.SyncDLObjectConstants;
 import com.liferay.sync.model.SyncDLObject;
 import com.liferay.sync.service.base.SyncDLObjectLocalServiceBaseImpl;
-import com.liferay.sync.service.configuration.SyncServiceConfigurationValues;
-import com.liferay.sync.util.SyncUtil;
+import com.liferay.sync.service.internal.configuration.SyncServiceConfigurationValues;
+import com.liferay.sync.util.SyncHelper;
 
 import java.util.Date;
 import java.util.List;
@@ -393,7 +394,7 @@ public class SyncDLObjectLocalServiceImpl
 
 					if (!type.equals(SyncDLObjectConstants.TYPE_FOLDER)) {
 						syncDLObject.setLanTokenKey(
-							SyncUtil.getLanTokenKey(
+							_syncHelper.getLanTokenKey(
 								parentSyncDLObject.getModifiedTime(),
 								syncDLObject.getTypePK(), false));
 					}
@@ -463,5 +464,8 @@ public class SyncDLObjectLocalServiceImpl
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SyncDLObjectLocalServiceImpl.class);
+
+	@ServiceReference(type = SyncHelper.class)
+	private SyncHelper _syncHelper;
 
 }

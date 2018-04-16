@@ -14,16 +14,20 @@
 
 package com.liferay.portal.workflow.kaleo.runtime.integration.impl.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.uuid.PortalUUID;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionManager;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.comparator.WorkflowComparatorFactory;
 import com.liferay.portal.workflow.kaleo.KaleoWorkflowModelConverter;
+import com.liferay.portal.workflow.kaleo.definition.Definition;
+import com.liferay.portal.workflow.kaleo.definition.parser.WorkflowModelParser;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinitionVersion;
 import com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine;
@@ -46,15 +50,34 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Eduardo Lundgren
  */
 @Component(
-	immediate = true, property = {"proxy.bean=false"},
+	immediate = true, property = "proxy.bean=false",
 	service = WorkflowDefinitionManager.class
 )
 public class WorkflowDefinitionManagerImpl
 	implements WorkflowDefinitionManager {
 
+	/**
+	 * @deprecated As of 1.0.0, replaced by {@link
+	 *             #deployWorkflowDefinition(long, long, String, String,
+	 *             byte[])}
+	 */
+	@Deprecated
 	@Override
 	public WorkflowDefinition deployWorkflowDefinition(
 			long companyId, long userId, String title, byte[] bytes)
+		throws WorkflowException {
+
+		Definition definition = _workflowModelParser.parse(
+			new UnsyncByteArrayInputStream(bytes));
+
+		return deployWorkflowDefinition(
+			companyId, userId, title, definition.getName(), bytes);
+	}
+
+	@Override
+	public WorkflowDefinition deployWorkflowDefinition(
+			long companyId, long userId, String title, String name,
+			byte[] bytes)
 		throws WorkflowException {
 
 		ServiceContext serviceContext = new ServiceContext();
@@ -63,7 +86,7 @@ public class WorkflowDefinitionManagerImpl
 		serviceContext.setUserId(userId);
 
 		return _workflowEngine.deployWorkflowDefinition(
-			title, new UnsyncByteArrayInputStream(bytes), serviceContext);
+			title, name, new UnsyncByteArrayInputStream(bytes), serviceContext);
 	}
 
 	@Override
@@ -165,8 +188,21 @@ public class WorkflowDefinitionManagerImpl
 		}
 	}
 
+	/**
+	 * @deprecated As of 1.0.0, replaced by {@link
+	 *             #getLatestWorkflowDefinition(long, String)}
+	 */
+	@Deprecated
 	@Override
 	public WorkflowDefinition getLatestKaleoDefinition(
+			long companyId, String name)
+		throws WorkflowException {
+
+		return getLatestWorkflowDefinition(companyId, name);
+	}
+
+	@Override
+	public WorkflowDefinition getLatestWorkflowDefinition(
 			long companyId, String name)
 		throws WorkflowException {
 
@@ -311,6 +347,21 @@ public class WorkflowDefinitionManagerImpl
 	}
 
 	@Override
+	public WorkflowDefinition saveWorkflowDefinition(
+			long companyId, long userId, String title, String name,
+			byte[] bytes)
+		throws WorkflowException {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(companyId);
+		serviceContext.setUserId(userId);
+
+		return _workflowEngine.saveWorkflowDefinition(
+			title, name, bytes, serviceContext);
+	}
+
+	@Override
 	public void undeployWorkflowDefinition(
 			long companyId, long userId, String name, int version)
 		throws WorkflowException {
@@ -375,7 +426,7 @@ public class WorkflowDefinitionManagerImpl
 			String content = kaleoDefinition.getContent();
 
 			return _workflowEngine.deployWorkflowDefinition(
-				title, new UnsyncByteArrayInputStream(content.getBytes()),
+				title, name, new UnsyncByteArrayInputStream(content.getBytes()),
 				serviceContext);
 		}
 		catch (Exception e) {
@@ -389,6 +440,12 @@ public class WorkflowDefinitionManagerImpl
 
 		_workflowEngine.validateWorkflowDefinition(
 			new UnsyncByteArrayInputStream(bytes));
+	}
+
+	protected String getNextVersion(String version) {
+		int[] versionParts = StringUtil.split(version, StringPool.PERIOD, 0);
+
+		return String.valueOf(++versionParts[0]);
 	}
 
 	protected String getVersion(int version) {
@@ -433,6 +490,9 @@ public class WorkflowDefinitionManagerImpl
 	}
 
 	@Reference
+	protected PortalUUID portalUUID;
+
+	@Reference
 	private KaleoDefinitionLocalService _kaleoDefinitionLocalService;
 
 	@Reference
@@ -451,5 +511,8 @@ public class WorkflowDefinitionManagerImpl
 		policyOption = ReferencePolicyOption.GREEDY
 	)
 	private volatile WorkflowEngine _workflowEngine;
+
+	@Reference
+	private WorkflowModelParser _workflowModelParser;
 
 }

@@ -24,13 +24,14 @@ dependencies {
 	compile group: "log4j", name: "log4j", version: "1.2.17"
 	compile group: "org.freemarker", name: "freemarker", transitive: false, version: "2.3.23"
 
-	provided group: "com.liferay", name: "com.liferay.petra.string", version: "1.0.0"
-	provided group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "2.20.0"
-	provided group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.49.0"
-	provided group: "com.liferay.portal", name: "com.liferay.util.java", version: "2.0.0"
-	provided group: "org.apache.ant", name: "ant", transitive: false, version: "1.9.4"
-	provided group: "org.apache.maven", name: "maven-plugin-api", transitive: false, version: "3.0.4"
-	provided group: "xerces", name: "xercesImpl", transitive: false, version: "2.11.0"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.string", version: "1.0.0"
+	compileOnly group: "com.liferay", name: "com.liferay.petra.xml", version: "1.0.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "2.20.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.49.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.util.java", version: "2.5.0"
+	compileOnly group: "org.apache.ant", name: "ant", transitive: false, version: "1.9.4"
+	compileOnly group: "org.apache.maven", name: "maven-plugin-api", transitive: false, version: "3.0.4"
+	compileOnly group: "xerces", name: "xercesImpl", transitive: false, version: "2.11.0"
 
 	xmltask group: "com.oopsconsultancy", name: "xmltask", version: "1.16"
 }
@@ -72,7 +73,7 @@ needed by Service Builder to generate model services.
 	}
 
 	from {
-		File portalImplJarFile = configurations.provided.find {
+		File portalImplJarFile = configurations.compileOnly.find {
 			it.name.startsWith "com.liferay.portal.impl-"
 		}
 
@@ -87,6 +88,12 @@ needed by Service Builder to generate model services.
 }
 
 updateFileVersions {
+	String portalToolsPropertiesFileName = "portal-tools.properties"
+
+	if (project["git.working.branch.name"] == "7.0.x") {
+		portalToolsPropertiesFileName = "portal-tools-7.0.x.properties"
+	}
+
 	match(/\t\t\t\t<version>(\d.+)<\/version>/, "samples/pom.xml")
-	match(/com\.liferay\.portal\.tools\.service\.builder=(\d.+)/, "../../sdk/gradle-plugins/src/main/resources/com/liferay/gradle/plugins/dependencies/portal-tools.properties")
+	match(/com\.liferay\.portal\.tools\.service\.builder=(\d.+)/, "../../sdk/gradle-plugins/src/main/resources/com/liferay/gradle/plugins/dependencies/${portalToolsPropertiesFileName}")
 }

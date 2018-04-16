@@ -5,8 +5,9 @@ clean {
 }
 
 dependencies {
-	provided group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.51.0"
-	provided group: "org.apache.ant", name: "ant", transitive: false, version: "1.9.4"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
+	compileOnly group: "org.apache.ant", name: "ant", transitive: false, version: "1.9.4"
+	compileOnly project(":core:petra:petra-process")
 }
 
 liferay {

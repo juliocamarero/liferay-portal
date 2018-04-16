@@ -52,9 +52,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Roberto Díaz
  */
 @Component(
-	property = {
-		"item.selector.view.key=" + WikiItemSelectorViewConstants.ITEM_SELECTOR_VIEW_KEY
-	}
+	property = "item.selector.view.key=" + WikiItemSelectorViewConstants.ITEM_SELECTOR_VIEW_KEY
 )
 public class WikiAttachmentItemSelectorView
 	implements ItemSelectorView<WikiAttachmentItemSelectorCriterion> {
@@ -78,11 +76,6 @@ public class WikiAttachmentItemSelectorView
 	@Override
 	public String getTitle(Locale locale) {
 		return LanguageUtil.get(locale, "page-attachments");
-	}
-
-	@Override
-	public boolean isShowSearch() {
-		return true;
 	}
 
 	@Override

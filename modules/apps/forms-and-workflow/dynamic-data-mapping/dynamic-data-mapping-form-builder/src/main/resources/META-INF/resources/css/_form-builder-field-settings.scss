@@ -11,8 +11,20 @@
 		}
 	}
 
+	.field-type-editor {
+		padding: 0;
+
+		.alloy-editor {
+			padding-bottom: 0.5rem;
+			padding-left: 1rem;
+			padding-right: 1rem;
+			padding-top: 0.5rem;
+		}
+	}
+
 	.alloy-editor {
 		padding-right: 4px;
+		width: 100%;
 	}
 
 	.form-inline .checkbox label {
@@ -86,7 +98,7 @@
 	}
 
 	.has-error .key-value-editor {
-		display: none
+		display: none;
 	}
 
 	.liferay-ddm-form-field-checkbox,
@@ -107,6 +119,10 @@
 		.help-block {
 			height: 22px;
 			position: relative;
+		}
+
+		.key-value-input {
+			width: 140px;
 		}
 	}
 
@@ -135,6 +151,10 @@
 
 		.drag-placeholder {
 			opacity: 0.5;
+		}
+
+		.key-value-input {
+			width: 158px;
 		}
 
 		.last-option:not(:first-of-type) {
@@ -195,4 +215,21 @@
 
 div.portlet-forms-admin .form-builder-layout .layout-row-container-row .layout-row .col {
 	min-height: 20px;
+}
+
+.form-builder-field-list-add-container {
+	display: none;
+}
+
+.lfr-ddm-plus-button.btn {
+	cursor: pointer;
+	padding: 0.43125rem 0.67125rem;
+	position: fixed;
+	right: 20px;
+	top: 75px;
+	z-index: 20;
+
+	@include respond-to(phone) {
+		top: 54px;
+	}
 }

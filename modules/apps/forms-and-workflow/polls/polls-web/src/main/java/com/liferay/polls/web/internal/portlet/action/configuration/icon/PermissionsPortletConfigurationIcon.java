@@ -14,8 +14,9 @@
 
 package com.liferay.polls.web.internal.portlet.action.configuration.icon;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.polls.constants.PollsPortletKeys;
-import com.liferay.polls.service.permission.PollsResourcePermissionChecker;
+import com.liferay.polls.web.internal.security.permission.resource.PollsPermission;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -24,7 +25,6 @@ import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfiguration
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.security.PermissionsURLTag;
 
@@ -37,8 +37,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Rafael Praxedes
  */
 @Component(
-	immediate = true,
-	property = {"javax.portlet.name=" + PollsPortletKeys.POLLS},
+	immediate = true, property = "javax.portlet.name=" + PollsPortletKeys.POLLS,
 	service = PortletConfigurationIcon.class
 )
 public class PermissionsPortletConfigurationIcon
@@ -92,8 +91,8 @@ public class PermissionsPortletConfigurationIcon
 		PermissionChecker permissionChecker =
 			themeDisplay.getPermissionChecker();
 
-		return PollsResourcePermissionChecker.contains(
-			permissionChecker, themeDisplay.getScopeGroupId(),
+		return PollsPermission.contains(
+			permissionChecker, themeDisplay.getScopeGroup(),
 			ActionKeys.PERMISSIONS);
 	}
 

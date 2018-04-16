@@ -61,7 +61,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Mate Thurzo
  */
 @Component(
-	property = {"model.class.name=com.liferay.journal.model.JournalArticle"},
+	property = "model.class.name=com.liferay.journal.model.JournalArticle",
 	service = {
 		ExportImportContentProcessor.class,
 		JournalArticleExportImportContentProcessor.class
@@ -184,7 +184,7 @@ public class JournalArticleExportImportContentProcessor
 					sb.append(type);
 
 					sb.append(" was detected during import when validating ");
-					sb.append("the content below. This is not an error, it ");
+					sb.append("the content below. This is not an error; it ");
 					sb.append("typically means the ");
 					sb.append(type);
 					sb.append(" was deleted.\n");
@@ -254,7 +254,7 @@ public class JournalArticleExportImportContentProcessor
 
 				if (journalArticle == null) {
 					if (_log.isInfoEnabled()) {
-						StringBundler messageSB = new StringBundler();
+						StringBundler messageSB = new StringBundler(7);
 
 						messageSB.append("Staged model with class name ");
 						messageSB.append(stagedModel.getModelClassName());
@@ -286,9 +286,36 @@ public class JournalArticleExportImportContentProcessor
 				dynamicContentElement.addCDATA(journalArticleReference);
 
 				if (exportReferencedContent) {
-					StagedModelDataHandlerUtil.exportReferenceStagedModel(
-						portletDataContext, stagedModel, journalArticle,
-						PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
+					try {
+						StagedModelDataHandlerUtil.exportReferenceStagedModel(
+							portletDataContext, stagedModel, journalArticle,
+							PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
+					}
+					catch (Exception e) {
+						if (_log.isDebugEnabled()) {
+							StringBundler messageSB = new StringBundler(10);
+
+							messageSB.append("Staged model with class name ");
+							messageSB.append(stagedModel.getModelClassName());
+							messageSB.append(" and primary key ");
+							messageSB.append(stagedModel.getPrimaryKeyObj());
+							messageSB.append(" references journal article ");
+							messageSB.append("with class primary key ");
+							messageSB.append(classPK);
+							messageSB.append(" that could not be exported ");
+							messageSB.append("due to ");
+							messageSB.append(e);
+
+							String errorMessage = messageSB.toString();
+
+							if (Validator.isNotNull(e.getMessage())) {
+								errorMessage = StringBundler.concat(
+									errorMessage, ": ", e.getMessage());
+							}
+
+							_log.debug(errorMessage, e);
+						}
+					}
 				}
 				else {
 					Element entityElement =
@@ -397,6 +424,24 @@ public class JournalArticleExportImportContentProcessor
 						_journalArticleLocalService.fetchLatestArticle(classPK);
 
 					if (journalArticle == null) {
+						if (ExportImportThreadLocal.isImportInProcess()) {
+							if (_log.isDebugEnabled()) {
+								StringBundler sb = new StringBundler(7);
+
+								sb.append("An invalid web content article ");
+								sb.append("was detected during import when ");
+								sb.append("validating the content below. ");
+								sb.append("This is not an error; it ");
+								sb.append("typically means the web content ");
+								sb.append("article was deleted.\n");
+								sb.append(content);
+
+								_log.debug(sb.toString());
+							}
+
+							return;
+						}
+
 						NoSuchArticleException nsae =
 							new NoSuchArticleException(
 								StringBundler.concat(

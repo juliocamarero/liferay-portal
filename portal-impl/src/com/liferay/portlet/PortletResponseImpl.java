@@ -14,6 +14,7 @@
 
 package com.liferay.portlet;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
@@ -33,7 +34,6 @@ import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -187,6 +187,16 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 		if (StringUtil.equalsIgnoreCase(
 				key, MimeResponse.MARKUP_HEAD_ELEMENT)) {
 
+			if (StringUtil.equalsIgnoreCase(element.getNodeName(), "script") &&
+				!element.hasChildNodes()) {
+
+				// LPS-77798
+
+				element = (Element)element.cloneNode(true);
+
+				element.appendChild(_document.createTextNode(StringPool.SPACE));
+			}
+
 			List<Element> values = _markupHeadElements.get(key);
 
 			if (values != null) {
@@ -338,10 +348,6 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 
 	@Override
 	public String getNamespace() {
-		if (_wsrp) {
-			return "wsrp_rewrite_";
-		}
-
 		if (_namespace == null) {
 			_namespace = PortalUtil.getPortletNamespace(portletName);
 		}
@@ -583,7 +589,9 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 
 		String portletURLClass = portlet.getPortletURLClass();
 
-		if (portlet.getPortletId().equals(portletName) &&
+		String portletId = portlet.getPortletId();
+
+		if (portletId.equals(portletName) &&
 			Validator.isNotNull(portletURLClass)) {
 
 			if (portletURLClass.equals(
@@ -670,22 +678,7 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 
 		_companyId = _portlet.getCompanyId();
 
-		_wsrp = ParamUtil.getBoolean(
-			portletRequestImpl.getHttpServletRequest(), "wsrp");
-
 		setPlid(portletRequestImpl.getPlid());
-	}
-
-	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #init(PortletRequestImpl,
-	 *             HttpServletResponse)}
-	 */
-	@Deprecated
-	protected void init(
-		PortletRequestImpl portletRequestImpl, HttpServletResponse response,
-		String portletName, long companyId, long plid) {
-
-		init(portletRequestImpl, response);
 	}
 
 	protected String portletName;
@@ -707,7 +700,6 @@ public abstract class PortletResponseImpl implements LiferayPortletResponse {
 	private Portlet _portlet;
 	private PortletPreferences _portletSetup;
 	private URLEncoder _urlEncoder;
-	private boolean _wsrp;
 
 	private class LiferayPortletURLPrivilegedAction
 		implements PrivilegedAction<LiferayPortletURL> {

@@ -14,20 +14,22 @@
 
 package com.liferay.portal.kernel.test.rule.callback;
 
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.messaging.BaseAsyncDestination;
 import com.liferay.portal.kernel.messaging.BaseDestination;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.InvokerMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
 import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
 import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.rule.callback.SynchronousDestinationTestCallback.SyncHandler;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
@@ -41,13 +43,11 @@ import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.dependency.ServiceDependencyManager;
 
-import java.lang.reflect.Method;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 
-import org.junit.Test;
 import org.junit.runner.Description;
 
 /**
@@ -81,33 +81,7 @@ public class SynchronousDestinationTestCallback
 	public SyncHandler beforeClass(Description description) throws Throwable {
 		Class<?> testClass = description.getTestClass();
 
-		Sync sync = testClass.getAnnotation(Sync.class);
-
-		if (sync != null) {
-			return _createSyncHandler(sync);
-		}
-
-		boolean hasSyncedMethod = false;
-
-		for (Method method : testClass.getMethods()) {
-			if ((method.getAnnotation(Sync.class) != null) &&
-				(method.getAnnotation(Test.class) != null)) {
-
-				hasSyncedMethod = true;
-
-				break;
-			}
-		}
-
-		if (!hasSyncedMethod) {
-			throw new AssertionError(
-				StringBundler.concat(
-					testClass.getName(), " uses ",
-					SynchronousDestinationTestRule.class.getName(),
-					" without any usage of ", Sync.class.getName()));
-		}
-
-		return null;
+		return _createSyncHandler(testClass.getAnnotation(Sync.class));
 	}
 
 	@Override
@@ -150,10 +124,6 @@ public class SynchronousDestinationTestCallback
 		}
 
 		public void enableSync() {
-			if (_sync == null) {
-				return;
-			}
-
 			ServiceDependencyManager serviceDependencyManager =
 				new ServiceDependencyManager();
 
@@ -207,8 +177,10 @@ public class SynchronousDestinationTestCallback
 			replaceDestination("liferay/report_request");
 			replaceDestination("liferay/reports_admin");
 
-			for (String name : _sync.destinationNames()) {
-				replaceDestination(name);
+			if (_sync != null) {
+				for (String name : _sync.destinationNames()) {
+					replaceDestination(name);
+				}
 			}
 
 			if (schedulerEnabled) {
@@ -225,6 +197,67 @@ public class SynchronousDestinationTestCallback
 					SearchEngineHelperUtil.getSearchWriterDestinationName(
 						searchEngineId));
 			}
+
+			MessageBus messageBus = MessageBusUtil.getMessageBus();
+
+			BaseAsyncDestination schedulerDestination =
+				(BaseAsyncDestination)messageBus.getDestination(
+					DestinationNames.SCHEDULER_DISPATCH);
+
+			if (schedulerDestination == null) {
+				return;
+			}
+
+			for (MessageListener messageListener :
+					schedulerDestination.getMessageListeners()) {
+
+				InvokerMessageListener invokerMessageListener =
+					(InvokerMessageListener)messageListener;
+
+				MessageListener schedulerMessageListener =
+					invokerMessageListener.getMessageListener();
+
+				schedulerDestination.unregister(schedulerMessageListener);
+
+				_schedulerInvokerMessageListeners.add(invokerMessageListener);
+			}
+
+			CountDownLatch startCountDownLatch = new CountDownLatch(
+				schedulerDestination.getWorkersMaxSize());
+
+			CountDownLatch endCountDownLatch = new CountDownLatch(1);
+
+			Message countDownMessage = new Message();
+
+			MessageListener messageListener = message -> {
+				if (countDownMessage == message) {
+					startCountDownLatch.countDown();
+
+					try {
+						endCountDownLatch.await();
+					}
+					catch (InterruptedException ie) {
+						ReflectionUtil.throwException(ie);
+					}
+				}
+			};
+
+			schedulerDestination.register(messageListener);
+
+			for (int i = 0; i < schedulerDestination.getWorkersMaxSize(); i++) {
+				schedulerDestination.send(countDownMessage);
+			}
+
+			try {
+				startCountDownLatch.await();
+			}
+			catch (InterruptedException ie) {
+				ReflectionUtil.throwException(ie);
+			}
+
+			schedulerDestination.unregister(messageListener);
+
+			endCountDownLatch.countDown();
 		}
 
 		public void replaceDestination(String destinationName) {
@@ -249,10 +282,6 @@ public class SynchronousDestinationTestCallback
 		}
 
 		public void restorePreviousSync() {
-			if (_sync == null) {
-				return;
-			}
-
 			ProxyModeThreadLocal.setForceSync(_forceSync);
 
 			MessageBus messageBus = MessageBusUtil.getMessageBus();
@@ -265,6 +294,21 @@ public class SynchronousDestinationTestCallback
 
 			for (String absentDestinationName : _absentDestinationNames) {
 				messageBus.removeDestination(absentDestinationName);
+			}
+
+			Destination destination = messageBus.getDestination(
+				DestinationNames.SCHEDULER_DISPATCH);
+
+			if (destination == null) {
+				return;
+			}
+
+			for (InvokerMessageListener invokerMessageListener :
+					_schedulerInvokerMessageListeners) {
+
+				destination.register(
+					invokerMessageListener.getMessageListener(),
+					invokerMessageListener.getClassLoader());
 			}
 		}
 
@@ -289,6 +333,8 @@ public class SynchronousDestinationTestCallback
 		private final List<Destination> _asyncServiceDestinations =
 			new ArrayList<>();
 		private boolean _forceSync;
+		private final List<InvokerMessageListener>
+			_schedulerInvokerMessageListeners = new ArrayList<>();
 		private Sync _sync;
 
 	}

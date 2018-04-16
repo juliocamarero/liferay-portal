@@ -14,7 +14,7 @@
 
 package com.liferay.chat.internal.events;
 
-import com.liferay.chat.jabber.JabberUtil;
+import com.liferay.chat.internal.jabber.JabberUtil;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.LifecycleAction;
 import com.liferay.portal.kernel.util.Portal;
@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Peter Fellwock
  */
 @Component(
-	enabled = false, immediate = true, property = {"key=logout.events.post"},
+	enabled = false, immediate = true, property = "key=logout.events.post",
 	service = LifecycleAction.class
 )
 public class LoginPostAction extends Action {

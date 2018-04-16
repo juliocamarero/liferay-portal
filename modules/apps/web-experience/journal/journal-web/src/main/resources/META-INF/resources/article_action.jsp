@@ -33,7 +33,13 @@ else {
 }
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcPath" value="/edit_article.jsp" />
@@ -201,4 +207,10 @@ else {
 			url="<%= deleteURL %>"
 		/>
 	</c:if>
+
+	<liferay-export-import-changeset:publish-entity-menu-item
+		className="<%= JournalArticle.class.getName() %>"
+		groupId="<%= article.getGroupId() %>"
+		uuid="<%= article.getUuid() %>"
+	/>
 </liferay-ui:icon-menu>

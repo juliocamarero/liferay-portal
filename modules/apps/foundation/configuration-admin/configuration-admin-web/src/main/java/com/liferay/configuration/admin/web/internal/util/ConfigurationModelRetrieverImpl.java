@@ -14,13 +14,24 @@
 
 package com.liferay.configuration.admin.web.internal.util;
 
+import com.liferay.configuration.admin.category.ConfigurationCategory;
+import com.liferay.configuration.admin.web.internal.display.ConfigurationCategoryDisplay;
+import com.liferay.configuration.admin.web.internal.display.ConfigurationCategoryMenuDisplay;
+import com.liferay.configuration.admin.web.internal.display.ConfigurationCategorySectionDisplay;
+import com.liferay.configuration.admin.web.internal.display.ConfigurationEntry;
+import com.liferay.configuration.admin.web.internal.display.ConfigurationModelConfigurationEntry;
 import com.liferay.configuration.admin.web.internal.model.ConfigurationModel;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeInformation;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeService;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
@@ -30,6 +41,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -45,6 +57,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
+ * @author Jorge Ferrer
  * @author Michael C. Han
  */
 @Component(immediate = true, service = ConfigurationModelRetriever.class)
@@ -99,16 +112,105 @@ public class ConfigurationModelRetrieverImpl
 		return null;
 	}
 
+	public ConfigurationCategory getConfigurationCategory(
+		String configurationCategoryKey) {
+
+		return _configurationCategoryServiceTrackerMap.getService(
+			configurationCategoryKey);
+	}
+
 	@Override
-	public List<String> getConfigurationCategories(
-		Map<String, Set<ConfigurationModel>> categorizedConfigurationModels) {
+	public ConfigurationCategoryMenuDisplay getConfigurationCategoryMenuDisplay(
+		String configurationCategory, String languageId) {
 
-		Set<String> configurationCategories = new TreeSet<>(
-			getConfigurationCategoryComparator());
+		ConfigurationCategoryDisplay configurationCategoryDisplay =
+			new ConfigurationCategoryDisplay(
+				getConfigurationCategory(configurationCategory));
 
-		configurationCategories.addAll(categorizedConfigurationModels.keySet());
+		return new ConfigurationCategoryMenuDisplay(
+			configurationCategoryDisplay,
+			getConfigurationEntries(configurationCategory, languageId));
+	}
 
-		return new ArrayList<>(configurationCategories);
+	@Override
+	public List<ConfigurationCategorySectionDisplay>
+		getConfigurationCategorySectionDisplays() {
+
+		Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
+
+		Map<String, ConfigurationModel> configurationModelsMap =
+			getConfigurationModels(locale.getLanguage());
+
+		Map<String, Set<ConfigurationModel>> categorizedConfigurationModels =
+			categorizeConfigurationModels(configurationModelsMap);
+
+		Map<String, ConfigurationCategorySectionDisplay>
+			configurationCategorySectionDisplaysMap = new HashMap<>();
+
+		for (String curConfigurationCategoryKey :
+				categorizedConfigurationModels.keySet()) {
+
+			ConfigurationCategory curConfigurationCategory =
+				_configurationCategoryServiceTrackerMap.getService(
+					curConfigurationCategoryKey);
+
+			if (curConfigurationCategory == null) {
+				curConfigurationCategory = new AdhocConfigurationCategory(
+					curConfigurationCategoryKey);
+			}
+
+			ConfigurationCategorySectionDisplay
+				configurationCategorySectionDisplay =
+					configurationCategorySectionDisplaysMap.get(
+						curConfigurationCategory.getCategorySection());
+
+			if (configurationCategorySectionDisplay == null) {
+				configurationCategorySectionDisplay =
+					new ConfigurationCategorySectionDisplay(
+						curConfigurationCategory.getCategorySection());
+
+				configurationCategorySectionDisplaysMap.put(
+					curConfigurationCategory.getCategorySection(),
+					configurationCategorySectionDisplay);
+			}
+
+			ConfigurationCategoryDisplay configurationCategoryDisplay =
+				new ConfigurationCategoryDisplay(curConfigurationCategory);
+
+			configurationCategorySectionDisplay.add(
+				configurationCategoryDisplay);
+		}
+
+		Set<ConfigurationCategorySectionDisplay> configurationCategorySections =
+			new TreeSet(new ConfigurationCategorySectionDisplayComparator());
+
+		configurationCategorySections.addAll(
+			configurationCategorySectionDisplaysMap.values());
+
+		return new ArrayList<>(configurationCategorySections);
+	}
+
+	@Override
+	public Set<ConfigurationEntry> getConfigurationEntries(
+		String configurationCategory, String languageId) {
+
+		Set<ConfigurationModel> configurationModels = getConfigurationModels(
+			configurationCategory, languageId);
+
+		Set<ConfigurationEntry> configurationEntries = new TreeSet(
+			getConfigurationEntryComparator());
+
+		Locale locale = LocaleUtil.fromLanguageId(languageId);
+
+		for (ConfigurationModel configurationModel : configurationModels) {
+			ConfigurationEntry configurationEntry =
+				new ConfigurationModelConfigurationEntry(
+					configurationModel, locale, _resourceBundleLoaderProvider);
+
+			configurationEntries.add(configurationEntry);
+		}
+
+		return configurationEntries;
 	}
 
 	@Override
@@ -150,6 +252,25 @@ public class ConfigurationModelRetrieverImpl
 		return configurationModels;
 	}
 
+	public Set<ConfigurationModel> getConfigurationModels(
+		String configurationCategory, String languageId) {
+
+		Map<String, ConfigurationModel> configurationModelsMap =
+			getConfigurationModels(languageId);
+
+		Map<String, Set<ConfigurationModel>> categorizedConfigurationModels =
+			categorizeConfigurationModels(configurationModelsMap);
+
+		Set<ConfigurationModel> configurationModels =
+			categorizedConfigurationModels.get(configurationCategory);
+
+		if (configurationModels == null) {
+			configurationModels = Collections.emptySet();
+		}
+
+		return configurationModels;
+	}
+
 	@Override
 	public List<ConfigurationModel> getFactoryInstances(
 			ConfigurationModel factoryConfigurationModel)
@@ -179,6 +300,25 @@ public class ConfigurationModelRetrieverImpl
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
+
+		_configurationCategoriesServiceTrackerMap =
+			ServiceTrackerMapFactory.openMultiValueMap(
+				bundleContext, ConfigurationCategory.class, null,
+				(serviceReference, emitter) -> {
+					ConfigurationCategory configurationCategory =
+						bundleContext.getService(serviceReference);
+
+					emitter.emit(configurationCategory.getCategorySection());
+				});
+		_configurationCategoryServiceTrackerMap =
+			ServiceTrackerMapFactory.openSingleValueMap(
+				bundleContext, ConfigurationCategory.class, null,
+				(serviceReference, emitter) -> {
+					ConfigurationCategory configurationCategory =
+						bundleContext.getService(serviceReference);
+
+					emitter.emit(configurationCategory.getCategoryKey());
+				});
 	}
 
 	protected void collectConfigurationModels(
@@ -233,8 +373,22 @@ public class ConfigurationModelRetrieverImpl
 		return configuration;
 	}
 
-	protected Comparator<String> getConfigurationCategoryComparator() {
-		return new ConfigurationCategoryComparator();
+	protected List<ConfigurationCategory> getConfigurationCategories(
+		String configurationCategorySection) {
+
+		List<ConfigurationCategory> configurationCategories =
+			_configurationCategoriesServiceTrackerMap.getService(
+				configurationCategorySection);
+
+		if (configurationCategories == null) {
+			configurationCategories = Collections.emptyList();
+		}
+
+		return configurationCategories;
+	}
+
+	protected Comparator<ConfigurationEntry> getConfigurationEntryComparator() {
+		return new ConfigurationEntryComparator();
 	}
 
 	protected ConfigurationModel getConfigurationModel(
@@ -337,42 +491,81 @@ public class ConfigurationModelRetrieverImpl
 	@Reference
 	private ConfigurationAdmin _configurationAdmin;
 
+	private ServiceTrackerMap<String, List<ConfigurationCategory>>
+		_configurationCategoriesServiceTrackerMap;
+	private ServiceTrackerMap<String, ConfigurationCategory>
+		_configurationCategoryServiceTrackerMap;
+
 	@Reference
 	private ExtendedMetaTypeService _extendedMetaTypeService;
 
-	private static class ConfigurationCategoryComparator
-		implements Comparator<String> {
+	@Reference
+	private ResourceBundleLoaderProvider _resourceBundleLoaderProvider;
+
+	private static class ConfigurationCategorySectionDisplayComparator
+		implements Comparator<ConfigurationCategorySectionDisplay> {
 
 		@Override
 		public int compare(
-			String configurationCategory1, String configurationCategory2) {
+			ConfigurationCategorySectionDisplay
+				configurationCategorySectionDisplay1,
+			ConfigurationCategorySectionDisplay
+				configurationCategorySectionDisplay2) {
 
-			if (configurationCategory1.equals("other")) {
+			String configurationCategorySection1 =
+				configurationCategorySectionDisplay1.
+					getConfigurationCategorySection();
+			String configurationCategorySection2 =
+				configurationCategorySectionDisplay2.
+					getConfigurationCategorySection();
+
+			int index1 = _orderedConfigurationCategorySections.indexOf(
+				configurationCategorySection1);
+			int index2 = _orderedConfigurationCategorySections.indexOf(
+				configurationCategorySection2);
+
+			if ((index1 == -1) && (index2 == -1)) {
+				return configurationCategorySection1.compareTo(
+					configurationCategorySection2);
+			}
+			else if (index1 == -1) {
 				return 1;
 			}
-			else if (configurationCategory1.equals("web-experience")) {
+			else if (index2 == -1) {
 				return -1;
 			}
-			else if (configurationCategory1.equals("collaboration")) {
-				if (configurationCategory2.equals("web-experience")) {
-					return 1;
-				}
-				else {
-					return -1;
-				}
+			else if (index1 > index2) {
+				return 1;
 			}
-			else if (configurationCategory1.equals("productivity")) {
-				if (configurationCategory2.equals("collaboration") ||
-					configurationCategory2.equals("web-experience")) {
-
-					return 1;
-				}
-				else {
-					return -1;
-				}
+			else if (index2 > index1) {
+				return -1;
 			}
 
-			return configurationCategory1.compareTo(configurationCategory2);
+			return configurationCategorySection1.compareTo(
+				configurationCategorySection2);
+		}
+
+		private final List<String> _orderedConfigurationCategorySections =
+			ListUtil.fromArray(
+				new String[] {
+					"content-management", "social", "commerce", "platform",
+					"security"
+				});
+
+	}
+
+	private static class ConfigurationEntryComparator
+		implements Comparator<ConfigurationEntry> {
+
+		@Override
+		public int compare(
+			ConfigurationEntry configurationEntry1,
+			ConfigurationEntry configurationEntry2) {
+
+			String name1 = configurationEntry1.getName();
+			String name2 = configurationEntry2.getName();
+
+			return name1.compareTo(name2);
 		}
 
 	}

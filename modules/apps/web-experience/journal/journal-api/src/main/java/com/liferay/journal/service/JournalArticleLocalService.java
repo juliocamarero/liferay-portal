@@ -82,7 +82,9 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	 */
 
 	/**
-	* Adds a web content article with additional parameters.
+	* Adds a web content article with additional parameters. All scheduling
+	* parameters (display date, expiration date, and review date) use the
+	* current user's timezone.
 	*
 	* <p>
 	* The web content articles hold HTML content wrapped in XML. The XML lets
@@ -122,6 +124,8 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @param titleMap the web content article's locales and localized titles
 	* @param descriptionMap the web content article's locales and localized
 	descriptions
+	* @param friendlyURLMap the web content article's locales and localized
+	friendly URLs
 	* @param content the HTML content wrapped in XML
 	* @param ddmStructureKey the primary key of the web content article's DDM
 	structure, if the article is related to a DDM structure, or
@@ -167,8 +171,6 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @param smallImageFile the web content article's small image file
 	* @param images the web content's images
 	* @param articleURL the web content article's accessible URL
-	* @param latestVersion whether the article references and structure fields
-	are validated or not, as it is needed for the latest version only
 	* @param serviceContext the service context to be applied. Can set the
 	UUID, creation date, modification date, expando bridge
 	attributes, guest permissions, group permissions, asset category
@@ -182,7 +184,8 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		long classNameId, long classPK, java.lang.String articleId,
 		boolean autoArticleId, double version,
 		Map<Locale, java.lang.String> titleMap,
-		Map<Locale, java.lang.String> descriptionMap, java.lang.String content,
+		Map<Locale, java.lang.String> descriptionMap,
+		Map<Locale, java.lang.String> friendlyURLMap, java.lang.String content,
 		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
 		java.lang.String layoutUuid, int displayDateMonth, int displayDateDay,
 		int displayDateYear, int displayDateHour, int displayDateMinute,
@@ -192,11 +195,13 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		int reviewDateHour, int reviewDateMinute, boolean neverReview,
 		boolean indexable, boolean smallImage, java.lang.String smallImageURL,
 		File smallImageFile, Map<java.lang.String, byte[]> images,
-		java.lang.String articleURL, boolean latestVersion,
-		ServiceContext serviceContext) throws PortalException;
+		java.lang.String articleURL, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
-	* Adds a web content article with additional parameters.
+	* Adds a web content article with additional parameters. All scheduling
+	* parameters (display date, expiration date, and review date) use the
+	* current user's timezone.
 	*
 	* <p>
 	* The web content articles hold HTML content wrapped in XML. The XML lets
@@ -3141,6 +3146,108 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		long ddmStructureId) throws PortalException;
 
 	/**
+	* Updates the web content article with additional parameters. All
+	* scheduling parameters (display date, expiration date, and review date)
+	* use the current user's timezone.
+	*
+	* @param userId the primary key of the user updating the web content
+	article
+	* @param groupId the primary key of the web content article's group
+	* @param folderId the primary key of the web content article folder
+	* @param articleId the primary key of the web content article
+	* @param version the web content article's version
+	* @param titleMap the web content article's locales and localized titles
+	* @param descriptionMap the web content article's locales and localized
+	descriptions
+	* @param friendlyURLMap the web content article's locales and localized
+	friendly URLs
+	* @param content the HTML content wrapped in XML. For more information,
+	see the content example in the {@link #addArticle(long, long,
+	long, long, long, String, boolean, double, Map, Map, String,
+	String, String, String, int, int, int, int, int, int, int, int,
+	int, int, boolean, int, int, int, int, int, boolean, boolean,
+	boolean, String, File, Map, String, ServiceContext)} description.
+	* @param ddmStructureKey the primary key of the web content article's DDM
+	structure, if the article is related to a DDM structure, or
+	<code>null</code> otherwise
+	* @param ddmTemplateKey the primary key of the web content article's DDM
+	template
+	* @param layoutUuid the unique string identifying the web content
+	article's display page
+	* @param displayDateMonth the month the web content article is set to
+	display
+	* @param displayDateDay the calendar day the web content article is set to
+	display
+	* @param displayDateYear the year the web content article is set to
+	display
+	* @param displayDateHour the hour the web content article is set to
+	display
+	* @param displayDateMinute the minute the web content article is set to
+	display
+	* @param expirationDateMonth the month the web content article is set to
+	expire
+	* @param expirationDateDay the calendar day the web content article is set
+	to expire
+	* @param expirationDateYear the year the web content article is set to
+	expire
+	* @param expirationDateHour the hour the web content article is set to
+	expire
+	* @param expirationDateMinute the minute the web content article is set to
+	expire
+	* @param neverExpire whether the web content article is not set to auto
+	expire
+	* @param reviewDateMonth the month the web content article is set for
+	review
+	* @param reviewDateDay the calendar day the web content article is set for
+	review
+	* @param reviewDateYear the year the web content article is set for review
+	* @param reviewDateHour the hour the web content article is set for review
+	* @param reviewDateMinute the minute the web content article is set for
+	review
+	* @param neverReview whether the web content article is not set for review
+	* @param indexable whether the web content is searchable
+	* @param smallImage whether to update web content article's a small image.
+	A file must be passed in as <code>smallImageFile</code> value,
+	otherwise the current small image is deleted.
+	* @param smallImageURL the web content article's small image URL
+	(optionally <code>null</code>)
+	* @param smallImageFile the web content article's new small image file
+	(optionally <code>null</code>). Must pass in
+	<code>smallImage</code> value of <code>true</code> to replace the
+	article's small image file.
+	* @param images the web content's images (optionally <code>null</code>)
+	* @param articleURL the web content article's accessible URL (optionally
+	<code>null</code>)
+	* @param serviceContext the service context to be applied. Can set the
+	modification date, expando bridge attributes, asset category IDs,
+	asset tag names, asset link entry IDs, asset priority, workflow
+	actions, URL title , and can set whether to add the default
+	command update for the web content article. With respect to
+	social activities, by setting the service context's command to
+	{@link Constants#UPDATE}, the invocation is considered a web
+	content update activity; otherwise it is considered a web content
+	add activity.
+	* @return the updated web content article
+	*/
+	@Indexable(type = IndexableType.REINDEX)
+	public JournalArticle updateArticle(long userId, long groupId,
+		long folderId, java.lang.String articleId, double version,
+		Map<Locale, java.lang.String> titleMap,
+		Map<Locale, java.lang.String> descriptionMap,
+		Map<Locale, java.lang.String> friendlyURLMap, java.lang.String content,
+		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
+		java.lang.String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, java.lang.String smallImageURL,
+		File smallImageFile, Map<java.lang.String, byte[]> images,
+		java.lang.String articleURL, ServiceContext serviceContext)
+		throws PortalException;
+
+	/**
 	* Updates the web content article matching the version, replacing its
 	* folder, title, description, content, and layout UUID.
 	*
@@ -3180,7 +3287,9 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		throws PortalException;
 
 	/**
-	* Updates the web content article with additional parameters.
+	* Updates the web content article with additional parameters. All
+	* scheduling parameters (display date, expiration date, and review date)
+	* use the current user's timezone.
 	*
 	* @param userId the primary key of the user updating the web content
 	article
@@ -3248,8 +3357,6 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @param images the web content's images (optionally <code>null</code>)
 	* @param articleURL the web content article's accessible URL (optionally
 	<code>null</code>)
-	* @param latestVersion whether the article references and structure fields
-	are validated or not, as it is needed for the latest version only
 	* @param serviceContext the service context to be applied. Can set the
 	modification date, expando bridge attributes, asset category IDs,
 	asset tag names, asset link entry IDs, asset priority, workflow
@@ -3262,102 +3369,6 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	* @return the updated web content article
 	*/
 	@Indexable(type = IndexableType.REINDEX)
-	public JournalArticle updateArticle(long userId, long groupId,
-		long folderId, java.lang.String articleId, double version,
-		Map<Locale, java.lang.String> titleMap,
-		Map<Locale, java.lang.String> descriptionMap, java.lang.String content,
-		java.lang.String ddmStructureKey, java.lang.String ddmTemplateKey,
-		java.lang.String layoutUuid, int displayDateMonth, int displayDateDay,
-		int displayDateYear, int displayDateHour, int displayDateMinute,
-		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
-		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
-		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
-		int reviewDateHour, int reviewDateMinute, boolean neverReview,
-		boolean indexable, boolean smallImage, java.lang.String smallImageURL,
-		File smallImageFile, Map<java.lang.String, byte[]> images,
-		java.lang.String articleURL, boolean latestVersion,
-		ServiceContext serviceContext) throws PortalException;
-
-	/**
-	* Updates the web content article with additional parameters.
-	*
-	* @param userId the primary key of the user updating the web content
-	article
-	* @param groupId the primary key of the web content article's group
-	* @param folderId the primary key of the web content article folder
-	* @param articleId the primary key of the web content article
-	* @param version the web content article's version
-	* @param titleMap the web content article's locales and localized titles
-	* @param descriptionMap the web content article's locales and localized
-	descriptions
-	* @param content the HTML content wrapped in XML. For more information,
-	see the content example in the {@link #addArticle(long, long,
-	long, long, long, String, boolean, double, Map, Map, String,
-	String, String, String, int, int, int, int, int, int, int, int,
-	int, int, boolean, int, int, int, int, int, boolean, boolean,
-	boolean, String, File, Map, String, ServiceContext)} description.
-	* @param ddmStructureKey the primary key of the web content article's DDM
-	structure, if the article is related to a DDM structure, or
-	<code>null</code> otherwise
-	* @param ddmTemplateKey the primary key of the web content article's DDM
-	template
-	* @param layoutUuid the unique string identifying the web content
-	article's display page
-	* @param displayDateMonth the month the web content article is set to
-	display
-	* @param displayDateDay the calendar day the web content article is set to
-	display
-	* @param displayDateYear the year the web content article is set to
-	display
-	* @param displayDateHour the hour the web content article is set to
-	display
-	* @param displayDateMinute the minute the web content article is set to
-	display
-	* @param expirationDateMonth the month the web content article is set to
-	expire
-	* @param expirationDateDay the calendar day the web content article is set
-	to expire
-	* @param expirationDateYear the year the web content article is set to
-	expire
-	* @param expirationDateHour the hour the web content article is set to
-	expire
-	* @param expirationDateMinute the minute the web content article is set to
-	expire
-	* @param neverExpire whether the web content article is not set to auto
-	expire
-	* @param reviewDateMonth the month the web content article is set for
-	review
-	* @param reviewDateDay the calendar day the web content article is set for
-	review
-	* @param reviewDateYear the year the web content article is set for review
-	* @param reviewDateHour the hour the web content article is set for review
-	* @param reviewDateMinute the minute the web content article is set for
-	review
-	* @param neverReview whether the web content article is not set for review
-	* @param indexable whether the web content is searchable
-	* @param smallImage whether to update web content article's a small image.
-	A file must be passed in as <code>smallImageFile</code> value,
-	otherwise the current small image is deleted.
-	* @param smallImageURL the web content article's small image URL
-	(optionally <code>null</code>)
-	* @param smallImageFile the web content article's new small image file
-	(optionally <code>null</code>). Must pass in
-	<code>smallImage</code> value of <code>true</code> to replace the
-	article's small image file.
-	* @param images the web content's images (optionally <code>null</code>)
-	* @param articleURL the web content article's accessible URL (optionally
-	<code>null</code>)
-	* @param serviceContext the service context to be applied. Can set the
-	modification date, expando bridge attributes, asset category IDs,
-	asset tag names, asset link entry IDs, asset priority, workflow
-	actions, URL title , and can set whether to add the default
-	command update for the web content article. With respect to
-	social activities, by setting the service context's command to
-	{@link Constants#UPDATE}, the invocation is considered a web
-	content update activity; otherwise it is considered a web content
-	add activity.
-	* @return the updated web content article
-	*/
 	public JournalArticle updateArticle(long userId, long groupId,
 		long folderId, java.lang.String articleId, double version,
 		Map<Locale, java.lang.String> titleMap,

@@ -16,7 +16,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute function="Type" locator1="AssetCategorization#TAGS_FIELD" value1="tag " />
@@ -48,7 +48,7 @@
 
 	<command name="addViaSiteCP">
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute macro="AssetCategorization#addTag">
@@ -118,7 +118,15 @@
 	</command>
 
 	<command name="tearDownCP">
-		<execute macro="Navigator#openURL" />
+		<if>
+			<equals arg1="${stagingSite}" arg2="true" />
+			<then>
+				<execute macro="ProductMenu#gotoStagingSite" />
+			</then>
+			<else>
+				<execute macro="Navigator#openURL" />
+			</else>
+		</if>
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />

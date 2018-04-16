@@ -65,7 +65,7 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{layoutPageTemplateEntryId=");
 		sb.append(layoutPageTemplateEntryId);
@@ -83,8 +83,16 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		sb.append(modifiedDate);
 		sb.append(", layoutPageTemplateCollectionId=");
 		sb.append(layoutPageTemplateCollectionId);
+		sb.append(", classNameId=");
+		sb.append(classNameId);
+		sb.append(", classTypeId=");
+		sb.append(classTypeId);
 		sb.append(", name=");
 		sb.append(name);
+		sb.append(", htmlPreviewEntryId=");
+		sb.append(htmlPreviewEntryId);
+		sb.append(", defaultTemplate=");
+		sb.append(defaultTemplate);
 		sb.append("}");
 
 		return sb.toString();
@@ -121,6 +129,8 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		}
 
 		layoutPageTemplateEntryImpl.setLayoutPageTemplateCollectionId(layoutPageTemplateCollectionId);
+		layoutPageTemplateEntryImpl.setClassNameId(classNameId);
+		layoutPageTemplateEntryImpl.setClassTypeId(classTypeId);
 
 		if (name == null) {
 			layoutPageTemplateEntryImpl.setName("");
@@ -128,6 +138,9 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		else {
 			layoutPageTemplateEntryImpl.setName(name);
 		}
+
+		layoutPageTemplateEntryImpl.setHtmlPreviewEntryId(htmlPreviewEntryId);
+		layoutPageTemplateEntryImpl.setDefaultTemplate(defaultTemplate);
 
 		layoutPageTemplateEntryImpl.resetOriginalValues();
 
@@ -148,7 +161,15 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		modifiedDate = objectInput.readLong();
 
 		layoutPageTemplateCollectionId = objectInput.readLong();
+
+		classNameId = objectInput.readLong();
+
+		classTypeId = objectInput.readLong();
 		name = objectInput.readUTF();
+
+		htmlPreviewEntryId = objectInput.readLong();
+
+		defaultTemplate = objectInput.readBoolean();
 	}
 
 	@Override
@@ -174,12 +195,20 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 
 		objectOutput.writeLong(layoutPageTemplateCollectionId);
 
+		objectOutput.writeLong(classNameId);
+
+		objectOutput.writeLong(classTypeId);
+
 		if (name == null) {
 			objectOutput.writeUTF("");
 		}
 		else {
 			objectOutput.writeUTF(name);
 		}
+
+		objectOutput.writeLong(htmlPreviewEntryId);
+
+		objectOutput.writeBoolean(defaultTemplate);
 	}
 
 	public long layoutPageTemplateEntryId;
@@ -190,5 +219,9 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 	public long createDate;
 	public long modifiedDate;
 	public long layoutPageTemplateCollectionId;
+	public long classNameId;
+	public long classTypeId;
 	public String name;
+	public long htmlPreviewEntryId;
+	public boolean defaultTemplate;
 }

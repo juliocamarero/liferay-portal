@@ -15,19 +15,18 @@
 package com.liferay.bookmarks.service.permission.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.bookmarks.constants.BookmarksConstants;
 import com.liferay.bookmarks.model.BookmarksEntry;
 import com.liferay.bookmarks.model.BookmarksFolder;
-import com.liferay.bookmarks.service.permission.BookmarksEntryPermissionChecker;
-import com.liferay.bookmarks.service.permission.BookmarksResourcePermissionChecker;
 import com.liferay.bookmarks.util.test.BookmarksTestUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.service.permission.test.BasePermissionTestCase;
 import com.liferay.portal.service.test.ServiceTestUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import org.junit.Assert;
@@ -42,16 +41,13 @@ import org.junit.runner.RunWith;
  * @author Shinn Lok
  */
 @RunWith(Arquillian.class)
-@Sync
 public class BookmarksEntryPermissionCheckerTest
 	extends BasePermissionTestCase {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Before
 	@Override
@@ -64,19 +60,19 @@ public class BookmarksEntryPermissionCheckerTest
 	@Test
 	public void testContains() throws Exception {
 		Assert.assertTrue(
-			BookmarksEntryPermissionChecker.contains(
+			_bookmarksEntryModelResourcePermission.contains(
 				permissionChecker, _entry.getEntryId(), ActionKeys.VIEW));
 		Assert.assertTrue(
-			BookmarksEntryPermissionChecker.contains(
+			_bookmarksEntryModelResourcePermission.contains(
 				permissionChecker, _subentry.getEntryId(), ActionKeys.VIEW));
 
 		removePortletModelViewPermission();
 
 		Assert.assertFalse(
-			BookmarksEntryPermissionChecker.contains(
+			_bookmarksEntryModelResourcePermission.contains(
 				permissionChecker, _entry.getEntryId(), ActionKeys.VIEW));
 		Assert.assertFalse(
-			BookmarksEntryPermissionChecker.contains(
+			_bookmarksEntryModelResourcePermission.contains(
 				permissionChecker, _subentry.getEntryId(), ActionKeys.VIEW));
 	}
 
@@ -93,8 +89,14 @@ public class BookmarksEntryPermissionCheckerTest
 
 	@Override
 	protected String getResourceName() {
-		return BookmarksResourcePermissionChecker.RESOURCE_NAME;
+		return BookmarksConstants.RESOURCE_NAME;
 	}
+
+	@Inject(
+		filter = "model.class.name=com.liferay.bookmarks.model.BookmarksEntry"
+	)
+	private static ModelResourcePermission<BookmarksEntry>
+		_bookmarksEntryModelResourcePermission;
 
 	private BookmarksEntry _entry;
 	private BookmarksEntry _subentry;

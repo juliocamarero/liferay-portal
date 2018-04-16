@@ -1,70 +1,41 @@
 <definition>
 	<command name="_addPage">
+		<execute macro="SitePages#_selectPageType">
+			<var name="pageTemplateName" value="${pageTemplateName}" />
+			<var name="sitePageType" value="${sitePageType}" />
+		</execute>
+
+		<execute macro="PortletEntry#inputName">
+			<var name="name" value="${pageName}" />
+		</execute>
+
+		<execute macro="Modal#submit" />
+	</command>
+
+	<command name="_clickAddPage">
 		<execute function="AssertClick" locator1="Button#ADD_PAGE" value1="Add Page" />
+
+		<execute macro="Alert#viewSuccessMessage" />
 	</command>
 
 	<command name="_configurePage">
 		<if>
 			<equals arg1="${sitePageType}" arg2="Embedded" />
 			<then>
-				<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="Embedded" />
-
 				<execute macro="Page#_addPageTypeEmbedded">
-					<var name="pageTypeDescription" value="${pageTypeDescription}" />
 					<var name="pageTypeURL" value="${pageTypeURL}" />
 				</execute>
 			</then>
 			<elseif>
-				<equals arg1="${pageType}" arg2="Link to a Page of This Site" />
-				<then>
-					<execute function="AssertClick" locator1="Button#SELECT" value1="Select" />
-
-					<execute function="SelectFrame" locator1="IFrame#DIALOG" />
-
-					<execute macro="Portlet#expandTree" />
-
-					<execute macro="Portlet#selectTreeNode">
-						<var name="nodeName" value="${pageLinkName}" />
-					</execute>
-
-					<execute function="SelectFrameTop" />
-
-					<execute macro="Button#clickDone" />
-				</then>
-			</elseif>
-			<elseif>
-				<equals arg1="${sitePageType}" arg2="Link to URL" />
-				<then>
-					<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="Link to URL" />
-
-					<execute macro="Page#_addPageTypeLinkToURL">
-						<var name="pageTypeDescription" value="${pageTypeDescription}" />
-						<var name="pageTypeURL" value="${pageTypeURL}" />
-					</execute>
-				</then>
-			</elseif>
-			<elseif>
 				<equals arg1="${sitePageType}" arg2="Panel" />
 				<then>
-					<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="Panel" />
-
 					<execute macro="Page#_addPageTypePanel">
 						<var name="componentName" value="${componentName}" />
 					</execute>
 				</then>
 			</elseif>
 			<elseif>
-				<equals arg1="${sitePageType}" arg2="Full Page Application" />
-				<then>
-					<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="Full Page Application" />
-
-					<execute macro="Page#_addPageTypeFullPageApplication">
-						<var name="portlet" value="${portlet}" />
-					</execute>
-				</then>
-			</elseif>
-			<elseif>
-				<equals arg1="${sitePageType}" arg2="Empty Page" />
+				<equals arg1="${sitePageType}" arg2="Layout" />
 				<then>
 					<var name="key_columnName" value="${columnName}" />
 
@@ -72,73 +43,64 @@
 				</then>
 			</elseif>
 			<elseif>
-				<equals arg1="${sitePageType}" arg2="Page Set" />
+				<equals arg1="${sitePageType}" arg2="Content" />
 				<then>
-					<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="Page Set" />
+					<execute function="Select" locator1="SitePagesEditPage#LAYOUT_PAGE_TEMPLATE_SELECT" value1="${layoutPageTemplateName}" />
 				</then>
 			</elseif>
 			<elseif>
-				<not>
-					<contains string="${pageTemplateName}" substring="{pageTemplateName}" />
-				</not>
+				<equals arg1="${sitePageType}" arg2="Full Page Application" />
 				<then>
-					<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="${pageTemplateName}" />
-
-					<execute macro="Page#togglePageTemplateInheritChanges">
-						<var name="toggleValue" value="enable" />
+					<execute macro="Page#_addPageTypeFullPageApplication">
+						<var name="portlet" value="${portlet}" />
 					</execute>
 				</then>
 			</elseif>
 		</if>
 	</command>
 
-	<command name="addChildPage">
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
-			<var name="menuItem" value="Add Child Page" />
-			<var name="rowEntry" value="${parentPageName}" />
-		</execute>
+	<command name="_selectPageType">
+		<if>
+			<contains string="${sitePageType}" substring="{sitePageType}" />
+			<then>
+				<var name="sitePageType" value="Layout" />
+			</then>
+		</if>
 
-		<execute macro="PortletEntry#inputName">
-			<var name="name" value="${childPageName}" />
-		</execute>
+		<var name="rowEntry" value="${sitePageType}" />
 
-		<execute macro="SitePages#_configurePage">
-			<var name="columnName" value="${columnName}" />
-			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
-			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
-			<var name="pageTypeURL" value="${pageTypeURL}" />
-			<var name="portlet" value="${portlet}" />
-			<var name="sitePageType" value="${sitePageType}" />
-		</execute>
+		<if>
+			<not>
+				<contains string="${pageTemplateName}" substring="{pageTemplateName}" />
+			</not>
+			<then>
+				<execute macro="Navigator#gotoNavItem">
+					<var name="navItem" value="Global Templates" />
+				</execute>
 
-		<execute macro="SitePages#_addPage" />
+				<var name="rowEntry" value="${pageTemplateName}" />
+			</then>
+		</if>
+
+		<execute macro="LexiconEntry#gotoEntry">
+			<var name="rowEntry" value="${rowEntry}" />
+		</execute>
 	</command>
 
-	<command name="addPage">
-		<execute macro="SitePages#togglePrivacy">
-			<var name="privacy" value="${privacy}" />
+	<command name="addChildPage">
+		<execute function="MouseOver" locator1="SitePages#LIST_GROUP_ITEM">
+			<var name="key_itemName" value="${parentPageName}" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoAdd" />
-
-		<execute macro="PortletEntry#inputName">
-			<var name="name" value="${pageName}" />
+		<execute function="Click" locator1="SitePages#LIST_GROUP_ITEM_PLUS_ICON">
+			<var name="key_pageName" value="${parentPageName}" />
 		</execute>
 
-		<execute macro="SitePages#_configurePage">
-			<var name="columnName" value="${columnName}" />
-			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
+		<execute macro="SitePages#_addPage">
+			<var name="pageName" value="${childPageName}" />
 			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
-			<var name="pageTypeURL" value="${pageTypeURL}" />
-			<var name="portlet" value="${portlet}" />
 			<var name="sitePageType" value="${sitePageType}" />
 		</execute>
-
-		<execute macro="SitePages#_addPage" />
 	</command>
 
 	<command name="addPrivateChildPage">
@@ -148,29 +110,22 @@
 
 		<execute macro="SitePages#addChildPage">
 			<var name="childPageName" value="${childPageName}" />
-			<var name="columnName" value="${columnName}" />
-			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
 			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
-			<var name="pageTypeURL" value="${pageTypeURL}" />
 			<var name="parentPageName" value="${parentPageName}" />
-			<var name="portlet" value="${portlet}" />
 			<var name="sitePageType" value="${sitePageType}" />
 		</execute>
 	</command>
 
 	<command name="addPrivatePage">
-		<execute macro="SitePages#addPage">
-			<var name="columnName" value="${columnName}" />
-			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
+		<execute macro="SitePages#togglePrivacy">
+			<var name="privacy" value="Private" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoAdd" />
+
+		<execute macro="SitePages#_addPage">
 			<var name="pageName" value="${pageName}" />
 			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
-			<var name="pageTypeURL" value="${pageTypeURL}" />
-			<var name="portlet" value="${portlet}" />
-			<var name="privacy" value="Private" />
 			<var name="sitePageType" value="${sitePageType}" />
 		</execute>
 	</command>
@@ -182,29 +137,23 @@
 
 		<execute macro="SitePages#addChildPage">
 			<var name="childPageName" value="${childPageName}" />
-			<var name="columnName" value="${columnName}" />
-			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
 			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
-			<var name="pageTypeURL" value="${pageTypeURL}" />
 			<var name="parentPageName" value="${parentPageName}" />
-			<var name="portlet" value="${portlet}" />
 			<var name="sitePageType" value="${sitePageType}" />
 		</execute>
 	</command>
 
 	<command name="addPublicPage">
-		<execute macro="SitePages#addPage">
-			<var name="columnName" value="${columnName}" />
-			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
+		<execute macro="SitePages#togglePrivacy">
+			<var name="privacy" value="Public" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoAdd" />
+
+		<execute macro="SitePages#_addPage">
 			<var name="pageName" value="${pageName}" />
 			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
 			<var name="pageTypeURL" value="${pageTypeURL}" />
-			<var name="portlet" value="${portlet}" />
-			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="${sitePageType}" />
 		</execute>
 	</command>
@@ -214,28 +163,90 @@
 			<var name="privacy" value="${privacy}" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute macro="SitePages#_configurePage">
 			<var name="columnName" value="${columnName}" />
 			<var name="componentName" value="${componentName}" />
-			<var name="pageLinkName" value="${pageLinkName}" />
-			<var name="pageTemplateName" value="${pageTemplateName}" />
-			<var name="pageTypeDescription" value="${pageTypeDescription}" />
+			<var name="layoutPageTemplateName" value="${layoutPageTemplateName}" />
 			<var name="pageTypeURL" value="${pageTypeURL}" />
 			<var name="portlet" value="${portlet}" />
 			<var name="sitePageType" value="${sitePageType}" />
 		</execute>
 
-		<execute macro="Button#clickSave" />
+		<execute macro="PortletEntry#save" />
 	</command>
 
 	<command name="deletePage">
-		<execute macro="PortletEntry#deleteViaMenuItem">
-			<var name="rowEntry" value="${pageName}" />
+		<execute function="Click" locator1="SitePages#LIST_GROUP_ITEM_ELLIPSIS_ICON">
+			<var name="key_pageName" value="${pageName}" />
+		</execute>
+
+		<execute function="AssertClickNoError" locator1="MenuItem#ANY_MENU_ITEM" value1="Delete">
+			<var name="key_menuItem" value="Delete" />
+		</execute>
+
+		<execute function="Confirm" value1="Are you sure you want to delete this? It will be deleted immediately." />
+
+		<if>
+			<isset var="failure" />
+			<then>
+				<if>
+					<condition function="IsElementPresent" locator1="Message#ERROR_2" />
+					<then>
+						<execute macro="Alert#viewRequestFailedToComplete" />
+
+						<execute function="AssertTextEquals" locator1="Message#ERROR_2" value1="${failure}" />
+					</then>
+					<else>
+						<execute function="AssertTextEquals" locator1="Message#ERROR" value1="${failure}" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<execute macro="Alert#waitForSuccessMessageHide" />
+			</else>
+		</if>
+	</command>
+
+	<command name="expandPageTree">
+		<if>
+			<not>
+				<isset var="depth" />
+			</not>
+			<then>
+				<var name="depth" value="1" />
+			</then>
+		</if>
+
+		<var name="count" value="0" />
+
+		<while>
+			<not>
+				<equals arg1="${count}" arg2="${depth}" />
+			</not>
+			<then>
+				<var method="MathUtil#sum('${count}', '1')" name="index" />
+
+				<execute function="Click" locator1="SitePages#LIST_GROUP_ITEM_ANGLE_ICON">
+					<var name="key_depth" value="${index}" />
+				</execute>
+
+				<var method="MathUtil#sum('${count}', '1')" name="count" />
+			</then>
+		</while>
+	</command>
+
+	<command name="gotoPageMenuItem">
+		<execute function="Click" locator1="SitePages#LIST_GROUP_ITEM_ELLIPSIS_ICON">
+			<var name="key_pageName" value="${pageName}" />
+		</execute>
+
+		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${menuItem}">
+			<var name="key_menuItem" value="${menuItem}" />
 		</execute>
 	</command>
 

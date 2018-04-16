@@ -15,50 +15,82 @@
 package com.liferay.blogs.attachments.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.blogs.util.BlogsEntryImageSelectorHelper;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.servlet.taglib.ui.ImageSelector;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.io.InputStream;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+
 /**
  * @author Roberto Díaz
  */
 @RunWith(Arquillian.class)
-@Sync
 public class BlogsEntryImageSelectorHelperTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		Bundle bundle = FrameworkUtil.getBundle(
+			BlogsEntryAttachmentFileEntryHelperTest.class);
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		for (Bundle installedBundle : bundleContext.getBundles()) {
+			String symbolicName = installedBundle.getSymbolicName();
+
+			if (symbolicName.equals("com.liferay.blogs.web")) {
+				bundle = installedBundle;
+
+				break;
+			}
+		}
+
+		Class<?> clazz = bundle.loadClass(
+			"com.liferay.blogs.web.internal.util." +
+				"BlogsEntryImageSelectorHelper");
+
+		_constructor = clazz.getConstructor(
+			Long.TYPE, Long.TYPE, Long.TYPE, String.class, String.class,
+			String.class);
+
+		_getImageSelectorMethod = clazz.getMethod("getImageSelector");
+
+		_isFileEntryTempFileMethod = clazz.getMethod("isFileEntryTempFile");
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -71,12 +103,12 @@ public class BlogsEntryImageSelectorHelperTest {
 	public void testGetEmptyImageSelectorWithDifferentFileEntryIds()
 		throws Exception {
 
-		BlogsEntryImageSelectorHelper blogsEntryImageSelectorHelper =
-			new BlogsEntryImageSelectorHelper(
-				0, 1, StringPool.BLANK, StringPool.BLANK, StringPool.BLANK);
+		Object blogsEntryImageSelectorHelper = _constructor.newInstance(
+			0, 0, 1, StringPool.BLANK, StringPool.BLANK, StringPool.BLANK);
 
 		ImageSelector imageSelector =
-			blogsEntryImageSelectorHelper.getImageSelector();
+			(ImageSelector)_getImageSelectorMethod.invoke(
+				blogsEntryImageSelectorHelper);
 
 		Assert.assertNull(imageSelector.getImageBytes());
 		Assert.assertEquals(StringPool.BLANK, imageSelector.getImageTitle());
@@ -100,13 +132,13 @@ public class BlogsEntryImageSelectorHelperTest {
 				MimeTypesUtil.getContentType(_IMAGE_TITLE), "image",
 				StringPool.BLANK, StringPool.BLANK, bytes, serviceContext);
 
-			BlogsEntryImageSelectorHelper blogsEntryImageSelectorHelper =
-				new BlogsEntryImageSelectorHelper(
-					fileEntry.getFileEntryId(), fileEntry.getFileEntryId() + 1,
-					_IMAGE_CROP_REGION, StringPool.BLANK, StringPool.BLANK);
+			Object blogsEntryImageSelectorHelper = _constructor.newInstance(
+				0, fileEntry.getFileEntryId(), fileEntry.getFileEntryId() + 1,
+				_IMAGE_CROP_REGION, StringPool.BLANK, StringPool.BLANK);
 
 			ImageSelector imageSelector =
-				blogsEntryImageSelectorHelper.getImageSelector();
+				(ImageSelector)_getImageSelectorMethod.invoke(
+					blogsEntryImageSelectorHelper);
 
 			Assert.assertArrayEquals(bytes, imageSelector.getImageBytes());
 			Assert.assertEquals(_IMAGE_TITLE, imageSelector.getImageTitle());
@@ -118,18 +150,19 @@ public class BlogsEntryImageSelectorHelperTest {
 			Assert.assertEquals(StringPool.BLANK, imageSelector.getImageURL());
 
 			Assert.assertFalse(
-				blogsEntryImageSelectorHelper.isFileEntryTempFile());
+				(Boolean)_isFileEntryTempFileMethod.invoke(
+					blogsEntryImageSelectorHelper));
 		}
 	}
 
 	@Test
 	public void testGetImageSelectorWithImageURL() throws Exception {
-		BlogsEntryImageSelectorHelper blogsEntryImageSelectorHelper =
-			new BlogsEntryImageSelectorHelper(
-				0, 0, StringPool.BLANK, _IMAGE_URL, StringPool.BLANK);
+		Object blogsEntryImageSelectorHelper = _constructor.newInstance(
+			0, 0, 0, StringPool.BLANK, _IMAGE_URL, StringPool.BLANK);
 
 		ImageSelector imageSelector =
-			blogsEntryImageSelectorHelper.getImageSelector();
+			(ImageSelector)_getImageSelectorMethod.invoke(
+				blogsEntryImageSelectorHelper);
 
 		Assert.assertNull(imageSelector.getImageBytes());
 		Assert.assertEquals(StringPool.BLANK, imageSelector.getImageTitle());
@@ -138,7 +171,9 @@ public class BlogsEntryImageSelectorHelperTest {
 			StringPool.BLANK, imageSelector.getImageCropRegion());
 		Assert.assertEquals(_IMAGE_URL, imageSelector.getImageURL());
 
-		Assert.assertFalse(blogsEntryImageSelectorHelper.isFileEntryTempFile());
+		Assert.assertFalse(
+			(Boolean)_isFileEntryTempFileMethod.invoke(
+				blogsEntryImageSelectorHelper));
 	}
 
 	@Test
@@ -157,25 +192,30 @@ public class BlogsEntryImageSelectorHelperTest {
 				MimeTypesUtil.getContentType(_IMAGE_TITLE), "image",
 				StringPool.BLANK, StringPool.BLANK, bytes, serviceContext);
 
-			BlogsEntryImageSelectorHelper blogsEntryImageSelectorHelper =
-				new BlogsEntryImageSelectorHelper(
-					fileEntry.getFileEntryId(), fileEntry.getFileEntryId(),
-					_IMAGE_CROP_REGION, StringPool.BLANK, StringPool.BLANK);
+			Object blogsEntryImageSelectorHelper = _constructor.newInstance(
+				0, fileEntry.getFileEntryId(), fileEntry.getFileEntryId(),
+				_IMAGE_CROP_REGION, StringPool.BLANK, StringPool.BLANK);
 
-			Assert.assertNull(blogsEntryImageSelectorHelper.getImageSelector());
+			Assert.assertNull(
+				(ImageSelector)_getImageSelectorMethod.invoke(
+					blogsEntryImageSelectorHelper));
 			Assert.assertFalse(
-				blogsEntryImageSelectorHelper.isFileEntryTempFile());
+				(Boolean)_isFileEntryTempFileMethod.invoke(
+					blogsEntryImageSelectorHelper));
 		}
 	}
 
 	@Test
 	public void testGetImageSelectorWithSameImageURL() throws Exception {
-		BlogsEntryImageSelectorHelper blogsEntryImageSelectorHelper =
-			new BlogsEntryImageSelectorHelper(
-				0, 0, StringPool.BLANK, _IMAGE_URL, _IMAGE_URL);
+		Object blogsEntryImageSelectorHelper = _constructor.newInstance(
+			0, 0, 0, StringPool.BLANK, _IMAGE_URL, _IMAGE_URL);
 
-		Assert.assertNull(blogsEntryImageSelectorHelper.getImageSelector());
-		Assert.assertFalse(blogsEntryImageSelectorHelper.isFileEntryTempFile());
+		Assert.assertNull(
+			(ImageSelector)_getImageSelectorMethod.invoke(
+				blogsEntryImageSelectorHelper));
+		Assert.assertFalse(
+			(Boolean)_isFileEntryTempFileMethod.invoke(
+				blogsEntryImageSelectorHelper));
 	}
 
 	@Test
@@ -188,14 +228,14 @@ public class BlogsEntryImageSelectorHelperTest {
 				_TEMP_FOLDER_NAME, _IMAGE_TITLE, getInputStream(),
 				ContentTypes.IMAGE_JPEG);
 
-			BlogsEntryImageSelectorHelper blogsEntryImageSelectorHelper =
-				new BlogsEntryImageSelectorHelper(
-					tempFileEntry.getFileEntryId(),
-					tempFileEntry.getFileEntryId() + 1, _IMAGE_CROP_REGION,
-					StringPool.BLANK, StringPool.BLANK);
+			Object blogsEntryImageSelectorHelper = _constructor.newInstance(
+				0, tempFileEntry.getFileEntryId(),
+				tempFileEntry.getFileEntryId() + 1, _IMAGE_CROP_REGION,
+				StringPool.BLANK, StringPool.BLANK);
 
 			ImageSelector imageSelector =
-				blogsEntryImageSelectorHelper.getImageSelector();
+				(ImageSelector)_getImageSelectorMethod.invoke(
+					blogsEntryImageSelectorHelper);
 
 			Assert.assertArrayEquals(bytes, imageSelector.getImageBytes());
 			Assert.assertEquals(_IMAGE_TITLE, imageSelector.getImageTitle());
@@ -207,7 +247,8 @@ public class BlogsEntryImageSelectorHelperTest {
 			Assert.assertEquals(StringPool.BLANK, imageSelector.getImageURL());
 
 			Assert.assertTrue(
-				blogsEntryImageSelectorHelper.isFileEntryTempFile());
+				(Boolean)_isFileEntryTempFileMethod.invoke(
+					blogsEntryImageSelectorHelper));
 		}
 	}
 
@@ -229,6 +270,10 @@ public class BlogsEntryImageSelectorHelperTest {
 
 	private static final String _TEMP_FOLDER_NAME =
 		BlogsEntryImageSelectorHelperTest.class.getName();
+
+	private static Constructor _constructor;
+	private static Method _getImageSelectorMethod;
+	private static Method _isFileEntryTempFileMethod;
 
 	@DeleteAfterTestRun
 	private Group _group;

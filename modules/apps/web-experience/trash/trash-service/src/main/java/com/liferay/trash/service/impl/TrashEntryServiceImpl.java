@@ -15,6 +15,7 @@
 package com.liferay.trash.service.impl;
 
 import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchPaginationUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -29,7 +30,6 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.trash.constants.TrashActionKeys;
@@ -60,7 +60,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	 * @param groupId the primary key of the group
 	 */
 	@Override
-	@Transactional(noRollbackFor = {TrashPermissionException.class})
+	@Transactional(noRollbackFor = TrashPermissionException.class)
 	public void deleteEntries(long groupId) throws PortalException {
 		boolean throwTrashPermissionException = false;
 
@@ -116,7 +116,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	 * @param entryIds the primary keys of the trash entries
 	 */
 	@Override
-	@Transactional(noRollbackFor = {TrashPermissionException.class})
+	@Transactional(noRollbackFor = TrashPermissionException.class)
 	public void deleteEntries(long[] entryIds) throws PortalException {
 		boolean throwTrashPermissionException = false;
 

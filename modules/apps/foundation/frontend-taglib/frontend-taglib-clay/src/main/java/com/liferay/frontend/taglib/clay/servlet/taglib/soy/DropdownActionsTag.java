@@ -15,9 +15,8 @@
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,15 +33,6 @@ public class DropdownActionsTag extends BaseClayTag {
 	@Override
 	public int doStartTag() {
 		Map<String, Object> context = getContext();
-
-		if (Validator.isNull(context.get("spritemap"))) {
-			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-			putValue(
-				"spritemap",
-				themeDisplay.getPathThemeImages().concat("/clay/icons.svg"));
-		}
 
 		if (Validator.isNotNull(context.get("buttonLabel"))) {
 			Map<String, String> button = new HashMap();
@@ -81,12 +71,12 @@ public class DropdownActionsTag extends BaseClayTag {
 		putValue("helpText", helpText);
 	}
 
-	public void setItems(Object items) {
-		putValue("items", items);
+	public void setItems(DropdownItemList dropdownItemList) {
+		putValue("items", dropdownItemList);
 	}
 
-	public void setSpritemap(String spritemap) {
-		putValue("spritemap", spritemap);
+	public void setTriggerCssClasses(String triggerCssClasses) {
+		putValue("triggerClasses", triggerCssClasses);
 	}
 
 }

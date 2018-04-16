@@ -17,6 +17,8 @@ package com.liferay.portal.kernel.dao.jdbc;
 import com.liferay.petra.concurrent.NoticeableThreadPoolExecutor;
 import com.liferay.petra.concurrent.ThreadPoolHandlerAdapter;
 import com.liferay.petra.executor.PortalExecutorManager;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.nio.intraband.PortalExecutorManagerInvocationHandler;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
@@ -27,8 +29,6 @@ import com.liferay.portal.kernel.test.rule.NewEnv;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtilAdvice;
 import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.portal.kernel.util.ReflectionUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 import com.liferay.registry.BasicRegistryImpl;
@@ -92,7 +92,7 @@ public class AutoBatchPreparedStatementUtilTest {
 				new PortalExecutorManagerInvocationHandler()));
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testCINITFailure() throws ClassNotFoundException {
 		PropsUtilAdvice.setProps(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE, "0");
@@ -123,7 +123,7 @@ public class AutoBatchPreparedStatementUtilTest {
 		}
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testConcurrentCancellationException() {
 		Registry registry = RegistryUtil.getRegistry();
@@ -162,7 +162,7 @@ public class AutoBatchPreparedStatementUtilTest {
 		doTestConcurrentCancellationException(false);
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testConcurrentExecutionException() {
 		PropsUtilAdvice.setProps(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE, "0");
@@ -171,7 +171,7 @@ public class AutoBatchPreparedStatementUtilTest {
 		doTestConcurrentExecutionExceptions(false);
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testConcurrentWaitingForFutures() throws SQLException {
 		PropsUtilAdvice.setProps(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE, "0");
@@ -180,7 +180,7 @@ public class AutoBatchPreparedStatementUtilTest {
 		doTestConcurrentWaitingForFutures(false);
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testConstructor() throws ReflectiveOperationException {
 		PropsUtilAdvice.setProps(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE, "0");
@@ -195,7 +195,7 @@ public class AutoBatchPreparedStatementUtilTest {
 		constructor.newInstance();
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testNotSupportBatchUpdates() throws Exception {
 		PropsUtilAdvice.setProps(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE, "0");
@@ -204,7 +204,7 @@ public class AutoBatchPreparedStatementUtilTest {
 		doTestNotSupportBatchUpdatesConcurrent();
 	}
 
-	@AdviseWith(adviceClasses = {PropsUtilAdvice.class})
+	@AdviseWith(adviceClasses = PropsUtilAdvice.class)
 	@Test
 	public void testSupportBatchUpdates() throws Exception {
 		PropsUtilAdvice.setProps(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE, "2");
@@ -294,14 +294,16 @@ public class AutoBatchPreparedStatementUtilTest {
 			preparedStatement.executeBatch();
 		}
 		catch (Throwable t) {
-			Assert.assertTrue(throwables.contains(t));
+			Assert.assertTrue(throwables.toString(), throwables.contains(t));
 
 			Throwable[] suppressedThrowables = t.getSuppressed();
 
 			Assert.assertEquals(
 				Arrays.toString(suppressedThrowables), 1,
 				suppressedThrowables.length);
-			Assert.assertTrue(throwables.contains(suppressedThrowables[0]));
+			Assert.assertTrue(
+				throwables.toString(),
+				throwables.contains(suppressedThrowables[0]));
 
 			return;
 		}

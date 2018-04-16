@@ -63,15 +63,18 @@ import com.liferay.journal.service.JournalFeedService;
 import com.liferay.journal.service.JournalFolderService;
 import com.liferay.journal.util.JournalContent;
 import com.liferay.journal.util.JournalConverter;
-import com.liferay.journal.util.impl.JournalUtil;
+import com.liferay.journal.util.JournalHelper;
 import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
 import com.liferay.journal.web.configuration.JournalWebConfiguration;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
 import com.liferay.journal.web.util.JournalPortletUtil;
+import com.liferay.journal.web.util.JournalUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.diff.CompareVersionsException;
 import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -104,14 +107,13 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.RSSUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.rss.util.RSSUtil;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.kernel.service.TrashEntryService;
 import com.liferay.trash.util.TrashWebKeys;
@@ -535,7 +537,7 @@ public class JournalPortlet extends MVCPortlet {
 			String diffHtmlResults = null;
 
 			try {
-				diffHtmlResults = JournalUtil.diffHtml(
+				diffHtmlResults = _journalHelper.diffHtml(
 					groupId, articleId, sourceVersion, targetVersion,
 					languageId,
 					new PortletRequestModel(resourceRequest, resourceResponse),
@@ -711,6 +713,8 @@ public class JournalPortlet extends MVCPortlet {
 		Map<Locale, String> descriptionMap =
 			LocalizationUtil.getLocalizationMap(
 				actionRequest, "descriptionMapAsXML");
+		Map<Locale, String> friendlyURLMap =
+			LocalizationUtil.getLocalizationMap(actionRequest, "friendlyURL");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			JournalArticle.class.getName(), uploadPortletRequest);
@@ -733,7 +737,8 @@ public class JournalPortlet extends MVCPortlet {
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
 
-		Layout targetLayout = JournalUtil.getArticleLayout(layoutUuid, groupId);
+		Layout targetLayout = _journalHelper.getArticleLayout(
+			layoutUuid, groupId);
 
 		if (targetLayout == null) {
 			layoutUuid = null;
@@ -824,15 +829,15 @@ public class JournalPortlet extends MVCPortlet {
 
 			article = _journalArticleService.addArticle(
 				groupId, folderId, classNameId, classPK, articleId,
-				autoArticleId, titleMap, descriptionMap, content,
-				ddmStructureKey, ddmTemplateKey, layoutUuid, displayDateMonth,
-				displayDateDay, displayDateYear, displayDateHour,
-				displayDateMinute, expirationDateMonth, expirationDateDay,
-				expirationDateYear, expirationDateHour, expirationDateMinute,
-				neverExpire, reviewDateMonth, reviewDateDay, reviewDateYear,
-				reviewDateHour, reviewDateMinute, neverReview, indexable,
-				smallImage, smallImageURL, smallFile, null, articleURL,
-				serviceContext);
+				autoArticleId, titleMap, descriptionMap, friendlyURLMap,
+				content, ddmStructureKey, ddmTemplateKey, layoutUuid,
+				displayDateMonth, displayDateDay, displayDateYear,
+				displayDateHour, displayDateMinute, expirationDateMonth,
+				expirationDateDay, expirationDateYear, expirationDateHour,
+				expirationDateMinute, neverExpire, reviewDateMonth,
+				reviewDateDay, reviewDateYear, reviewDateHour, reviewDateMinute,
+				neverReview, indexable, smallImage, smallImageURL, smallFile,
+				null, articleURL, serviceContext);
 		}
 		else {
 
@@ -843,20 +848,18 @@ public class JournalPortlet extends MVCPortlet {
 
 			String tempOldUrlTitle = article.getUrlTitle();
 
-			if (actionName.equals("previewArticle") ||
-				actionName.equals("updateArticle")) {
-
+			if (actionName.equals("updateArticle")) {
 				article = _journalArticleService.updateArticle(
 					groupId, folderId, articleId, version, titleMap,
-					descriptionMap, content, ddmStructureKey, ddmTemplateKey,
-					layoutUuid, displayDateMonth, displayDateDay,
-					displayDateYear, displayDateHour, displayDateMinute,
-					expirationDateMonth, expirationDateDay, expirationDateYear,
-					expirationDateHour, expirationDateMinute, neverExpire,
-					reviewDateMonth, reviewDateDay, reviewDateYear,
-					reviewDateHour, reviewDateMinute, neverReview, indexable,
-					smallImage, smallImageURL, smallFile, null, articleURL,
-					serviceContext);
+					descriptionMap, friendlyURLMap, content, ddmStructureKey,
+					ddmTemplateKey, layoutUuid, displayDateMonth,
+					displayDateDay, displayDateYear, displayDateHour,
+					displayDateMinute, expirationDateMonth, expirationDateDay,
+					expirationDateYear, expirationDateHour,
+					expirationDateMinute, neverExpire, reviewDateMonth,
+					reviewDateDay, reviewDateYear, reviewDateHour,
+					reviewDateMinute, neverReview, indexable, smallImage,
+					smallImageURL, smallFile, null, articleURL, serviceContext);
 			}
 
 			if (!tempOldUrlTitle.equals(article.getUrlTitle())) {
@@ -1211,6 +1214,15 @@ public class JournalPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		try {
+			ActionUtil.getFolder(renderRequest);
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage());
+
+			SessionErrors.add(renderRequest, e.getClass());
+		}
+
 		if (SessionErrors.contains(
 				renderRequest, NoSuchArticleException.class.getName()) ||
 			SessionErrors.contains(
@@ -1295,6 +1307,7 @@ public class JournalPortlet extends MVCPortlet {
 			cause instanceof LocaleException ||
 			cause instanceof MaxAddMenuFavItemsException ||
 			cause instanceof StorageFieldRequiredException ||
+			cause instanceof SystemException ||
 			super.isSessionErrorException(cause)) {
 
 			return true;
@@ -1471,6 +1484,9 @@ public class JournalPortlet extends MVCPortlet {
 
 	@Reference
 	private JournalFolderService _journalFolderService;
+
+	@Reference
+	private JournalHelper _journalHelper;
 
 	private volatile JournalWebConfiguration _journalWebConfiguration;
 

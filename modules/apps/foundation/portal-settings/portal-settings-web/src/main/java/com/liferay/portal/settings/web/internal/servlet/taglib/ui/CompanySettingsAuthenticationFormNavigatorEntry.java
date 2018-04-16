@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorConstants;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.settings.web.constants.PortalSettingsWebKeys;
+import com.liferay.portal.settings.web.internal.constants.PortalSettingsWebKeys;
 
 import java.io.IOException;
 
@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Tomas Polesovsky
  */
 @Component(
-	immediate = true, property = {"form.navigator.entry.order:Integer=70"},
+	immediate = true, property = "form.navigator.entry.order:Integer=70",
 	service = FormNavigatorEntry.class
 )
 public class CompanySettingsAuthenticationFormNavigatorEntry

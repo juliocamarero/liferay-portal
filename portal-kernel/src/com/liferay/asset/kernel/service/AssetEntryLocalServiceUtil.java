@@ -288,6 +288,11 @@ public class AssetEntryLocalServiceUtil {
 	}
 
 	public static com.liferay.asset.kernel.model.AssetEntry fetchEntry(
+		long classNameId, long classPK) {
+		return getService().fetchEntry(classNameId, classPK);
+	}
+
+	public static com.liferay.asset.kernel.model.AssetEntry fetchEntry(
 		long groupId, java.lang.String classUuid) {
 		return getService().fetchEntry(groupId, classUuid);
 	}
@@ -471,6 +476,15 @@ public class AssetEntryLocalServiceUtil {
 		java.lang.String className, long classPK)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getEntry(className, classPK);
+	}
+
+	public static double getEntryPriority(long classNameId, long classPK) {
+		return getService().getEntryPriority(classNameId, classPK);
+	}
+
+	public static double getEntryPriority(java.lang.String className,
+		long classPK) {
+		return getService().getEntryPriority(className, classPK);
 	}
 
 	public static java.util.List<com.liferay.asset.kernel.model.AssetEntry> getGroupEntries(

@@ -14,7 +14,11 @@
 
 package com.liferay.portal.workflow.kaleo.runtime.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.WorkflowDefinitionLink;
 import com.liferay.portal.kernel.service.GroupLocalService;
@@ -25,11 +29,12 @@ import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.uuid.PortalUUID;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
+import com.liferay.portal.kernel.workflow.WorkflowDefinitionFileException;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowInstance;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -55,6 +60,7 @@ import com.liferay.portal.workflow.kaleo.runtime.util.comparator.KaleoInstanceOr
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +72,7 @@ import java.util.concurrent.Callable;
  */
 @Transactional(
 	isolation = Isolation.PORTAL, propagation = Propagation.REQUIRED,
-	rollbackFor = {Exception.class}
+	rollbackFor = Exception.class
 )
 public class DefaultWorkflowEngineImpl
 	extends BaseKaleoBean implements WorkflowEngine {
@@ -77,8 +83,19 @@ public class DefaultWorkflowEngineImpl
 		throws WorkflowException {
 
 		try {
-			kaleoDefinitionLocalService.deleteKaleoDefinition(
-				name, serviceContext);
+			KaleoDefinition kaleoDefinition =
+				kaleoDefinitionLocalService.fetchKaleoDefinition(
+					name, serviceContext);
+
+			if (kaleoDefinition != null) {
+				kaleoDefinitionLocalService.deleteKaleoDefinition(
+					name, serviceContext);
+			}
+			else {
+				kaleoDefinitionVersionLocalService.
+					deleteKaleoDefinitionVersions(
+						serviceContext.getCompanyId(), name);
+			}
 		}
 		catch (Exception e) {
 			throw new WorkflowException(e);
@@ -98,9 +115,27 @@ public class DefaultWorkflowEngineImpl
 		}
 	}
 
+	/**
+	 * @deprecated As of 1.0.0, replaced by {@link
+	 *             #deployWorkflowDefinition(String, String, InputStream,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public WorkflowDefinition deployWorkflowDefinition(
 			String title, InputStream inputStream,
+			ServiceContext serviceContext)
+		throws WorkflowException {
+
+		Definition definition = _workflowModelParser.parse(inputStream);
+
+		return deployWorkflowDefinition(
+			title, definition.getName(), inputStream, serviceContext);
+	}
+
+	@Override
+	public WorkflowDefinition deployWorkflowDefinition(
+			String title, String name, InputStream inputStream,
 			ServiceContext serviceContext)
 		throws WorkflowException {
 
@@ -111,12 +146,14 @@ public class DefaultWorkflowEngineImpl
 				_workflowValidator.validate(definition);
 			}
 
+			String definitionName = getDefinitionName(definition, name);
+
 			KaleoDefinition kaleoDefinition =
 				kaleoDefinitionLocalService.fetchKaleoDefinition(
-					definition.getName(), serviceContext);
+					definitionName, serviceContext);
 
 			WorkflowDefinition workflowDefinition = _workflowDeployer.deploy(
-				title, definition, serviceContext);
+				title, definitionName, definition, serviceContext);
 
 			if (kaleoDefinition != null) {
 				List<WorkflowDefinitionLink> workflowDefinitionLinks =
@@ -357,6 +394,25 @@ public class DefaultWorkflowEngineImpl
 		}
 		catch (Exception e) {
 			throw new WorkflowException(e);
+		}
+	}
+
+	@Override
+	public WorkflowDefinition saveWorkflowDefinition(
+			String title, String name, byte[] bytes,
+			ServiceContext serviceContext)
+		throws WorkflowException {
+
+		try {
+			Definition definition = getDefinition(bytes);
+
+			String definitionName = getDefinitionName(definition, name);
+
+			return _workflowDeployer.save(
+				title, definitionName, definition, serviceContext);
+		}
+		catch (PortalException pe) {
+			throw new WorkflowException(pe);
 		}
 	}
 
@@ -605,6 +661,47 @@ public class DefaultWorkflowEngineImpl
 			workflowInstanceId, workflowContext, serviceContext);
 	}
 
+	protected Definition getDefinition(byte[] bytes) throws WorkflowException {
+		try {
+			_workflowModelParser.setValidate(false);
+
+			return _workflowModelParser.parse(
+				new UnsyncByteArrayInputStream(bytes));
+		}
+		catch (WorkflowDefinitionFileException wdfe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(wdfe, wdfe);
+			}
+
+			try {
+				return new Definition(
+					StringPool.BLANK, StringPool.BLANK,
+					new String(bytes, "UTF-8"), 0);
+			}
+			catch (UnsupportedEncodingException uee) {
+				throw new WorkflowException(uee);
+			}
+		}
+		catch (WorkflowException we) {
+			throw new WorkflowException(we);
+		}
+		finally {
+			_workflowModelParser.setValidate(true);
+		}
+	}
+
+	protected String getDefinitionName(Definition definition, String name) {
+		if (Validator.isNotNull(name)) {
+			return name;
+		}
+
+		if (Validator.isNotNull(definition.getName())) {
+			return definition.getName();
+		}
+
+		return portalUUID.generate();
+	}
+
 	protected void getNextTransitionNames(
 			KaleoInstanceToken kaleoInstanceToken, List<String> transitionNames)
 		throws Exception {
@@ -660,6 +757,12 @@ public class DefaultWorkflowEngineImpl
 
 		return workflowInstances;
 	}
+
+	@ServiceReference(type = PortalUUID.class)
+	protected PortalUUID portalUUID;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DefaultWorkflowEngineImpl.class);
 
 	@ServiceReference(type = GroupLocalService.class)
 	private GroupLocalService _groupLocalService;

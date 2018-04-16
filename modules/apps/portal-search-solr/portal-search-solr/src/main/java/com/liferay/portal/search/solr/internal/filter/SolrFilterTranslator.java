@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.solr.internal.filter;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
@@ -21,7 +22,6 @@ import com.liferay.portal.kernel.search.filter.DateRangeTermFilter;
 import com.liferay.portal.kernel.search.filter.ExistsFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.FilterTranslator;
-import com.liferay.portal.kernel.search.filter.FilterVisitor;
 import com.liferay.portal.kernel.search.filter.GeoBoundingBoxFilter;
 import com.liferay.portal.kernel.search.filter.GeoDistanceFilter;
 import com.liferay.portal.kernel.search.filter.GeoDistanceRangeFilter;
@@ -33,8 +33,9 @@ import com.liferay.portal.kernel.search.filter.RangeTermFilter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.filter.FilterVisitor;
+import com.liferay.portal.search.filter.TermsSetFilter;
 import com.liferay.portal.search.solr.filter.BooleanFilterTranslator;
 import com.liferay.portal.search.solr.filter.DateRangeTermFilterTranslator;
 import com.liferay.portal.search.solr.filter.ExistsFilterTranslator;
@@ -49,6 +50,8 @@ import com.liferay.portal.search.solr.filter.RangeTermFilterTranslator;
 import com.liferay.portal.search.solr.filter.TermFilterTranslator;
 import com.liferay.portal.search.solr.filter.TermsFilterTranslator;
 
+import org.apache.lucene.search.Query;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -56,19 +59,18 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  */
 @Component(
-	immediate = true, property = {"search.engine.impl=Solr"},
+	immediate = true, property = "search.engine.impl=Solr",
 	service = FilterTranslator.class
 )
 public class SolrFilterTranslator
-	implements FilterTranslator<String>,
-			   FilterVisitor<org.apache.lucene.search.Query> {
+	implements FilterTranslator<String>, FilterVisitor<Query> {
 
 	@Override
 	public String translate(Filter filter, SearchContext searchContext) {
 		String filterString = StringPool.BLANK;
 
 		if (filter != null) {
-			org.apache.lucene.search.Query luceneQuery = filter.accept(this);
+			Query luceneQuery = filter.accept(this);
 
 			if (luceneQuery != null) {
 				filterString = luceneQuery.toString();
@@ -83,81 +85,74 @@ public class SolrFilterTranslator
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(BooleanFilter booleanFilter) {
+	public Query visit(BooleanFilter booleanFilter) {
 		return _booleanQueryTranslator.translate(booleanFilter, this);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(
-		DateRangeTermFilter dateRangeTermFilter) {
-
+	public Query visit(DateRangeTermFilter dateRangeTermFilter) {
 		return _dateRangeTermFilterTranslator.translate(dateRangeTermFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(ExistsFilter existsFilter) {
+	public Query visit(ExistsFilter existsFilter) {
 		return _existsFilterTranslator.translate(existsFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(
-		GeoBoundingBoxFilter geoBoundingBoxFilter) {
-
+	public Query visit(GeoBoundingBoxFilter geoBoundingBoxFilter) {
 		return _geoBoundingBoxFilterTranslator.translate(geoBoundingBoxFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(
-		GeoDistanceFilter geoDistanceFilter) {
-
+	public Query visit(GeoDistanceFilter geoDistanceFilter) {
 		return _geoDistanceFilterTranslator.translate(geoDistanceFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(
-		GeoDistanceRangeFilter geoDistanceRangeFilter) {
-
+	public Query visit(GeoDistanceRangeFilter geoDistanceRangeFilter) {
 		return _geoDistanceRangeFilterTranslator.translate(
 			geoDistanceRangeFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(
-		GeoPolygonFilter geoPolygonFilter) {
-
+	public Query visit(GeoPolygonFilter geoPolygonFilter) {
 		return _geoPolygonFilterTranslator.translate(geoPolygonFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(MissingFilter missingFilter) {
+	public Query visit(MissingFilter missingFilter) {
 		return _missingFilterTranslator.translate(missingFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(PrefixFilter prefixFilter) {
+	public Query visit(PrefixFilter prefixFilter) {
 		return _prefixFilterTranslator.translate(prefixFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(QueryFilter queryFilter) {
+	public Query visit(QueryFilter queryFilter) {
 		return _queryFilterTranslator.translate(queryFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(
-		RangeTermFilter rangeTermFilter) {
-
+	public Query visit(RangeTermFilter rangeTermFilter) {
 		return _rangeTermFilterTranslator.translate(rangeTermFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(TermFilter termFilter) {
+	public Query visit(TermFilter termFilter) {
 		return _termFilterTranslator.translate(termFilter);
 	}
 
 	@Override
-	public org.apache.lucene.search.Query visit(TermsFilter termsFilter) {
+	public Query visit(TermsFilter termsFilter) {
 		return _termsFilterTranslator.translate(termsFilter);
+	}
+
+	@Override
+	public Query visit(TermsSetFilter termsSetFilter) {
+		throw new UnsupportedOperationException();
 	}
 
 	protected String includeCompanyId(

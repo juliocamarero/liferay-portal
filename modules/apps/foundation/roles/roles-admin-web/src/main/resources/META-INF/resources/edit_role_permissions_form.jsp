@@ -148,8 +148,11 @@ if (Validator.isNotNull(portletResource)) {
 				boolean supportsFilterByGroup = true;
 				String target = resource + actionId;
 				List<Group> groups = Collections.emptyList();
+
 				String groupIds = ParamUtil.getString(request, "groupIds" + target, null);
+
 				long[] groupIdsArray = StringUtil.split(groupIds, 0L);
+
 				List<String> groupNames = new ArrayList<String>();
 
 				Portlet curPortlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), resource);
@@ -201,12 +204,15 @@ if (Validator.isNotNull(portletResource)) {
 
 			<aui:input name="relatedPortletResources" type="hidden" value="<%= StringUtil.merge(relatedPortletResources) %>" />
 
-			<liferay-ui:search-iterator paginate="<%= false %>" searchContainer="<%= searchContainer %>" />
+			<liferay-ui:search-iterator
+				paginate="<%= false %>"
+				searchContainer="<%= searchContainer %>"
+			/>
 		</div>
 	</c:if>
 
 	<div class="form-group">
-		<aui:button cssClass="btn-lg" onClick='<%= liferayPortletResponse.getNamespace() + "updateActions();" %>' value="save" />
+		<aui:button onClick='<%= liferayPortletResponse.getNamespace() + "updateActions();" %>' value="save" />
 	</div>
 </aui:form>
 

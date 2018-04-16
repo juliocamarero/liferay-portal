@@ -120,6 +120,10 @@ public class FilePropagator {
 	}
 
 	private void _copyFromSource() {
+		if (_filePropagatorTasks.isEmpty() || _targetSlaves.isEmpty()) {
+			return;
+		}
+
 		List<String> commands = new ArrayList<>();
 
 		String targetSlave = null;
@@ -175,7 +179,7 @@ public class FilePropagator {
 	}
 
 	private int _executeBashCommands(List<String> commands, String targetSlave)
-		throws InterruptedException, IOException, TimeoutException {
+		throws IOException, TimeoutException {
 
 		StringBuffer sb = new StringBuffer("ssh -o NumberOfPasswordPrompts=0 ");
 

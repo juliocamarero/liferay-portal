@@ -26,31 +26,33 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 <liferay-portlet:renderURL portletConfiguration="<%= true %>" varImpl="configurationRenderURL" />
 
-<aui:form action="<%= configurationActionURL %>" method="post" name="fm">
+<liferay-frontend:edit-form
+	action="<%= configurationActionURL %>"
+	method="post"
+	name="fm"
+>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= configurationRenderURL %>" />
 	<aui:input name="preferences--assetEntryId--" type="hidden" value="<%= journalContentDisplayContext.getAssetEntryId() %>" />
 
-	<div class="portlet-configuration-body-content">
-		<div class="container-fluid-1280">
-			<aui:fieldset-group markupView="lexicon">
-				<aui:fieldset>
-					<div id="<portlet:namespace />articlePreview">
-						<liferay-util:include page="/journal_resources.jsp" servletContext="<%= application %>">
-							<liferay-util:param name="refererPortletName" value="<%= renderResponse.getNamespace() %>" />
-						</liferay-util:include>
-					</div>
-				</aui:fieldset>
-			</aui:fieldset-group>
-		</div>
-	</div>
+	<liferay-frontend:edit-form-body>
+		<liferay-frontend:fieldset-group>
+			<liferay-frontend:fieldset>
+				<div id="<portlet:namespace />articlePreview">
+					<liferay-util:include page="/journal_resources.jsp" servletContext="<%= application %>">
+						<liferay-util:param name="refererPortletName" value="<%= renderResponse.getNamespace() %>" />
+					</liferay-util:include>
+				</div>
+			</liferay-frontend:fieldset>
+		</liferay-frontend:fieldset-group>
+	</liferay-frontend:edit-form-body>
 
-	<aui:button-row>
-		<aui:button cssClass="btn-lg" name="saveButton" type="submit" />
+	<liferay-frontend:edit-form-footer>
+		<aui:button name="saveButton" type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
-	</aui:button-row>
-</aui:form>
+		<aui:button href="<%= redirect %>" type="cancel" />
+	</liferay-frontend:edit-form-footer>
+</liferay-frontend:edit-form>
 
 <aui:script sandbox="<%= true %>" use="aui-base">
 	var form = A.one('#<portlet:namespace />fm');
@@ -66,7 +68,14 @@ String redirect = ParamUtil.getString(request, "redirect");
 			PortletURL selectWebContentURL = PortletProviderUtil.getPortletURL(request, JournalArticle.class.getName(), PortletProvider.Action.BROWSE);
 
 			selectWebContentURL.setParameter("groupId", String.valueOf(journalContentDisplayContext.getGroupId()));
-			selectWebContentURL.setParameter("selectedGroupId", String.valueOf(themeDisplay.getScopeGroupId()));
+
+			if (journalContentDisplayContext.getSelectedGroupIds() != null) {
+				selectWebContentURL.setParameter("selectedGroupIds", StringUtil.merge(journalContentDisplayContext.getSelectedGroupIds()));
+			}
+			else {
+				selectWebContentURL.setParameter("selectedGroupId", String.valueOf(themeDisplay.getScopeGroupId()));
+			}
+
 			selectWebContentURL.setParameter("refererAssetEntryId", "[$ARTICLE_REFERER_ASSET_ENTRY_ID$]");
 			selectWebContentURL.setParameter("typeSelection", JournalArticle.class.getName());
 			selectWebContentURL.setParameter("showNonindexable", String.valueOf(Boolean.TRUE));

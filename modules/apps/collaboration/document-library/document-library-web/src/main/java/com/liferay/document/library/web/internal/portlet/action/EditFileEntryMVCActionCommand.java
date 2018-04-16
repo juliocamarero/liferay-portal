@@ -18,6 +18,7 @@ import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.asset.kernel.exception.AssetTagException;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.document.library.configuration.DLConfiguration;
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.antivirus.AntivirusScannerException;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
@@ -30,15 +31,16 @@ import com.liferay.document.library.kernel.exception.InvalidFileEntryTypeExcepti
 import com.liferay.document.library.kernel.exception.InvalidFileVersionException;
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
+import com.liferay.document.library.kernel.exception.RequiredFileException;
 import com.liferay.document.library.kernel.exception.SourceFileNameException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.document.library.kernel.service.DLTrashService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.document.library.kernel.util.DLValidator;
-import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.document.library.web.internal.settings.DLPortletInstanceSettings;
 import com.liferay.dynamic.data.mapping.kernel.StorageFieldRequiredException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -60,7 +62,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.PortletDisplay;
@@ -70,13 +71,11 @@ import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.upload.UploadRequestSizeException;
 import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
@@ -84,6 +83,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.trash.service.TrashEntryService;
+import com.liferay.upload.UploadResponseHandler;
 
 import java.io.InputStream;
 
@@ -101,8 +101,6 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.WindowState;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUploadBase;
 
@@ -278,12 +276,8 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 				themeDisplay.getScopeGroupId(), folderId, TEMP_FOLDER_NAME,
 				tempFileName, inputStream, mimeType);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("groupId", fileEntry.getGroupId());
-			jsonObject.put("name", fileEntry.getTitle());
-			jsonObject.put("title", sourceFileName);
-			jsonObject.put("uuid", fileEntry.getUuid());
+			JSONObject jsonObject = _multipleUploadResponseHandler.onSuccess(
+				uploadPortletRequest, fileEntry);
 
 			JSONPortletResponseUtil.writeJSON(
 				actionRequest, actionResponse, jsonObject);
@@ -480,8 +474,27 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 					 cmd.equals(Constants.UPDATE) ||
 					 cmd.equals(Constants.UPDATE_AND_CHECKIN)) {
 
-				fileEntry = updateFileEntry(
-					portletConfig, actionRequest, actionResponse);
+				UploadPortletRequest uploadPortletRequest =
+					_portal.getUploadPortletRequest(actionRequest);
+
+				String sourceFileName = uploadPortletRequest.getFileName(
+					"file");
+
+				try {
+					fileEntry = updateFileEntry(
+						portletConfig, actionRequest, actionResponse,
+						uploadPortletRequest);
+				}
+				catch (Exception e) {
+					if (!cmd.equals(Constants.ADD_DYNAMIC) &&
+						Validator.isNotNull(sourceFileName)) {
+
+						SessionErrors.add(
+							actionRequest, RequiredFileException.class);
+					}
+
+					throw e;
+				}
 			}
 			else if (cmd.equals(Constants.ADD_MULTIPLE)) {
 				addMultipleFileEntries(
@@ -766,63 +779,9 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 				e instanceof FileSizeException ||
 				e instanceof UploadRequestSizeException) {
 
-				HttpServletResponse response = _portal.getHttpServletResponse(
-					actionResponse);
-
-				response.setContentType(ContentTypes.TEXT_HTML);
-				response.setStatus(HttpServletResponse.SC_OK);
-
-				String errorMessage = StringPool.BLANK;
-				int errorType = 0;
-
-				ThemeDisplay themeDisplay =
-					(ThemeDisplay)actionRequest.getAttribute(
-						WebKeys.THEME_DISPLAY);
-
-				if (e instanceof AntivirusScannerException) {
-					AntivirusScannerException ase =
-						(AntivirusScannerException)e;
-
-					errorMessage = themeDisplay.translate(ase.getMessageKey());
-
-					errorType =
-						ServletResponseConstants.SC_FILE_ANTIVIRUS_EXCEPTION;
-				}
-
-				if (e instanceof DuplicateFileEntryException) {
-					errorMessage = themeDisplay.translate(
-						"please-enter-a-unique-document-name");
-					errorType =
-						ServletResponseConstants.SC_DUPLICATE_FILE_EXCEPTION;
-				}
-				else if (e instanceof FileExtensionException) {
-					errorMessage = themeDisplay.translate(
-						"please-enter-a-file-with-a-valid-extension-x",
-						StringUtil.merge(
-							getAllowedFileExtensions(
-								portletConfig, actionRequest, actionResponse)));
-					errorType =
-						ServletResponseConstants.SC_FILE_EXTENSION_EXCEPTION;
-				}
-				else if (e instanceof FileNameException) {
-					errorMessage = themeDisplay.translate(
-						"please-enter-a-file-with-a-valid-file-name");
-					errorType = ServletResponseConstants.SC_FILE_NAME_EXCEPTION;
-				}
-				else if (e instanceof FileSizeException) {
-					errorMessage = themeDisplay.translate(
-						"please-enter-a-file-with-a-valid-file-size-no-" +
-							"larger-than-x",
-						TextFormatter.formatStorageSize(
-							_dlValidator.getMaxAllowableSize(),
-							themeDisplay.getLocale()));
-					errorType = ServletResponseConstants.SC_FILE_SIZE_EXCEPTION;
-				}
-
-				JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-				jsonObject.put("message", errorMessage);
-				jsonObject.put("status", errorType);
+				JSONObject jsonObject =
+					_multipleUploadResponseHandler.onFailure(
+						actionRequest, (PortalException)e);
 
 				JSONPortletResponseUtil.writeJSON(
 					actionRequest, actionResponse, jsonObject);
@@ -906,11 +865,9 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 
 	protected FileEntry updateFileEntry(
 			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+			ActionResponse actionResponse,
+			UploadPortletRequest uploadPortletRequest)
 		throws Exception {
-
-		UploadPortletRequest uploadPortletRequest =
-			_portal.getUploadPortletRequest(actionRequest);
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -1037,6 +994,9 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private Http _http;
+
+	@Reference(target = "(upload.response.handler=multiple)")
+	private UploadResponseHandler _multipleUploadResponseHandler;
 
 	@Reference
 	private Portal _portal;

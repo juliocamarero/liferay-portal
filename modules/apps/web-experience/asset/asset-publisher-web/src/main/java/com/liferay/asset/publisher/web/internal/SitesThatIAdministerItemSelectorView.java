@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.web.internal;
 
-import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
+import com.liferay.asset.publisher.constants.AssetPublisherWebKeys;
 import com.liferay.asset.publisher.web.display.context.SitesThatIAdministerItemSelectorViewDisplayContext;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorView;
@@ -51,7 +51,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  */
 @Component(
-	property = {"item.selector.view.order:Integer=100"},
+	property = "item.selector.view.order:Integer=100",
 	service = ItemSelectorView.class
 )
 public class SitesThatIAdministerItemSelectorView
@@ -73,11 +73,6 @@ public class SitesThatIAdministerItemSelectorView
 
 		return ResourceBundleUtil.getString(
 			resourceBundle, "sites-that-i-administer");
-	}
-
-	@Override
-	public boolean isShowSearch() {
-		return true;
 	}
 
 	@Override

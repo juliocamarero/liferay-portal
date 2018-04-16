@@ -19,11 +19,11 @@ import com.liferay.document.library.kernel.exception.NoSuchFileException;
 import com.liferay.document.library.kernel.store.BaseStore;
 import com.liferay.document.library.kernel.store.Store;
 import com.liferay.document.library.kernel.store.StoreWrapper;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.ExpectedLog;
 import com.liferay.portal.test.rule.ExpectedLogs;
 import com.liferay.portal.test.rule.ExpectedType;
@@ -80,10 +80,6 @@ public abstract class BaseStoreTestCase {
 					@Override
 					public Set<String> keySet() {
 						return Collections.emptySet();
-					}
-
-					@Override
-					public void open() {
 					}
 
 				});
@@ -359,8 +355,10 @@ public abstract class BaseStoreTestCase {
 
 		Set<String> fileNamesSet = SetUtil.fromArray(fileNames);
 
-		Assert.assertTrue(fileNamesSet.contains(fileName1));
-		Assert.assertTrue(fileNamesSet.contains(fileName2));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName1));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName2));
 	}
 
 	@Test
@@ -382,8 +380,10 @@ public abstract class BaseStoreTestCase {
 
 		Set<String> fileNamesSet = SetUtil.fromArray(fileNames);
 
-		Assert.assertTrue(fileNamesSet.contains(fileName1));
-		Assert.assertTrue(fileNamesSet.contains(fileName2));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName1));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName2));
 	}
 
 	@Test
@@ -412,8 +412,10 @@ public abstract class BaseStoreTestCase {
 
 		Set<String> fileNamesSet = SetUtil.fromArray(fileNames);
 
-		Assert.assertTrue(fileNamesSet.contains(fileName1));
-		Assert.assertTrue(fileNamesSet.contains(fileName2));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName1));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName2));
 
 		fileNames = store.getFileNames(companyId, repositoryId, subdirName);
 
@@ -458,8 +460,10 @@ public abstract class BaseStoreTestCase {
 
 		Set<String> fileNamesSet = SetUtil.fromArray(fileNames);
 
-		Assert.assertTrue(fileNamesSet.contains(fileName1));
-		Assert.assertTrue(fileNamesSet.contains(fileName2));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName1));
+		Assert.assertTrue(
+			fileNamesSet.toString(), fileNamesSet.contains(fileName2));
 	}
 
 	@Test

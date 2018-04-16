@@ -16,7 +16,8 @@ package com.liferay.fragment.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -61,6 +62,16 @@ public class FragmentCollectionLocalServiceUtil {
 		return getService()
 				   .addFragmentCollection(userId, groupId, name, description,
 			serviceContext);
+	}
+
+	public static com.liferay.fragment.model.FragmentCollection addFragmentCollection(
+		long userId, long groupId, java.lang.String fragmentCollectionKey,
+		java.lang.String name, java.lang.String description,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addFragmentCollection(userId, groupId,
+			fragmentCollectionKey, name, description, serviceContext);
 	}
 
 	/**
@@ -192,6 +203,12 @@ public class FragmentCollectionLocalServiceUtil {
 		return getService().fetchFragmentCollection(fragmentCollectionId);
 	}
 
+	public static com.liferay.fragment.model.FragmentCollection fetchFragmentCollection(
+		long groupId, java.lang.String fragmentCollectionKey) {
+		return getService()
+				   .fetchFragmentCollection(groupId, fragmentCollectionKey);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return getService().getActionableDynamicQuery();
 	}
@@ -226,15 +243,13 @@ public class FragmentCollectionLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.fragment.model.FragmentCollection> getFragmentCollections(
-		long groupId, int start, int end)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		long groupId, int start, int end) {
 		return getService().getFragmentCollections(groupId, start, end);
 	}
 
 	public static java.util.List<com.liferay.fragment.model.FragmentCollection> getFragmentCollections(
 		long groupId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.fragment.model.FragmentCollection> orderByComparator)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.fragment.model.FragmentCollection> orderByComparator) {
 		return getService()
 				   .getFragmentCollections(groupId, start, end,
 			orderByComparator);
@@ -276,6 +291,12 @@ public class FragmentCollectionLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static java.lang.String[] getTempFileNames(long userId,
+		long groupId, java.lang.String folderName)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getTempFileNames(userId, groupId, folderName);
+	}
+
 	/**
 	* Updates the fragment collection in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	*
@@ -300,6 +321,17 @@ public class FragmentCollectionLocalServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<FragmentCollectionLocalService, FragmentCollectionLocalService> _serviceTracker =
-		ServiceTrackerFactory.open(FragmentCollectionLocalService.class);
+	private static ServiceTracker<FragmentCollectionLocalService, FragmentCollectionLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(FragmentCollectionLocalService.class);
+
+		ServiceTracker<FragmentCollectionLocalService, FragmentCollectionLocalService> serviceTracker =
+			new ServiceTracker<FragmentCollectionLocalService, FragmentCollectionLocalService>(bundle.getBundleContext(),
+				FragmentCollectionLocalService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

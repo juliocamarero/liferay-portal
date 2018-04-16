@@ -93,10 +93,12 @@ if (forcePost && (portletURL != null)) {
 						if (curDelta > SearchContainer.MAX_DELTA) {
 							continue;
 						}
+
+						String curDeltaURL = HttpUtil.addParameter(deltaURL, namespace + deltaParam, curDelta + urlAnchor);
 					%>
 
 						<li>
-							<a href="<%= deltaURL + "&" + namespace + deltaParam + "=" + curDelta + urlAnchor %>" onClick="<%= forcePost ? _getOnClick(namespace, deltaParam, curDelta) : "" %>"><%= String.valueOf(curDelta) %></a>
+							<a href="<%= curDeltaURL %>" onClick="<%= forcePost ? _getOnClick(namespace, deltaParam, curDelta) : "" %>"><%= String.valueOf(curDelta) %></a>
 						</li>
 
 					<%
@@ -150,6 +152,9 @@ if (forcePost && (portletURL != null)) {
 
 								<%
 								for (int i = 4; i < initialPages; i++) {
+									if (i >= pages) {
+										break;
+									}
 								%>
 
 									<li>
@@ -178,7 +183,7 @@ if (forcePost && (portletURL != null)) {
 							<ul class="inline-scroller link-list" data-max-index="<%= pages - 2 %>">
 
 								<%
-								for (int i = 2; i < (initialPages); i++) {
+								for (int i = 2; i < (initialPages > (cur - 2) ? cur - 2 : initialPages); i++) {
 								%>
 
 									<li>
@@ -323,7 +328,7 @@ if (forcePost && (portletURL != null)) {
 <%!
 private String _getHREF(String formName, String curParam, int cur, String jsCall, String url, String urlAnchor) throws Exception {
 	if (Validator.isNotNull(url)) {
-		return HtmlUtil.escape(url + curParam + "=" + cur + urlAnchor);
+		return HttpUtil.addParameter(HttpUtil.removeParameter(url, curParam), curParam, cur + urlAnchor);
 	}
 
 	return "javascript:document." + formName + "." + curParam + ".value = '" + cur + "'; " + jsCall;

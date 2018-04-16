@@ -51,12 +51,13 @@
 		}
 		%>
 
-		<liferay-ui:search-container-column-text align="center">
+		<liferay-ui:search-container-column-text
+			align="center"
+		>
 			<aui:input data-mbThreadId="<%= userThread.getMbThreadId() %>" id='<%= "mbThread" + index++ %>' label="" name="mbThread" type="checkbox" />
 		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-user
-			cssClass="user-icon-lg"
 			showDetails="<%= false %>"
 			userId="<%= userId %>"
 		/>
@@ -67,7 +68,9 @@
 			<portlet:param name="mbThreadId" value="<%= String.valueOf(userThread.getMbThreadId()) %>" />
 		</portlet:renderURL>
 
-		<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+		<liferay-ui:search-container-column-text
+			colspan="<%= 2 %>"
+		>
 			<h5 class="text-default">
 
 				<%
@@ -125,5 +128,8 @@
 		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" />
+	<liferay-ui:search-iterator
+		displayStyle="descriptive"
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>

@@ -57,9 +57,11 @@ public class MulticastServerTool {
 
 			transport.connect();
 
+			InetAddress inetAddress = InetAddress.getLocalHost();
+
 			String msg = StringBundler.concat(
-				InetAddress.getLocalHost().getHostName(), ":",
-				String.valueOf(port), " heartbeat ");
+				inetAddress.getHostName(), ":", String.valueOf(port),
+				" heartbeat ");
 
 			int i = 0;
 

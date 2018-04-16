@@ -14,11 +14,11 @@
 
 package com.liferay.portal.scheduler.internal.verify;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.Props;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.scheduler.internal.configuration.SchedulerEngineHelperConfiguration;
 import com.liferay.portal.verify.VerifyProcess;
@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	enabled = false, immediate = true,
-	property = {"verify.process.name=com.liferay.portal.scheduler.internal.verify"},
+	property = "verify.process.name=com.liferay.portal.scheduler.internal.verify",
 	service = VerifyProcess.class
 )
 public class SchedulerHelperPropertiesVerifyProcess extends VerifyProcess {

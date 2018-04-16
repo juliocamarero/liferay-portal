@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.web.portlet.action;
 
-import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 
 import org.osgi.service.component.annotations.Component;
@@ -24,9 +24,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + AssetPublisherPortletKeys.RELATED_ASSETS
-	},
+	property = "javax.portlet.name=" + AssetPublisherPortletKeys.RELATED_ASSETS,
 	service = ConfigurationAction.class
 )
 public class RelatedAssetsConfigurationAction

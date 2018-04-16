@@ -14,7 +14,7 @@
 
 package com.liferay.frontend.editor.alloyeditor.web.internal.editor.configuration;
 
-import com.liferay.message.boards.kernel.model.MBThreadConstants;
+import com.liferay.message.boards.constants.MBThreadConstants;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigContributor;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Ambrín Chaudhary
  */
 @Component(
-	property = {"editor.name=alloyeditor_bbcode"},
+	property = "editor.name=alloyeditor_bbcode",
 	service = EditorConfigContributor.class
 )
 public class AlloyEditorBBCodeConfigContributor
@@ -75,7 +75,7 @@ public class AlloyEditorBBCodeConfigContributor
 
 		String removePlugins = jsonObject.getString("removePlugins");
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(4);
 
 		sb.append("bidi,colorbutton,colordialog,div,flash,font,forms,");
 		sb.append("indentblock,keystrokes,maximize,newpage,pagebreak,");
@@ -230,7 +230,7 @@ public class AlloyEditorBBCodeConfigContributor
 	protected JSONObject getToolbarsStylesSelectionsLinkJSONObject() {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		jsonObject.put("buttons", toJSONArray("['linkEdit']"));
+		jsonObject.put("buttons", toJSONArray("['linkEditBrowse']"));
 		jsonObject.put("name", "link");
 		jsonObject.put("test", "AlloyEditor.SelectionTest.link");
 
@@ -250,7 +250,7 @@ public class AlloyEditorBBCodeConfigContributor
 		jsonArray.put("underline");
 		jsonArray.put("ol");
 		jsonArray.put("ul");
-		jsonArray.put("link");
+		jsonArray.put("linkBrowse");
 		jsonArray.put("quote");
 
 		jsonObject.put("buttons", jsonArray);

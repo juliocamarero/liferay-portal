@@ -112,7 +112,7 @@ ShoppingOrder order = ShoppingOrderLocalServiceUtil.getLatestOrder(user.getUserI
 						<liferay-ui:message key="number" />:
 					</th>
 					<td>
-						<%= CreditCard.hide(order.getCcNumber()) %>
+						<%= ShoppingUtil.hideCardNumber(order.getCcNumber()) %>
 					</td>
 				</tr>
 				<tr>
@@ -229,7 +229,9 @@ ShoppingOrder order = ShoppingOrderLocalServiceUtil.getLatestOrder(user.getUserI
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 
 	<aui:input name="itemIds" type="hidden" value="<%= itemIds %>" />
@@ -302,14 +304,14 @@ ShoppingOrder order = ShoppingOrderLocalServiceUtil.getLatestOrder(user.getUserI
 	</div>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" value='<%= shoppingGroupServiceOverriddenConfiguration.usePayPal() ? "continue" : "finished" %>' />
+		<aui:button type="submit" value='<%= shoppingGroupServiceOverriddenConfiguration.usePayPal() ? "continue" : "finished" %>' />
 
 		<portlet:actionURL name="/shopping/checkout" var="checkoutURL">
 			<portlet:param name="mvcActionCommand" value="/shopping/checkout" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.CHECKOUT %>" />
 		</portlet:actionURL>
 
-		<aui:button cssClass="btn-lg" href="<%= checkoutURL.toString() %>" value="back" />
+		<aui:button href="<%= checkoutURL.toString() %>" value="back" />
 	</aui:button-row>
 </aui:form>
 

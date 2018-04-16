@@ -28,8 +28,8 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.util.axis.ServletUtil;
 import com.liferay.wsrp.exception.NoSuchProducerException;
+import com.liferay.wsrp.internal.util.ExtensionHelperUtil;
 import com.liferay.wsrp.model.WSRPProducer;
-import com.liferay.wsrp.util.ExtensionHelperUtil;
 
 import java.rmi.RemoteException;
 
@@ -42,6 +42,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import oasis.names.tc.wsrp.v2.intf.WSRP_v2_ServiceDescription_PortType;
 import oasis.names.tc.wsrp.v2.types.CookieProtocol;
@@ -151,8 +152,9 @@ public class V2ServiceDescriptionServiceImpl
 
 		HttpServletRequest request = ServletUtil.getRequest();
 
-		ServletContext servletContext =
-			request.getSession().getServletContext();
+		HttpSession session = request.getSession();
+
+		ServletContext servletContext = session.getServletContext();
 
 		String title = PortalUtil.getPortletTitle(
 			portlet, servletContext, LocaleUtil.getDefault());

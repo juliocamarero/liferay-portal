@@ -17,9 +17,10 @@ package com.liferay.asset.publisher.web.util;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
+import com.liferay.asset.publisher.constants.AssetPublisherWebKeys;
 import com.liferay.asset.publisher.web.display.context.AssetEntryResult;
 import com.liferay.asset.publisher.web.display.context.AssetPublisherDisplayContext;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -30,19 +31,13 @@ import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.rss.model.SyndContent;
+import com.liferay.rss.model.SyndEntry;
+import com.liferay.rss.model.SyndFeed;
+import com.liferay.rss.model.SyndLink;
 import com.liferay.rss.util.RSSUtil;
-
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.feed.synd.SyndLink;
-import com.sun.syndication.feed.synd.SyndLinkImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,7 +98,7 @@ public class AssetRSSUtil {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		SyndFeed syndFeed = new SyndFeedImpl();
+		SyndFeed syndFeed = SyndModelFactoryUtil.createSyndFeed();
 
 		syndFeed.setDescription(GetterUtil.getString(description, name));
 
@@ -112,13 +107,13 @@ public class AssetRSSUtil {
 		syndFeed.setEntries(syndEntries);
 
 		for (AssetEntry assetEntry : assetEntries) {
-			SyndEntry syndEntry = new SyndEntryImpl();
+			SyndEntry syndEntry = SyndModelFactoryUtil.createSyndEntry();
 
 			String author = PortalUtil.getUserName(assetEntry);
 
 			syndEntry.setAuthor(author);
 
-			SyndContent syndContent = new SyndContentImpl();
+			SyndContent syndContent = SyndModelFactoryUtil.createSyndContent();
 
 			syndContent.setType(RSSUtil.ENTRY_TYPE_DEFAULT);
 
@@ -145,7 +140,7 @@ public class AssetRSSUtil {
 			syndEntry.setPublishedDate(assetEntry.getPublishDate());
 			syndEntry.setTitle(assetEntry.getTitle(languageId, true));
 			syndEntry.setUpdatedDate(assetEntry.getModifiedDate());
-			syndEntry.setUri(syndEntry.getLink());
+			syndEntry.setUri(link);
 
 			syndEntries.add(syndEntry);
 		}
@@ -156,7 +151,7 @@ public class AssetRSSUtil {
 
 		syndFeed.setLinks(syndLinks);
 
-		SyndLink selfSyndLink = new SyndLinkImpl();
+		SyndLink selfSyndLink = SyndModelFactoryUtil.createSyndLink();
 
 		syndLinks.add(selfSyndLink);
 
@@ -166,7 +161,7 @@ public class AssetRSSUtil {
 
 		selfSyndLink.setRel("self");
 
-		SyndLink alternateSyndLink = new SyndLinkImpl();
+		SyndLink alternateSyndLink = SyndModelFactoryUtil.createSyndLink();
 
 		syndLinks.add(alternateSyndLink);
 
@@ -177,7 +172,7 @@ public class AssetRSSUtil {
 		syndFeed.setTitle(name);
 		syndFeed.setUri(feedURL);
 
-		return RSSUtil.export(syndFeed);
+		return RSSExporterUtil.export(syndFeed);
 	}
 
 	/**

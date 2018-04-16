@@ -81,9 +81,9 @@ for (String categoryKey : categoryKeys) {
 
 <c:if test="<%= showButtons %>">
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" primary="<%= true %>" type="submit" />
+		<aui:button primary="<%= true %>" type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= backURL %>" type="cancel" />
+		<aui:button href="<%= backURL %>" type="cancel" />
 	</aui:button-row>
 </c:if>
 
@@ -111,8 +111,6 @@ for (String categoryKey : categoryKeys) {
 				if (event.portletId === '<%= portletDisplay.getRootPortletId() %>') {
 					Liferay.detach('showTab', updateRedirectField);
 					Liferay.detach('destroyPortlet', clearFormNavigatorHandles);
-
-					Liferay.Store('<portlet:namespace /><%= id %>', null);
 				}
 			};
 

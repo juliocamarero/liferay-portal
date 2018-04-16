@@ -15,6 +15,7 @@
 package com.liferay.portal.jsonwebservice.action;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONSerializable;
 import com.liferay.portal.kernel.json.JSONSerializer;
@@ -24,7 +25,6 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionsManagerUtil
 import com.liferay.portal.kernel.util.CamelCaseUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -189,7 +189,9 @@ public class JSONWebServiceInvokerAction implements JSONWebServiceAction {
 		StringBuilder sb = new StringBuilder();
 
 		while (statement._parentStatement != null) {
-			String statementName = statement.getName().substring(1);
+			String statementName = statement.getName();
+
+			statementName = statementName.substring(1);
 
 			sb.insert(0, statementName + StringPool.PERIOD);
 
@@ -484,7 +486,7 @@ public class JSONWebServiceInvokerAction implements JSONWebServiceAction {
 			statement.setMethod(assignment.trim());
 		}
 		else {
-			String name = assignment.substring(0, x).trim();
+			String name = StringUtil.trim(assignment.substring(0, x));
 
 			int y = name.indexOf(StringPool.OPEN_BRACKET);
 
@@ -505,7 +507,7 @@ public class JSONWebServiceInvokerAction implements JSONWebServiceAction {
 
 			statement.setName(name);
 
-			statement.setMethod(assignment.substring(x + 1).trim());
+			statement.setMethod(StringUtil.trim(assignment.substring(x + 1)));
 		}
 
 		HashMap<String, Object> parameterMap = new HashMap<>(

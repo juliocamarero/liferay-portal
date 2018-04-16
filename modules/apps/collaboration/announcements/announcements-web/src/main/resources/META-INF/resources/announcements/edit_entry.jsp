@@ -86,7 +86,11 @@ if (portletTitleBasedNavigation) {
 
 				<aui:input name="title" type="hidden" />
 
-				<liferay-ui:input-editor contents="<%= content %>" editorName='<%= PropsUtil.get("editor.wysiwyg.portal-web.docroot.html.portlet.announcements.edit_entry.jsp") %>' name="contentEditor" />
+				<liferay-ui:input-editor
+					contents="<%= content %>"
+					editorName='<%= PropsUtil.get("editor.wysiwyg.portal-web.docroot.html.portlet.announcements.edit_entry.jsp") %>'
+					name="contentEditor"
+				/>
 
 				<aui:input name="content" type="hidden" />
 			</aui:fieldset>
@@ -155,9 +159,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" primary="<%= true %>" type="submit" />
+			<aui:button primary="<%= true %>" type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

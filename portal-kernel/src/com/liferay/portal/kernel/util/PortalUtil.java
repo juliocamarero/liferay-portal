@@ -1805,6 +1805,12 @@ public class PortalUtil {
 		return getPortal().getSiteAndCompanyGroupIds(themeDisplay);
 	}
 
+	public static Locale getSiteDefaultLocale(Group group)
+		throws PortalException {
+
+		return getPortal().getSiteDefaultLocale(group);
+	}
+
 	public static Locale getSiteDefaultLocale(long groupId)
 		throws PortalException {
 
@@ -2102,6 +2108,10 @@ public class PortalUtil {
 		return getPortal().isControlPanelPortlet(portletId, themeDisplay);
 	}
 
+	public static boolean isCustomPortletMode(PortletMode portletMode) {
+		return getPortal().isCustomPortletMode(portletMode);
+	}
+
 	public static boolean isForwardedSecure(HttpServletRequest request) {
 		return getPortal().isForwardedSecure(request);
 	}
@@ -2176,13 +2186,13 @@ public class PortalUtil {
 	}
 
 	public static boolean isSkipPortletContentProcesssing(
-			Group group, HttpServletRequest htpServletRequest,
+			Group group, HttpServletRequest httpServletRequest,
 			LayoutTypePortlet layoutTypePortlet, PortletDisplay portletDisplay,
 			String portletName)
 		throws Exception {
 
 		return getPortal().isSkipPortletContentProcessing(
-			group, htpServletRequest, layoutTypePortlet, portletDisplay,
+			group, httpServletRequest, layoutTypePortlet, portletDisplay,
 			portletName);
 	}
 

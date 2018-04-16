@@ -33,6 +33,7 @@ import com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleManagerUti
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.kernel.service.ExportImportConfigurationLocalServiceUtil;
 import com.liferay.exportimport.kernel.service.ExportImportLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
@@ -51,7 +52,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.test.LayoutTestUtil;
 import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
@@ -133,7 +133,7 @@ public abstract class BasePortletExportImportTestCase
 
 		exportParameterMap.put(
 			PortletDataHandlerKeys.DELETIONS,
-			new String[] {String.valueOf(true)});
+			new String[] {Boolean.TRUE.toString()});
 
 		exportImportPortlet(
 			getPortletId(), exportParameterMap, getImportParameterMap());
@@ -147,7 +147,7 @@ public abstract class BasePortletExportImportTestCase
 
 		importParameterMap.put(
 			PortletDataHandlerKeys.DELETIONS,
-			new String[] {String.valueOf(true)});
+			new String[] {Boolean.TRUE.toString()});
 
 		exportImportPortlet(
 			getPortletId(), exportParameterMap, importParameterMap);
@@ -237,7 +237,7 @@ public abstract class BasePortletExportImportTestCase
 
 		exportParameterMap.put(
 			PortletDataHandlerKeys.UPDATE_LAST_PUBLISH_DATE,
-			new String[] {String.valueOf(true)});
+			new String[] {Boolean.TRUE.toString()});
 		exportParameterMap.put(
 			"range",
 			new String[] {ExportImportDateUtil.RANGE_FROM_LAST_PUBLISH_DATE});
@@ -409,7 +409,8 @@ public abstract class BasePortletExportImportTestCase
 			ExportImportConfigurationLocalServiceUtil.
 				addDraftExportImportConfiguration(
 					user.getUserId(),
-					ExportImportConfigurationConstants.TYPE_PUBLISH_PORTLET,
+					ExportImportConfigurationConstants.
+						TYPE_PUBLISH_PORTLET_LOCAL,
 					settingsMap);
 
 		ExportImportThreadLocal.setPortletStagingInProcess(true);

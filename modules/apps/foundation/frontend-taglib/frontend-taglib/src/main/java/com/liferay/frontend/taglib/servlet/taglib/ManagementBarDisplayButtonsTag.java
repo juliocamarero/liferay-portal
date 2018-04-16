@@ -15,7 +15,7 @@
 package com.liferay.frontend.taglib.servlet.taglib;
 
 import com.liferay.frontend.taglib.internal.servlet.ServletContextUtil;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.portlet.PortletURL;
@@ -63,6 +63,8 @@ public class ManagementBarDisplayButtonsTag
 
 	@Override
 	protected void cleanUp() {
+		super.cleanUp();
+
 		_disabled = null;
 		_displayViews = null;
 		_portletURL = null;
@@ -105,7 +107,7 @@ public class ManagementBarDisplayButtonsTag
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
 			"liferay-frontend:management-bar-display-buttons:defaultViews",
-			_defaultViews);
+			_DEFAULT_VIEWS);
 		request.setAttribute(
 			"liferay-frontend:management-bar-display-buttons:disabled",
 			isDisabled());
@@ -126,10 +128,12 @@ public class ManagementBarDisplayButtonsTag
 
 	private static final boolean _CLEAN_UP_SET_ATTRIBUTES = true;
 
+	private static final String[] _DEFAULT_VIEWS =
+		{"icon", "descriptive", "list"};
+
 	private static final String _PAGE =
 		"/management_bar_display_buttons/page.jsp";
 
-	private final String[] _defaultViews = {"icon", "descriptive", "list"};
 	private Boolean _disabled;
 	private String[] _displayViews;
 	private PortletURL _portletURL;

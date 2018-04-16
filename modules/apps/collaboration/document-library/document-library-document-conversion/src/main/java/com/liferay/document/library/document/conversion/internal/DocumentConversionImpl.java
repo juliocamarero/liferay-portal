@@ -25,6 +25,7 @@ import com.artofsolving.jodconverter.openoffice.converter.StreamOpenOfficeDocume
 
 import com.liferay.document.library.document.conversion.internal.configuration.OpenOfficeConfiguration;
 import com.liferay.document.library.kernel.document.conversion.DocumentConversion;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -36,7 +37,6 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.SortedArrayList;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PropsUtil;
@@ -164,9 +164,7 @@ public class DocumentConversionImpl implements DocumentConversion {
 			if (ArrayUtil.contains(conversions, extension)) {
 				List<String> conversionsList = new ArrayList<>();
 
-				for (int i = 0; i < conversions.length; i++) {
-					String conversion = conversions[i];
-
+				for (String conversion : conversions) {
 					if (!conversion.equals(extension)) {
 						conversionsList.add(conversion);
 					}

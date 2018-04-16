@@ -136,11 +136,18 @@ renderResponse.setTitle(title);
 												editURL.setParameter("portletResource", String.valueOf(portlet.getPortletId()));
 												%>
 
-												<liferay-ui:icon iconCssClass="icon-edit" label="<%= true %>" message="change" url="<%= editURL.toString() %>" />
+												<liferay-ui:icon
+													iconCssClass="icon-edit"
+													label="<%= true %>"
+													message="change"
+													url="<%= editURL.toString() %>"
+												/>
 											</liferay-ui:search-container-column-text>
 										</liferay-ui:search-container-row>
 
-										<liferay-ui:search-iterator type="more" />
+										<liferay-ui:search-iterator
+											type="more"
+										/>
 									</liferay-ui:search-container>
 								</div>
 							</c:if>
@@ -182,11 +189,18 @@ renderResponse.setTitle(title);
 												editURL.setParameter("portletResource", String.valueOf(portlet.getPortletId()));
 												%>
 
-												<liferay-ui:icon iconCssClass="icon-edit" label="<%= true %>" message="change" url="<%= editURL.toString() %>" />
+												<liferay-ui:icon
+													iconCssClass="icon-edit"
+													label="<%= true %>"
+													message="change"
+													url="<%= editURL.toString() %>"
+												/>
 											</liferay-ui:search-container-column-text>
 										</liferay-ui:search-container-row>
 
-										<liferay-ui:search-iterator type="more" />
+										<liferay-ui:search-iterator
+											type="more"
+										/>
 									</liferay-ui:search-container>
 								</div>
 							</c:if>
@@ -204,9 +218,9 @@ renderResponse.setTitle(title);
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>

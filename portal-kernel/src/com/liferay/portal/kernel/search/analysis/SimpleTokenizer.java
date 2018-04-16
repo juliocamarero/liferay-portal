@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.search.analysis;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Arrays;
@@ -22,7 +22,10 @@ import java.util.List;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.portal.search.analysis.SimpleTokenizer}
  */
+@Deprecated
 public class SimpleTokenizer implements Tokenizer {
 
 	@Override

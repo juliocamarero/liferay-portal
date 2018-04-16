@@ -22,10 +22,16 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 FragmentCollection fragmentCollection = (FragmentCollection)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= FragmentCollectionPermission.contains(permissionChecker, fragmentCollection, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editFragmentCollectionURL">
-			<portlet:param name="mvcPath" value="/edit_fragment_collection.jsp" />
+			<portlet:param name="mvcRenderCommandName" value="/fragment/edit_fragment_collection" />
 			<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentCollection.getFragmentCollectionId()) %>" />
 		</portlet:renderURL>
 
@@ -52,8 +58,17 @@ FragmentCollection fragmentCollection = (FragmentCollection)row.getObject();
 		/>
 	</c:if>
 
+	<portlet:resourceURL id="/fragment/export_fragment_collections" var="exportFragmentCollectionsURL">
+		<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentCollection.getFragmentCollectionId()) %>" />
+	</portlet:resourceURL>
+
+	<liferay-ui:icon
+		message="export"
+		url="<%= exportFragmentCollectionsURL %>"
+	/>
+
 	<c:if test="<%= FragmentCollectionPermission.contains(permissionChecker, fragmentCollection, ActionKeys.DELETE) %>">
-		<portlet:actionURL name="deleteFragmentCollection" var="deleteFragmentCollectionURL">
+		<portlet:actionURL name="/fragment/delete_fragment_collection" var="deleteFragmentCollectionURL">
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentCollection.getFragmentCollectionId()) %>" />
 		</portlet:actionURL>

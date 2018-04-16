@@ -18,7 +18,6 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.kernel.service.ExportImportConfigurationLocalService;
-import com.liferay.exportimport.web.trash.ExportImportConfigurationTrashRenderer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.TrashedModel;
@@ -43,9 +42,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"model.class.name=com.liferay.exportimport.kernel.model.ExportImportConfiguration"
-	},
+	property = "model.class.name=com.liferay.exportimport.kernel.model.ExportImportConfiguration",
 	service = TrashHandler.class
 )
 @ProviderType

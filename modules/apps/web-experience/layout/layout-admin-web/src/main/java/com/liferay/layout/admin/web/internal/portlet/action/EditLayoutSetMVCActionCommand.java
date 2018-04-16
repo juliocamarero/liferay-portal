@@ -15,7 +15,7 @@
 package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
@@ -78,8 +78,6 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 			stagingGroupId, privateLayout, layoutSet.getSettingsProperties());
 
 		updateMergePages(actionRequest, liveGroupId);
-
-		updateRobots(actionRequest, liveGroupId, privateLayout);
 
 		updateSettings(
 			actionRequest, liveGroupId, stagingGroupId, privateLayout,
@@ -167,32 +165,6 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 			"mergeGuestPublicPages", String.valueOf(mergeGuestPublicPages));
 
 		_groupService.updateGroup(liveGroupId, liveGroup.getTypeSettings());
-	}
-
-	protected void updateRobots(
-			ActionRequest actionRequest, long liveGroupId,
-			boolean privateLayout)
-		throws Exception {
-
-		Group liveGroup = _groupLocalService.getGroup(liveGroupId);
-
-		UnicodeProperties typeSettingsProperties =
-			liveGroup.getTypeSettingsProperties();
-
-		String propertyName = "false-robots.txt";
-
-		if (privateLayout) {
-			propertyName = "true-robots.txt";
-		}
-
-		String robots = ParamUtil.getString(
-			actionRequest, "robots",
-			liveGroup.getTypeSettingsProperty(propertyName));
-
-		typeSettingsProperties.setProperty(propertyName, robots);
-
-		_groupService.updateGroup(
-			liveGroup.getGroupId(), typeSettingsProperties.toString());
 	}
 
 	protected void updateSettings(

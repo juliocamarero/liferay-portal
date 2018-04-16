@@ -16,12 +16,12 @@ package com.liferay.journal.content.web.internal.portlet;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.journal.constants.JournalContentPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalContentSearchLocalService;
-import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
-import com.liferay.journal.web.asset.JournalArticleAssetRendererFactory;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -44,7 +44,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.journal.model.JournalArticle"},
+	property = "model.class.name=com.liferay.journal.model.JournalArticle",
 	service = AddPortletProvider.class
 )
 public class JournalContentAddPortletProvider
@@ -72,17 +72,15 @@ public class JournalContentAddPortletProvider
 		AssetEntry assetEntry = _assetEntryLocalService.getEntry(
 			className, classPK);
 
-		JournalArticleAssetRendererFactory articleAssetRendererFactory =
-			(JournalArticleAssetRendererFactory)
-				AssetRendererFactoryRegistryUtil.
-					getAssetRendererFactoryByClassName(
-						JournalArticle.class.getName());
+		AssetRendererFactory<JournalArticle> articleAssetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClass(
+				JournalArticle.class);
 
-		JournalArticleAssetRenderer articleAssetRenderer =
-			(JournalArticleAssetRenderer)articleAssetRendererFactory.
-				getAssetRenderer(assetEntry.getClassPK());
+		AssetRenderer<JournalArticle> articleAssetRenderer =
+			articleAssetRendererFactory.getAssetRenderer(
+				assetEntry.getClassPK());
 
-		JournalArticle article = articleAssetRenderer.getArticle();
+		JournalArticle article = articleAssetRenderer.getAssetObject();
 
 		portletPreferences.setValue("articleId", article.getArticleId());
 		portletPreferences.setValue(
@@ -108,32 +106,9 @@ public class JournalContentAddPortletProvider
 	}
 
 	@Reference
-	protected void setAssetEntryLocalService(
-		AssetEntryLocalService assetEntryLocalService) {
-
-		_assetEntryLocalService = assetEntryLocalService;
-	}
+	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
-	protected void setJournalContentSearchLocal(
-		JournalContentSearchLocalService journalContentSearchLocal) {
-
-		_journalContentSearchLocal = journalContentSearchLocal;
-	}
-
-	protected void unsetAssetEntryLocalService(
-		AssetEntryLocalService assetEntryLocalService) {
-
-		_assetEntryLocalService = null;
-	}
-
-	protected void unsetJournalContentSearchLocal(
-		JournalContentSearchLocalService journalContentSearchLocal) {
-
-		_journalContentSearchLocal = null;
-	}
-
-	private AssetEntryLocalService _assetEntryLocalService;
 	private JournalContentSearchLocalService _journalContentSearchLocal;
 
 }

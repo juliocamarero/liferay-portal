@@ -14,7 +14,8 @@
 
 package com.liferay.sync.service.persistence.impl;
 
-import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -27,8 +28,8 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.sync.model.SyncDLObject;
 import com.liferay.sync.model.impl.SyncDLObjectImpl;
 import com.liferay.sync.service.persistence.SyncDLObjectFinder;
@@ -61,7 +62,7 @@ public class SyncDLObjectFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(getClass(), FIND_BY_TYPE_PKS);
+			String sql = _customSQL.get(getClass(), FIND_BY_TYPE_PKS);
 
 			sql = StringUtil.replace(
 				sql, new String[] {"[$TYPE_PKS$]", "[$ROLE_IDS_OR_OWNER_ID$]"},
@@ -98,7 +99,7 @@ public class SyncDLObjectFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(getClass(), FIND_BY_MODIFIED_TIME);
+			String sql = _customSQL.get(getClass(), FIND_BY_MODIFIED_TIME);
 
 			if (modifiedTime <= 0) {
 				sql = StringUtil.replace(
@@ -118,7 +119,7 @@ public class SyncDLObjectFinderImpl
 			}
 
 			if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
-				sql = CustomSQLUtil.removeOrderBy(sql);
+				sql = _customSQL.removeOrderBy(sql);
 			}
 
 			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
@@ -183,7 +184,7 @@ public class SyncDLObjectFinderImpl
 
 		for (int i = 0; i < typePKs.length; i++) {
 			sb.append("CAST_TEXT(");
-			sb.append(String.valueOf(typePKs[i]).trim());
+			sb.append(StringUtil.trim(String.valueOf(typePKs[i])));
 			sb.append(StringPool.CLOSE_PARENTHESIS);
 
 			if ((i + 1) != typePKs.length) {
@@ -195,5 +196,8 @@ public class SyncDLObjectFinderImpl
 
 		return sb.toString();
 	}
+
+	@ServiceReference(type = CustomSQL.class)
+	private CustomSQL _customSQL;
 
 }

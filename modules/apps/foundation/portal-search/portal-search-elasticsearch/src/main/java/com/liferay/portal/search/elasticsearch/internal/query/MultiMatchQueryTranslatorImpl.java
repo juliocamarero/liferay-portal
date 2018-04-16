@@ -14,10 +14,9 @@
 
 package com.liferay.portal.search.elasticsearch.internal.query;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.generic.MultiMatchQuery;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.elasticsearch.query.MultiMatchQueryTranslator;
 
 import java.util.Map;
 

@@ -14,8 +14,8 @@
 
 package com.liferay.asset.publisher.web.servlet.taglib.ui;
 
-import com.liferay.asset.publisher.web.constants.AssetPublisherConstants;
-import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.asset.publisher.constants.AssetPublisherConstants;
+import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -33,7 +33,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  */
 @Component(
-	property = {"form.navigator.entry.order:Integer=400"},
+	property = "form.navigator.entry.order:Integer=400",
 	service = FormNavigatorEntry.class
 )
 public class ScopeFormNavigatorEntry

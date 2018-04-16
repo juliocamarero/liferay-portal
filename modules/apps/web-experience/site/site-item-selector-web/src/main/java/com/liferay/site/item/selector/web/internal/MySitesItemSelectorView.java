@@ -52,7 +52,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Julio Camarero
  */
 @Component(
-	property = {"item.selector.view.order:Integer=300"},
+	property = "item.selector.view.order:Integer=300",
 	service = ItemSelectorView.class
 )
 public class MySitesItemSelectorView
@@ -77,11 +77,6 @@ public class MySitesItemSelectorView
 		ResourceBundle resourceBundle = _portal.getResourceBundle(locale);
 
 		return ResourceBundleUtil.getString(resourceBundle, "my-sites");
-	}
-
-	@Override
-	public boolean isShowSearch() {
-		return true;
 	}
 
 	@Override

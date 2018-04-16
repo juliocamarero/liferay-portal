@@ -14,10 +14,10 @@
 
 package com.liferay.weather.web.internal.portlet.action;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.weather.web.internal.constants.WeatherPortletKeys;
 
@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + WeatherPortletKeys.WEATHER},
+	property = "javax.portlet.name=" + WeatherPortletKeys.WEATHER,
 	service = ConfigurationAction.class
 )
 public class WeatherConfigurationAction extends DefaultConfigurationAction {

@@ -16,6 +16,7 @@ package com.liferay.portal.security.auth;
 
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.auth.AuthTokenWhitelistUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -33,7 +34,6 @@ import com.liferay.portal.security.auth.bundle.authtokenwhitelistutil.TestPortal
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.SyntheticBundleRule;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.PortletURLImpl;
 
 import java.util.Set;
 
@@ -70,6 +70,7 @@ public class AuthTokenWhitelistUtilTest {
 			AuthTokenWhitelistUtil.getPortletCSRFWhitelistActions();
 
 		Assert.assertTrue(
+			portletCSRFWhitelistActions.toString(),
 			portletCSRFWhitelistActions.contains(
 				TestAuthTokenIgnoreActions.TEST_AUTH_TOKEN_IGNORE_ACTION_URL));
 	}
@@ -87,6 +88,7 @@ public class AuthTokenWhitelistUtilTest {
 				PropsValues.AUTH_TOKEN_IGNORE_ACTIONS) {
 
 			Assert.assertTrue(
+				portletCSRFWhitelistActions.toString(),
 				portletCSRFWhitelistActions.contains(authTokenIgnoreAction));
 		}
 	}
@@ -101,6 +103,7 @@ public class AuthTokenWhitelistUtilTest {
 			AuthTokenWhitelistUtil.getPortletCSRFWhitelist();
 
 		Assert.assertTrue(
+			portletCSRFWhitelist.toString(),
 			portletCSRFWhitelist.contains(
 				TestAuthTokenIgnorePortlets.
 					TEST_AUTH_TOKEN_IGNORE_PORTLETS_URL));
@@ -119,6 +122,7 @@ public class AuthTokenWhitelistUtilTest {
 				PropsValues.AUTH_TOKEN_IGNORE_PORTLETS) {
 
 			Assert.assertTrue(
+				portletCSRFWhitelist.toString(),
 				portletCSRFWhitelist.contains(authTokenIgnoreAction));
 		}
 	}
@@ -136,7 +140,9 @@ public class AuthTokenWhitelistUtilTest {
 			TestPortalAddDefaultResourceCheckWhitelistActions.
 				TEST_PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST_ACTIONS_URL;
 
-		Assert.assertTrue(portletInvocationWhitelistActions.contains(action));
+		Assert.assertTrue(
+			portletInvocationWhitelistActions.toString(),
+			portletInvocationWhitelistActions.contains(action));
 	}
 
 	/**
@@ -153,6 +159,7 @@ public class AuthTokenWhitelistUtilTest {
 
 		for (String action : actions) {
 			Assert.assertTrue(
+				portletInvocationWhitelistActions.toString(),
 				portletInvocationWhitelistActions.contains(action));
 		}
 	}
@@ -170,7 +177,9 @@ public class AuthTokenWhitelistUtilTest {
 			TestPortalAddDefaultResourceCheckWhitelist.
 				TEST_PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST_URL;
 
-		Assert.assertTrue(portletInvocationWhitelist.contains(action));
+		Assert.assertTrue(
+			portletInvocationWhitelist.toString(),
+			portletInvocationWhitelist.contains(action));
 	}
 
 	/**
@@ -186,7 +195,9 @@ public class AuthTokenWhitelistUtilTest {
 			PropsValues.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST;
 
 		for (String action : actions) {
-			Assert.assertTrue(portletInvocationWhitelist.contains(action));
+			Assert.assertTrue(
+				portletInvocationWhitelist.toString(),
+				portletInvocationWhitelist.contains(action));
 		}
 	}
 
@@ -309,7 +320,7 @@ public class AuthTokenWhitelistUtilTest {
 
 	@Test
 	public void testIsPortletURLCSRFWhitelistedForMVCActionCommand() {
-		LiferayPortletURL liferayPortletURL = new PortletURLImpl(
+		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(
 			new MockHttpServletRequest(), TestMVCActionCommand.TEST_PORTLET_ID,
 			0, PortletRequest.ACTION_PHASE);
 
@@ -324,7 +335,7 @@ public class AuthTokenWhitelistUtilTest {
 
 	@Test
 	public void testIsPortletURLInvocationWhitelistedForMVCActionCommand() {
-		LiferayPortletURL liferayPortletURL = new PortletURLImpl(
+		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(
 			new MockHttpServletRequest(), TestMVCActionCommand.TEST_PORTLET_ID,
 			0, PortletRequest.ACTION_PHASE);
 
@@ -339,7 +350,7 @@ public class AuthTokenWhitelistUtilTest {
 
 	@Test
 	public void testIsPortletURLInvocationWhitelistedForMVCRenderCommand() {
-		LiferayPortletURL liferayPortletURL = new PortletURLImpl(
+		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(
 			new MockHttpServletRequest(), TestMVCRenderCommand.TEST_PORTLET_ID,
 			0, PortletRequest.RENDER_PHASE);
 
@@ -353,7 +364,7 @@ public class AuthTokenWhitelistUtilTest {
 
 	@Test
 	public void testIsPortletURLInvocationWhitelistedForMVCResourceCommand() {
-		LiferayPortletURL liferayPortletURL = new PortletURLImpl(
+		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(
 			new MockHttpServletRequest(),
 			TestMVCResourceCommand.TEST_PORTLET_ID, 0,
 			PortletRequest.RESOURCE_PHASE);

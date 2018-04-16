@@ -11,37 +11,74 @@
  * Prints the DDM form date field.
  */
 {template .render}
-	{@param displayValue: string}
 	{@param label: string}
 	{@param name: string}
+	{@param pathThemeImages: string}
 	{@param readOnly: bool}
-	{@param? required: bool}
 	{@param showLabel: bool}
-	{@param? tip: string}
 	{@param value: string}
 	{@param visible: bool}
+	{@param? formattedValue: string}
+	{@param? predefinedValue: string}
+	{@param? required: bool}
+	{@param? tip: string}
 
-	<div class="form-group{$visible ? '' : ' hide'} liferay-ddm-form-field-date" data-fieldname="{$name}">
-		{if $showLabel}
-			<label class="control-label{$readOnly ? ' disabled' : ''}" for="{$name}">
-				{$label}
-
-				{if $required}
-					<span class="icon-asterisk text-warning"></span>
-				{/if}
-			</label>
-
-			<p class="liferay-ddm-form-field-tip">{$tip ? $tip: ''}</p>
+	{let $formGroupClass kind="text"}
+		form-group
+		{if not $visible}
+			{sp}hide
 		{/if}
 
+		{sp}liferay-ddm-form-field-date
+	{/let}
+
+	<div class="{$formGroupClass}" data-fieldname="{$name}">
+		{let $labelAttributes kind="attributes"}
+			for="{$name}"
+		{/let}
+
+		<label {$labelAttributes}>
+			{if $showLabel}
+				{$label}{sp}
+			{/if}
+
+			{if $required}
+				<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+					<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#asterisk" />
+				</svg>
+			{/if}
+		</label>
+
+		{if $showLabel}
+			{if $tip}
+				<span class="form-text">{$tip}</span>
+			{/if}
+		{/if}
+
+		{let $displayValue: $formattedValue ? $formattedValue : $predefinedValue /}
+
 		<div class="input-group input-group-container">
-			<input
-				aria-label="{$label}"
-				class="form-control trigger{if $readOnly}-readonly{/if}"
-				{if $readOnly}disabled{/if}
+			{let $inputAttributes kind="attributes"}
+				class="form-control"
+
+				{if $label}
+					aria-label="{$label}"
+				{/if}
+
+				{if $displayValue}
+					value="{$displayValue}"
+				{/if}
+
+				{if $readOnly}
+					disabled
+				{/if}
+
+				maxlength="10"
+
 				type="text"
-				value="{$displayValue}"
-			/>
+			{/let}
+
+			<input {$inputAttributes} />
 
 			<input
 				name="{$name}"

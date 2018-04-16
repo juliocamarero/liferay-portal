@@ -1,0 +1,43 @@
+.navbar-top {
+	padding-bottom: 0.907rem;
+	padding-top: 0.907rem;
+}
+
+.navbar-classic {
+	background-color: #FFF;
+	border-bottom: 1px solid $light-color;
+
+	.navbar-blank {
+		@include media-query(null, $screen-xs-max) {
+			margin-top: 2rem;
+		}
+	}
+
+	.navbar-form {
+		padding: 0;
+
+		.field-wrapper {
+			right: 0;
+			top: 0;
+
+			.lfr-icon-item {
+				color: #6B6C7E;
+			}
+		}
+	}
+
+	.portlet-navigation {
+		margin-left: auto;
+	}
+
+	.logo:hover {
+		text-decoration: none;
+	}
+
+	.nav-link {
+		color: #6B6C7E;
+		font-size: 0.8rem;
+		font-weight: 600;
+		letter-spacing: 0.035rem;
+	}
+}

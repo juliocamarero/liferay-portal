@@ -16,9 +16,9 @@ package com.liferay.portal.workflow.kaleo.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
@@ -33,6 +33,16 @@ import com.liferay.portal.workflow.kaleo.service.KaleoNodeLocalServiceUtil;
 public class KaleoDefinitionVersionImpl extends KaleoDefinitionVersionBaseImpl {
 
 	public KaleoDefinitionVersionImpl() {
+	}
+
+	@Override
+	public KaleoDefinition fetchKaleoDefinition() {
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(getCompanyId());
+
+		return KaleoDefinitionLocalServiceUtil.fetchKaleoDefinition(
+			getName(), serviceContext);
 	}
 
 	@Override

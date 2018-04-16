@@ -14,8 +14,6 @@
 
 package com.liferay.portal.monitoring.internal.statistics;
 
-import com.liferay.portal.monitoring.statistics.Statistics;
-
 /**
  * @author Rajesh Thiagarajan
  * @author Brian Wing Shun Chan
@@ -24,6 +22,7 @@ public class BaseStatistics implements Statistics {
 
 	public BaseStatistics(String name) {
 		_name = name;
+
 		_startTime = System.currentTimeMillis();
 	}
 

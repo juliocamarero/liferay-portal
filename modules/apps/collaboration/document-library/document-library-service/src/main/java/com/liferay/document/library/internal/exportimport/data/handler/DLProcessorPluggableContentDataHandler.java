@@ -28,9 +28,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"model.class.name=com.liferay.portal.kernel.repository.model.FileEntry"
-	},
+	property = "model.class.name=com.liferay.portal.kernel.repository.model.FileEntry",
 	service = DLPluggableContentDataHandler.class
 )
 public class DLProcessorPluggableContentDataHandler
@@ -67,7 +65,7 @@ public class DLProcessorPluggableContentDataHandler
 	}
 
 	/**
-	 * @see com.liferay.document.library.web.lar.DLPortletDataHandler#NAMESPACE
+	 * @see com.liferay.document.library.web.internal.lar.DLPortletDataHandler#NAMESPACE
 	 */
 	private static final String _DL_PORTLET_DATA_HANDLER_NAMESPACE =
 		"document_library";

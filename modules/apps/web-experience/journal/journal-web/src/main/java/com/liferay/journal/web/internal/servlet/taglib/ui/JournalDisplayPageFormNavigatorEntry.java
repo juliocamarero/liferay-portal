@@ -14,8 +14,7 @@
 
 package com.liferay.journal.web.internal.servlet.taglib.ui;
 
-import com.liferay.layout.item.selector.web.PrivateLayoutsItemSelectorView;
-import com.liferay.layout.item.selector.web.PublicLayoutsItemSelectorView;
+import com.liferay.item.selector.ItemSelectorView;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 
 import javax.servlet.ServletContext;
@@ -27,7 +26,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  */
 @Component(
-	property = {"form.navigator.entry.order:Integer=40"},
+	property = "form.navigator.entry.order:Integer=40",
 	service = FormNavigatorEntry.class
 )
 public class JournalDisplayPageFormNavigatorEntry
@@ -38,14 +37,14 @@ public class JournalDisplayPageFormNavigatorEntry
 		return "display-page";
 	}
 
-	@Reference(unbind = "-")
+	@Reference(target = "(view=private)", unbind = "-")
 	public void setPrivateLayoutsItemSelectorView(
-		PrivateLayoutsItemSelectorView privateLayoutsItemSelectorView) {
+		ItemSelectorView itemSelectorView) {
 	}
 
-	@Reference(unbind = "-")
+	@Reference(target = "(view=public)", unbind = "-")
 	public void setPublicLayoutsItemSelectorView(
-		PublicLayoutsItemSelectorView publicLayoutsItemSelectorView) {
+		ItemSelectorView itemSelectorView) {
 	}
 
 	@Override

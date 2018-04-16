@@ -10,19 +10,99 @@
 	<short-name>liferay-staging</short-name>
 	<uri>http://liferay.com/tld/staging</uri>
 	<tag>
+		<description>Renders the UI section for an alert.</description>
+		<name>alert</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.AlertTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Whether the alert is dismissible. The default value is <![CDATA[<code>false</code>]]>.</description>
+			<name>dismissible</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether the alert is fluid. The default value is <![CDATA[<code>false</code>]]>.</description>
+			<name>fluid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>The alert's type. Available alert types include <![CDATA[<code>ERROR</code>]]>, <![CDATA[<code>INFO</code>]]>, <![CDATA[<code>SUCCESS</code>]]>, and <![CDATA[<code>WARNING</code>]]>. The default value is <![CDATA[<code>INFO</code>]]>.</description>
+			<name>type</name>
+			<required>true</required>
+			<type>com.liferay.staging.taglib.servlet.taglib.AlertType</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders a checkbox designed specifically for Staging screens.</description>
+		<name>checkbox</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.CheckboxTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Whether the checkbox is checked or not. Default is not checked.</description>
+			<name>checked</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The language key of the checkbox's description text. It will be displayed after the label.</description>
+			<name>description</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Whether the checkbox is disabled or not. Default is enabled.</description>
+			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The id of the input in the html. It will be added to the portlet id when using as the dom id.</description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The language key of the checkbox's label.</description>
+			<name>label</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The name of the input in the html.</description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The language key of the checkbox's suggestion text. It will be displayed after the label.</description>
+			<name>suggestion</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The language key of the checkbox's warning text. It will be displayed after the suggestion.</description>
+			<name>warning</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<description>Renders the UI section for an <![CDATA[<code>exportImportConfiguration</code>]]> object's basic information.</description>
 		<name>configuration-header</name>
 		<tag-class>com.liferay.staging.taglib.servlet.taglib.ConfigurationHeaderTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>The <![CDATA[<code>exportImportConfiguration</code>]]> UI to display.</description>
+			<description>The Export/Import Configuration UI to display.</description>
 			<name>exportImportConfiguration</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>com.liferay.exportimport.kernel.model.ExportImportConfiguration</type>
 		</attribute>
 		<attribute>
-			<description>The label for the rendered fieldset.</description>
+			<description>The rendered fieldset's label.</description>
 			<name>label</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -47,7 +127,7 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The ID of the <![CDATA[<code>exportImportConfiguration</code>]]>. If the <![CDATA[<code>exportImportConfigurationId</code>]]> is valid, the content settings are used from the corresponding <![CDATA[<code>exportImportConfiguration</code>]]>.</description>
+			<description>The export/import configuration's ID. If the ID is valid, the content settings are used from the corresponding configuration.</description>
 			<name>exportImportConfigurationId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -61,7 +141,7 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The type of staging to be used. The possible values for the staging type are <![CDATA[<code>publish_to_live</code>]]> or <![CDATA[<code>publish_to_remote</code>]]>.</description>
+			<description>The staging type to be used. The possible values for the staging type are <![CDATA[<code>publish_to_live</code>]]> or <![CDATA[<code>publish_to_remote</code>]]>.</description>
 			<name>type</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -74,7 +154,7 @@
 		<tei-class>com.liferay.staging.taglib.servlet.taglib.DefineObjectsTei</tei-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description>The ID of the portlet which, when defined, is used to extend setup information with portlet specific information.</description>
+			<description>The portlet's ID which, when defined, is used to extend setup information with portlet specific information.</description>
 			<name>portletId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -99,7 +179,7 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The ID of the <![CDATA[<code>exportImportConfiguration</code>]]>. If the <![CDATA[<code>exportImportConfigurationId</code>]]> is valid, the content settings are used from the corresponding <![CDATA[<code>exportImportConfiguration</code>]]>.</description>
+			<description>The export/import configuration's ID. If the ID is valid, the content settings are used from the corresponding configuration.</description>
 			<name>exportImportConfigurationId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -107,73 +187,29 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Displays the group name suffixed with <![CDATA[<code>(Staging)</code>]]> (e.g., Test (Staging)). This is useful for distinguishing a site as a staged group.</description>
 		<name>descriptive-name</name>
 		<tag-class>com.liferay.staging.taglib.servlet.taglib.DescriptiveNameTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<description>The group the descriptive name is being display for.</description>
 			<name>group</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 	<tag>
-		<description>Renders a menu item for the Export Entity screen's UI.</description>
-		<name>export-entity</name>
-		<tag-class>com.liferay.staging.taglib.servlet.taglib.ExportEntityTag</tag-class>
-		<body-content>JSP</body-content>
+		<description>Renders the incomplete processing message for publication.</description>
+		<name>incomplete-process-message</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.IncompleteProcessMessageTag</tag-class>
+		<body-content>empty</body-content>
 		<attribute>
-			<description>The className of the entity that will be exported. Either className or classNameId should be passed.</description>
-			<name>className</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>The classNameId of the entity that will be exported. Either className or classNameId should be passed.</description>
-			<name>classNameId</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>long</type>
-		</attribute>
-		<attribute>
-			<description>The classPK of the entity that will be exported.</description>
-			<name>classPK</name>
+			<description>Whether the publication is local.</description>
+			<name>localPublishing</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>long</type>
+			<type>boolean</type>
 		</attribute>
-	</tag>
-	<tag>
-		<description>Renders a menu item for the Export/Publish Entity screen's UI.</description>
-		<name>export-import-entity-management-bar-button</name>
-		<tag-class>com.liferay.staging.taglib.servlet.taglib.ExportImportEntityManagementBarButtonTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>cmd</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>searchContainerMappingId</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<description>Adds a search container mapping to the DOM required by the Export/Import Entity Management Bar Button tag library.</description>
-		<name>export-import-entity-search-container-mapping</name>
-		<tag-class>com.liferay.staging.taglib.servlet.taglib.ExportImportEntitySearchContainerMappingTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>searchContainerMappingId</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<description>Renders a menu item for the Import Entity screen's UI.</description>
-		<name>import-entity</name>
-		<tag-class>com.liferay.staging.taglib.servlet.taglib.ImportEntityTag</tag-class>
-		<body-content>JSP</body-content>
 	</tag>
 	<tag>
 		<description>Renders a <![CDATA[<code>Navbar</code>]]> containing a staging menu with page versioning information, if available.</description>
@@ -240,7 +276,7 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The ID of the <![CDATA[<code>exportImportConfiguration</code>]]>. If the <![CDATA[<code>exportImportConfigurationId</code>]]> is valid, the content settings are used from the corresponding <![CDATA[<code>exportImportConfiguration</code>]]>.</description>
+			<description>The export/import configuration's ID. If the ID is valid, the content settings are used from the corresponding configuration.</description>
 			<name>exportImportConfigurationId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -266,14 +302,14 @@
 		<tag-class>com.liferay.staging.taglib.servlet.taglib.PortletListTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Whether to disable all the rendered inputs on the screen</description>
+			<description>Whether to disable all the rendered inputs on the screen.</description>
 			<name>disableInputs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The ID of the <![CDATA[<code>exportImportConfiguration</code>]]>. If the <![CDATA[<code>exportImportConfigurationId</code>]]> is valid, the content settings are used from the corresponding <![CDATA[<code>exportImportConfiguration</code>]]>.</description>
+			<description>The export/import configuration's ID. If the ID is valid, the content settings are used from the corresponding configuration.</description>
 			<name>exportImportConfigurationId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -301,6 +337,283 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>Renders a labeled date for a publishing process.</description>
+		<name>process-date</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessDateTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The date to display.</description>
+			<name>date</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Date</type>
+		</attribute>
+		<attribute>
+			<description>The display date label's language key.</description>
+			<name>labelKey</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Whether the title is for a list view or detail view.</description>
+			<name>listView</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the process duration information for a publishing process.</description>
+		<name>process-duration</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessDurationTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task for the publishing process.</description>
+			<name>backgroundTask</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.backgroundtask.BackgroundTask</type>
+		</attribute>
+		<attribute>
+			<description>Whether the title is for a list view or detail view.</description>
+			<name>listView</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders different error messages the publishing process.</description>
+		<name>process-error</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessErrorTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Whether AuthException should be displayed.</description>
+			<name>authException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether DuplicateLockException should be displayed.</description>
+			<name>duplicateLockException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether IllegalArgumentException should be displayed.</description>
+			<name>illegalArgumentException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether LayoutPrototypeException should be displayed.</description>
+			<name>layoutPrototypeException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether NoSuchGroup, NoSuchLayout, NoSuchRoleException should be displayed.</description>
+			<name>noSuchExceptions</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether RemoteExportException should be displayed.</description>
+			<name>remoteExportException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether RemoteOptionsException should be displayed.</description>
+			<name>remoteOptionsException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether SystemException should be displayed.</description>
+			<name>systemException</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the status information for an in-progress publishing process.</description>
+		<name>process-in-progress</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessInProgressTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task for the publishing process.</description>
+			<name>backgroundTask</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.backgroundtask.BackgroundTask</type>
+		</attribute>
+		<attribute>
+			<description>Whether the background task is displayed in list view or detail view. Default is false (detail view).</description>
+			<name>listView</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders information about the publishing process in descriptive mode.</description>
+		<name>process-info</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task for the publishing process.</description>
+			<name>backgroundTask</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.backgroundtask.BackgroundTask</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders a process list screen for the staging publication.</description>
+		<name>process-list</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessListTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The row splitter for the search container. It should implement <![CDATA[<code>ResultRowSplitter</code>]]>.</description>
+			<name>resultRowSplitter</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.dao.search.ResultRowSplitter</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the kebab menu for a staging process list item.</description>
+		<name>process-list-menu</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessListMenuTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task for the publishing process.</description>
+			<name>backgroundTask</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.backgroundtask.BackgroundTask</type>
+		</attribute>
+		<attribute>
+			<description>Whether the publication is local.</description>
+			<name>localPublishing</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the detailed process message.</description>
+		<name>process-message-task-details</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessMessageTaskDetailsTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task's ID.</description>
+			<name>backgroundTaskId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>long</type>
+		</attribute>
+		<attribute>
+			<description>The background task's status message (e.g., <![CDATA[<code>backgroundTask.getStatusMessage()</code>]]>).</description>
+			<name>backgroundTaskStatusMessage</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The CSS class for the link to the detailed message.</description>
+			<name>linkClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the start date of a publishing process.</description>
+		<name>process-start-date</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessStartDateTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task for the publishing process.</description>
+			<name>backgroundTask</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.backgroundtask.BackgroundTask</type>
+		</attribute>
+		<attribute>
+			<description>Whether the title is for a list view or detail view.</description>
+			<name>listView</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the short status information for a publishing process.</description>
+		<name>process-status</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessStatusTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task's status (e.g., <![CDATA[<code>backgroundTask.getStatus()</code>]]>).</description>
+			<name>backgroundTaskStatus</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
+		</attribute>
+		<attribute>
+			<description>The background task's status label (e.g., <![CDATA[<code>backgroundTask.getStatusLabel()</code>]]>).</description>
+			<name>backgroundTaskStatusLabel</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>The CSS class for the link to the detailed message.</description>
+			<name>linkClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders a link to the process' summary. It should be used within a <![CDATA[<code>process-list-menu</code>]]>.</description>
+		<name>process-summary-link</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessSummaryLinkTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background tasks ID.</description>
+			<name>backgroundTaskId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>long</type>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Renders the process title information for a publishing process.</description>
+		<name>process-title</name>
+		<tag-class>com.liferay.staging.taglib.servlet.taglib.ProcessTitleTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The background task for the publishing process.</description>
+			<name>backgroundTask</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.portal.kernel.backgroundtask.BackgroundTask</type>
+		</attribute>
+		<attribute>
+			<description>Whether the title is for a list view or detail view.</description>
+			<name>listView</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+	<tag>
 		<description>Renders the remote site options.</description>
 		<name>remote-options</name>
 		<tag-class>com.liferay.staging.taglib.servlet.taglib.RemoteOptionsTag</tag-class>
@@ -313,7 +626,7 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The ID of the <![CDATA[<code>exportImportConfiguration</code>]]>. If the <![CDATA[<code>exportImportConfigurationId</code>]]> is valid, the content settings are used from the corresponding <![CDATA[<code>exportImportConfiguration</code>]]>.</description>
+			<description>The export/import configuration's ID. If the ID is valid, the content settings are used from the corresponding configuration.</description>
 			<name>exportImportConfigurationId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -346,7 +659,7 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>The ID of the <![CDATA[<code>exportImportConfiguration</code>]]>. If the <![CDATA[<code>exportImportConfigurationId</code>]]> is valid, the content settings are used from the corresponding <![CDATA[<code>exportImportConfiguration</code>]]>.</description>
+			<description>The export/import configuration's ID. If the ID is valid, the content settings are used from the corresponding configuration.</description>
 			<name>exportImportConfigurationId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -374,18 +687,18 @@
 		</attribute>
 	</tag>
 	<tag>
-		<description>Displays a badge UI element on the screen with simple publication information, indicating whether a staged model has been published or not.</description>
+		<description>Displays a badge UI element on the screen with simple publication information, indicating whether a staged model has been published.</description>
 		<name>status</name>
 		<tag-class>com.liferay.staging.taglib.servlet.taglib.StatusTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>The CSS class to be used for formatting the badge and tag displays.</description>
+			<description>The CSS class to use for formatting the badge and tag displays.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The staged model to be used to display the publishing information.</description>
+			<description>The staged model to use to display the publishing information.</description>
 			<name>stagedModel</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>

@@ -45,8 +45,6 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 
 SearchContainer rulesSearchContainer = new SearchContainer(renderRequest, portletURL, null, "no-classification-rules-are-configured-for-this-device-family");
 
-rulesSearchContainer.setEmptyResultsMessageCssClass("taglib-empty-result-message-header-has-plus-btn");
-
 String orderByCol = ParamUtil.getString(request, "orderByCol", "create-date");
 
 rulesSearchContainer.setOrderByCol(orderByCol);
@@ -76,13 +74,21 @@ portletDisplay.setURLBack(backURL);
 renderResponse.setTitle(ruleGroup.getName(locale));
 %>
 
-<aui:nav-bar markupView="lexicon">
-	<portlet:renderURL var="mainURL" />
-
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item href="<%= mainURL.toString() %>" label="classification-rules" selected="<%= true %>" />
-	</aui:nav>
-</aui:nav-bar>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(renderResponse.createRenderURL());
+						navigationItem.setLabel(LanguageUtil.get(request, "classification-rules"));
+					});
+			}
+		}
+	%>"
+/>
 
 <liferay-frontend:management-bar
 	disabled="<%= rulesCount <= 0 %>"
@@ -98,6 +104,21 @@ renderResponse.setTitle(ruleGroup.getName(locale));
 			portletURL="<%= displayStyleURL %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
+
+		<liferay-portlet:renderURL var="addURL">
+			<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
+			<portlet:param name="redirect" value="<%= portletURL.toString() %>" />
+			<portlet:param name="ruleGroupId" value="<%= String.valueOf(ruleGroupId) %>" />
+		</liferay-portlet:renderURL>
+
+		<liferay-frontend:add-menu
+			inline="<%= true %>"
+		>
+			<liferay-frontend:add-menu-item
+				title='<%= LanguageUtil.get(resourceBundle, "add-classification-rule") %>'
+				url="<%= addURL.toString() %>"
+			/>
+		</liferay-frontend:add-menu>
 	</liferay-frontend:management-bar-buttons>
 
 	<%
@@ -196,16 +217,10 @@ renderResponse.setTitle(ruleGroup.getName(locale));
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" type="more" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+			type="more"
+		/>
 	</liferay-ui:search-container>
 </div>
-
-<liferay-portlet:renderURL var="addURL">
-	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
-	<portlet:param name="redirect" value="<%= portletURL.toString() %>" />
-	<portlet:param name="ruleGroupId" value="<%= String.valueOf(ruleGroupId) %>" />
-</liferay-portlet:renderURL>
-
-<liferay-frontend:add-menu>
-	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(resourceBundle, "add-classification-rule") %>' url="<%= addURL.toString() %>" />
-</liferay-frontend:add-menu>

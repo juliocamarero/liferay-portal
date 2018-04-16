@@ -24,7 +24,7 @@
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= configurationRenderURL %>" />
 
-	<div class="portlet-configuration-body-content">
+	<div class="portlet-configuration-body-content sheet">
 		<div class="container-fluid-1280">
 			<aui:fieldset>
 				<aui:select label="maximum-activities-to-load-at-once" name="preferences--max--" value="<%= socialActivitiesDisplayContext.getMax() %>">
@@ -49,7 +49,7 @@
 			</aui:fieldset>
 
 			<c:if test="<%= PortalUtil.isRSSFeedsEnabled() %>">
-				<liferay-ui:rss-settings
+				<liferay-rss:rss-settings
 					delta="<%= socialActivitiesDisplayContext.getRSSDelta() %>"
 					displayStyle="<%= socialActivitiesDisplayContext.getRSSDisplayStyle() %>"
 					enabled="<%= socialActivitiesDisplayContext.isRSSEnabled() %>"
@@ -60,6 +60,6 @@
 	</div>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>

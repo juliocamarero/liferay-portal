@@ -25,15 +25,10 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Alberto Chaparro
@@ -53,19 +48,14 @@ public class UpgradeOracle extends UpgradeProcess {
 			while (rs.next()) {
 				String tableName = rs.getString(1);
 
-				if (!_tableNames.contains(StringUtil.toLowerCase(tableName))) {
+				if (!isPortal62TableName(tableName)) {
 					continue;
 				}
 
 				String columnName = rs.getString(2);
 				int dataLength = rs.getInt(3);
 
-				if (isBetweenBuildNumbers(
-						buildNumber, ReleaseInfo.RELEASE_5_2_9_BUILD_NUMBER,
-						ReleaseInfo.RELEASE_6_0_0_BUILD_NUMBER) ||
-					isBetweenBuildNumbers(
-						buildNumber, ReleaseInfo.RELEASE_6_0_5_BUILD_NUMBER,
-						ReleaseInfo.RELEASE_6_2_0_BUILD_NUMBER)) {
+				if (buildNumber < ReleaseInfo.RELEASE_6_2_0_BUILD_NUMBER) {
 
 					// LPS-33903
 
@@ -132,71 +122,9 @@ public class UpgradeOracle extends UpgradeProcess {
 		}
 	}
 
-	protected boolean isBetweenBuildNumbers(
-		int buildNumber, int startBuildNumber, int endBuildNumber) {
-
-		if ((buildNumber >= startBuildNumber) &&
-			(buildNumber < endBuildNumber)) {
-
-			return true;
-		}
-
-		return false;
-	}
-
 	private static final int[] _ORIGINAL_DATA_LENGTH_VALUES =
 		{75, 100, 150, 200, 255, 500, 1000, 1024, 2000, 4000};
 
 	private static final Log _log = LogFactoryUtil.getLog(UpgradeOracle.class);
-
-	private static final Set<String> _tableNames = new HashSet<>(
-		Arrays.asList(
-			"account_", "address", "announcementsdelivery",
-			"announcementsentry", "announcementsflag", "assetcategory",
-			"assetcategoryproperty", "assetentries_assetcategories",
-			"assetentries_assettags", "assetentry", "assetlink", "assettag",
-			"assettagstats", "assetvocabulary", "backgroundtask", "blogsentry",
-			"blogsstatsuser", "bookmarksentry", "bookmarksfolder",
-			"browsertracker", "classname_", "clustergroup", "company",
-			"contact_", "counter", "country", "ddlrecord", "ddlrecordset",
-			"ddlrecordversion", "ddmcontent", "ddmstoragelink", "ddmstructure",
-			"ddmstructurelink", "ddmtemplate", "dlcontent", "dlfileentry",
-			"dlfileentrymetadata", "dlfileentrytype",
-			"dlfileentrytypes_dlfolders", "dlfilerank", "dlfileshortcut",
-			"dlfileversion", "dlfolder", "dlsyncevent", "emailaddress",
-			"expandocolumn", "expandorow", "expandotable", "expandovalue",
-			"exportimportconfiguration", "group_", "groups_orgs",
-			"groups_roles", "groups_usergroups", "image", "journalarticle",
-			"journalarticleimage", "journalarticleresource",
-			"journalcontentsearch", "journalfeed", "journalfolder", "layout",
-			"layoutbranch", "layoutfriendlyurl", "layoutprototype",
-			"layoutrevision", "layoutset", "layoutsetbranch",
-			"layoutsetprototype", "listtype", "lock_", "mbban", "mbcategory",
-			"mbdiscussion", "mbmailinglist", "mbmessage", "mbstatsuser",
-			"mbthread", "mbthreadflag", "mdraction", "mdrrule", "mdrrulegroup",
-			"mdrrulegroupinstance", "membershiprequest", "organization_",
-			"orggrouprole", "orglabor", "passwordpolicy", "passwordpolicyrel",
-			"passwordtracker", "phone", "pluginsetting", "pollschoice",
-			"pollsquestion", "pollsvote", "portalpreferences", "portlet",
-			"portletitem", "portletpreferences", "ratingsentry", "ratingsstats",
-			"recentlayoutbranch", "recentlayoutrevision",
-			"recentlayoutsetbranch", "region", "release_", "repository",
-			"repositoryentry", "resourceaction", "resourceblock",
-			"resourceblockpermission", "resourcepermission",
-			"resourcetypepermission", "role_", "servicecomponent",
-			"shoppingcart", "shoppingcategory", "shoppingcoupon",
-			"shoppingitem", "shoppingitemfield", "shoppingitemprice",
-			"shoppingorder", "shoppingorderitem", "socialactivity",
-			"socialactivityachievement", "socialactivitycounter",
-			"socialactivitylimit", "socialactivityset", "socialactivitysetting",
-			"socialrelation", "socialrequest", "subscription", "systemevent",
-			"team", "ticket", "trashentry", "trashversion",
-			"usernotificationdelivery", "user_", "usergroup",
-			"usergroupgrouprole", "usergrouprole", "usergroups_teams",
-			"useridmapper", "usernotificationevent", "users_groups",
-			"users_orgs", "users_roles", "users_teams", "users_usergroups",
-			"usertracker", "usertrackerpath", "virtualhost", "webdavprops",
-			"website", "wikinode", "wikipage", "wikipageresource",
-			"workflowdefinitionlink", "workflowinstancelink"));
 
 }

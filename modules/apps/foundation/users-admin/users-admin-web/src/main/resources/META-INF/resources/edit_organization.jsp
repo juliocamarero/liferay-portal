@@ -25,7 +25,6 @@ long organizationId = ParamUtil.getLong(request, "organizationId");
 
 Organization organization = OrganizationServiceUtil.fetchOrganization(organizationId);
 
-long parentOrganizationId = ParamUtil.getLong(request, "parentOrganizationSearchContainerPrimaryKeys", (organization != null) ? organization.getParentOrganizationId() : OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
 String type = BeanParamUtil.getString(organization, request, "type");
 
 portletDisplay.setShowBackIcon(true);
@@ -70,7 +69,9 @@ renderResponse.setTitle(headerTitle);
 	request.setAttribute("websites.classPK", organizationId);
 	%>
 
-	<liferay-util:buffer var="htmlTop">
+	<liferay-util:buffer
+		var="htmlTop"
+	>
 		<c:if test="<%= organization != null %>">
 
 			<%

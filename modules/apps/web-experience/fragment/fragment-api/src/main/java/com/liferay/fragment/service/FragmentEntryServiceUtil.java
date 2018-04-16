@@ -16,7 +16,8 @@ package com.liferay.fragment.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -43,30 +44,56 @@ public class FragmentEntryServiceUtil {
 	 */
 	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 		long groupId, long fragmentCollectionId, java.lang.String name,
+		int status,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addFragmentEntry(groupId, fragmentCollectionId, name,
+			status, serviceContext);
+	}
+
+	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+		long groupId, long fragmentCollectionId,
+		java.lang.String fragmentEntryKey, java.lang.String name, int status,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addFragmentEntry(groupId, fragmentCollectionId,
+			fragmentEntryKey, name, status, serviceContext);
+	}
+
+	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+		long groupId, long fragmentCollectionId, java.lang.String name,
 		java.lang.String css, java.lang.String html, java.lang.String js,
+		int status,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addFragmentEntry(groupId, fragmentCollectionId, name, css,
-			html, js, serviceContext);
+			html, js, status, serviceContext);
 	}
 
-	public static java.util.List<com.liferay.fragment.model.FragmentEntry> deleteFragmentEntries(
-		long[] fragmentEntriesIds)
+	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+		long groupId, long fragmentCollectionId,
+		java.lang.String fragmentEntryKey, java.lang.String name,
+		java.lang.String css, java.lang.String html, java.lang.String js,
+		int status,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteFragmentEntries(fragmentEntriesIds);
+		return getService()
+				   .addFragmentEntry(groupId, fragmentCollectionId,
+			fragmentEntryKey, name, css, html, js, status, serviceContext);
+	}
+
+	public static void deleteFragmentEntries(long[] fragmentEntriesIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteFragmentEntries(fragmentEntriesIds);
 	}
 
 	public static com.liferay.fragment.model.FragmentEntry deleteFragmentEntry(
 		long fragmentEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteFragmentEntry(fragmentEntryId);
-	}
-
-	public static java.util.List<com.liferay.fragment.model.FragmentEntry> fetchFragmentEntries(
-		long fragmentCollectionId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().fetchFragmentEntries(fragmentCollectionId);
 	}
 
 	public static com.liferay.fragment.model.FragmentEntry fetchFragmentEntry(
@@ -89,16 +116,24 @@ public class FragmentEntryServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
-		long groupId, long fragmentCollectionId, int start, int end)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		long fragmentCollectionId) {
+		return getService().getFragmentEntries(fragmentCollectionId);
+	}
+
+	public static java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
+		long fragmentCollectionId, int status) {
+		return getService().getFragmentEntries(fragmentCollectionId, status);
+	}
+
+	public static java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
+		long groupId, long fragmentCollectionId, int start, int end) {
 		return getService()
 				   .getFragmentEntries(groupId, fragmentCollectionId, start, end);
 	}
 
 	public static java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
 		long groupId, long fragmentCollectionId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.fragment.model.FragmentEntry> orderByComparator)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.fragment.model.FragmentEntry> orderByComparator) {
 		return getService()
 				   .getFragmentEntries(groupId, fragmentCollectionId, start,
 			end, orderByComparator);
@@ -122,6 +157,12 @@ public class FragmentEntryServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static java.lang.String[] getTempFileNames(long groupId,
+		java.lang.String folderName)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getTempFileNames(groupId, folderName);
+	}
+
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		long fragmentEntryId, java.lang.String name)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -130,16 +171,29 @@ public class FragmentEntryServiceUtil {
 
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		long fragmentEntryId, java.lang.String name, java.lang.String css,
-		java.lang.String html, java.lang.String js)
+		java.lang.String html, java.lang.String js, int status,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .updateFragmentEntry(fragmentEntryId, name, css, html, js);
+				   .updateFragmentEntry(fragmentEntryId, name, css, html, js,
+			status, serviceContext);
 	}
 
 	public static FragmentEntryService getService() {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<FragmentEntryService, FragmentEntryService> _serviceTracker =
-		ServiceTrackerFactory.open(FragmentEntryService.class);
+	private static ServiceTracker<FragmentEntryService, FragmentEntryService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(FragmentEntryService.class);
+
+		ServiceTracker<FragmentEntryService, FragmentEntryService> serviceTracker =
+			new ServiceTracker<FragmentEntryService, FragmentEntryService>(bundle.getBundleContext(),
+				FragmentEntryService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

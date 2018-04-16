@@ -21,10 +21,13 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.util.PropsValues;
 
+import javax.portlet.PortletRequest;
+
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,7 +36,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  */
 @Component(
-	property = {"form.navigator.entry.order:Integer=50"},
+	property = "form.navigator.entry.order:Integer=50",
 	service = FormNavigatorEntry.class
 )
 public class JournalScheduleFormNavigatorEntry
@@ -53,10 +56,13 @@ public class JournalScheduleFormNavigatorEntry
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+		HttpServletRequest request = serviceContext.getRequest();
+
+		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST);
 
 		long classNameId = BeanParamUtil.getLong(
-			article, themeDisplay.getRequest(), "classNameId");
+			article, portletRequest, "classNameId");
 
 		if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
 			return false;

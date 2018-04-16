@@ -23,12 +23,12 @@ import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoValueLocalServiceUtil;
 import com.liferay.opensocial.shindig.util.ShindigUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -191,15 +191,15 @@ public class LiferayAppDataService implements AppDataService {
 
 		long userIdLong = GetterUtil.getLong(userId.getUserId(securityToken));
 
-		for (String key : values.keySet()) {
+		for (Map.Entry<String, String> entry : values.entrySet()) {
 
 			// Workaround for a Shindig bug that stores a Long in value instead
 			// of the expected String so we cannot use generics here
 
-			String value = String.valueOf(values.get(key));
+			String value = String.valueOf(entry.getValue());
 
 			ExpandoColumn expandoColumn = getExpandoColumn(
-				companyId, getColumnName(appId, key));
+				companyId, getColumnName(appId, entry.getKey()));
 
 			ExpandoValueLocalServiceUtil.addValue(
 				companyId, User.class.getName(),

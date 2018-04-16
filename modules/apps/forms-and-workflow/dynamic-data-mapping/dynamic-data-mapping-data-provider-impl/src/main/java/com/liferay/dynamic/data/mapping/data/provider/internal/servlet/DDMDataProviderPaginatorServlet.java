@@ -34,6 +34,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,9 @@ public class DDMDataProviderPaginatorServlet extends HttpServlet {
 		JSONObject inputParametersJSONObject = getInputParametersJSONObject(
 			request);
 
-		inputParametersJSONObject.keys().forEachRemaining(
+		Iterator<String> iterator = inputParametersJSONObject.keys();
+
+		iterator.forEachRemaining(
 			inputParameterName -> {
 				ddmDataProviderRequest.queryString(
 					inputParameterName,
@@ -134,15 +137,15 @@ public class DDMDataProviderPaginatorServlet extends HttpServlet {
 			DDMDataProviderResponse ddmDataProviderResponse =
 				_ddmDataProviderInvoker.invoke(ddmDataProviderRequest);
 
-			DDMDataProviderResponseOutput ddDataProviderResponseOutput =
+			DDMDataProviderResponseOutput ddmDataProviderResponseOutput =
 				ddmDataProviderResponse.get(outputParameterName);
 
-			if (ddDataProviderResponseOutput == null) {
+			if (ddmDataProviderResponseOutput == null) {
 				return dataProviderResult;
 			}
 
 			List<KeyValuePair> keyValuePairs =
-				ddDataProviderResponseOutput.getValue(List.class);
+				ddmDataProviderResponseOutput.getValue(List.class);
 
 			for (KeyValuePair keyValuePair : keyValuePairs) {
 				Map<String, String> result = new HashMap<>();

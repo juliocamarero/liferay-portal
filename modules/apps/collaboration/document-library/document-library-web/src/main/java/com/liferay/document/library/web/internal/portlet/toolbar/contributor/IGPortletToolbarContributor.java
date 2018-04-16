@@ -14,7 +14,7 @@
 
 package com.liferay.document.library.web.internal.portlet.toolbar.contributor;
 
-import com.liferay.document.library.web.constants.DLPortletKeys;
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.web.internal.portlet.toolbar.contributor.helper.DLPortletToolbarContributorHelper;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.toolbar.contributor.BasePortletToolbarContributor;
@@ -44,7 +44,7 @@ import org.osgi.service.component.annotations.Reference;
 		"mvc.render.command.name=-",
 		"mvc.render.command.name=/image_gallery_display/view"
 	},
-	service = {PortletToolbarContributor.class}
+	service = PortletToolbarContributor.class
 )
 public class IGPortletToolbarContributor extends BasePortletToolbarContributor {
 

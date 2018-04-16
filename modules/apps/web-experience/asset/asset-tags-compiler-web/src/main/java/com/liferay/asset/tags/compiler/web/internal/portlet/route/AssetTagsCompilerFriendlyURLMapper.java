@@ -17,10 +17,10 @@ package com.liferay.asset.tags.compiler.web.internal.portlet.route;
 import com.liferay.asset.tags.compiler.web.internal.configuration.AssetTagsCompilerWebConfigurationValues;
 import com.liferay.asset.tags.compiler.web.internal.constants.AssetTagsCompilerPortletKeys;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.BaseFriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Map;
@@ -35,9 +35,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Shuyang Zhou
  */
 @Component(
-	property = {
-		"javax.portlet.name=" + AssetTagsCompilerPortletKeys.ASSET_TAGS_COMPILER
-	},
+	property = "javax.portlet.name=" + AssetTagsCompilerPortletKeys.ASSET_TAGS_COMPILER,
 	service = FriendlyURLMapper.class
 )
 public class AssetTagsCompilerFriendlyURLMapper extends BaseFriendlyURLMapper {

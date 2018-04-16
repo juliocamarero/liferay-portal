@@ -31,13 +31,14 @@ import com.liferay.dynamic.data.mapping.service.DDMDataProviderInstanceLinkLocal
 import com.liferay.dynamic.data.mapping.service.DDMDataProviderInstanceLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLayoutLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
+import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataException;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
-import com.liferay.exportimport.lar.BaseStagedModelDataHandler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -50,7 +51,6 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -70,7 +70,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING},
+	property = "javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING,
 	service = StagedModelDataHandler.class
 )
 public class DDMStructureStagedModelDataHandler
@@ -339,20 +339,19 @@ public class DDMStructureStagedModelDataHandler
 			if (existingStructure == null) {
 				serviceContext.setUuid(structure.getUuid());
 
-				// Force a new structure key if a structure with the same key
-				// already exists
-
 				existingStructure = _ddmStructureLocalService.fetchStructure(
 					targetGroupId, structure.getClassNameId(),
 					structure.getStructureKey());
 
-				if (existingStructure != null) {
-					structure.setStructureKey(null);
+				String structureKey = null;
+
+				if (existingStructure == null) {
+					structureKey = structure.getStructureKey();
 				}
 
 				importedStructure = _ddmStructureLocalService.addStructure(
 					userId, targetGroupId, parentStructureId,
-					structure.getClassNameId(), structure.getStructureKey(),
+					structure.getClassNameId(), structureKey,
 					structure.getNameMap(), structure.getDescriptionMap(),
 					ddmForm, ddmFormLayout, structure.getStorageType(),
 					structure.getType(), serviceContext);
@@ -536,7 +535,9 @@ public class DDMStructureStagedModelDataHandler
 		List<DDMFormField> ddmFormFields = ddmForm.getDDMFormFields();
 
 		for (DDMFormField ddmFormField : ddmFormFields) {
-			if (!ddmFormField.getType().equals(DDMFormFieldType.SELECT)) {
+			String ddmFormFieldType = ddmFormField.getType();
+
+			if (!ddmFormFieldType.equals(DDMFormFieldType.SELECT)) {
 				continue;
 			}
 

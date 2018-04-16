@@ -4,15 +4,15 @@
 	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.countByG_C_N">
 		<![CDATA[
 			SELECT
-				COUNT(DISTINCT AssetEntries_AssetCategories.entryId) AS COUNT_VALUE
+				COUNT(DISTINCT AssetEntryAssetCategoryRel.assetEntryId) AS COUNT_VALUE
 			FROM
 				AssetCategory
 			INNER JOIN
-				AssetEntries_AssetCategories ON
-					AssetEntries_AssetCategories.categoryId = AssetCategory.categoryId
+				AssetEntryAssetCategoryRel ON
+					AssetEntryAssetCategoryRel.assetCategoryId = AssetCategory.categoryId
 			WHERE
 				(
-					AssetEntries_AssetCategories.entryId IN
+					AssetEntryAssetCategoryRel.assetEntryId IN
 						(
 							SELECT
 								entryId
@@ -56,6 +56,23 @@
 				(lower(AssetCategory.name) = ?)
 		]]>
 	</sql>
+	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByC_C">
+		<![CDATA[
+			SELECT
+				{AssetCategory.*}
+			FROM
+				AssetEntry
+			INNER JOIN
+				AssetEntryAssetCategoryRel ON
+					AssetEntryAssetCategoryRel.assetEntryId = AssetEntry.entryId
+			INNER JOIN
+				AssetCategory ON
+					AssetCategory.categoryId = AssetEntryAssetCategoryRel.assetCategoryId
+			WHERE
+				(AssetEntry.classNameId = ?) AND
+				(AssetEntry.classPK =  ?)
+		]]>
+	</sql>
 	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByG_N_P">
 		<![CDATA[
 			SELECT
@@ -80,10 +97,10 @@
 					SELECT
 						1
 					FROM
-						AssetEntries_AssetCategories
+						AssetEntryAssetCategoryRel
 					WHERE
-						(AssetEntries_AssetCategories.entryId = AssetEntry.entryId) AND
-						(AssetEntries_AssetCategories.categoryId IN ([$CATEGORY_ID$]))
+						(AssetEntryAssetCategoryRel.assetEntryId = AssetEntry.entryId) AND
+						(AssetEntryAssetCategoryRel.assetCategoryId IN ([$CATEGORY_ID$]))
 				)
 		]]>
 	</sql>
@@ -108,6 +125,69 @@
 				[$WHERE$]
 				(AssetEntry.classNameId = ?)
 		]]>
+	</sql>
+	<sql id="com.liferay.asset.kernel.service.persistence.AssetEntryFinder.findPriorityByC_C">
+		<![CDATA[
+			SELECT
+				AssetEntry.priority
+			FROM
+				AssetEntry
+			WHERE
+				(AssetEntry.classNameId = ?) AND
+				(AssetEntry.classPK = ?)
+		]]>
+	</sql>
+	<sql id="com.liferay.asset.kernel.service.persistence.AssetLinkFinder.findByG_C">
+		<![CDATA[
+			SELECT
+				AssetLink.*
+			FROM
+				AssetLink
+			WHERE
+				EXISTS
+					(
+						SELECT
+							1
+						FROM
+							AssetEntry AssetEntry1, AssetEntry AssetEntry2
+						WHERE
+							(AssetLink.entryId1 = AssetEntry1.entryId) AND
+							(AssetLink.entryId2 = AssetEntry2.entryId) AND
+							(
+								(AssetEntry1.groupId = ?) OR
+								(AssetEntry2.groupId = ?)
+							)
+					)
+				[$CREATE_DATE_COMPARATOR$]
+		]]>
+	</sql>
+	<sql id="com.liferay.asset.kernel.service.persistence.AssetLinkFinder.findByC_C">
+		<![CDATA[
+			(
+				SELECT
+					AssetLink.*
+				FROM
+					AssetEntry
+				INNER JOIN
+					AssetLink ON
+						AssetEntry.entryId = AssetLink.entryId1
+				WHERE
+					(AssetEntry.classNameId = ?) AND
+					(AssetEntry.classPK = ?)
+			) UNION
+			(
+				SELECT
+					AssetLink.*
+				FROM
+					AssetEntry
+				INNER JOIN
+					AssetLink ON
+						AssetEntry.entryId = AssetLink.entryId2
+				WHERE
+					(AssetEntry.classNameId = ?) AND
+					(AssetEntry.classPK = ?)
+			)
+	]]>
 	</sql>
 	<sql id="com.liferay.asset.kernel.service.persistence.AssetTagFinder.countByG_N">
 		<![CDATA[
@@ -248,29 +328,6 @@
 				)
 			ORDER BY
 				AssetVocabulary.name ASC
-		]]>
-	</sql>
-	<sql id="com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
-		<![CDATA[
-			SELECT
-				AssetLink.*
-			FROM
-				AssetLink
-			WHERE
-				EXISTS
-					(
-						SELECT
-							1
-						FROM
-							AssetEntry AssetEntry1, AssetEntry AssetEntry2
-						WHERE
-							(AssetLink.entryId1 = AssetEntry1.entryId) AND
-							(AssetLink.entryId2 = AssetEntry2.entryId) AND
-							(
-								(AssetEntry1.groupId = ?) OR
-								(AssetEntry2.groupId = ?)
-							)
-					)
 		]]>
 	</sql>
 </custom-sql>

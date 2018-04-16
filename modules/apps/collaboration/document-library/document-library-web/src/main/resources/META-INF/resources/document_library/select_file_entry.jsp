@@ -47,7 +47,11 @@ dlSearchContainer.setResults(foldersAndFileEntriesAndFileShortcuts);
 
 <div class="container-fluid-1280">
 	<aui:form method="post" name="selectFileEntryFm">
-		<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
+		<liferay-ui:breadcrumb
+			showGuestGroup="<%= false %>"
+			showLayout="<%= false %>"
+			showParentGroups="<%= false %>"
+		/>
 
 		<liferay-ui:search-container
 			emptyResultsMessage="there-are-no-documents-or-media-files-in-this-folder"
@@ -83,7 +87,7 @@ dlSearchContainer.setResults(foldersAndFileEntriesAndFileShortcuts);
 							name="title"
 						>
 							<aui:a href="<%= rowURL.toString() %>">
-								<%= HtmlUtil.escape(curFolder.getName()) %>
+								<%= curFolder.getName() %>
 							</aui:a>
 						</liferay-ui:search-container-column-text>
 					</c:when>
@@ -102,16 +106,16 @@ dlSearchContainer.setResults(foldersAndFileEntriesAndFileShortcuts);
 								Map<String, Object> data = new HashMap<String, Object>();
 
 								data.put("entryid", fileEntry.getFileEntryId());
-								data.put("entryname", fileEntry.getTitle());
+								data.put("entryname", HtmlUtil.unescape(fileEntry.getTitle()));
 								%>
 
 								<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
-									<%= HtmlUtil.escape(fileEntry.getTitle()) %>
+									<%= fileEntry.getTitle() %>
 								</aui:a>
 
 								<c:if test="<%= Validator.isNotNull(fileEntry.getDescription()) %>">
 									<br />
-									<%= HtmlUtil.escape(fileEntry.getDescription()) %>
+									<%= fileEntry.getDescription() %>
 								</c:if>
 							</liferay-ui:search-container-column-text>
 						</c:if>
@@ -119,7 +123,11 @@ dlSearchContainer.setResults(foldersAndFileEntriesAndFileShortcuts);
 				</c:choose>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator markupView="lexicon" resultRowSplitter="<%= new DLResultRowSplitter() %>" searchContainer="<%= dlSearchContainer %>" />
+			<liferay-ui:search-iterator
+				markupView="lexicon"
+				resultRowSplitter="<%= new DLResultRowSplitter() %>"
+				searchContainer="<%= dlSearchContainer %>"
+			/>
 		</liferay-ui:search-container>
 	</aui:form>
 </div>

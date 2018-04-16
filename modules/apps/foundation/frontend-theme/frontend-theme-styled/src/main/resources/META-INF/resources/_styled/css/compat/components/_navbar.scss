@@ -5,10 +5,14 @@
 		border: 1px solid transparent;
 		border-radius: $border-radius;
 		float: right;
+
 		// TODO: can't mix rem and px
+
 		//margin-bottom: (($navbar-height - 34px) / 2);
 		margin-right: $navbar-padding-x;
+
 		// TODO: can't mix rem and px
+
 		//margin-top: (($navbar-height - 34px) / 2);
 		padding: 9px 10px;
 		position: relative;
@@ -106,7 +110,7 @@
 			padding: 3.5px 16px;
 
 			@include media-breakpoint-up(md) {
-				padding: 10px 0;
+				padding: 10px 0 7px;
 			}
 		}
 
@@ -150,7 +154,9 @@
 
 		.navbar-nav > .active > a,
 		.navbar-toggle-page-name {
-			color: $navbar-light-active-color;
+			&, &:hover {
+				color: $navbar-light-active-color;
+			}
 
 			&:after {
 				background-color: $navbar-light-active-highlight;
@@ -161,6 +167,12 @@
 				left: 16px;
 				position: absolute;
 				right: 16px;
+			}
+		}
+
+		.navbar-nav > .active > a:after {
+			@include media-breakpoint-down($scaling-breakpoint-down) {
+				content: normal;
 			}
 		}
 	}
@@ -179,7 +191,9 @@
 
 		.navbar-nav > .active > a,
 		.navbar-toggle-page-name {
-			color: $navbar-dark-active-color;
+			&, &:hover {
+				color: $navbar-dark-active-color;
+			}
 
 			&:after {
 				background-color: $navbar-dark-active-highlight;
@@ -190,6 +204,12 @@
 				left: 16px;
 				position: absolute;
 				right: 16px;
+			}
+		}
+
+		.navbar-nav > .active > a:after {
+			@include media-breakpoint-down($scaling-breakpoint-down) {
+				content: normal;
 			}
 		}
 	}

@@ -18,11 +18,12 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.fragment.model.FragmentEntry;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
-
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -785,63 +786,249 @@ public class FragmentEntryUtil {
 	}
 
 	/**
-	* Returns the fragment entry where groupId = &#63; and name = &#63; or throws a {@link NoSuchEntryException} if it could not be found.
+	* Returns the fragment entry where groupId = &#63; and fragmentEntryKey = &#63; or throws a {@link NoSuchEntryException} if it could not be found.
 	*
 	* @param groupId the group ID
-	* @param name the name
+	* @param fragmentEntryKey the fragment entry key
 	* @return the matching fragment entry
 	* @throws NoSuchEntryException if a matching fragment entry could not be found
 	*/
-	public static FragmentEntry findByG_N(long groupId, java.lang.String name)
+	public static FragmentEntry findByG_FEK(long groupId,
+		java.lang.String fragmentEntryKey)
 		throws com.liferay.fragment.exception.NoSuchEntryException {
-		return getPersistence().findByG_N(groupId, name);
+		return getPersistence().findByG_FEK(groupId, fragmentEntryKey);
 	}
 
 	/**
-	* Returns the fragment entry where groupId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	* Returns the fragment entry where groupId = &#63; and fragmentEntryKey = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	*
 	* @param groupId the group ID
-	* @param name the name
+	* @param fragmentEntryKey the fragment entry key
 	* @return the matching fragment entry, or <code>null</code> if a matching fragment entry could not be found
 	*/
-	public static FragmentEntry fetchByG_N(long groupId, java.lang.String name) {
-		return getPersistence().fetchByG_N(groupId, name);
+	public static FragmentEntry fetchByG_FEK(long groupId,
+		java.lang.String fragmentEntryKey) {
+		return getPersistence().fetchByG_FEK(groupId, fragmentEntryKey);
 	}
 
 	/**
-	* Returns the fragment entry where groupId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	* Returns the fragment entry where groupId = &#63; and fragmentEntryKey = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	*
 	* @param groupId the group ID
-	* @param name the name
+	* @param fragmentEntryKey the fragment entry key
 	* @param retrieveFromCache whether to retrieve from the finder cache
 	* @return the matching fragment entry, or <code>null</code> if a matching fragment entry could not be found
 	*/
-	public static FragmentEntry fetchByG_N(long groupId, java.lang.String name,
-		boolean retrieveFromCache) {
-		return getPersistence().fetchByG_N(groupId, name, retrieveFromCache);
+	public static FragmentEntry fetchByG_FEK(long groupId,
+		java.lang.String fragmentEntryKey, boolean retrieveFromCache) {
+		return getPersistence()
+				   .fetchByG_FEK(groupId, fragmentEntryKey, retrieveFromCache);
 	}
 
 	/**
-	* Removes the fragment entry where groupId = &#63; and name = &#63; from the database.
+	* Removes the fragment entry where groupId = &#63; and fragmentEntryKey = &#63; from the database.
 	*
 	* @param groupId the group ID
-	* @param name the name
+	* @param fragmentEntryKey the fragment entry key
 	* @return the fragment entry that was removed
 	*/
-	public static FragmentEntry removeByG_N(long groupId, java.lang.String name)
+	public static FragmentEntry removeByG_FEK(long groupId,
+		java.lang.String fragmentEntryKey)
 		throws com.liferay.fragment.exception.NoSuchEntryException {
-		return getPersistence().removeByG_N(groupId, name);
+		return getPersistence().removeByG_FEK(groupId, fragmentEntryKey);
 	}
 
 	/**
-	* Returns the number of fragment entries where groupId = &#63; and name = &#63;.
+	* Returns the number of fragment entries where groupId = &#63; and fragmentEntryKey = &#63;.
 	*
 	* @param groupId the group ID
-	* @param name the name
+	* @param fragmentEntryKey the fragment entry key
 	* @return the number of matching fragment entries
 	*/
-	public static int countByG_N(long groupId, java.lang.String name) {
-		return getPersistence().countByG_N(groupId, name);
+	public static int countByG_FEK(long groupId,
+		java.lang.String fragmentEntryKey) {
+		return getPersistence().countByG_FEK(groupId, fragmentEntryKey);
+	}
+
+	/**
+	* Returns all the fragment entries where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @return the matching fragment entries
+	*/
+	public static List<FragmentEntry> findByFCI_S(long fragmentCollectionId,
+		int status) {
+		return getPersistence().findByFCI_S(fragmentCollectionId, status);
+	}
+
+	/**
+	* Returns a range of all the fragment entries where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link FragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param start the lower bound of the range of fragment entries
+	* @param end the upper bound of the range of fragment entries (not inclusive)
+	* @return the range of matching fragment entries
+	*/
+	public static List<FragmentEntry> findByFCI_S(long fragmentCollectionId,
+		int status, int start, int end) {
+		return getPersistence()
+				   .findByFCI_S(fragmentCollectionId, status, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the fragment entries where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link FragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param start the lower bound of the range of fragment entries
+	* @param end the upper bound of the range of fragment entries (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching fragment entries
+	*/
+	public static List<FragmentEntry> findByFCI_S(long fragmentCollectionId,
+		int status, int start, int end,
+		OrderByComparator<FragmentEntry> orderByComparator) {
+		return getPersistence()
+				   .findByFCI_S(fragmentCollectionId, status, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns an ordered range of all the fragment entries where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link FragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param start the lower bound of the range of fragment entries
+	* @param end the upper bound of the range of fragment entries (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching fragment entries
+	*/
+	public static List<FragmentEntry> findByFCI_S(long fragmentCollectionId,
+		int status, int start, int end,
+		OrderByComparator<FragmentEntry> orderByComparator,
+		boolean retrieveFromCache) {
+		return getPersistence()
+				   .findByFCI_S(fragmentCollectionId, status, start, end,
+			orderByComparator, retrieveFromCache);
+	}
+
+	/**
+	* Returns the first fragment entry in the ordered set where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching fragment entry
+	* @throws NoSuchEntryException if a matching fragment entry could not be found
+	*/
+	public static FragmentEntry findByFCI_S_First(long fragmentCollectionId,
+		int status, OrderByComparator<FragmentEntry> orderByComparator)
+		throws com.liferay.fragment.exception.NoSuchEntryException {
+		return getPersistence()
+				   .findByFCI_S_First(fragmentCollectionId, status,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the first fragment entry in the ordered set where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching fragment entry, or <code>null</code> if a matching fragment entry could not be found
+	*/
+	public static FragmentEntry fetchByFCI_S_First(long fragmentCollectionId,
+		int status, OrderByComparator<FragmentEntry> orderByComparator) {
+		return getPersistence()
+				   .fetchByFCI_S_First(fragmentCollectionId, status,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last fragment entry in the ordered set where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching fragment entry
+	* @throws NoSuchEntryException if a matching fragment entry could not be found
+	*/
+	public static FragmentEntry findByFCI_S_Last(long fragmentCollectionId,
+		int status, OrderByComparator<FragmentEntry> orderByComparator)
+		throws com.liferay.fragment.exception.NoSuchEntryException {
+		return getPersistence()
+				   .findByFCI_S_Last(fragmentCollectionId, status,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last fragment entry in the ordered set where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching fragment entry, or <code>null</code> if a matching fragment entry could not be found
+	*/
+	public static FragmentEntry fetchByFCI_S_Last(long fragmentCollectionId,
+		int status, OrderByComparator<FragmentEntry> orderByComparator) {
+		return getPersistence()
+				   .fetchByFCI_S_Last(fragmentCollectionId, status,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the fragment entries before and after the current fragment entry in the ordered set where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentEntryId the primary key of the current fragment entry
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next fragment entry
+	* @throws NoSuchEntryException if a fragment entry with the primary key could not be found
+	*/
+	public static FragmentEntry[] findByFCI_S_PrevAndNext(
+		long fragmentEntryId, long fragmentCollectionId, int status,
+		OrderByComparator<FragmentEntry> orderByComparator)
+		throws com.liferay.fragment.exception.NoSuchEntryException {
+		return getPersistence()
+				   .findByFCI_S_PrevAndNext(fragmentEntryId,
+			fragmentCollectionId, status, orderByComparator);
+	}
+
+	/**
+	* Removes all the fragment entries where fragmentCollectionId = &#63; and status = &#63; from the database.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	*/
+	public static void removeByFCI_S(long fragmentCollectionId, int status) {
+		getPersistence().removeByFCI_S(fragmentCollectionId, status);
+	}
+
+	/**
+	* Returns the number of fragment entries where fragmentCollectionId = &#63; and status = &#63;.
+	*
+	* @param fragmentCollectionId the fragment collection ID
+	* @param status the status
+	* @return the number of matching fragment entries
+	*/
+	public static int countByFCI_S(long fragmentCollectionId, int status) {
+		return getPersistence().countByFCI_S(fragmentCollectionId, status);
 	}
 
 	/**
@@ -1291,6 +1478,17 @@ public class FragmentEntryUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<FragmentEntryPersistence, FragmentEntryPersistence> _serviceTracker =
-		ServiceTrackerFactory.open(FragmentEntryPersistence.class);
+	private static ServiceTracker<FragmentEntryPersistence, FragmentEntryPersistence> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(FragmentEntryPersistence.class);
+
+		ServiceTracker<FragmentEntryPersistence, FragmentEntryPersistence> serviceTracker =
+			new ServiceTracker<FragmentEntryPersistence, FragmentEntryPersistence>(bundle.getBundleContext(),
+				FragmentEntryPersistence.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

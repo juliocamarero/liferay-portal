@@ -14,7 +14,7 @@
 
 package com.liferay.document.library.web.internal.ratings.definition;
 
-import com.liferay.document.library.web.constants.DLPortletKeys;
+import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.ratings.kernel.RatingsType;
 import com.liferay.ratings.kernel.definition.PortletRatingsDefinition;
 
@@ -24,9 +24,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Roberto Díaz
  */
 @Component(
-	property = {
-		"model.class.name=com.liferay.document.library.kernel.model.DLFileEntry"
-	}
+	property = "model.class.name=com.liferay.document.library.kernel.model.DLFileEntry"
 )
 public class DLPortletRatingsDefinition implements PortletRatingsDefinition {
 

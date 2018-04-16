@@ -25,8 +25,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Peter Fellwock
  */
 @Component(
-	immediate = true,
-	property = {"service.ranking:Integer=" + Integer.MAX_VALUE}
+	immediate = true, property = "service.ranking:Integer=" + Integer.MAX_VALUE
 )
 public class TestUserNotificationHandler implements UserNotificationHandler {
 
@@ -51,7 +50,10 @@ public class TestUserNotificationHandler implements UserNotificationHandler {
 		UserNotificationEvent userNotificationEvent,
 		ServiceContext serviceContext) {
 
-		return new UserNotificationFeedEntry(false, "body", LINK);
+		boolean applicable = isApplicable(
+			userNotificationEvent, serviceContext);
+
+		return new UserNotificationFeedEntry(false, "body", LINK, applicable);
 	}
 
 	@Override

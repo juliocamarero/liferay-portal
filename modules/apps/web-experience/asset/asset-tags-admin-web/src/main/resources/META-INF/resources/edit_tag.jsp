@@ -35,35 +35,41 @@ renderResponse.setTitle(assetTagsDisplayContext.getAssetTitle());
 	<portlet:param name="mvcPath" value="/edit_tag.jsp" />
 </portlet:actionURL>
 
-<aui:form action="<%= editTagURL %>" cssClass="container-fluid-1280" method="post" name="fm">
+<liferay-frontend:edit-form
+	action="<%= editTagURL %>"
+	method="post"
+	name="fm"
+>
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 
-	<liferay-ui:error exception="<%= AssetTagException.class %>">
+	<liferay-frontend:edit-form-body>
+		<liferay-ui:error exception="<%= AssetTagException.class %>">
 
-		<%
-		AssetTagException ate = (AssetTagException)errorException;
-		%>
+			<%
+			AssetTagException ate = (AssetTagException)errorException;
+			%>
 
-		<c:if test="<%= ate.getType() == AssetTagException.INVALID_CHARACTER %>">
-			<liferay-ui:message arguments='<%= new String[] {"tag-name", StringUtil.merge(AssetHelper.INVALID_CHARACTERS, StringPool.SPACE)} %>' key="the-x-cannot-contain-the-following-invalid-characters-x" />
-		</c:if>
-	</liferay-ui:error>
+			<c:if test="<%= ate.getType() == AssetTagException.INVALID_CHARACTER %>">
+				<liferay-ui:message arguments='<%= new String[] {"tag-name", StringUtil.merge(AssetHelper.INVALID_CHARACTERS, StringPool.SPACE)} %>' key="the-x-cannot-contain-the-following-invalid-characters-x" />
+			</c:if>
+		</liferay-ui:error>
 
-	<liferay-ui:error exception="<%= DuplicateTagException.class %>" message="a-tag-with-that-name-already-exists" />
+		<liferay-ui:error exception="<%= DuplicateTagException.class %>" message="a-tag-with-that-name-already-exists" />
 
-	<aui:model-context bean="<%= assetTagsDisplayContext.getTag() %>" model="<%= AssetTag.class %>" />
+		<aui:model-context bean="<%= assetTagsDisplayContext.getTag() %>" model="<%= AssetTag.class %>" />
 
-	<aui:fieldset-group markupView="lexicon">
-		<aui:fieldset>
-			<aui:input name="tagId" type="hidden" value="<%= assetTagsDisplayContext.getTagId() %>" />
+		<liferay-frontend:fieldset-group>
+			<liferay-frontend:fieldset>
+				<aui:input name="tagId" type="hidden" value="<%= assetTagsDisplayContext.getTagId() %>" />
 
-			<aui:input autoFocus="<%= true %>" cssClass="tag-name" name="name" placeholder="name" />
-		</aui:fieldset>
-	</aui:fieldset-group>
+				<aui:input autoFocus="<%= true %>" cssClass="tag-name" name="name" placeholder="name" />
+			</liferay-frontend:fieldset>
+		</liferay-frontend:fieldset-group>
+	</liferay-frontend:edit-form-body>
 
-	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+	<liferay-frontend:edit-form-footer>
+		<aui:button type="submit" />
 
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
-	</aui:button-row>
-</aui:form>
+		<aui:button href="<%= redirect %>" type="cancel" />
+	</liferay-frontend:edit-form-footer>
+</liferay-frontend:edit-form>

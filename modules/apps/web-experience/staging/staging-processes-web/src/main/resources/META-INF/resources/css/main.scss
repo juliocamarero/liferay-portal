@@ -278,8 +278,35 @@
 	}
 }
 
+.process-list-list-view {
+	.process-title {
+		line-height: 34px;
+		margin-left: 0.5em;
+	}
+
+	.user-icon {
+		float: left;
+	}
+}
+
+.process-status {
+	text-transform: uppercase;
+}
+
 .range-options {
 	margin-right: 5%;
+}
+
+.staging-checkbox-description {
+	font-weight: normal;
+}
+
+.staging-checkbox-suggestion {
+	font-weight: normal;
+}
+
+.staging-checkbox-warning {
+	font-weight: normal;
 }
 
 .tree-node-content {

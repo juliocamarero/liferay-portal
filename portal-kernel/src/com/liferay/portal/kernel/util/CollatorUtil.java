@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -63,7 +64,7 @@ public class CollatorUtil {
 			_rules.put(locale, rules);
 		}
 
-		if (rules != StringPool.BLANK) {
+		if (!rules.equals(StringPool.BLANK)) {
 			try {
 				return new RuleBasedCollator(rules);
 			}

@@ -18,7 +18,9 @@ import aQute.bnd.differ.Baseline.BundleInfo;
 import aQute.bnd.differ.Baseline.Info;
 import aQute.bnd.differ.DiffPluginImpl;
 import aQute.bnd.osgi.Constants;
+import aQute.bnd.osgi.Instructions;
 import aQute.bnd.osgi.Jar;
+import aQute.bnd.osgi.Resource;
 import aQute.bnd.service.diff.Delta;
 import aQute.bnd.service.diff.Diff;
 import aQute.bnd.version.Version;
@@ -34,10 +36,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -98,7 +102,16 @@ public abstract class Baseline {
 			aQute.bnd.differ.Baseline baseline = new aQute.bnd.differ.Baseline(
 				baselineProcessor, new DiffPluginImpl());
 
-			Set<Info> infos = baseline.baseline(newJar, oldJar, null);
+			List<String> packageFilter = new ArrayList<>();
+
+			for (String movedPackage : getMovedPackages()) {
+				packageFilter.add("!".concat(movedPackage));
+			}
+
+			packageFilter.add("*");
+
+			Set<Info> infos = baseline.baseline(
+				newJar, oldJar, new Instructions(packageFilter));
 
 			if (infos.isEmpty()) {
 				return match;
@@ -197,7 +210,8 @@ public abstract class Baseline {
 					}
 				}
 
-				boolean correctPackageInfo = generatePackageInfo(info, delta);
+				boolean correctPackageInfo = generatePackageInfo(
+					newJar, info, delta);
 
 				if (!correctPackageInfo) {
 					if (delta == Delta.ADDED) {
@@ -434,7 +448,7 @@ public abstract class Baseline {
 			"==========", "==========");
 	}
 
-	protected boolean generatePackageInfo(Info info, Delta delta)
+	protected boolean generatePackageInfo(Jar jar, Info info, Delta delta)
 		throws Exception {
 
 		boolean correct = true;
@@ -456,20 +470,41 @@ public abstract class Baseline {
 			}
 		}
 		else {
+			boolean writePackageInfoFile = true;
+
 			if (!packageInfoFile.exists()) {
 				correct = false;
+
+				Resource resource = jar.getResource(
+					info.packageName.replace('.', '/') + "/packageinfo");
+
+				if (resource != null) {
+					writePackageInfoFile = false;
+
+					String content = IO.collect(resource.openInputStream());
+
+					if (content.startsWith("version ")) {
+						Version version = Version.parseVersion(
+							content.substring(8));
+
+						if (version.equals(info.suggestedVersion)) {
+							correct = true;
+						}
+					}
+				}
 			}
 
-			packageDir.mkdirs();
+			if (writePackageInfoFile) {
+				packageDir.mkdirs();
 
-			FileOutputStream fileOutputStream = new FileOutputStream(
-				packageInfoFile);
+				try (FileOutputStream fileOutputStream = new FileOutputStream(
+						packageInfoFile)) {
 
-			String content = "version " + info.suggestedVersion;
+					String content = "version " + info.suggestedVersion;
 
-			fileOutputStream.write(content.getBytes());
-
-			fileOutputStream.close();
+					fileOutputStream.write(content.getBytes());
+				}
+			}
 		}
 
 		return correct;
@@ -483,7 +518,7 @@ public abstract class Baseline {
 			return Collections.emptySet();
 		}
 
-		Set<String> movedPackages = new HashSet<>();
+		Set<String> movedPackages = new LinkedHashSet<>();
 
 		try (BufferedReader bufferedReader = new BufferedReader(
 				new FileReader(movedPackagesFile))) {

@@ -33,9 +33,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + UserGroupsAdminPortletKeys.USER_GROUPS_ADMIN
-	},
+	property = "javax.portlet.name=" + UserGroupsAdminPortletKeys.USER_GROUPS_ADMIN,
 	service = ExportImportPortletPreferencesProcessor.class
 )
 public class UserGroupsAdminExportImportPortletPreferencesProcessor
@@ -75,29 +73,10 @@ public class UserGroupsAdminExportImportPortletPreferencesProcessor
 		return null;
 	}
 
-	@Reference(unbind = "-")
-	protected void
-		setUserGroupsAdminPortletDisplayTemplateExportCapability(
-			UserGroupsAdminPortletDisplayTemplateExportCapability
-				userGroupsAdminPortletDisplayTemplateExportCapability) {
+	@Reference(target = "(name=UserGroupsAdminExportCapability)")
+	private Capability _userGroupsAdminPortletDisplayTemplateExportCapability;
 
-		_userGroupsAdminPortletDisplayTemplateExportCapability =
-			userGroupsAdminPortletDisplayTemplateExportCapability;
-	}
-
-	@Reference(unbind = "-")
-	protected void
-		setUserGroupsAdminPortletDisplayTemplateImportCapability(
-			UserGroupsAdminPortletDisplayTemplateImportCapability
-				userGroupsAdminPortletDisplayTemplateImportCapability) {
-
-		_userGroupsAdminPortletDisplayTemplateImportCapability =
-			userGroupsAdminPortletDisplayTemplateImportCapability;
-	}
-
-	private UserGroupsAdminPortletDisplayTemplateExportCapability
-		_userGroupsAdminPortletDisplayTemplateExportCapability;
-	private UserGroupsAdminPortletDisplayTemplateImportCapability
-		_userGroupsAdminPortletDisplayTemplateImportCapability;
+	@Reference(target = "(name=UserGroupsAdminImportCapability)")
+	private Capability _userGroupsAdminPortletDisplayTemplateImportCapability;
 
 }

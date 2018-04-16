@@ -38,13 +38,14 @@ import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
 import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.model.DDMTemplateConstants;
+import com.liferay.dynamic.data.mapping.security.permission.DDMPermissionSupport;
 import com.liferay.dynamic.data.mapping.service.base.DDMStructureLocalServiceBaseImpl;
-import com.liferay.dynamic.data.mapping.service.permission.DDMStructurePermission;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.dynamic.data.mapping.util.DDMXML;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.LocaleException;
@@ -70,7 +71,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -156,8 +156,8 @@ public class DDMStructureLocalServiceImpl
 		structure.setClassNameId(classNameId);
 		structure.setStructureKey(structureKey);
 		structure.setVersion(DDMStructureConstants.VERSION_DEFAULT);
-		structure.setNameMap(nameMap);
-		structure.setDescriptionMap(descriptionMap);
+		structure.setDescriptionMap(descriptionMap, ddmForm.getDefaultLocale());
+		structure.setNameMap(nameMap, ddmForm.getDefaultLocale());
 		structure.setDefinition(ddmFormJSONSerializer.serialize(ddmForm));
 		structure.setStorageType(storageType);
 		structure.setType(type);
@@ -383,7 +383,7 @@ public class DDMStructureLocalServiceImpl
 		throws PortalException {
 
 		String resourceName =
-			DDMStructurePermission.getStructureModelResourceName(
+			ddmPermissionSupport.getStructureModelResourceName(
 				structure.getClassName());
 
 		resourceLocalService.addResources(
@@ -404,7 +404,7 @@ public class DDMStructureLocalServiceImpl
 		throws PortalException {
 
 		String resourceName =
-			DDMStructurePermission.getStructureModelResourceName(
+			ddmPermissionSupport.getStructureModelResourceName(
 				structure.getClassName());
 
 		resourceLocalService.addModelResources(
@@ -529,7 +529,7 @@ public class DDMStructureLocalServiceImpl
 		// Resources
 
 		String resourceName =
-			DDMStructurePermission.getStructureModelResourceName(
+			ddmPermissionSupport.getStructureModelResourceName(
 				structure.getClassName());
 
 		resourceLocalService.deleteResource(
@@ -1530,8 +1530,8 @@ public class DDMStructureLocalServiceImpl
 
 		structureVersion.setGroupId(structure.getGroupId());
 		structureVersion.setCompanyId(structure.getCompanyId());
-		structureVersion.setUserId(structure.getUserId());
-		structureVersion.setUserName(structure.getUserName());
+		structureVersion.setUserId(user.getUserId());
+		structureVersion.setUserName(user.getFullName());
 		structureVersion.setCreateDate(structure.getModifiedDate());
 		structureVersion.setStructureId(structure.getStructureId());
 		structureVersion.setVersion(version);
@@ -1604,6 +1604,7 @@ public class DDMStructureLocalServiceImpl
 		validateParentStructure(structure.getStructureId(), parentStructureId);
 		validate(nameMap, parentDDMForm, ddmForm);
 
+		structure.setUserId(userId);
 		structure.setParentStructureId(parentStructureId);
 
 		DDMStructureVersion latestStructureVersion =
@@ -1618,10 +1619,10 @@ public class DDMStructureLocalServiceImpl
 
 		structure.setVersion(version);
 
-		structure.setNameMap(nameMap);
+		structure.setNameMap(nameMap, ddmForm.getDefaultLocale());
 		structure.setVersionUserId(user.getUserId());
 		structure.setVersionUserName(user.getFullName());
-		structure.setDescriptionMap(descriptionMap);
+		structure.setDescriptionMap(descriptionMap, ddmForm.getDefaultLocale());
 		structure.setDefinition(ddmFormJSONSerializer.serialize(ddmForm));
 
 		// Structure version
@@ -2006,6 +2007,9 @@ public class DDMStructureLocalServiceImpl
 
 	@ServiceReference(type = DDMFormXSDDeserializer.class)
 	protected DDMFormXSDDeserializer ddmFormXSDDeserializer;
+
+	@ServiceReference(type = DDMPermissionSupport.class)
+	protected DDMPermissionSupport ddmPermissionSupport;
 
 	@ServiceReference(type = DDMXML.class)
 	protected DDMXML ddmXML;

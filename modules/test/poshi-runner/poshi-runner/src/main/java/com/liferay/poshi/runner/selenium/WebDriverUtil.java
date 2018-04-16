@@ -33,9 +33,11 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -109,6 +111,8 @@ public class WebDriverUtil extends PropsValues {
 			"webdriver.chrome.driver",
 			SELENIUM_EXECUTABLE_DIR_NAME + SELENIUM_CHROME_DRIVER_EXECUTABLE);
 
+		ChromeOptions chromeOptions = new ChromeOptions();
+
 		DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
 
 		Map<String, Object> preferences = new HashMap<>();
@@ -126,7 +130,13 @@ public class WebDriverUtil extends PropsValues {
 
 		desiredCapabilities.setCapability("chrome.prefs", preferences);
 
-		return new ChromeDriver(desiredCapabilities);
+		chromeOptions.merge(desiredCapabilities);
+
+		if (Validator.isNotNull(PropsValues.BROWSER_CHROME_BIN_ARGS)) {
+			chromeOptions.addArguments(PropsValues.BROWSER_CHROME_BIN_ARGS);
+		}
+
+		return new ChromeDriver(chromeOptions);
 	}
 
 	private WebDriver _getEdgeDriver() {
@@ -151,6 +161,11 @@ public class WebDriverUtil extends PropsValues {
 	}
 
 	private WebDriver _getFirefoxDriver() {
+		System.setProperty("webdriver.firefox.marionette", "false");
+		System.setProperty(
+			"webdriver.gecko.driver",
+			SELENIUM_EXECUTABLE_DIR_NAME + SELENIUM_GECKO_DRIVER_EXECUTABLE);
+
 		FirefoxProfile firefoxProfile = new FirefoxProfile();
 
 		try {
@@ -183,24 +198,25 @@ public class WebDriverUtil extends PropsValues {
 		firefoxProfile.setPreference("dom.max_chrome_script_run_time", 300);
 		firefoxProfile.setPreference("dom.max_script_run_time", 300);
 
+		FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+		firefoxOptions.setProfile(firefoxProfile);
+
 		DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
 
 		desiredCapabilities.setCapability("locationContextEnabled", false);
+
+		firefoxOptions.merge(desiredCapabilities);
 
 		if (Validator.isNotNull(PropsValues.BROWSER_FIREFOX_BIN_FILE)) {
 			File file = new File(PropsValues.BROWSER_FIREFOX_BIN_FILE);
 
 			FirefoxBinary firefoxBinary = new FirefoxBinary(file);
 
-			return new FirefoxDriver(
-				firefoxBinary, firefoxProfile, desiredCapabilities);
+			firefoxOptions.setBinary(firefoxBinary);
 		}
-		else {
-			desiredCapabilities.setCapability(
-				FirefoxDriver.PROFILE, firefoxProfile);
 
-			return new FirefoxDriver(desiredCapabilities);
-		}
+		return new FirefoxDriver(firefoxOptions);
 	}
 
 	private WebDriver _getInternetExplorerDriver() {

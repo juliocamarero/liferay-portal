@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet;
 
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.BaseControlPanelEntry;
@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES},
+	property = "javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES,
 	service = ControlPanelEntry.class
 )
 public class GroupPagesControlPanelEntry extends BaseControlPanelEntry {

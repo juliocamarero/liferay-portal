@@ -1,4 +1,5 @@
 <definition component-name="portal-deployment-mysql">
+	<property name="database.types" value="mysql" />
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
 	<property name="setup.wizard.enabled" value="true" />
@@ -13,8 +14,9 @@
 	</command>
 
 	<command name="MySQLtoMySQLEditedAdministratorUser" priority="4">
-		<execute macro="SetupWizard#viewDefaultPortalNamePG" />
 		<property name="test.name.skip.portal.instance" value="SetupWizardMySQL#MySQLtoMySQLEditAdministratorUser" />
+
+		<execute macro="SetupWizard#viewDefaultPortalNamePG" />
 
 		<execute macro="SetupWizard#configureSampleDataPG">
 			<var name="addSampleData" value="false" />
@@ -78,8 +80,12 @@
 			<var name="userFirstName" value="TestSetupWizardFN" />
 		</execute>
 
-		<execute macro="Page#gotoMyAccount">
-			<var name="portletName" value="Account Settings" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="My Account" />
+			<var name="panel" value="User" />
+			<var name="portlet" value="Account Settings" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="TextInput#EMAIL_ADDRESS" value1="testsetupwizard@liferay.com" />
@@ -90,7 +96,7 @@
 
 	<command name="MySQLtoMySQLLportal1" priority="5">
 		<property name="databases.size" value="1" />
-		<property name="portal.acceptance.tomcat.mysql" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="test.name.skip.portal.instance" value="SetupWizardMySQL#MySQLtoMySQLLportal1" />
 
 		<execute macro="SetupWizard#configurePG">
@@ -115,7 +121,7 @@
 
 	<command name="MySQLtoMySQLLportal1SampleDataDisabled" priority="5">
 		<property name="databases.size" value="1" />
-		<property name="portal.acceptance.tomcat.mysql" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="test.name.skip.portal.instance" value="SetupWizardMySQL#MySQLtoMySQLLportal1SampleDataDisabled" />
 
 		<execute macro="SetupWizard#configurePG">

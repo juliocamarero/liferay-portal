@@ -15,16 +15,17 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.source.formatter.SourceFormatterExcludes;
 import com.liferay.source.formatter.SourceFormatterMessage;
 import com.liferay.source.formatter.checks.util.SourceUtil;
+import com.liferay.source.formatter.util.CheckType;
 import com.liferay.source.formatter.util.FileUtil;
 import com.liferay.source.formatter.util.SourceFormatterUtil;
 
@@ -33,7 +34,6 @@ import java.io.File;
 import java.net.URL;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +68,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	@Override
+	public boolean isEnabled() {
+		return _enabled;
+	}
+
+	@Override
 	public boolean isModulesCheck() {
 		return false;
 	}
@@ -84,6 +89,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	@Override
 	public void setBaseDirName(String baseDirName) {
 		_baseDirName = baseDirName;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		_enabled = enabled;
 	}
 
 	@Override
@@ -151,9 +161,12 @@ public abstract class BaseSourceCheck implements SourceCheck {
 			sourceFormatterMessages = new TreeSet<>();
 		}
 
+		Class<?> clazz = getClass();
+
 		sourceFormatterMessages.add(
 			new SourceFormatterMessage(
-				fileName, message, markdownFileName, lineCount));
+				fileName, message, CheckType.SOURCE_CHECK,
+				clazz.getSimpleName(), markdownFileName, lineCount));
 
 		_sourceFormatterMessagesMap.put(fileName, sourceFormatterMessages);
 	}
@@ -434,6 +447,17 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return document;
 	}
 
+	protected File getPortalDir() {
+		File portalImplDir = SourceFormatterUtil.getFile(
+			getBaseDirName(), "portal-impl", ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+
+		if (portalImplDir == null) {
+			return null;
+		}
+
+		return portalImplDir.getParentFile();
+	}
+
 	protected String getProjectPathPrefix() {
 		return _projectPathPrefix;
 	}
@@ -585,21 +609,6 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return _portalSource;
 	}
 
-	protected boolean isReadOnly(String absolutePath) {
-
-		// This method should only be called temporarily by checks with new
-		// logic. After all source in all subrepositories has been changed
-		// according to new formatting rules, the call should be reverted.
-
-		for (String readOnlyDirName : _readOnlyDirNames) {
-			if (absolutePath.contains(readOnlyDirName)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	protected boolean isSubrepository() {
 		return _subrepository;
 	}
@@ -675,14 +684,8 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	private static final String _GIT_LIFERAY_PORTAL_URL =
 		"https://raw.githubusercontent.com/liferay/liferay-portal/";
 
-	private static final List<String> _readOnlyDirNames = Arrays.asList(
-		"/modules/apps/adaptive-media/", "/modules/apps/analytics/",
-		"/modules/apps/forms-and-workflow/dynamic-data-mapping/",
-		"/modules/apps/forms-and-workflow/portal-workflow/",
-		"/modules/apps/foundation/vulcan/",
-		"/modules/apps/web-experience/journal/", "/modules/private/apps/");
-
 	private String _baseDirName;
+	private boolean _enabled = true;
 	private int _maxLineLength;
 	private List<String> _pluginsInsideModulesDirectoryNames;
 	private boolean _portalSource;

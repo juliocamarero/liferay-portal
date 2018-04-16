@@ -26,7 +26,6 @@ import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataException;
 import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
-import com.liferay.exportimport.staged.model.repository.base.BaseStagedModelRepository;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -42,11 +41,11 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance"},
+	property = "model.class.name=com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance",
 	service = StagedModelRepository.class
 )
 public class DDMDataProviderInstanceStagedModelRepository
-	extends BaseStagedModelRepository<DDMDataProviderInstance> {
+	implements StagedModelRepository<DDMDataProviderInstance> {
 
 	@Override
 	public DDMDataProviderInstance addStagedModel(

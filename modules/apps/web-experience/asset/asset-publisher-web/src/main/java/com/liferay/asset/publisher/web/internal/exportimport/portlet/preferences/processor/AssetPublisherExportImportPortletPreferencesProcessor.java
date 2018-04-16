@@ -22,8 +22,8 @@ import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
-import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -43,8 +43,8 @@ import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.exportimport.portlet.preferences.processor.Capability;
 import com.liferay.exportimport.portlet.preferences.processor.ExportImportPortletPreferencesProcessor;
 import com.liferay.exportimport.portlet.preferences.processor.base.BaseExportImportPortletPreferencesProcessor;
-import com.liferay.exportimport.portlet.preferences.processor.capability.ReferencedStagedModelImporterCapability;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
@@ -74,7 +74,6 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -109,9 +108,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	configurationPid = "com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration",
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + AssetPublisherPortletKeys.ASSET_PUBLISHER
-	},
+	property = "javax.portlet.name=" + AssetPublisherPortletKeys.ASSET_PUBLISHER,
 	service = ExportImportPortletPreferencesProcessor.class
 )
 public class AssetPublisherExportImportPortletPreferencesProcessor
@@ -119,18 +116,12 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 
 	@Override
 	public List<Capability> getExportCapabilities() {
-		return ListUtil.toList(
-			new Capability[] {
-				_assetPublisherPortletDisplayTemplateExportCapability
-			});
+		return ListUtil.toList(new Capability[] {assetExportCapability});
 	}
 
 	@Override
 	public List<Capability> getImportCapabilities() {
-		return ListUtil.toList(
-			new Capability[] {
-				_assetPublisherPortletDisplayTemplateImportCapability
-			});
+		return ListUtil.toList(new Capability[] {assetImportCapability});
 	}
 
 	@Override
@@ -166,8 +157,7 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 		try {
 			importLayoutReferences(portletDataContext);
 
-			_referencedStagedModelImporterCapability.process(
-				portletDataContext, portletPreferences);
+			capability.process(portletDataContext, portletPreferences);
 
 			return updateImportPortletPreferences(
 				portletDataContext, portletPreferences);
@@ -579,24 +569,6 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 	}
 
 	@Reference(unbind = "-")
-	protected void setAssetPublisherPortletDisplayTemplateExportCapability(
-		AssetPublisherPortletDisplayTemplateExportCapability
-			assetPublisherPortletDisplayTemplateExportCapability) {
-
-		_assetPublisherPortletDisplayTemplateExportCapability =
-			assetPublisherPortletDisplayTemplateExportCapability;
-	}
-
-	@Reference(unbind = "-")
-	protected void setAssetPublisherPortletDisplayTemplateImportCapability(
-		AssetPublisherPortletDisplayTemplateImportCapability
-			assetPublisherPortletDisplayTemplateImportCapability) {
-
-		_assetPublisherPortletDisplayTemplateImportCapability =
-			assetPublisherPortletDisplayTemplateImportCapability;
-	}
-
-	@Reference(unbind = "-")
 	protected void setAssetVocabularyLocalService(
 		AssetVocabularyLocalService assetVocabularyLocalService) {
 
@@ -648,15 +620,6 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 		PortletLocalService portletLocalService) {
 
 		_portletLocalService = portletLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setReferencedStagedModelImporterCapability(
-		ReferencedStagedModelImporterCapability
-			referencedStagedModelImporterCapability) {
-
-		_referencedStagedModelImporterCapability =
-			referencedStagedModelImporterCapability;
 	}
 
 	protected void updateExportClassNameIds(
@@ -1227,7 +1190,7 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 			else if (name.startsWith("queryName") &&
 					 StringUtil.equalsIgnoreCase(value, "assetCategories")) {
 
-				String index = name.substring(9, name.length());
+				String index = name.substring(9);
 
 				updateImportPortletPreferencesClassPKs(
 					portletDataContext, portletPreferences,
@@ -1358,8 +1321,17 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 			key, newValues.toArray(new String[newValues.size()]));
 	}
 
+	@Reference(target = "(name=AssetPublisherExportCapability)")
+	protected Capability assetExportCapability;
+
+	@Reference(target = "(name=AssetPublisherImportCapability)")
+	protected Capability assetImportCapability;
+
 	@Reference
 	protected AssetPublisherWebUtil assetPublisherWebUtil;
+
+	@Reference(target = "(name=ReferencedStagedModelImporter)")
+	protected Capability capability;
 
 	@Reference
 	protected Portal portal;
@@ -1368,10 +1340,6 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 		AssetPublisherExportImportPortletPreferencesProcessor.class);
 
 	private AssetCategoryLocalService _assetCategoryLocalService;
-	private AssetPublisherPortletDisplayTemplateExportCapability
-		_assetPublisherPortletDisplayTemplateExportCapability;
-	private AssetPublisherPortletDisplayTemplateImportCapability
-		_assetPublisherPortletDisplayTemplateImportCapability;
 	private AssetPublisherWebConfiguration _assetPublisherWebConfiguration;
 	private AssetVocabularyLocalService _assetVocabularyLocalService;
 	private CompanyLocalService _companyLocalService;
@@ -1381,7 +1349,5 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 	private LayoutLocalService _layoutLocalService;
 	private OrganizationLocalService _organizationLocalService;
 	private PortletLocalService _portletLocalService;
-	private ReferencedStagedModelImporterCapability
-		_referencedStagedModelImporterCapability;
 
 }

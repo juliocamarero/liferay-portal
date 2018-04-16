@@ -16,11 +16,21 @@ package com.liferay.site.navigation.menu.item.layout.internal.type;
 
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.UnicodeProperties;
-import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutConstants;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.webserver.WebServerServletTokenUtil;
+import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutWebKeys;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
@@ -28,6 +38,11 @@ import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 import java.io.IOException;
 
 import java.util.Locale;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -41,11 +56,24 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"site.navigation.menu.item.type=" + SiteNavigationMenuItemTypeLayoutConstants.LAYOUT},
+	property = "site.navigation.menu.item.type=" + SiteNavigationMenuItemTypeConstants.LAYOUT,
 	service = SiteNavigationMenuItemType.class
 )
 public class LayoutSiteNavigationMenuItemType
 	implements SiteNavigationMenuItemType {
+
+	@Override
+	public PortletURL getAddURL(
+		RenderRequest renderRequest, RenderResponse renderResponse) {
+
+		PortletURL addURL = renderResponse.createActionURL();
+
+		addURL.setParameter(
+			ActionRequest.ACTION_NAME,
+			"/navigation_menu/add_layout_site_navigation_menu_item");
+
+		return addURL;
+	}
 
 	@Override
 	public String getIcon() {
@@ -58,6 +86,51 @@ public class LayoutSiteNavigationMenuItemType
 	}
 
 	@Override
+	public Layout getLayout(SiteNavigationMenuItem siteNavigationMenuItem) {
+		return _getLayout(siteNavigationMenuItem);
+	}
+
+	@Override
+	public String getRegularURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.getRegularURL(request);
+	}
+
+	@Override
+	public String getResetLayoutURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.getResetLayoutURL(request);
+	}
+
+	@Override
+	public String getResetMaxStateURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.getResetMaxStateURL(request);
+	}
+
+	@Override
+	public String getTarget(SiteNavigationMenuItem siteNavigationMenuItem) {
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.getTarget();
+	}
+
+	@Override
 	public String getTitle(
 		SiteNavigationMenuItem siteNavigationMenuItem, Locale locale) {
 
@@ -66,15 +139,13 @@ public class LayoutSiteNavigationMenuItemType
 		typeSettingsProperties.fastLoad(
 			siteNavigationMenuItem.getTypeSettings());
 
-		String layoutUuid = typeSettingsProperties.get("layoutUuid");
+		String label = typeSettingsProperties.getProperty("title");
 
-		Layout layout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
-			layoutUuid, siteNavigationMenuItem.getGroupId(), false);
-
-		if (layout == null) {
-			layout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
-				layoutUuid, siteNavigationMenuItem.getGroupId(), true);
+		if (Validator.isNotNull(label)) {
+			return label;
 		}
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
 
 		if (layout != null) {
 			return layout.getName(locale);
@@ -85,7 +156,82 @@ public class LayoutSiteNavigationMenuItemType
 
 	@Override
 	public String getType() {
-		return SiteNavigationMenuItemTypeLayoutConstants.LAYOUT;
+		return SiteNavigationMenuItemTypeConstants.LAYOUT;
+	}
+
+	@Override
+	public String getTypeSettingsFromLayout(Layout layout) {
+		UnicodeProperties unicodeProperties = new UnicodeProperties();
+
+		unicodeProperties.setProperty(
+			"groupId", String.valueOf(layout.getGroupId()));
+		unicodeProperties.setProperty("layoutUuid", layout.getUuid());
+		unicodeProperties.setProperty(
+			"privateLayout", String.valueOf(layout.isPrivateLayout()));
+
+		return unicodeProperties.toString();
+	}
+
+	@Override
+	public String getUnescapedName(
+		SiteNavigationMenuItem siteNavigationMenuItem, String languageId) {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.getName(languageId);
+	}
+
+	@Override
+	public String iconURL(
+		SiteNavigationMenuItem siteNavigationMenuItem, String pathImage) {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		if ((layout == null) || !layout.isIconImage()) {
+			return StringPool.BLANK;
+		}
+
+		StringBundler sb = new StringBundler(5);
+
+		sb.append(pathImage);
+		sb.append("/layout_icon?img_id=");
+		sb.append(layout.getIconImageId());
+		sb.append("&t=");
+		sb.append(WebServerServletTokenUtil.getToken(layout.getIconImageId()));
+
+		return sb.toString();
+	}
+
+	@Override
+	public boolean isBrowsable(SiteNavigationMenuItem siteNavigationMenuItem) {
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		LayoutType layoutType = layout.getLayoutType();
+
+		return layoutType.isBrowsable();
+	}
+
+	@Override
+	public boolean isChildSelected(
+			boolean selectable, SiteNavigationMenuItem siteNavigationMenuItem,
+			Layout curLayout)
+		throws PortalException {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.isChildSelected(selectable, curLayout);
+	}
+
+	@Override
+	public boolean isSelected(
+			boolean selectable, SiteNavigationMenuItem siteNavigationMenuItem,
+			Layout curLayout)
+		throws Exception {
+
+		Layout layout = _getLayout(siteNavigationMenuItem);
+
+		return layout.isSelected(
+			selectable, curLayout, curLayout.getAncestorPlid());
 	}
 
 	@Override
@@ -101,6 +247,45 @@ public class LayoutSiteNavigationMenuItemType
 			_servletContext, request, response, "/add_layout.jsp");
 	}
 
+	@Override
+	public void renderEditPage(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws IOException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		request.setAttribute(
+			SiteNavigationMenuItemTypeLayoutWebKeys.ITEM_SELECTOR,
+			_itemSelector);
+
+		request.setAttribute(
+			WebKeys.SEL_LAYOUT, _getLayout(siteNavigationMenuItem));
+		request.setAttribute(
+			WebKeys.TITLE,
+			getTitle(siteNavigationMenuItem, themeDisplay.getLocale()));
+
+		_jspRenderer.renderJSP(
+			_servletContext, request, response, "/edit_layout.jsp");
+	}
+
+	private Layout _getLayout(SiteNavigationMenuItem siteNavigationMenuItem) {
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		String layoutUuid = typeSettingsProperties.get("layoutUuid");
+		long groupId = GetterUtil.getLong(
+			typeSettingsProperties.get("groupId"));
+		boolean privateLayout = GetterUtil.getBoolean(
+			typeSettingsProperties.get("privateLayout"));
+
+		return _layoutLocalService.fetchLayoutByUuidAndGroupId(
+			layoutUuid, groupId, privateLayout);
+	}
+
 	@Reference
 	private ItemSelector _itemSelector;
 
@@ -109,6 +294,9 @@ public class LayoutSiteNavigationMenuItemType
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference(
 		target = "(osgi.web.symbolicname=com.liferay.site.navigation.menu.item.layout)",

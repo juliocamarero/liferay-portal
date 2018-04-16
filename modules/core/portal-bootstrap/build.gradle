@@ -1,3 +1,5 @@
+import aQute.bnd.osgi.Domain
+
 import com.liferay.gradle.util.copy.RenameDependencyClosure
 
 import org.dm.gradle.plugins.bundle.JarBuilder
@@ -30,6 +32,14 @@ if (!System.getenv("JENKINS_HOME") || !systemPackagesExtraManifestFile.exists())
 			properties["-check"] = "imports"
 			properties["-fixupmessages"] = '"Classpath is empty. Private-Package ...";is:=ignore'
 			properties["-include"] = "system.packages.extra.bnd"
+
+			File portalImplJarFile = configurations.compileOnly.find {
+				it.name.startsWith "com.liferay.portal.impl-"
+			}
+
+			Domain portalImplJarDomain = Domain.domain(portalImplJarFile)
+
+			properties["Provide-Capability"] = portalImplJarDomain.provideCapability.toString()
 
 			jarBuilder.withClasspath new File[0]
 			jarBuilder.withFailOnError true
@@ -67,40 +77,41 @@ bundle {
 }
 
 copySystemPackagesExtraLibs {
-	from configurations.provided
+	from configurations.compileOnly
 	into "lib"
-	rename new RenameDependencyClosure(project, configurations.provided.name)
+	rename new RenameDependencyClosure(project, configurations.compileOnly.name)
 }
 
 dependencies {
-	provided group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
-	provided group: "com.liferay", name: "com.liferay.osgi.felix.util", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.osgi.service.tracker.collections", version: "2.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.concurrent", version: "1.1.0"
-	provided group: "com.liferay", name: "com.liferay.petra.content", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.encryptor", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.executor", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.function", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.io", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.lang", version: "1.1.0"
-	provided group: "com.liferay", name: "com.liferay.petra.log4j", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.mail", version: "1.1.0"
-	provided group: "com.liferay", name: "com.liferay.petra.memory", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.nio", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.process", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.reflect", version: "1.0.0"
-	provided group: "com.liferay", name: "com.liferay.petra.string", version: "1.0.0"
-	provided group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
-	provided group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
-	provided group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
-	provided group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
-	provided group: "org.springframework", name: "spring-beans", version: "4.1.9.RELEASE"
-	provided group: "org.springframework", name: "spring-context", version: "4.1.9.RELEASE"
-	provided group: "org.springframework", name: "spring-core", version: "4.1.9.RELEASE"
-	provided project(":core:jaxws-osgi-bridge")
-	provided project(":core:portal-app-license-api")
-	provided project(":core:registry-api")
-	provided project(":core:registry-impl")
+	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
+	compileOnly group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
+	compileOnly group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	compileOnly group: "org.springframework", name: "spring-beans", version: "4.1.9.RELEASE"
+	compileOnly group: "org.springframework", name: "spring-context", version: "4.1.9.RELEASE"
+	compileOnly group: "org.springframework", name: "spring-core", version: "4.1.9.RELEASE"
+	compileOnly project(":apps:foundation:petra:petra-content")
+	compileOnly project(":apps:foundation:petra:petra-encryptor")
+	compileOnly project(":apps:foundation:petra:petra-log4j")
+	compileOnly project(":apps:foundation:petra:petra-mail")
+	compileOnly project(":apps:foundation:petra:petra-xml")
+	compileOnly project(":core:jaxws-osgi-bridge")
+	compileOnly project(":core:osgi-felix-util")
+	compileOnly project(":core:osgi-service-tracker-collections")
+	compileOnly project(":core:petra:petra-concurrent")
+	compileOnly project(":core:petra:petra-executor")
+	compileOnly project(":core:petra:petra-function")
+	compileOnly project(":core:petra:petra-io")
+	compileOnly project(":core:petra:petra-lang")
+	compileOnly project(":core:petra:petra-memory")
+	compileOnly project(":core:petra:petra-nio")
+	compileOnly project(":core:petra:petra-process")
+	compileOnly project(":core:petra:petra-reflect")
+	compileOnly project(":core:petra:petra-string")
+	compileOnly project(":core:portal-app-license-api")
+	compileOnly project(":core:registry-api")
+	compileOnly project(":core:registry-impl")
 }
 
 liferay {

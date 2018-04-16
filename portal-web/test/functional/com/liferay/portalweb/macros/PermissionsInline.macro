@@ -1,6 +1,6 @@
 <definition>
 	<command name="addOrRemoveViewPermissionFromAllRoles">
-		<for list="${roleList}" param="roleTitle" >
+		<for list="${roleList}" param="roleTitle">
 			<var name="roleTitle" value="${roleTitle}" />
 
 			<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
@@ -26,7 +26,7 @@
 	</command>
 
 	<command name="assertDefaultPG">
-		<for list="${roleList}" param="roleTitle" >
+		<for list="${roleList}" param="roleTitle">
 			<var name="roleTitle" value="${roleTitle}" />
 
 			<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
@@ -134,7 +134,11 @@
 			<var name="key_categoryName" value="${categoryName}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#PERMISSIONS" value1="Permissions" />
+		<execute function="Click" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
+
+		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Permissions">
+			<var name="key_menuItem" value="Permissions" />
+		</execute>
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
@@ -144,7 +148,11 @@
 			<var name="pageName" value="${pageName}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#PERMISSIONS" value1="Permissions" />
+		<execute function="Click" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
+
+		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Permissions">
+			<var name="key_menuItem" value="Permissions" />
+		</execute>
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
@@ -177,9 +185,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Permissions" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
@@ -201,9 +209,9 @@
 	</command>
 
 	<command name="gotoSitepageCP">
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Permissions" />
-			<var name="rowEntry" value="${pageName}" />
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute macro="IFrame#selectPermissionsFrame" />
@@ -235,9 +243,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Permissions" />
-			<var name="rowEntry" value="${page}" />
+			<var name="pageName" value="${page}" />
 		</execute>
 	</command>
 

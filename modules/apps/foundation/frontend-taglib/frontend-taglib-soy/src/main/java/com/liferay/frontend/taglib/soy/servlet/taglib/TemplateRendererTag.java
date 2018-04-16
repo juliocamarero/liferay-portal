@@ -14,26 +14,25 @@
 
 package com.liferay.frontend.taglib.soy.servlet.taglib;
 
+import com.liferay.frontend.taglib.soy.internal.util.SoyContextFactoryUtil;
+import com.liferay.frontend.taglib.soy.internal.util.SoyJavaScriptRendererUtil;
+import com.liferay.frontend.taglib.soy.internal.util.SoyTemplateResourcesProviderUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
-import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.template.soy.utils.SoyContext;
-import com.liferay.portal.template.soy.utils.SoyJavaScriptRenderer;
-import com.liferay.portal.template.soy.utils.SoyTemplateResourcesProvider;
 import com.liferay.taglib.aui.ScriptTag;
 import com.liferay.taglib.util.ParamAndPropertyAncestorTagImpl;
 
 import java.io.IOException;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -158,7 +157,7 @@ public class TemplateRendererTag extends ParamAndPropertyAncestorTagImpl {
 
 	protected Map<String, Object> getContext() {
 		if (_context == null) {
-			_context = new SoyContext();
+			_context = SoyContextFactoryUtil.createSoyContext();
 		}
 
 		return _context;
@@ -188,9 +187,6 @@ public class TemplateRendererTag extends ParamAndPropertyAncestorTagImpl {
 			JspWriter jspWriter, Map<String, Object> context)
 		throws Exception, IOException {
 
-		SoyJavaScriptRenderer javaScriptComponentRenderer =
-			_getJavaScriptComponentRenderer();
-
 		if (!context.containsKey("element")) {
 			context.put("element", getElementSelector());
 		}
@@ -203,7 +199,7 @@ public class TemplateRendererTag extends ParamAndPropertyAncestorTagImpl {
 			requiredModules.addAll(_dependencies);
 		}
 
-		String componentJavaScript = javaScriptComponentRenderer.getJavaScript(
+		String componentJavaScript = SoyJavaScriptRendererUtil.getJavaScript(
 			context, getComponentId(), requiredModules);
 
 		ScriptTag.doTag(
@@ -236,27 +232,11 @@ public class TemplateRendererTag extends ParamAndPropertyAncestorTagImpl {
 		}
 	}
 
-	private SoyJavaScriptRenderer _getJavaScriptComponentRenderer()
-		throws Exception {
-
-		return new SoyJavaScriptRenderer();
-	}
-
 	private Template _getTemplate() throws TemplateException {
 		return TemplateManagerUtil.getTemplate(
-			TemplateConstants.LANG_TYPE_SOY, _getTemplateResources(), false);
+			TemplateConstants.LANG_TYPE_SOY,
+			SoyTemplateResourcesProviderUtil.getAllTemplateResources(), false);
 	}
-
-	private List<TemplateResource> _getTemplateResources() {
-		if (_templateResources == null) {
-			_templateResources =
-				SoyTemplateResourcesProvider.getAllTemplateResources();
-		}
-
-		return _templateResources;
-	}
-
-	private static List<TemplateResource> _templateResources;
 
 	private String _componentId;
 	private Map<String, Object> _context;

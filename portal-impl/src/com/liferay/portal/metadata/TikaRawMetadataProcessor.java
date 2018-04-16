@@ -14,19 +14,19 @@
 
 package com.liferay.portal.metadata;
 
+import com.liferay.petra.process.ProcessCallable;
+import com.liferay.petra.process.ProcessChannel;
+import com.liferay.petra.process.ProcessException;
+import com.liferay.petra.process.ProcessExecutor;
 import com.liferay.portal.fabric.InputResource;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.DummyWriter;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.process.ClassPathUtil;
-import com.liferay.portal.kernel.process.ProcessCallable;
-import com.liferay.portal.kernel.process.ProcessChannel;
-import com.liferay.portal.kernel.process.ProcessException;
-import com.liferay.portal.kernel.process.ProcessExecutor;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
+import com.liferay.portal.util.PortalClassPathUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
@@ -67,15 +67,15 @@ public class TikaRawMetadataProcessor extends XugglerRawMetadataProcessor {
 			metadata = new Metadata();
 		}
 
-		ParseContext parserContext = new ParseContext();
+		ParseContext parseContext = new ParseContext();
 
-		parserContext.set(Parser.class, parser);
+		parseContext.set(Parser.class, parser);
 
 		ContentHandler contentHandler = new WriteOutContentHandler(
 			new DummyWriter());
 
 		try (InputStream inputStream = new FileInputStream(file)) {
-			parser.parse(inputStream, contentHandler, metadata, parserContext);
+			parser.parse(inputStream, contentHandler, metadata, parseContext);
 		}
 		catch (Exception e) {
 			Throwable throwable = ExceptionUtils.getRootCause(e);
@@ -132,7 +132,7 @@ public class TikaRawMetadataProcessor extends XugglerRawMetadataProcessor {
 			try {
 				ProcessChannel<Metadata> processChannel =
 					_processExecutor.execute(
-						ClassPathUtil.getPortalProcessConfig(),
+						PortalClassPathUtil.getPortalProcessConfig(),
 						extractMetadataProcessCallable);
 
 				Future<Metadata> future =

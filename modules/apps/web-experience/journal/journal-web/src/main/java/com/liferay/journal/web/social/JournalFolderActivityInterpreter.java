@@ -16,9 +16,10 @@ package com.liferay.journal.web.social;
 
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.service.permission.JournalFolderPermission;
 import com.liferay.journal.web.util.JournalResourceBundleLoader;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionHelper;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.Validator;
@@ -28,12 +29,13 @@ import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.social.kernel.model.SocialActivityInterpreter;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Zsolt Berentey
  */
 @Component(
-	property = {"javax.portlet.name=" + JournalPortletKeys.JOURNAL},
+	property = "javax.portlet.name=" + JournalPortletKeys.JOURNAL,
 	service = SocialActivityInterpreter.class
 )
 public class JournalFolderActivityInterpreter
@@ -101,12 +103,18 @@ public class JournalFolderActivityInterpreter
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
-		return JournalFolderPermission.contains(
-			permissionChecker, activity.getGroupId(), activity.getClassPK(),
-			actionId);
+		return ModelResourcePermissionHelper.contains(
+			_journalFolderModelResourcePermission, permissionChecker,
+			activity.getGroupId(), activity.getClassPK(), actionId);
 	}
 
 	private static final String[] _CLASS_NAMES =
 		{JournalFolder.class.getName()};
+
+	@Reference(
+		target = "(model.class.name=com.liferay.journal.model.JournalFolder)"
+	)
+	private ModelResourcePermission<JournalFolder>
+		_journalFolderModelResourcePermission;
 
 }

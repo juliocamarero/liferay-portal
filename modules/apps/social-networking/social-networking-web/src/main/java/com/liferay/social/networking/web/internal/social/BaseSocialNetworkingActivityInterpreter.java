@@ -14,16 +14,16 @@
 
 package com.liferay.social.networking.web.internal.social;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.social.kernel.model.BaseSocialActivityInterpreter;
 import com.liferay.social.kernel.model.SocialActivity;
-import com.liferay.social.networking.friends.social.FriendsActivityKeys;
+import com.liferay.social.networking.web.internal.friends.social.FriendsActivityKeys;
 
 import org.osgi.service.component.annotations.Reference;
 

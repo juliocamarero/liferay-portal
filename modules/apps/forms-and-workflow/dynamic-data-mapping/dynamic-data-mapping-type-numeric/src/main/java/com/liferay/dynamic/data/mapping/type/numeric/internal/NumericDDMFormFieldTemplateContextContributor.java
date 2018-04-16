@@ -14,12 +14,13 @@
 
 package com.liferay.dynamic.data.mapping.type.numeric.internal;
 
+import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormFieldEvaluationResult;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTemplateContextContributor;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -47,12 +48,19 @@ public class NumericDDMFormFieldTemplateContextContributor
 
 		Map<String, Object> parameters = new HashMap<>();
 
+		parameters.put(
+			"dataType",
+			getDataType(ddmFormField, ddmFormFieldRenderingContext));
+
 		LocalizedValue placeholder = (LocalizedValue)ddmFormField.getProperty(
 			"placeholder");
 
 		Locale locale = ddmFormFieldRenderingContext.getLocale();
 
 		parameters.put("placeholder", getValueString(placeholder, locale));
+		parameters.put(
+			"predefinedValue",
+			getValueString(ddmFormField.getPredefinedValue(), locale));
 
 		LocalizedValue tooltip = (LocalizedValue)ddmFormField.getProperty(
 			"tooltip");
@@ -60,6 +68,26 @@ public class NumericDDMFormFieldTemplateContextContributor
 		parameters.put("tooltip", getValueString(tooltip, locale));
 
 		return parameters;
+	}
+
+	protected String getDataType(
+		DDMFormField ddmFormField,
+		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
+
+		DDMFormFieldEvaluationResult ddmFormFieldEvaluationResult =
+			(DDMFormFieldEvaluationResult)ddmFormFieldRenderingContext.
+				getProperty("ddmFormFieldEvaluationResult");
+
+		if (ddmFormFieldEvaluationResult != null) {
+			String dataType = ddmFormFieldEvaluationResult.getProperty(
+				"dataType");
+
+			if (dataType != null) {
+				return dataType;
+			}
+		}
+
+		return ddmFormField.getDataType();
 	}
 
 	protected String getValueString(Value value, Locale locale) {

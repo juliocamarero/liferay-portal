@@ -17,7 +17,8 @@ package com.liferay.blogs.service.persistence.impl;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.model.impl.BlogsEntryImpl;
 import com.liferay.blogs.service.persistence.BlogsEntryFinder;
-import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -28,9 +29,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.CalendarUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.sql.Timestamp;
 
@@ -82,16 +83,15 @@ public class BlogsEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(
-				getClass(), COUNT_BY_ORGANIZATION_IDS);
+			String sql = _customSQL.get(getClass(), COUNT_BY_ORGANIZATION_IDS);
 
 			if (queryDefinition.getStatus() != WorkflowConstants.STATUS_ANY) {
 				if (queryDefinition.isExcludeStatus()) {
-					sql = CustomSQLUtil.appendCriteria(
+					sql = _customSQL.appendCriteria(
 						sql, "AND (BlogsEntry.status != ?)");
 				}
 				else {
-					sql = CustomSQLUtil.appendCriteria(
+					sql = _customSQL.appendCriteria(
 						sql, "AND (BlogsEntry.status = ?)");
 				}
 			}
@@ -106,9 +106,7 @@ public class BlogsEntryFinderImpl
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			for (int i = 0; i < organizationIds.size(); i++) {
-				Long organizationId = organizationIds.get(i);
-
+			for (Long organizationId : organizationIds) {
 				qPos.add(organizationId);
 			}
 
@@ -148,15 +146,15 @@ public class BlogsEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(getClass(), FIND_BY_GROUP_IDS);
+			String sql = _customSQL.get(getClass(), FIND_BY_GROUP_IDS);
 
 			if (queryDefinition.getStatus() != WorkflowConstants.STATUS_ANY) {
 				if (queryDefinition.isExcludeStatus()) {
-					sql = CustomSQLUtil.appendCriteria(
+					sql = _customSQL.appendCriteria(
 						sql, "AND (BlogsEntry.status != ?)");
 				}
 				else {
-					sql = CustomSQLUtil.appendCriteria(
+					sql = _customSQL.appendCriteria(
 						sql, "AND (BlogsEntry.status = ?)");
 				}
 			}
@@ -214,16 +212,15 @@ public class BlogsEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(
-				getClass(), FIND_BY_ORGANIZATION_IDS);
+			String sql = _customSQL.get(getClass(), FIND_BY_ORGANIZATION_IDS);
 
 			if (queryDefinition.getStatus() != WorkflowConstants.STATUS_ANY) {
 				if (queryDefinition.isExcludeStatus()) {
-					sql = CustomSQLUtil.appendCriteria(
+					sql = _customSQL.appendCriteria(
 						sql, "AND (BlogsEntry.status != ?)");
 				}
 				else {
-					sql = CustomSQLUtil.appendCriteria(
+					sql = _customSQL.appendCriteria(
 						sql, "AND (BlogsEntry.status = ?)");
 				}
 			}
@@ -231,7 +228,7 @@ public class BlogsEntryFinderImpl
 			sql = StringUtil.replace(
 				sql, "[$ORGANIZATION_ID$]",
 				getOrganizationIds(organizationIds));
-			sql = CustomSQLUtil.replaceOrderBy(
+			sql = _customSQL.replaceOrderBy(
 				sql, queryDefinition.getOrderByComparator());
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
@@ -240,9 +237,7 @@ public class BlogsEntryFinderImpl
 
 			QueryPos qPos = QueryPos.getInstance(q);
 
-			for (int i = 0; i < organizationIds.size(); i++) {
-				Long organizationId = organizationIds.get(i);
-
+			for (Long organizationId : organizationIds) {
 				qPos.add(organizationId);
 			}
 
@@ -271,7 +266,7 @@ public class BlogsEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(getClass(), FIND_BY_NO_ASSETS);
+			String sql = _customSQL.get(getClass(), FIND_BY_NO_ASSETS);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
@@ -308,5 +303,8 @@ public class BlogsEntryFinderImpl
 
 		return sb.toString();
 	}
+
+	@ServiceReference(type = CustomSQL.class)
+	private CustomSQL _customSQL;
 
 }

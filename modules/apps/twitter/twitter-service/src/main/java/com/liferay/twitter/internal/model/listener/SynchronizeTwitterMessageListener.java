@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.scheduler.SchedulerEntryImpl;
 import com.liferay.portal.kernel.scheduler.TimeUnit;
 import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
-import com.liferay.twitter.configuration.TwitterGroupServiceConfiguration;
+import com.liferay.twitter.internal.configuration.TwitterGroupServiceConfiguration;
 import com.liferay.twitter.service.FeedLocalService;
 
 import java.util.Map;
@@ -40,7 +40,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Peter Fellwock
  */
 @Component(
-	configurationPid = "com.liferay.twitter.configuration.TwitterConfiguration",
+	configurationPid = "com.liferay.twitter.internal.configuration.TwitterGroupServiceConfiguration",
 	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
 	service = SynchronizeTwitterMessageListener.class
 )

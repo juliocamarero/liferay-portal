@@ -67,6 +67,16 @@ AUI.add(
 						return EditorField.superclass.hasFocus.apply(instance, arguments) || instance._hasAlloyEditorFocus();
 					},
 
+					processEvaluationContext: function(context) {
+						var instance = this;
+
+						if (!instance.hasFocus()) {
+							context.valid = true;
+						}
+
+						return context;
+					},
+
 					render: function() {
 						var instance = this;
 
@@ -101,7 +111,9 @@ AUI.add(
 										}
 									},
 									namespace: name,
-									onChangeMethod: A.bind(A.debounce(instance._onChangeEditor, 100), instance),
+									onBlurMethod: A.bind(instance._afterBlur, instance),
+									onChangeMethod: A.bind(instance._onChangeEditor, instance),
+									onFocusMethod: A.bind(instance._afterFocus, instance),
 									plugins: [],
 									textMode: false
 								}
@@ -129,16 +141,22 @@ AUI.add(
 						return !!A.one(document.activeElement).ancestor('.ae-ui');
 					},
 
-					_onActionPerformed: function() {
+					_onActionPerformed: function(event) {
 						var instance = this;
 
-						instance._onChangeEditor(instance.getValue());
+						var eventData = event.data;
+						var props = eventData.props;
+
+						if (props.tabKey === 'twitter') {
+							instance._onChangeEditor();
+						}
 					},
 
-					_onChangeEditor: function(value) {
+					_onChangeEditor: function() {
 						var instance = this;
 
 						var inputNode = instance.getInputNode();
+						var value = instance.getValue();
 
 						if (inputNode && !Util.compare(value, inputNode.val())) {
 							inputNode.val(value);

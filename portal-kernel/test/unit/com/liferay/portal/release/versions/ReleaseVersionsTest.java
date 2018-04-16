@@ -17,11 +17,11 @@ package com.liferay.portal.release.versions;
 import aQute.bnd.osgi.Constants;
 import aQute.bnd.version.Version;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
@@ -165,27 +165,16 @@ public class ReleaseVersionsTest {
 		Version masterVersion = masterVersionPair.getKey();
 		Version releaseVersion = releaseVersionPair.getKey();
 
-		int delta = 0;
+		if (!releaseVersion.equals(Version.ONE) &&
+			(masterVersion.getMajor() != (releaseVersion.getMajor() + 1))) {
 
-		for (int i = 0; i < 3; i++) {
-			int masterVersionPart = masterVersion.get(i);
-			int releaseVersionPart = releaseVersion.get(i);
+			StringBundler sb = new StringBundler(22);
 
-			if (masterVersionPart != releaseVersionPart) {
-				delta = masterVersionPart - releaseVersionPart;
-
-				break;
-			}
-		}
-
-		if ((delta != 0) && (delta != 1)) {
-			StringBundler sb = new StringBundler(21);
-
-			sb.append("Difference in ");
+			sb.append("The ");
 			sb.append(Constants.BUNDLE_VERSION);
 			sb.append(" for ");
 			sb.append(_portalPath.relativize(dirPath));
-			sb.append(" between master (");
+			sb.append(" on the 'master' branch (");
 			sb.append(masterVersion);
 			sb.append(", defined in ");
 
@@ -193,7 +182,8 @@ public class ReleaseVersionsTest {
 
 			sb.append(masterVersionPath.getFileName());
 
-			sb.append(") and release (");
+			sb.append(") must be 1 major version greater than the 'release' ");
+			sb.append("branch (");
 			sb.append(releaseVersion);
 			sb.append(", defined in ");
 
@@ -201,7 +191,7 @@ public class ReleaseVersionsTest {
 
 			sb.append(releaseVersionPath.getFileName());
 
-			sb.append(") branches is not allowed. Please ");
+			sb.append("). Please ");
 
 			Path updateVersionPath;
 			String updateVersionSeparator;
@@ -241,10 +231,10 @@ public class ReleaseVersionsTest {
 			sb.append(" \"");
 			sb.append(Constants.BUNDLE_VERSION);
 			sb.append(updateVersionSeparator);
-			sb.append(releaseVersion);
+			sb.append(new Version(releaseVersion.getMajor() + 1));
 			sb.append("\" in ");
 			sb.append(_portalPath.relativize(updateVersionPath));
-			sb.append(" for the master branch.");
+			sb.append(" for the 'master' branch.");
 
 			Assert.fail(sb.toString());
 		}

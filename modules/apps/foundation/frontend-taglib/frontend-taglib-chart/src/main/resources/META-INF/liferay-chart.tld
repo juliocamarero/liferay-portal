@@ -11,14 +11,71 @@
 	<uri>http://liferay.com/tld/chart</uri>
 	<tag>
 		<description><![CDATA[]]></description>
+		<name>area-spline</name>
+		<tag-class>com.liferay.frontend.taglib.chart.servlet.taglib.soy.AreaSplineChartTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.area.spline.AreaSplineChartConfig</type>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description><![CDATA[]]></description>
+		<name>area-step</name>
+		<tag-class>com.liferay.frontend.taglib.chart.servlet.taglib.soy.AreaStepChartTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.area.step.AreaStepChartConfig</type>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description><![CDATA[]]></description>
 		<name>bar</name>
 		<tag-class>com.liferay.frontend.taglib.chart.servlet.taglib.soy.BarChartTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.point.bar.BarChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -34,15 +91,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
-			<required>true</required>
+			<name>componentId</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>groups</name>
-			<required>false</required>
+			<name>config</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.combination.CombinationChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -58,9 +116,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.percentage.donut.DonutChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -76,9 +141,41 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.gauge.GaugeChartConfig</type>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description><![CDATA[]]></description>
+		<name>geomap</name>
+		<tag-class>com.liferay.frontend.taglib.chart.servlet.taglib.soy.GeomapTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.geomap.GeomapConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -94,9 +191,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.point.line.LineChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -112,9 +216,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.percentage.pie.PieChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -130,9 +241,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.point.scatter.ScatterChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -148,9 +266,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.point.spline.SplineChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>
@@ -166,9 +291,16 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
-			<name>columns</name>
+			<name>componentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>config</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+			<type>com.liferay.frontend.taglib.chart.model.point.step.StepChartConfig</type>
 		</attribute>
 		<attribute>
 			<description></description>

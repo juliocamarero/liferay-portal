@@ -29,11 +29,10 @@ import com.liferay.blogs.exception.NoSuchEntryException;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalService;
 import com.liferay.blogs.service.BlogsEntryService;
-import com.liferay.blogs.util.BlogsEntryAttachmentContentUpdater;
-import com.liferay.blogs.util.BlogsEntryAttachmentFileEntryUtil;
-import com.liferay.blogs.util.BlogsEntryImageSelectorHelper;
+import com.liferay.blogs.web.internal.util.BlogsEntryImageSelectorHelper;
 import com.liferay.document.library.kernel.exception.FileSizeException;
 import com.liferay.friendly.url.exception.DuplicateFriendlyURLEntryException;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.editor.EditorConstants;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -48,8 +47,6 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
-import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -64,17 +61,17 @@ import com.liferay.portal.kernel.upload.LiferayFileItemException;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadRequestSizeException;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portlet.blogs.BlogsEntryAttachmentFileEntryReference;
 import com.liferay.trash.service.TrashEntryService;
+import com.liferay.upload.AttachmentContentUpdater;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,7 +88,6 @@ import javax.portlet.WindowState;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Brian Wing Shun Chan
@@ -345,14 +341,6 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
-	@Reference(policyOption = ReferencePolicyOption.GREEDY, unbind = "-")
-	protected void setBlogsEntryAttachmentContentUpdater(
-		BlogsEntryAttachmentContentUpdater blogsEntryAttachmentContentUpdater) {
-
-		_blogsEntryAttachmentContentUpdater =
-			blogsEntryAttachmentContentUpdater;
-	}
-
 	@Reference(unbind = "-")
 	protected void setBlogsEntryLocalService(
 		BlogsEntryLocalService blogsEntryLocalService) {
@@ -445,23 +433,25 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		String coverImageCaption = ParamUtil.getString(
 			actionRequest, "coverImageCaption");
 
-		long oldCoverImageId = 0;
+		long oldCoverImageFileEntryId = 0;
 		String oldCoverImageURL = StringPool.BLANK;
+		long oldSmallImageFileEntryId = 0;
 		long oldSmallImageId = 0;
 		String oldSmallImageURL = StringPool.BLANK;
 
 		if (entryId != 0) {
 			BlogsEntry entry = _blogsEntryLocalService.getEntry(entryId);
 
-			oldCoverImageId = entry.getCoverImageFileEntryId();
+			oldCoverImageFileEntryId = entry.getCoverImageFileEntryId();
 			oldCoverImageURL = entry.getCoverImageURL();
+			oldSmallImageFileEntryId = entry.getSmallImageFileEntryId();
 			oldSmallImageId = entry.getSmallImageId();
 			oldSmallImageURL = entry.getSmallImageURL();
 		}
 
 		BlogsEntryImageSelectorHelper blogsEntryCoverImageSelectorHelper =
 			new BlogsEntryImageSelectorHelper(
-				coverImageFileEntryId, oldCoverImageId,
+				0, coverImageFileEntryId, oldCoverImageFileEntryId,
 				coverImageFileEntryCropRegion, coverImageURL, oldCoverImageURL);
 
 		ImageSelector coverImageImageSelector =
@@ -474,8 +464,9 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		BlogsEntryImageSelectorHelper blogsEntrySmallImageSelectorHelper =
 			new BlogsEntryImageSelectorHelper(
-				smallImageFileEntryId, oldSmallImageId, StringPool.BLANK,
-				smallImageURL, oldSmallImageURL);
+				oldSmallImageId, smallImageFileEntryId,
+				oldSmallImageFileEntryId, StringPool.BLANK, smallImageURL,
+				oldSmallImageURL);
 
 		ImageSelector smallImageImageSelector =
 			blogsEntrySmallImageSelectorHelper.getImageSelector();
@@ -484,8 +475,6 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 			BlogsEntry.class.getName(), actionRequest);
 
 		BlogsEntry entry = null;
-		List<BlogsEntryAttachmentFileEntryReference>
-			blogsEntryAttachmentFileEntryReferences = null;
 
 		if (entryId <= 0) {
 
@@ -499,34 +488,13 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 				coverImageImageSelector, smallImageImageSelector,
 				serviceContext);
 
-			List<FileEntry> tempBlogsEntryAttachments =
-				BlogsEntryAttachmentFileEntryUtil.
-					getTempBlogsEntryAttachmentFileEntries(content);
+			String updatedContent = _updateContent(
+				entry, content, themeDisplay);
 
-			if (!tempBlogsEntryAttachments.isEmpty()) {
-				Folder folder = _blogsEntryLocalService.addAttachmentsFolder(
-					themeDisplay.getUserId(), entry.getGroupId());
-
-				blogsEntryAttachmentFileEntryReferences =
-					BlogsEntryAttachmentFileEntryUtil.
-						addBlogsEntryAttachmentFileEntries(
-							entry.getGroupId(), themeDisplay.getUserId(),
-							entry.getEntryId(), folder.getFolderId(),
-							tempBlogsEntryAttachments);
-
-				content = _blogsEntryAttachmentContentUpdater.updateContent(
-					content, blogsEntryAttachmentFileEntryReferences);
-
-				entry.setContent(content);
+			if (!content.equals(updatedContent)) {
+				entry.setContent(updatedContent);
 
 				_blogsEntryLocalService.updateBlogsEntry(entry);
-			}
-
-			for (FileEntry tempBlogsEntryAttachment :
-					tempBlogsEntryAttachments) {
-
-				PortletFileRepositoryUtil.deletePortletFileEntry(
-					tempBlogsEntryAttachment.getFileEntryId());
 			}
 		}
 		else {
@@ -547,24 +515,7 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 
 			entry = _blogsEntryLocalService.getEntry(entryId);
 
-			List<FileEntry> tempBlogsEntryAttachmentFileEntries =
-				BlogsEntryAttachmentFileEntryUtil.
-					getTempBlogsEntryAttachmentFileEntries(content);
-
-			if (!tempBlogsEntryAttachmentFileEntries.isEmpty()) {
-				Folder folder = _blogsEntryLocalService.addAttachmentsFolder(
-					themeDisplay.getUserId(), entry.getGroupId());
-
-				blogsEntryAttachmentFileEntryReferences =
-					BlogsEntryAttachmentFileEntryUtil.
-						addBlogsEntryAttachmentFileEntries(
-							entry.getGroupId(), themeDisplay.getUserId(),
-							entry.getEntryId(), folder.getFolderId(),
-							tempBlogsEntryAttachmentFileEntries);
-
-				content = _blogsEntryAttachmentContentUpdater.updateContent(
-					content, blogsEntryAttachmentFileEntryReferences);
-			}
+			content = _updateContent(entry, content, themeDisplay);
 
 			entry = _blogsEntryService.updateEntry(
 				entryId, title, subtitle, urlTitle, description, content,
@@ -573,13 +524,6 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 				allowTrackbacks, trackbacks, coverImageCaption,
 				coverImageImageSelector, smallImageImageSelector,
 				serviceContext);
-
-			for (FileEntry tempBlogsEntryAttachmentFileEntry :
-					tempBlogsEntryAttachmentFileEntries) {
-
-				PortletFileRepositoryUtil.deletePortletFileEntry(
-					tempBlogsEntryAttachmentFileEntry.getFileEntryId());
-			}
 		}
 
 		if (blogsEntryCoverImageSelectorHelper.isFileEntryTempFile()) {
@@ -603,6 +547,17 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		return entry;
 	}
 
+	private String _updateContent(
+			BlogsEntry entry, String content, ThemeDisplay themeDisplay)
+		throws PortalException {
+
+		return _attachmentContentUpdater.updateContent(
+			content, ContentTypes.TEXT_HTML,
+			tempFileEntry -> _blogsEntryLocalService.addAttachmentFileEntry(
+				entry, themeDisplay.getUserId(), tempFileEntry.getTitle(),
+				tempFileEntry.getMimeType(), tempFileEntry.getContentStream()));
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		EditEntryMVCActionCommand.class);
 
@@ -610,8 +565,9 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		TransactionConfig.Factory.create(
 			Propagation.REQUIRED, new Class<?>[] {Exception.class});
 
-	private BlogsEntryAttachmentContentUpdater
-		_blogsEntryAttachmentContentUpdater;
+	@Reference
+	private AttachmentContentUpdater _attachmentContentUpdater;
+
 	private BlogsEntryLocalService _blogsEntryLocalService;
 	private BlogsEntryService _blogsEntryService;
 

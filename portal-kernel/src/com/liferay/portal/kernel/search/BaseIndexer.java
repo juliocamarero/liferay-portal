@@ -20,11 +20,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.expando.kernel.model.ExpandoBridge;
-import com.liferay.expando.kernel.model.ExpandoColumn;
-import com.liferay.expando.kernel.model.ExpandoColumnConstants;
-import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
-import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
-import com.liferay.expando.kernel.util.ExpandoBridgeIndexerUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchCountryException;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.NoSuchRegionException;
@@ -64,11 +60,10 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.registry.collections.ServiceTrackerCollections;
@@ -646,7 +641,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				}
 
 				SearchResultPermissionFilter searchResultPermissionFilter =
-					new DefaultSearchResultPermissionFilter(
+					_searchResultPermissionFilterFactory.create(
 						this::doSearch, permissionChecker);
 
 				hits = searchResultPermissionFilter.search(searchContext);
@@ -884,8 +879,8 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		String[] selectedFieldNames = queryConfig.getSelectedFieldNames();
 
 		if (ArrayUtil.isEmpty(selectedFieldNames) ||
-			(selectedFieldNames.length == 1) &&
-			selectedFieldNames[0].equals(Field.ANY)) {
+			((selectedFieldNames.length == 1) &&
+			 selectedFieldNames[0].equals(Field.ANY))) {
 
 			return;
 		}
@@ -1035,49 +1030,14 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			String keywords)
 		throws Exception {
 
-		Map<String, Query> expandoQueries = new HashMap<>();
+		for (ExpandoQueryContributor expandoQueryContributor :
+				getExpandoQueryContributors()) {
 
-		ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(
-			searchContext.getCompanyId(), getClassName(searchContext));
-
-		Set<String> attributeNames = SetUtil.fromEnumeration(
-			expandoBridge.getAttributeNames());
-
-		for (String attributeName : attributeNames) {
-			UnicodeProperties properties = expandoBridge.getAttributeProperties(
-				attributeName);
-
-			int indexType = GetterUtil.getInteger(
-				properties.getProperty(ExpandoColumnConstants.INDEX_TYPE));
-
-			if ((indexType != ExpandoColumnConstants.INDEX_TYPE_NONE) &&
-				Validator.isNotNull(keywords)) {
-
-				String fieldName = getExpandoFieldName(
-					searchContext, expandoBridge, attributeName);
-
-				boolean like = false;
-
-				if (indexType == ExpandoColumnConstants.INDEX_TYPE_TEXT) {
-					like = true;
-				}
-
-				if (searchContext.isAndSearch()) {
-					Query query = searchQuery.addRequiredTerm(
-						fieldName, keywords, like);
-
-					expandoQueries.put(attributeName, query);
-				}
-				else {
-					Query query = searchQuery.addTerm(
-						fieldName, keywords, like);
-
-					expandoQueries.put(attributeName, query);
-				}
-			}
+			expandoQueryContributor.contribute(
+				keywords, searchQuery, getSearchClassNames(), searchContext);
 		}
 
-		return expandoQueries;
+		return new HashMap<>();
 	}
 
 	protected void addSearchFolderId(
@@ -1567,28 +1527,18 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		SearchContext searchContext, ExpandoBridge expandoBridge,
 		String attributeName) {
 
-		ExpandoColumn expandoColumn =
-			ExpandoColumnLocalServiceUtil.getDefaultTableColumn(
-				expandoBridge.getCompanyId(), expandoBridge.getClassName(),
-				attributeName);
+		return null;
+	}
 
-		UnicodeProperties unicodeProperties =
-			expandoColumn.getTypeSettingsProperties();
-
-		int indexType = GetterUtil.getInteger(
-			unicodeProperties.getProperty(ExpandoColumnConstants.INDEX_TYPE));
-
-		String fieldName = ExpandoBridgeIndexerUtil.encodeFieldName(
-			attributeName, indexType);
-
-		if (expandoColumn.getType() ==
-				ExpandoColumnConstants.STRING_LOCALIZED) {
-
-			fieldName = Field.getLocalizedName(
-				searchContext.getLocale(), fieldName);
+	protected List<ExpandoQueryContributor> getExpandoQueryContributors() {
+		if (_expandoQueryContributors != null) {
+			return _expandoQueryContributors;
 		}
 
-		return fieldName;
+		_expandoQueryContributors = ServiceTrackerCollections.openList(
+			ExpandoQueryContributor.class);
+
+		return _expandoQueryContributors;
 	}
 
 	protected Locale getLocale(PortletRequest portletRequest) {
@@ -1748,7 +1698,11 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		for (Address address : addresses) {
 			cities.add(StringUtil.toLowerCase(address.getCity()));
 			countries.addAll(getLocalizedCountryNames(address.getCountry()));
-			regions.add(StringUtil.toLowerCase(address.getRegion().getName()));
+
+			Region region = address.getRegion();
+
+			regions.add(StringUtil.toLowerCase(region.getName()));
+
 			streets.add(StringUtil.toLowerCase(address.getStreet1()));
 			streets.add(StringUtil.toLowerCase(address.getStreet2()));
 			streets.add(StringUtil.toLowerCase(address.getStreet3()));
@@ -1875,16 +1829,23 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			SearchContext searchContext)
 		throws Exception {
 
+		BooleanFilter preFilterBooleanFilter = new BooleanFilter();
+
 		for (Entry<String, Indexer<?>> entry :
 				entryClassNameIndexerMap.entrySet()) {
 
 			String entryClassName = entry.getKey();
 			Indexer<?> indexer = entry.getValue();
 
-			queryBooleanFilter.add(
+			preFilterBooleanFilter.add(
 				_createPreFilterForEntryClassName(
 					entryClassName, indexer, searchContext),
 				BooleanClauseOccur.SHOULD);
+		}
+
+		if (preFilterBooleanFilter.hasClauses()) {
+			queryBooleanFilter.add(
+				preFilterBooleanFilter, BooleanClauseOccur.MUST);
 		}
 	}
 
@@ -1971,11 +1932,18 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseIndexer.class);
 
+	private static volatile SearchResultPermissionFilterFactory
+		_searchResultPermissionFilterFactory =
+			ServiceProxyFactory.newServiceTrackedInstance(
+				SearchResultPermissionFilterFactory.class, BaseIndexer.class,
+				"_searchResultPermissionFilterFactory", false);
+
 	private boolean _commitImmediately;
 	private String[] _defaultSelectedFieldNames;
 	private String[] _defaultSelectedLocalizedFieldNames;
 	private final Document _document = new DocumentImpl();
 	private List<DocumentContributor> _documentContributors;
+	private List<ExpandoQueryContributor> _expandoQueryContributors;
 	private boolean _filterSearch;
 	private Boolean _indexerEnabled;
 	private IndexerPostProcessor[] _indexerPostProcessors =

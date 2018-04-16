@@ -33,9 +33,7 @@ import java.util.regex.Pattern;
  */
 public class LoadBalancerUtil {
 
-	public static String getMostAvailableMasterURL(Properties properties)
-		throws Exception {
-
+	public static String getMostAvailableMasterURL(Properties properties) {
 		long start = System.currentTimeMillis();
 
 		int retries = 0;
@@ -240,7 +238,7 @@ public class LoadBalancerUtil {
 			return 0;
 		}
 
-		else return _nextUpdateTimestampMap.get(masterPrefix);
+		return _nextUpdateTimestampMap.get(masterPrefix);
 	}
 
 	private static void _setNextUpdateTimestamp(

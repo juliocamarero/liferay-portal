@@ -161,7 +161,9 @@ public class LocalGitSyncUtil {
 		GitWorkingDirectory.Branch localUpstreamBranch =
 			updateLocalUpstreamBranch(gitWorkingDirectory, upstreamBranchSHA);
 
-		gitWorkingDirectory.checkoutBranch(localUpstreamBranch);
+		if (localUpstreamBranch != null) {
+			gitWorkingDirectory.checkoutBranch(localUpstreamBranch);
+		}
 	}
 
 	protected static void copyUpstreamRefsToHeads(
@@ -200,12 +202,13 @@ public class LocalGitSyncUtil {
 			remoteBranches.put(remoteBranch.getName(), remoteBranch);
 		}
 
-		for (String remoteBranchName : remoteBranches.keySet()) {
-			GitWorkingDirectory.Branch remoteBranch = remoteBranches.get(
-				remoteBranchName);
+		for (Map.Entry<String, GitWorkingDirectory.Branch> entry :
+				remoteBranches.entrySet()) {
+
+			GitWorkingDirectory.Branch remoteBranch = entry.getValue();
 
 			Matcher matcher = _cacheTimestampBranchPattern.matcher(
-				remoteBranchName);
+				entry.getKey());
 
 			if (matcher.matches()) {
 				branchCount++;
@@ -290,7 +293,7 @@ public class LocalGitSyncUtil {
 		for (String localBranchName :
 				gitWorkingDirectory.getLocalBranchNames()) {
 
-			if (localBranchName.matches(_cacheBranchRegex) &&
+			if (localBranchName.matches(_CACHE_BRANCH_REGEX) &&
 				!localBranchName.equals(excludeBranchName)) {
 
 				gitWorkingDirectory.deleteBranch(localBranchName, null);
@@ -302,13 +305,17 @@ public class LocalGitSyncUtil {
 		String cacheBranchName, GitWorkingDirectory gitWorkingDirectory,
 		Map<String, GitWorkingDirectory.Branch> remoteBranches) {
 
-		for (String remoteBranchName : remoteBranches.keySet()) {
+		for (Map.Entry<String, GitWorkingDirectory.Branch> entry :
+				remoteBranches.entrySet()) {
+
+			String remoteBranchName = entry.getKey();
+
 			if (!remoteBranchName.startsWith(cacheBranchName)) {
 				continue;
 			}
 
 			deleteRemoteRepositoryCacheBranch(
-				gitWorkingDirectory, remoteBranches.get(remoteBranchName));
+				gitWorkingDirectory, entry.getValue());
 		}
 	}
 
@@ -403,11 +410,14 @@ public class LocalGitSyncUtil {
 			remoteBranches.put(remoteBranch.getName(), remoteBranch);
 		}
 
-		for (String remoteBranchName : remoteBranches.keySet()) {
-			if (remoteBranchName.matches(_cacheBranchRegex)) {
+		for (Map.Entry<String, GitWorkingDirectory.Branch> entry :
+				remoteBranches.entrySet()) {
+
+			String remoteBranchName = entry.getKey();
+
+			if (remoteBranchName.matches(_CACHE_BRANCH_REGEX)) {
 				if (hasTimestampBranch(remoteBranchName, remoteBranches)) {
-					remoteCacheBranches.add(
-						remoteBranches.get(remoteBranchName));
+					remoteCacheBranches.add(entry.getValue());
 				}
 				else {
 					deleteRemoteCacheBranch(
@@ -521,10 +531,9 @@ public class LocalGitSyncUtil {
 	}
 
 	protected static String synchronizeToLocalGit(
-			GitWorkingDirectory gitWorkingDirectory, String receiverUsername,
-			int retryCount, String senderBranchName, String senderUsername,
-			String senderBranchSHA, String upstreamBranchSHA)
-		throws IOException {
+		GitWorkingDirectory gitWorkingDirectory, String receiverUsername,
+		int retryCount, String senderBranchName, String senderUsername,
+		String senderBranchSHA, String upstreamBranchSHA) {
 
 		long start = System.currentTimeMillis();
 
@@ -539,7 +548,9 @@ public class LocalGitSyncUtil {
 			originalBranch = gitWorkingDirectory.getBranch(
 				gitWorkingDirectory.getUpstreamBranchName(), null);
 
-			gitWorkingDirectory.checkoutBranch(originalBranch);
+			if (originalBranch != null) {
+				gitWorkingDirectory.checkoutBranch(originalBranch);
+			}
 		}
 
 		System.out.println(
@@ -791,7 +802,8 @@ public class LocalGitSyncUtil {
 					updated = true;
 				}
 				finally {
-					if (gitWorkingDirectory.branchExists(
+					if ((currentBranch != null) &&
+						gitWorkingDirectory.branchExists(
 							currentBranch.getName(), null)) {
 
 						gitWorkingDirectory.checkoutBranch(currentBranch);
@@ -922,7 +934,8 @@ public class LocalGitSyncUtil {
 	private static final long _BRANCH_EXPIRE_AGE_MILLIS =
 		1000 * 60 * 60 * 24 * 2;
 
-	private static final String _cacheBranchRegex = ".*cache-.+-.+-.+-[^-]+";
+	private static final String _CACHE_BRANCH_REGEX = ".*cache-.+-.+-.+-[^-]+";
+
 	private static final Pattern _cacheTimestampBranchPattern = Pattern.compile(
 		"(?<name>cache-[^-]+-[^-]+-[^-]+-[^-]+)-(?<timestamp>\\d+)");
 	private static final ThreadPoolExecutor _threadPoolExecutor =

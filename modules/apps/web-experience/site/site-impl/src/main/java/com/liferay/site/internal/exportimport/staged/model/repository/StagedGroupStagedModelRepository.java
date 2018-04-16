@@ -16,7 +16,6 @@ package com.liferay.site.internal.exportimport.staged.model.repository;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
-import com.liferay.exportimport.staged.model.repository.base.BaseStagedModelRepository;
 import com.liferay.layout.set.model.adapter.StagedLayoutSet;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -45,12 +44,12 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.site.model.adapter.StagedGroup"},
+	property = "model.class.name=com.liferay.site.model.adapter.StagedGroup",
 	service =
 		{StagedGroupStagedModelRepository.class, StagedModelRepository.class}
 )
 public class StagedGroupStagedModelRepository
-	extends BaseStagedModelRepository<StagedGroup> {
+	implements StagedModelRepository<StagedGroup> {
 
 	@Override
 	public StagedGroup addStagedModel(

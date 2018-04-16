@@ -26,8 +26,8 @@ import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
-import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.service.MBMessageLocalService;
+import com.liferay.message.boards.model.MBMessage;
+import com.liferay.message.boards.service.MBMessageLocalService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -51,7 +51,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + CalendarPortletKeys.CALENDAR},
+	property = "javax.portlet.name=" + CalendarPortletKeys.CALENDAR,
 	service = StagedModelDataHandler.class
 )
 public class CalendarBookingStagedModelDataHandler
@@ -378,8 +378,7 @@ public class CalendarBookingStagedModelDataHandler
 	}
 
 	private static final int[] _EXPORTABLE_STATUSES = {
-		CalendarBookingWorkflowConstants.STATUS_APPROVED,
-		CalendarBookingWorkflowConstants.STATUS_DENIED,
+		WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_DENIED,
 		CalendarBookingWorkflowConstants.STATUS_MAYBE
 	};
 

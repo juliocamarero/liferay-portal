@@ -16,13 +16,17 @@
 
 <%@ include file="/init.jsp" %>
 
+<liferay-util:dynamic-include key="com.liferay.blogs.web#/blogs/asset/full_content.jsp#pre" />
+
 <%
 BlogsEntry entry = (BlogsEntry)request.getAttribute(WebKeys.BLOGS_ENTRY);
 
 Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), portletDisplay.getId());
 %>
 
-<liferay-util:html-top outputKey="blogs_common_main_css">
+<liferay-util:html-top
+	outputKey="blogs_common_main_css"
+>
 	<link href="<%= PortalUtil.getStaticResourceURL(request, application.getContextPath() + "/blogs/css/common_main.css", portlet.getTimestamp()) %>" rel="stylesheet" type="text/css" />
 </liferay-util:html-top>
 
@@ -55,7 +59,9 @@ Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(),
 
 		<%= entry.getContent() %>
 
-		<liferay-expando:custom-attributes-available className="<%= BlogsEntry.class.getName() %>">
+		<liferay-expando:custom-attributes-available
+			className="<%= BlogsEntry.class.getName() %>"
+		>
 			<liferay-expando:custom-attribute-list
 				className="<%= BlogsEntry.class.getName() %>"
 				classPK="<%= (entry != null) ? entry.getEntryId() : 0 %>"
@@ -65,3 +71,5 @@ Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(),
 		</liferay-expando:custom-attributes-available>
 	</div>
 </div>
+
+<liferay-util:dynamic-include key="com.liferay.blogs.web#/blogs/asset/full_content.jsp#post" />

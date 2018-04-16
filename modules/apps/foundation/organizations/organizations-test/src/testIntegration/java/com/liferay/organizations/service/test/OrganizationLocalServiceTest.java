@@ -17,6 +17,7 @@ package com.liferay.organizations.service.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.OrganizationParentException;
 import com.liferay.portal.kernel.model.Group;
@@ -33,14 +34,11 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.OrganizationTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
@@ -58,15 +56,12 @@ import org.junit.runner.RunWith;
  * @author Sergio González
  */
 @RunWith(Arquillian.class)
-@Sync
 public class OrganizationLocalServiceTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE);
+		new LiferayIntegrationTestRule();
 
 	@Test
 	public void testAddOrganization() throws Exception {
@@ -82,7 +77,8 @@ public class OrganizationLocalServiceTest {
 
 		List<Organization> organizations = user.getOrganizations(true);
 
-		Assert.assertTrue(organizations.contains(organization));
+		Assert.assertTrue(
+			organizations.toString(), organizations.contains(organization));
 
 		Assert.assertFalse(
 			OrganizationLocalServiceUtil.hasUserOrganization(
@@ -345,8 +341,10 @@ public class OrganizationLocalServiceTest {
 		List<Object> results = getOrganizationsAndUsers(organization);
 
 		Assert.assertEquals(results.toString(), 2, results.size());
-		Assert.assertTrue(results.contains(suborganization));
-		Assert.assertTrue(results.contains(TestPropsValues.getUser()));
+		Assert.assertTrue(
+			results.toString(), results.contains(suborganization));
+		Assert.assertTrue(
+			results.toString(), results.contains(TestPropsValues.getUser()));
 
 		UserLocalServiceUtil.deleteOrganizationUser(
 			organization.getOrganizationId(), TestPropsValues.getUser());
@@ -368,7 +366,8 @@ public class OrganizationLocalServiceTest {
 		List<Object> results = getOrganizationsAndUsers(organization);
 
 		Assert.assertEquals(results.toString(), 1, results.size());
-		Assert.assertTrue(results.contains(TestPropsValues.getUser()));
+		Assert.assertTrue(
+			results.toString(), results.contains(TestPropsValues.getUser()));
 
 		UserLocalServiceUtil.deleteOrganizationUser(
 			organization.getOrganizationId(), TestPropsValues.getUser());
@@ -391,7 +390,8 @@ public class OrganizationLocalServiceTest {
 		List<Object> results = getOrganizationsAndUsers(organization);
 
 		Assert.assertEquals(results.toString(), 1, results.size());
-		Assert.assertTrue(results.contains(suborganization));
+		Assert.assertTrue(
+			results.toString(), results.contains(suborganization));
 	}
 
 	@Test
@@ -406,7 +406,7 @@ public class OrganizationLocalServiceTest {
 
 		List<Object> results = getOrganizationsAndUsers(organization);
 
-		Assert.assertTrue(results.isEmpty());
+		Assert.assertTrue(results.toString(), results.isEmpty());
 	}
 
 	@Test

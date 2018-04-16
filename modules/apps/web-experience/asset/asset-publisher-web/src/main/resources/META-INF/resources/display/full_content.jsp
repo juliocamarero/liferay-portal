@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String redirect = ParamUtil.getString(request, "redirect");
+String redirect = PortalUtil.escapeRedirect(ParamUtil.getString(request, "redirect"));
 
 if (Validator.isNull(redirect)) {
 	redirect = ParamUtil.getString(PortalUtil.getOriginalServletRequest(request), "redirect");
@@ -103,7 +103,11 @@ request.setAttribute("view.jsp-showIconLabel", true);
 					</c:if>
 
 					<div class="locale-actions">
-						<liferay-ui:language formAction="<%= currentURL %>" languageId="<%= languageId %>" languageIds="<%= availableLanguageIds %>" />
+						<liferay-ui:language
+							formAction="<%= currentURL %>"
+							languageId="<%= languageId %>"
+							languageIds="<%= availableLanguageIds %>"
+						/>
 					</div>
 				</c:if>
 			</c:if>
@@ -138,7 +142,9 @@ request.setAttribute("view.jsp-showIconLabel", true);
 		/>
 
 		<div class="pull-right">
-			<liferay-ui:social-bookmarks
+			<liferay-social-bookmarks:bookmarks
+				className="<%= assetEntry.getClassName() %>"
+				classPK="<%= assetEntry.getClassPK() %>"
 				displayStyle="<%= assetPublisherDisplayContext.getSocialBookmarksDisplayStyle() %>"
 				target="_blank"
 				title="<%= title %>"

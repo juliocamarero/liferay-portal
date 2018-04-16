@@ -31,6 +31,7 @@ import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.document.library.kernel.util.DLValidator;
 import com.liferay.document.library.kernel.util.comparator.DLFileVersionVersionComparator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.instances.service.PortalInstancesLocalService;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Criterion;
@@ -49,7 +50,6 @@ import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
@@ -77,7 +77,7 @@ import org.springframework.context.ApplicationContext;
  */
 @Component(
 	immediate = true,
-	property = {"verify.process.name=com.liferay.document.library.service"},
+	property = "verify.process.name=com.liferay.document.library.service",
 	service = VerifyProcess.class
 )
 public class DLServiceVerifyProcess extends VerifyProcess {
@@ -425,7 +425,8 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 		}
 
 		if (dlFileVersions.isEmpty()) {
-			DLStoreUtil.addFile(companyId, dataRepositoryId, name, new byte[0]);
+			DLStoreUtil.addFile(
+				companyId, dataRepositoryId, name, false, new byte[0]);
 
 			return;
 		}

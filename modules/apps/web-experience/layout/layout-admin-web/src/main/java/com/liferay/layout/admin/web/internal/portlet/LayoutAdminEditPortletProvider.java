@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet;
 
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.EditPortletProvider;
 
@@ -25,7 +25,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.portal.kernel.model.Layout"},
+	property = "model.class.name=com.liferay.portal.kernel.model.Layout",
 	service = EditPortletProvider.class
 )
 public class LayoutAdminEditPortletProvider

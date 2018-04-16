@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 
-<workflow-definition xmlns="urn:liferay.com:liferay-workflow_6.2.0"
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_6.2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd">
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd"
+>
 	<name>Single Approver</name>
 	<description>A single approver can approve a workflow content.</description>
 	<version>1</version>
@@ -142,6 +144,7 @@
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>organization</role-type>
 								<name>Organization Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -156,6 +159,7 @@
 						<recipients>
 							<roles>
 								<role>
+									<role-type></role-type>
 									<name>Portal Content Reviewer</name>
 									<auto-create>true</auto-create>
 								</role>
@@ -194,6 +198,7 @@
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>site</role-type>
 								<name>Site Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -222,6 +227,7 @@
 						<recipients>
 							<roles>
 								<role>
+									<role-type>organization</role-type>
 									<name>Organization Content Reviewer</name>
 								</role>
 							</roles>
@@ -259,6 +265,7 @@
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>organization</role-type>
 								<name>Organization Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -267,6 +274,7 @@
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>organization</role-type>
 								<name>Organization Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -281,6 +289,7 @@
 						<recipients>
 							<roles>
 								<role>
+									<role-type></role-type>
 									<name>Portal Content Reviewer</name>
 									<auto-create>true</auto-create>
 								</role>
@@ -296,6 +305,7 @@
 						<recipients>
 							<roles>
 								<role>
+									<role-type></role-type>
 									<name>Portal Content Reviewer</name>
 									<auto-create>true</auto-create>
 								</role>

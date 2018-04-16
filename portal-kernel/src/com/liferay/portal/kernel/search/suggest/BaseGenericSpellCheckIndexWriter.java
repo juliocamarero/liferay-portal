@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.search.suggest;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
@@ -21,7 +22,6 @@ import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.InputStream;
 
@@ -34,7 +34,10 @@ import java.util.Set;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.portal.search.suggest.BaseGenericSpellCheckIndexWriter}
  */
+@Deprecated
 public abstract class BaseGenericSpellCheckIndexWriter
 	extends BaseSpellCheckIndexWriter {
 

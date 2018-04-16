@@ -59,12 +59,6 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 						</span>
 					</div>
 
-					<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-						<aui:nav-bar-search>
-							<liferay-ui:input-search autoFocus="<%= true %>" markupView="lexicon" placeholder='<%= LanguageUtil.get(request, "keywords") %>' />
-						</aui:nav-bar-search>
-					</aui:nav-bar>
-
 					<liferay-frontend:management-bar
 						includeCheckBox="<%= false %>"
 					>
@@ -80,6 +74,16 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 								orderColumns='<%= new String[] {"create-date", "modified-date", "name"} %>'
 								portletURL="<%= configurationRenderURL %>"
 							/>
+
+							<li>
+								<div class="form">
+									<liferay-ui:input-search
+										autoFocus="<%= true %>"
+										markupView="lexicon"
+										placeholder='<%= LanguageUtil.get(request, "keywords") %>'
+									/>
+								</div>
+							</li>
 						</liferay-frontend:management-bar-filters>
 					</liferay-frontend:management-bar>
 
@@ -135,7 +139,9 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 							/>
 						</liferay-ui:search-container-row>
 
-						<liferay-ui:search-iterator markupView="lexicon" />
+						<liferay-ui:search-iterator
+							markupView="lexicon"
+						/>
 					</liferay-ui:search-container>
 				</div>
 			</liferay-ui:section>
@@ -164,7 +170,7 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 									}
 
 									for (DDMTemplate template : templates) {
-										if (!DDMTemplatePermission.contains(permissionChecker, scopeGroupId, template.getTemplateId(), PortletKeys.PORTLET_DISPLAY_TEMPLATE, ActionKeys.VIEW)) {
+										if (!DDMTemplatePermission.contains(permissionChecker, template.getTemplateId(), ActionKeys.VIEW)) {
 											continue;
 										}
 
@@ -196,7 +202,7 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 									}
 
 									for (DDMTemplate template : templates) {
-										if (!DDMTemplatePermission.contains(permissionChecker, scopeGroupId, template.getTemplateId(), PortletKeys.PORTLET_DISPLAY_TEMPLATE, ActionKeys.VIEW)) {
+										if (!DDMTemplatePermission.contains(permissionChecker, template.getTemplateId(), ActionKeys.VIEW)) {
 											continue;
 										}
 
@@ -230,8 +236,8 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 </div>
 
 <aui:button-row>
-	<aui:button cssClass="btn-lg" id="fm_submit" type="submit" />
-	<aui:button cssClass="btn-lg" type="cancel" />
+	<aui:button id="fm_submit" type="submit" />
+	<aui:button type="cancel" />
 </aui:button-row>
 
 <aui:script use="aui-base">
@@ -282,12 +288,10 @@ private OrderByComparator<DDLRecordSet> getDDLRecordSetOrderByComparator(String 
 	OrderByComparator<DDLRecordSet> orderByComparator = null;
 
 	if (orderByCol.equals("create-date")) {
-		orderByComparator = new DDLRecordSetCreateDateComparator(
-			orderByAsc);
+		orderByComparator = new DDLRecordSetCreateDateComparator(orderByAsc);
 	}
 	else if (orderByCol.equals("modified-date")) {
-		orderByComparator = new DDLRecordSetModifiedDateComparator(
-			orderByAsc);
+		orderByComparator = new DDLRecordSetModifiedDateComparator(orderByAsc);
 	}
 	else if (orderByCol.equals("name")) {
 		orderByComparator = new DDLRecordSetNameComparator(orderByAsc);

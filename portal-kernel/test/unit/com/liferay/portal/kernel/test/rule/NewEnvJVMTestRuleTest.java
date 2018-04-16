@@ -39,7 +39,7 @@ import org.junit.Test;
 /**
  * @author Shuyang Zhou
  */
-@Environment(variables = {"ENV_KEY=ENV_VALUE"})
+@Environment(variables = "ENV_KEY=ENV_VALUE")
 @JVMArgsLine("-Dkey1=default1 -Dkey2=default2")
 @NewEnv(type = NewEnv.Type.JVM)
 public class NewEnvJVMTestRuleTest {
@@ -170,7 +170,7 @@ public class NewEnvJVMTestRuleTest {
 		Assert.assertEquals(_parentEnvironment, environment);
 	}
 
-	@Environment(append = false, variables = {"KEY1=VALUE1"})
+	@Environment(append = false, variables = "KEY1=VALUE1")
 	@JVMArgsLine(
 		"-D" + _SYSTEM_PROPERTY_KEY_ENVIRONMENT + "=${" +
 			_SYSTEM_PROPERTY_KEY_ENVIRONMENT + "}"
@@ -241,6 +241,9 @@ public class NewEnvJVMTestRuleTest {
 	private static Map<String, String> _getEnvironment() {
 		Map<String, String> environment = new HashMap<>(System.getenv());
 
+		environment.remove("MODULES_BASE_DIR_NAMES_WITH_CHANGES");
+		environment.remove("PROJECT_NAMES");
+		environment.remove("SUBREPOSITORY_PACKAGE_NAMES");
 		environment.remove("TERMCAP");
 
 		return environment;

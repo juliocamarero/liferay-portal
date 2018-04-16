@@ -15,6 +15,7 @@
 package com.liferay.portal.workflow.web.internal.portlet;
 
 import com.liferay.portal.kernel.portlet.ControlPanelEntry;
+import com.liferay.portal.workflow.WorkflowControlPanelEntry;
 import com.liferay.portal.workflow.web.internal.constants.WorkflowPortletKeys;
 
 import org.osgi.service.component.annotations.Component;
@@ -24,9 +25,9 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + WorkflowPortletKeys.CONTROL_PANEL_WORKFLOW},
+	property = "javax.portlet.name=" + WorkflowPortletKeys.CONTROL_PANEL_WORKFLOW,
 	service = ControlPanelEntry.class
 )
 public class ControlPanelWorkflowControlPanelEntry
-	extends com.liferay.portal.workflow.WorkflowControlPanelEntry {
+	extends WorkflowControlPanelEntry {
 }

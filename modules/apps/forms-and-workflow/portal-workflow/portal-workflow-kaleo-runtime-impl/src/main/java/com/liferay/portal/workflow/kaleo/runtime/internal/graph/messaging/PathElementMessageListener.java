@@ -16,9 +16,8 @@ package com.liferay.portal.workflow.kaleo.runtime.internal.graph.messaging;
 
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageListener;
-import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
-import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSenderFactory;
 import com.liferay.portal.workflow.kaleo.runtime.constants.KaleoRuntimeDestinationNames;
 import com.liferay.portal.workflow.kaleo.runtime.graph.GraphWalker;
 import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
@@ -26,7 +25,6 @@ import com.liferay.portal.workflow.kaleo.runtime.graph.PathElement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -35,18 +33,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"destination.name=" + KaleoRuntimeDestinationNames.KALEO_GRAPH_WALKER},
+	property = "destination.name=" + KaleoRuntimeDestinationNames.KALEO_GRAPH_WALKER,
 	service = MessageListener.class
 )
 public class PathElementMessageListener extends BaseMessageListener {
-
-	@Activate
-	protected void activate() {
-		_singleDestinationMessageSender =
-			_singleDestinationMessageSenderFactory.
-				createSingleDestinationMessageSender(
-					KaleoRuntimeDestinationNames.KALEO_GRAPH_WALKER);
-	}
 
 	@Override
 	protected void doReceive(Message message) throws Exception {
@@ -59,17 +49,19 @@ public class PathElementMessageListener extends BaseMessageListener {
 			remainingPathElements, pathElement.getExecutionContext());
 
 		for (PathElement remainingPathElement : remainingPathElements) {
-			_singleDestinationMessageSender.send(remainingPathElement);
+			message = new Message();
+
+			message.setPayload(remainingPathElement);
+
+			_messageBus.sendMessage(
+				KaleoRuntimeDestinationNames.KALEO_GRAPH_WALKER, message);
 		}
 	}
 
 	@Reference
 	private GraphWalker _graphWalker;
 
-	private SingleDestinationMessageSender _singleDestinationMessageSender;
-
 	@Reference
-	private SingleDestinationMessageSenderFactory
-		_singleDestinationMessageSenderFactory;
+	private MessageBus _messageBus;
 
 }

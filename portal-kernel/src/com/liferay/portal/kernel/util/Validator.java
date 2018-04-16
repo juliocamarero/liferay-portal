@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.util;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -385,7 +386,9 @@ public class Validator {
 			return false;
 		}
 
-		for (char c : name.trim().toCharArray()) {
+		String trimmedName = name.trim();
+
+		for (char c : trimmedName.toCharArray()) {
 			if (!isChar(c) && !isDigit(c) && !Character.isWhitespace(c)) {
 				return false;
 			}
@@ -728,7 +731,7 @@ public class Validator {
 		if (month == 1) {
 			int febMax = 28;
 
-			if (((year % 4) == 0) && ((year % 100) != 0) ||
+			if ((((year % 4) == 0) && ((year % 100) != 0)) ||
 				((year % 400) == 0)) {
 
 				febMax = 29;
@@ -960,7 +963,9 @@ public class Validator {
 			return false;
 		}
 
-		for (char c : name.trim().toCharArray()) {
+		String trimmedName = name.trim();
+
+		for (char c : trimmedName.toCharArray()) {
 			if (!isChar(c) && !Character.isWhitespace(c)) {
 				return false;
 			}
@@ -1268,7 +1273,7 @@ public class Validator {
 	/**
 	 * Returns <code>true</code> if the character is whitespace, meaning it is
 	 * either the <code>null</code> character '0' or whitespace according to
-	 * {@link java.lang.Character#isWhitespace(char)}.
+	 * {@link Character#isWhitespace(char)}.
 	 *
 	 * @param  c the character to check
 	 * @return <code>true</code> if the character is whitespace;
@@ -1346,7 +1351,7 @@ public class Validator {
 
 	private static final Pattern _emailAddressPattern = Pattern.compile(
 		"[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@" +
-			"(?:[a-zA-Z0-9](?:-*[a-zA-Z0-9])?\\.*)+");
+			"(?:\\w(?:[\\w-]*\\w)?\\.)*\\w(?:[\\w-]*\\w)?");
 	private static final Pattern _ipv4AddressPattern;
 	private static final Pattern _ipv6AddressPattern;
 	private static final Pattern _variableNamePattern = Pattern.compile(

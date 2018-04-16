@@ -1,0 +1,7 @@
+baselineConfiguration {
+	lowestBaselineVersion = "3.0.0"
+}
+
+dependencies {
+	compileOnly project(":core:petra:petra-string")
+}

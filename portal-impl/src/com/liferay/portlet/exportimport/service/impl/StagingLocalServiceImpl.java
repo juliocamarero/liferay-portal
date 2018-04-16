@@ -14,11 +14,14 @@
 
 package com.liferay.portlet.exportimport.service.impl;
 
+import static com.liferay.exportimport.kernel.configuration.ExportImportConfigurationConstants.TYPE_PUBLISH_PORTLET_REMOTE;
+
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.util.comparator.RepositoryModelTitleComparator;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationParameterMapFactory;
+import com.liferay.exportimport.kernel.exception.ExportImportIOException;
 import com.liferay.exportimport.kernel.exception.RemoteExportException;
 import com.liferay.exportimport.kernel.lar.ExportImportDateUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
@@ -285,10 +288,20 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			disableStaging(liveGroup, serviceContext);
 		}
 
+		UnicodeProperties typeSettingsProperties =
+			liveGroup.getTypeSettingsProperties();
+
 		boolean hasStagingGroup = liveGroup.hasStagingGroup();
 
 		if (!hasStagingGroup) {
-			serviceContext.setAttribute("staging", String.valueOf(true));
+			serviceContext.setAttribute("staging", Boolean.TRUE.toString());
+
+			String languageId = typeSettingsProperties.getProperty(
+				"languageId");
+
+			if (Validator.isNotNull(languageId)) {
+				serviceContext.setLanguageId(languageId);
+			}
 
 			addStagingGroup(userId, liveGroup, serviceContext);
 		}
@@ -296,9 +309,6 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		checkDefaultLayoutSetBranches(
 			userId, liveGroup, branchingPublic, branchingPrivate, false,
 			serviceContext);
-
-		UnicodeProperties typeSettingsProperties =
-			liveGroup.getTypeSettingsProperties();
 
 		typeSettingsProperties.setProperty(
 			"branchingPrivate", String.valueOf(branchingPrivate));
@@ -309,7 +319,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			typeSettingsProperties.setProperty(
 				"staged", Boolean.TRUE.toString());
 			typeSettingsProperties.setProperty(
-				"stagedRemotely", String.valueOf(false));
+				"stagedRemotely", Boolean.FALSE.toString());
 
 			setCommonStagingOptions(typeSettingsProperties, serviceContext);
 		}
@@ -456,8 +466,16 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		Locale siteDefaultLocale = LocaleThreadLocal.getSiteDefaultLocale();
 
 		try {
-			ExportImportThreadLocal.setLayoutImportInProcess(true);
-			ExportImportThreadLocal.setLayoutStagingInProcess(true);
+			if (exportImportConfiguration.getType() ==
+					TYPE_PUBLISH_PORTLET_REMOTE) {
+
+				ExportImportThreadLocal.setPortletImportInProcess(true);
+				ExportImportThreadLocal.setPortletStagingInProcess(true);
+			}
+			else {
+				ExportImportThreadLocal.setLayoutImportInProcess(true);
+				ExportImportThreadLocal.setLayoutStagingInProcess(true);
+			}
 
 			Folder folder = PortletFileRepositoryUtil.getPortletFolder(
 				stagingRequestId);
@@ -479,27 +497,55 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			LocaleThreadLocal.setSiteDefaultLocale(
 				PortalUtil.getSiteDefaultLocale(targetGroupId));
 
-			exportImportLocalService.importLayoutsDataDeletions(
-				exportImportConfiguration, file);
+			MissingReferences missingReferences = null;
 
-			MissingReferences missingReferences =
-				exportImportLocalService.validateImportLayoutsFile(
+			if (exportImportConfiguration.getType() ==
+					TYPE_PUBLISH_PORTLET_REMOTE) {
+
+				exportImportLocalService.importPortletDataDeletions(
 					exportImportConfiguration, file);
 
-			exportImportLocalService.importLayouts(
-				exportImportConfiguration, file);
+				missingReferences =
+					exportImportLocalService.validateImportPortletInfo(
+						exportImportConfiguration, file);
+
+				exportImportLocalService.importPortletInfo(
+					exportImportConfiguration, file);
+			}
+			else {
+				exportImportLocalService.importLayoutsDataDeletions(
+					exportImportConfiguration, file);
+
+				missingReferences =
+					exportImportLocalService.validateImportLayoutsFile(
+						exportImportConfiguration, file);
+
+				exportImportLocalService.importLayouts(
+					exportImportConfiguration, file);
+			}
 
 			return missingReferences;
 		}
 		catch (IOException ioe) {
-			throw new SystemException(
-				"Unable to complete remote staging publication request " +
-					stagingRequestId + " due to a file system error",
-				ioe);
+			ExportImportIOException eiioe = new ExportImportIOException(
+				StagingLocalServiceImpl.class.getName(), ioe);
+
+			eiioe.setStagingRequestId(stagingRequestId);
+			eiioe.setType(ExportImportIOException.PUBLISH_STAGING_REQUEST);
+
+			throw eiioe;
 		}
 		finally {
-			ExportImportThreadLocal.setLayoutImportInProcess(false);
-			ExportImportThreadLocal.setLayoutStagingInProcess(false);
+			if (exportImportConfiguration.getType() ==
+					TYPE_PUBLISH_PORTLET_REMOTE) {
+
+				ExportImportThreadLocal.setPortletImportInProcess(false);
+				ExportImportThreadLocal.setPortletStagingInProcess(false);
+			}
+			else {
+				ExportImportThreadLocal.setLayoutImportInProcess(false);
+				ExportImportThreadLocal.setLayoutStagingInProcess(false);
+			}
 
 			LocaleThreadLocal.setSiteDefaultLocale(siteDefaultLocale);
 
@@ -929,10 +975,13 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			String checksum = FileUtil.getMD5Checksum(tempFile);
 
 			if (!checksum.equals(folder.getName())) {
-				throw new SystemException(
-					"Unable to process LAR file pieces for remote staging " +
-						"publication because LAR file checksum is not " +
-							checksum);
+				ExportImportIOException eiioe = new ExportImportIOException(
+					StagingLocalServiceImpl.class.getName());
+
+				eiioe.setChecksum(checksum);
+				eiioe.setType(ExportImportIOException.STAGING_REQUEST_CHECKSUM);
+
+				throw eiioe;
 			}
 
 			PortletFileRepositoryUtil.addPortletFileEntry(
@@ -946,18 +995,20 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 				stagingRequestId, folder);
 
 			if (stagingRequestFileEntry == null) {
-				throw new SystemException(
-					"Unable to assemble LAR file for remote staging " +
-						"publication request " + stagingRequestId);
+				throw new IOException();
 			}
 
 			return stagingRequestFileEntry;
 		}
 		catch (IOException ioe) {
-			throw new SystemException(
-				"Unable to reassemble LAR file for remote staging " +
-					"publication request " + stagingRequestId,
-				ioe);
+			ExportImportIOException eiioe = new ExportImportIOException(
+				StagingLocalServiceImpl.class.getName(), ioe);
+
+			eiioe.setStagingRequestId(stagingRequestId);
+			eiioe.setType(
+				ExportImportIOException.STAGING_REQUEST_REASSEMBLE_FILE);
+
+			throw eiioe;
 		}
 		finally {
 			IndexStatusManagerThreadLocal.setIndexReadOnly(indexReadOnly);

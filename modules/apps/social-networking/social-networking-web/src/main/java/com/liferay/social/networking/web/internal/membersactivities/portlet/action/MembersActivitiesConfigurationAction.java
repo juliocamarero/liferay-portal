@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Adolfo Pérez
  */
 @Component(
-	property = {"javax.portlet.name=" + SocialNetworkingPortletKeys.MEMBERS_ACTIVITIES},
+	property = "javax.portlet.name=" + SocialNetworkingPortletKeys.MEMBERS_ACTIVITIES,
 	service = ConfigurationAction.class
 )
 public class MembersActivitiesConfigurationAction
@@ -36,7 +36,7 @@ public class MembersActivitiesConfigurationAction
 
 	@Override
 	public String getJspPath(HttpServletRequest request) {
-		return "/configuration.jsp";
+		return "/members_activities/configuration.jsp";
 	}
 
 	@Override

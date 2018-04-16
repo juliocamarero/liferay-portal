@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.web.internal.exportimport.portlet.preferences.processor;
 
-import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.exportimport.portlet.preferences.processor.ExportImportPortletPreferencesProcessor;
 
 import org.osgi.service.component.annotations.Component;
@@ -31,9 +31,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + AssetPublisherPortletKeys.RECENT_CONTENT
-	},
+	property = "javax.portlet.name=" + AssetPublisherPortletKeys.RECENT_CONTENT,
 	service = ExportImportPortletPreferencesProcessor.class
 )
 public class RecentContentExportImportPortletPreferencesProcessor

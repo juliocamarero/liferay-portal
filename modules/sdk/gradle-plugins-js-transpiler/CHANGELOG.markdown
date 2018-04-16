@@ -204,6 +204,57 @@ required.
 - [LPS-75965]: Update the [Liferay Gradle Plugins Node] dependency to version
 4.0.0.
 
+## 2.4.2 - 2018-01-02
+
+### Changed
+- [LPS-74904]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.0.1.
+
+## 2.4.3 - 2018-01-17
+
+### Changed
+- [LPS-76644]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.0.2.
+- [LPS-77250]: Update the default value of the `soyDependencies` for
+`TranspileJSTask` instances from `"${npmInstall.workingDir}/node_modules/lexicon*/src/**/*.soy"`
+to `"${npmInstall.workingDir}/node_modules/clay*/src/**/*.soy"`.
+
+## 2.4.4 - 2018-02-08
+
+### Changed
+- [LPS-69802]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.1.0.
+
+## 2.4.5 - 2018-02-13
+
+### Changed
+- [LPS-77996]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.2.0.
+
+## 2.4.6 - 2018-03-15
+
+### Changed
+- [LPS-78741]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.3.0.
+
+## 2.4.7 - 2018-03-22
+
+### Changed
+- [LPS-78741]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.3.1.
+
+## 2.4.8 - 2018-03-30
+
+### Changed
+- [LPS-78741]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.3.2.
+
+## 2.4.9 - 2018-04-05
+
+### Changed
+- [LPS-78741]: Update the [Liferay Gradle Plugins Node] dependency to version
+4.3.3.
+
 [Liferay Gradle Plugins Node]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-node
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
@@ -229,7 +280,12 @@ required.
 [LPS-73472]: https://issues.liferay.com/browse/LPS-73472
 [LPS-74343]: https://issues.liferay.com/browse/LPS-74343
 [LPS-74770]: https://issues.liferay.com/browse/LPS-74770
+[LPS-74904]: https://issues.liferay.com/browse/LPS-74904
 [LPS-74933]: https://issues.liferay.com/browse/LPS-74933
 [LPS-75175]: https://issues.liferay.com/browse/LPS-75175
 [LPS-75829]: https://issues.liferay.com/browse/LPS-75829
 [LPS-75965]: https://issues.liferay.com/browse/LPS-75965
+[LPS-76644]: https://issues.liferay.com/browse/LPS-76644
+[LPS-77250]: https://issues.liferay.com/browse/LPS-77250
+[LPS-77996]: https://issues.liferay.com/browse/LPS-77996
+[LPS-78741]: https://issues.liferay.com/browse/LPS-78741

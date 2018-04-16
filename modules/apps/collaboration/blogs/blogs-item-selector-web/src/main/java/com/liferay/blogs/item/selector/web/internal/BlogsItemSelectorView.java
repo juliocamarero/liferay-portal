@@ -14,8 +14,8 @@
 
 package com.liferay.blogs.item.selector.web.internal;
 
+import com.liferay.blogs.item.selector.constants.BlogsItemSelectorViewConstants;
 import com.liferay.blogs.item.selector.criterion.BlogsItemSelectorCriterion;
-import com.liferay.blogs.item.selector.web.constants.BlogsItemSelectorViewConstants;
 import com.liferay.blogs.item.selector.web.internal.constants.BlogsItemSelectorWebKeys;
 import com.liferay.blogs.item.selector.web.internal.display.context.BlogsItemSelectorViewDisplayContext;
 import com.liferay.blogs.service.BlogsEntryLocalService;
@@ -53,9 +53,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Roberto Díaz
  */
 @Component(
-	property = {
-		"item.selector.view.key=" + BlogsItemSelectorViewConstants.ITEM_SELECTOR_VIEW_KEY
-	}
+	property = "item.selector.view.key=" + BlogsItemSelectorViewConstants.ITEM_SELECTOR_VIEW_KEY
 )
 public class BlogsItemSelectorView
 	implements ItemSelectorView<BlogsItemSelectorCriterion> {
@@ -77,11 +75,6 @@ public class BlogsItemSelectorView
 	@Override
 	public String getTitle(Locale locale) {
 		return LanguageUtil.get(locale, "blog-images");
-	}
-
-	@Override
-	public boolean isShowSearch() {
-		return true;
 	}
 
 	@Override

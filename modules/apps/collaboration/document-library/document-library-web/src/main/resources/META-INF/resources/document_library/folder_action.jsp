@@ -94,7 +94,13 @@ if ((row == null) && portletName.equals(DLPortletKeys.MEDIA_GALLERY_DISPLAY)) {
 %>
 
 <c:if test="<%= dlPortletInstanceSettingsHelper.isShowActions() %>">
-	<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+	<liferay-ui:icon-menu
+		direction="left-side"
+		icon="<%= StringPool.BLANK %>"
+		markupView="lexicon"
+		message="<%= StringPool.BLANK %>"
+		showWhenSingleIcon="<%= true %>"
+	>
 
 		<%
 		boolean hasViewPermission = DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.VIEW);
@@ -337,11 +343,7 @@ if ((row == null) && portletName.equals(DLPortletKeys.MEDIA_GALLERY_DISPLAY)) {
 			/>
 		</c:if>
 
-		<%
-		boolean hasDeletePermission = DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.DELETE);
-		%>
-
-		<c:if test="<%= (folder != null) && hasDeletePermission %>">
+		<c:if test="<%= (folder != null) && DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.DELETE) %>">
 
 			<%
 			String mvcRenderCommandName = "/image_gallery_display/view";
@@ -368,7 +370,10 @@ if ((row == null) && portletName.equals(DLPortletKeys.MEDIA_GALLERY_DISPLAY)) {
 						<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
 					</portlet:actionURL>
 
-					<liferay-ui:icon-delete trash="<%= ((folder.getModel() instanceof DLFolder) && dlTrashUtil.isTrashEnabled(scopeGroupId, repositoryId)) %>" url="<%= deleteURL %>" />
+					<liferay-ui:icon-delete
+						trash="<%= ((folder.getModel() instanceof DLFolder) && dlTrashUtil.isTrashEnabled(scopeGroupId, repositoryId)) %>"
+						url="<%= deleteURL %>"
+					/>
 				</c:when>
 				<c:otherwise>
 					<portlet:renderURL var="redirectURL">
@@ -382,7 +387,9 @@ if ((row == null) && portletName.equals(DLPortletKeys.MEDIA_GALLERY_DISPLAY)) {
 						<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
 					</portlet:actionURL>
 
-					<liferay-ui:icon-delete url="<%= deleteURL %>" />
+					<liferay-ui:icon-delete
+						url="<%= deleteURL %>"
+					/>
 				</c:otherwise>
 			</c:choose>
 		</c:if>

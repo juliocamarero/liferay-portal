@@ -14,7 +14,7 @@
 
 package com.liferay.weather.web.internal.portlet.validator;
 
-import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.weather.web.internal.constants.WeatherPortletKeys;
 import com.liferay.weather.web.internal.model.Weather;
@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + WeatherPortletKeys.WEATHER}
+	property = "javax.portlet.name=" + WeatherPortletKeys.WEATHER
 )
 public class WeatherPreferencesValidator implements PreferencesValidator {
 

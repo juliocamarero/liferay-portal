@@ -1,12 +1,17 @@
 <definition>
 	<command name="add">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
-		<execute function="Type" locator1="DocumentsAndMediaEditDocumentType#NAME_FIELD" value1="${dmDocumentTypeName}" />
-		<execute function="Type" locator1="DocumentsAndMediaEditDocumentType#DETAILS_DESCRIPTION_FIELD" value1="${dmDocumentTypeDescription}" />
+		<execute macro="PortletEntry#inputName">
+			<var name="name" value="${dmDocumentTypeName}" />
+		</execute>
+
+		<execute macro="PortletEntry#inputDescription">
+			<var name="description" value="${dmDocumentTypeDescription}" />
+		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Main Metadata Fields" />
+			<var name="panel" value="Main Metadata Fields" />
 		</execute>
 
 		<for list="${dmDocumentTypeFieldNames}" param="dmDocumentTypeFieldName">
@@ -21,7 +26,7 @@
 			<isset var="metadataSetName" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Additional Metadata Fields" />
+					<var name="panel" value="Additional Metadata Fields" />
 				</execute>
 
 				<execute macro="DMDocumentType#selectPGMetadataSet">
@@ -30,9 +35,7 @@
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="DocumentsAndMediaDocumentTypes#SAVE_BUTTON" value1="Save" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="DDLDataDefinition#save" />
 	</command>
 
 	<command name="deletePG">
@@ -66,14 +69,14 @@
 		<if>
 			<isset var="dmDocumentTypeNameEdit" />
 			<then>
-				<execute function="Type#clickAtType" locator1="DocumentsAndMediaEditDocumentType#NAME_FIELD" value1="${dmDocumentTypeNameEdit}"  />
+				<execute function="Type#clickAtType" locator1="DocumentsAndMediaEditDocumentType#NAME_FIELD" value1="${dmDocumentTypeNameEdit}" />
 			</then>
 		</if>
 
 		<if>
 			<isset var="dmDocumentTypeDescriptionEdit" />
 			<then>
-				<execute function="Type" locator1="DocumentsAndMediaEditDocumentType#DETAILS_DESCRIPTION_FIELD" value1="${dmDocumentTypeDescriptionEdit}"  />
+				<execute function="Type" locator1="DocumentsAndMediaEditDocumentType#DETAILS_DESCRIPTION_FIELD" value1="${dmDocumentTypeDescriptionEdit}" />
 			</then>
 		</if>
 
@@ -81,7 +84,7 @@
 			<isset var="dmDocumentTypeFieldRequiredEdit" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Main Metadata Fields" />
+					<var name="panel" value="Main Metadata Fields" />
 				</execute>
 
 				<execute macro="DynamicDataMapping#editFieldSettings">
@@ -96,7 +99,7 @@
 			<isset var="dmDocumentTypeFieldNames" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Main Metadata Fields" />
+					<var name="panel" value="Main Metadata Fields" />
 				</execute>
 
 				<for list="${dmDocumentTypeFieldNames}" param="dmDocumentTypeFieldName">
@@ -117,14 +120,14 @@
 				<var name="key_metadataSetName" value="${metadataSetName}" />
 
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Additional Metadata Fields" />
+					<var name="panel" value="Additional Metadata Fields" />
 				</execute>
 
 				<execute function="AssertClick" locator1="DocumentsAndMediaEditDocumentType#REMOVE_METADATA_SET_BUTTON" value1="Remove" />
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="DocumentsAndMediaDocumentTypes#SAVE_BUTTON" value1="Save" />
+		<execute macro="DDLDataDefinition#save" />
 
 		<if>
 			<isset var="dmDocumentTypeNameEdit" />
@@ -175,9 +178,9 @@
 
 		<execute macro="DMDocumentType#selectDocumentTypeFrame" />
 
-		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="DM Document Type" />
-
-		<execute function="AssertClick" locator1="NavBar#BASIC_SEARCH_BUTTON" value1="Search" />
+		<execute macro="Search#searchCP">
+			<var name="searchTerm" value="DM Document Type" />
+		</execute>
 
 		<while>
 			<condition function="IsElementPresent" locator1="DocumentsAndMediaDocumentTypes#DOCUMENT_TYPES_TABLE_ACTIONS_1" />
@@ -198,7 +201,7 @@
 	<command name="viewMenulistOption">
 		<var name="key_dmDocumentTypeName" value="${dmDocumentTypeName}" />
 
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute function="AssertTextEquals" locator1="MenuItem#ANY_MENU_ITEM" value1="${dmDocumentTypeName}">
 			<var name="key_menuItem" value="${dmDocumentTypeName}" />

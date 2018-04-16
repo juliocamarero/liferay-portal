@@ -22,7 +22,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Jürgen Kappler
  */
-@ExtendedObjectClassDefinition(category = "web-experience")
+@ExtendedObjectClassDefinition(category = "page-administration")
 @Meta.OCD(
 	id = "com.liferay.layout.admin.web.configuration.LayoutAdminWebConfiguration",
 	localization = "content/Language",
@@ -31,7 +31,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface LayoutAdminWebConfiguration {
 
 	@Meta.AD(
-		deflt = LayoutAdminDisplayStyleKeys.FLATTENED,
+		deflt = LayoutAdminDisplayStyleKeys.MILLER,
 		name = "layout-display-style", optionLabels = {"Flattened", "Miller"},
 		optionValues = {
 			LayoutAdminDisplayStyleKeys.FLATTENED,

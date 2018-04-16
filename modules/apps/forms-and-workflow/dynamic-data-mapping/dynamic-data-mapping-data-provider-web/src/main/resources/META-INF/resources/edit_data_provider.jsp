@@ -49,13 +49,17 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 	<aui:input name="type" type="hidden" value="<%= type %>" />
 	<aui:input name="languageId" type="hidden" value="<%= String.valueOf(themeDisplay.getLanguageId()) %>" />
 
-	<div class="container-fluid-1280">
+	<div class="container-fluid-1280 lfr-ddm-edit-data-provider">
 		<aui:fieldset-group markupView="lexicon">
 			<aui:fieldset>
-				<liferay-util:buffer var="requiredMark">
-					<span class="icon-asterisk text-warning">
-						<span class="hide-accessible"><liferay-ui:message key="required" /></span>
-					</span>
+				<liferay-util:buffer
+					var="requiredMark"
+				>
+					<span class="hide-accessible"><liferay-ui:message key="required" />&nbsp;</span>
+
+					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+						<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#asterisk" />
+					</svg>
 				</liferay-util:buffer>
 
 				<label class="required-warning">
@@ -84,9 +88,9 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 	<c:if test="<%= !windowState.equals(LiferayWindowState.POP_UP) %>">
 		<div class="container-fluid-1280">
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" id="submit" label="save" type="submit" />
+				<aui:button id="submit" label="save" type="submit" />
 
-				<aui:button cssClass="btn-lg" href="<%= redirect %>" name="cancelButton" type="cancel" />
+				<aui:button href="<%= redirect %>" name="cancelButton" type="cancel" />
 			</aui:button-row>
 		</div>
 	</c:if>
@@ -106,7 +110,7 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 			dialog.addToolbar(
 				[
 					{
-						cssClass: 'btn-lg btn-primary',
+						cssClass: 'btn-primary',
 						label: '<liferay-ui:message key="save" />',
 						on: {
 							click: function() {
@@ -115,7 +119,7 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 						}
 					},
 					{
-						cssClass: 'btn-lg btn-link',
+						cssClass: 'btn-link',
 						label: '<liferay-ui:message key="cancel" />',
 						on: {
 							click: function() {

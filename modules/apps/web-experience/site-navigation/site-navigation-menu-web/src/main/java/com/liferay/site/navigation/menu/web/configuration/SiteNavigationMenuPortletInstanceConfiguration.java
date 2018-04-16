@@ -22,7 +22,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Juergen Kappler
  */
 @ExtendedObjectClassDefinition(
-	category = "web-experience",
+	category = "navigation",
 	scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
 )
 @Meta.OCD(
@@ -32,31 +32,62 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface SiteNavigationMenuPortletInstanceConfiguration {
 
-	@Meta.AD(name = "bullet-style", required = false)
-	public String bulletStyle();
-
-	@Meta.AD(deflt = "0", name = "display-depth", required = false)
-	public int displayDepth();
-
-	@Meta.AD(name = "display-style", required = false)
-	public String displayStyle();
+	@Meta.AD(name = "site-navigation-menu-id", required = false)
+	public long siteNavigationMenuId();
 
 	@Meta.AD(deflt = "0", name = "display-style-group-id", required = false)
 	public long displayStyleGroupId();
 
+	@Meta.AD(name = "display-style", required = false)
+	public String displayStyle();
+
+	@Meta.AD(deflt = "absolute", name = "root-menu-item-type", required = false)
+	public String rootMenuItemType();
+
+	/**
+	 * @deprecated As of 2.0.0, replaced by {@link #rootMenuItemType()}
+	 */
+	@Deprecated
+	@Meta.AD(name = "root-layout-type", required = false)
+	public String rootLayoutType();
+
+	@Meta.AD(deflt = "0", name = "root-menu-item-level", required = false)
+	public int rootMenuItemLevel();
+
+	/**
+	 * @deprecated As of 2.0.0, replaced by {@link #rootMenuItemLevel()}
+	 */
+	@Deprecated
+	@Meta.AD(deflt = "0", name = "root-layout-level", required = false)
+	public int rootLayoutLevel();
+
+	@Meta.AD(name = "root-menu-item-id", required = false)
+	public String rootMenuItemId();
+
+	/**
+	 * @deprecated As of 2.0.0, with no direct replacement
+	 */
+	@Deprecated
+	@Meta.AD(name = "root-layout-uuid", required = false)
+	public String rootLayoutUuid();
+
+	@Meta.AD(deflt = "1", name = "site-navigation-menu-type", required = false)
+	public int siteNavigationMenuType();
+
+	@Meta.AD(deflt = "0", name = "display-depth", required = false)
+	public int displayDepth();
+
+	@Meta.AD(deflt = "auto", name = "expand-sublevels", required = false)
+	public String expandedLevels();
+
+	/**
+	 * @deprecated As of 2.0.0, replaced by {@link #expandedLevels()}
+	 */
+	@Deprecated
 	@Meta.AD(deflt = "current", name = "included-layouts", required = false)
 	public String includedLayouts();
 
 	@Meta.AD(deflt = "preview", name = "preview", required = false)
 	public boolean preview();
-
-	@Meta.AD(deflt = "0", name = "root-layout-level", required = false)
-	public int rootLayoutLevel();
-
-	@Meta.AD(deflt = "absolute", name = "root-layout-type", required = false)
-	public String rootLayoutType();
-
-	@Meta.AD(name = "root-layout-uuid", required = false)
-	public String rootLayoutUuid();
 
 }

@@ -32,7 +32,7 @@
 
 	var TPL_LEXICON_ICON = '<svg class="lexicon-icon lexicon-icon-{0} {1}" focusable="false" role="image">' +
 			'<use data-href="' + themeDisplay.getPathThemeImages() + '/lexicon/icons.svg#{0}" />' +
-			'<title>{0}</title>'
+			'<title>{0}</title>' +
 		'</svg>';
 
 	var Window = {
@@ -743,7 +743,7 @@
 
 			currentTarget = $(currentTarget);
 
-			config = A.mix(currentTarget.data(), config);
+			config = A.mix(A.merge({}, currentTarget.data()), config);
 
 			if (!config.uri) {
 				config.uri = currentTarget.data('href') || currentTarget.attr('href');
@@ -994,7 +994,7 @@
 
 		toCharCode: _.memoize(
 			function(name) {
-				return _.invoke(name, 'charCodeAt').join('');
+				return _.invokeMap(name, 'charCodeAt').join('');
 			}
 		),
 
@@ -1146,7 +1146,7 @@
 
 				var singleSubmit = event.singleSubmit;
 
-				var inputs = form.all('input[type=button], input[type=image], input[type=reset], input[type=submit]');
+				var inputs = form.all('button[type=submit], input[type=button], input[type=image], input[type=reset], input[type=submit]');
 
 				Util.disableFormButtons(inputs, form);
 

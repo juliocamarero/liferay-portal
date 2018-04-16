@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.configuration.css.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -22,7 +23,6 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletDecorator;
 import com.liferay.portal.kernel.model.Theme;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletSetupUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
@@ -57,6 +56,7 @@ import javax.portlet.RenderRequest;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Eudaldo Alonso
@@ -74,7 +74,7 @@ public class PortletConfigurationCSSPortletDisplayContext {
 			renderRequest, "portletResource");
 
 		PortletPreferences portletSetup =
-			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
+			themeDisplay.getStrictLayoutPortletSetup(
 				themeDisplay.getLayout(), portletResource);
 
 		JSONObject portletSetupJSONObject = PortletSetupUtil.cssToJSONObject(
@@ -157,8 +157,9 @@ public class PortletConfigurationCSSPortletDisplayContext {
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			_renderRequest);
 
-		ServletContext servletContext =
-			request.getSession().getServletContext();
+		HttpSession session = request.getSession();
+
+		ServletContext servletContext = session.getServletContext();
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
 			_portletResource);

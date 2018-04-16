@@ -29,15 +29,13 @@ if (Validator.isNull(redirect)) {
 
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 
-long groupId = ParamUtil.getLong(request, "groupId", portletName.equals(SiteAdminPortletKeys.SITE_SETTINGS) ? themeDisplay.getSiteGroupId() : 0);
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
 Group group = null;
 
 if (groupId > 0) {
 	group = GroupLocalServiceUtil.getGroup(groupId);
 }
-
-long parentGroupId = ParamUtil.getLong(request, "parentGroupSearchContainerPrimaryKeys", GroupConstants.DEFAULT_PARENT_GROUP_ID);
 
 Group liveGroup = null;
 
@@ -82,38 +80,6 @@ long layoutSetPrototypeId = ParamUtil.getLong(request, "layoutSetPrototypeId");
 if (layoutSetPrototypeId > 0) {
 	layoutSetPrototype = LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 }
-
-if (!portletName.equals(SiteAdminPortletKeys.SITE_SETTINGS)) {
-	portletDisplay.setShowBackIcon(true);
-	portletDisplay.setURLBack(backURL.toString());
-
-	String title = StringPool.BLANK;
-
-	if (group != null) {
-		title = group.getDescriptiveName(locale);
-	}
-	else if (layoutSetPrototype != null) {
-		title = layoutSetPrototype.getName(locale);
-	}
-	else if (parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
-		title = LanguageUtil.get(request, "new-child-site");
-	}
-	else {
-		title = LanguageUtil.get(request, "new-site");
-	}
-
-	renderResponse.setTitle(title);
-
-	if (group != null) {
-		PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
-		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "edit"), currentURL);
-	}
-	else if (parentGroupId != GroupConstants.DEFAULT_PARENT_GROUP_ID) {
-		Group parentGroup = GroupLocalServiceUtil.getGroup(parentGroupId);
-
-		PortalUtil.addPortletBreadcrumbEntry(request, parentGroup.getDescriptiveName(locale), null);
-	}
-}
 %>
 
 <liferay-ui:success key='<%= SiteAdminPortletKeys.SITE_SETTINGS + "requestProcessed" %>' message="site-was-added" />
@@ -122,7 +88,12 @@ if (!portletName.equals(SiteAdminPortletKeys.SITE_SETTINGS)) {
 	<portlet:param name="mvcPath" value="/edit_site.jsp" />
 </portlet:actionURL>
 
-<aui:form action="<%= editGroupURL %>" cssClass="container-fluid-1280" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveGroup();" %>'>
+<liferay-frontend:edit-form
+	action="<%= editGroupURL %>"
+	method="post"
+	name="fm"
+	onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveGroup();" %>'
+>
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
@@ -139,14 +110,21 @@ if (!portletName.equals(SiteAdminPortletKeys.SITE_SETTINGS)) {
 	request.setAttribute("site.stagingGroupId", Long.valueOf(stagingGroupId));
 	%>
 
-	<liferay-ui:form-navigator
-		backURL="<%= backURL %>"
-		formModelBean="<%= group %>"
-		id="<%= FormNavigatorConstants.FORM_NAVIGATOR_ID_SITES %>"
-		markupView="lexicon"
-		showButtons="<%= true %>"
-	/>
-</aui:form>
+	<liferay-frontend:edit-form-body>
+		<liferay-frontend:form-navigator
+			backURL="<%= backURL %>"
+			formModelBean="<%= group %>"
+			id="<%= FormNavigatorConstants.FORM_NAVIGATOR_ID_SITES %>"
+			showButtons="<%= false %>"
+		/>
+	</liferay-frontend:edit-form-body>
+
+	<liferay-frontend:edit-form-footer>
+		<aui:button type="submit" />
+
+		<aui:button href="<%= backURL %>" type="cancel" />
+	</liferay-frontend:edit-form-footer>
+</liferay-frontend:edit-form>
 
 <aui:script>
 	function <portlet:namespace />saveGroup(forceDisable) {

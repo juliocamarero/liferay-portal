@@ -17,18 +17,16 @@ package com.liferay.wiki.search.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.BaseSearcher;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchResult;
 import com.liferay.portal.kernel.search.SearchResultUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
@@ -36,11 +34,11 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
-import com.liferay.wiki.search.WikiPageTitleSearcher;
 import com.liferay.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.wiki.util.test.WikiTestUtil;
 
@@ -57,7 +55,6 @@ import org.junit.runner.RunWith;
  * @author Roberto Díaz
  */
 @RunWith(Arquillian.class)
-@Sync
 public class WikiPageTitleSearcherTest {
 
 	@ClassRule
@@ -65,8 +62,7 @@ public class WikiPageTitleSearcherTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
-			SynchronousDestinationTestRule.INSTANCE);
+			PermissionCheckerTestRule.INSTANCE);
 
 	@Before
 	public void setUp() throws Exception {
@@ -148,11 +144,9 @@ public class WikiPageTitleSearcherTest {
 	}
 
 	protected void assertSearch(String keywords, int length) throws Exception {
-		Indexer<?> indexer = WikiPageTitleSearcher.getInstance();
-
 		_searchContext.setKeywords(StringUtil.toLowerCase(keywords));
 
-		Hits hits = indexer.search(_searchContext);
+		Hits hits = _wikiPageSearcher.search(_searchContext);
 
 		Assert.assertEquals(hits.toString(), length, hits.getLength());
 	}
@@ -160,11 +154,9 @@ public class WikiPageTitleSearcherTest {
 	protected void assertSearchNode(String keywords, long nodeId)
 		throws Exception {
 
-		Indexer<?> indexer = WikiPageTitleSearcher.getInstance();
-
 		_searchContext.setKeywords(StringUtil.toLowerCase(keywords));
 
-		Hits hits = indexer.search(_searchContext);
+		Hits hits = _wikiPageSearcher.search(_searchContext);
 
 		List<SearchResult> searchResults = SearchResultUtil.getSearchResults(
 			hits, LocaleUtil.getDefault());
@@ -180,11 +172,9 @@ public class WikiPageTitleSearcherTest {
 	protected void assertSearchTitle(String keywords, String title)
 		throws Exception {
 
-		Indexer<?> indexer = WikiPageTitleSearcher.getInstance();
-
 		_searchContext.setKeywords(StringUtil.toLowerCase(keywords));
 
-		Hits hits = indexer.search(_searchContext);
+		Hits hits = _wikiPageSearcher.search(_searchContext);
 
 		for (Document document : hits.getDocs()) {
 			Assert.assertEquals(title, document.get(Field.TITLE));
@@ -197,6 +187,9 @@ public class WikiPageTitleSearcherTest {
 
 		return searchContext;
 	}
+
+	@Inject(filter = "model.class.name=com.liferay.wiki.model.WikiPage")
+	private static BaseSearcher _wikiPageSearcher;
 
 	@DeleteAfterTestRun
 	private Group _group;

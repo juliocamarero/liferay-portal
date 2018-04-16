@@ -33,11 +33,20 @@
 	</command>
 
 	<command name="addImageResolution">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${imageName}" />
 		</execute>
+
+		<if>
+			<isset var="description" />
+			<then>
+				<execute macro="PortletEntry#inputDescription">
+					<var name="description" value="${description}" />
+				</execute>
+			</then>
+		</if>
 
 		<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidth}" />
 
@@ -76,6 +85,12 @@
 					</execute>
 				</then>
 			</elseif>
+			<elseif>
+				<isset var="noDimensions" />
+				<then>
+					<execute function="AssertTextEquals" locator1="Message#REQUIRED_INFO" value1="At least one value is required." />
+				</then>
+			</elseif>
 			<else>
 				<execute macro="Alert#viewSuccessMessage" />
 			</else>
@@ -83,7 +98,7 @@
 	</command>
 
 	<command name="addNonNumericImageResolution">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${imageName}" />
@@ -113,7 +128,7 @@
 
 		<execute macro="Alert#viewSuccessMessage" />
 
-		<execute function="AssertElementNotPresent" locator1="AdaptiveMediaTable#NAME" value1="${imageName}" />
+		<execute function="AssertElementNotPresent" locator1="AdaptiveMediaTable#NAME" />
 	</command>
 
 	<command name="disableImageResolution">
@@ -128,6 +143,15 @@
 		<var name="key_imageState" value="${imageState}" />
 
 		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#STATE" value1="Disabled" />
+
+		<if>
+			<isset var="percentAdapted" />
+			<then>
+				<var name="key_percentAdapted" value="${percentAdapted}" />
+
+				<execute function="AssertCssValue" locator1="AdaptiveMediaTable#PROGRESS_BAR_COLOR" locator2="opacity" value1="0.5" />
+			</then>
+		</if>
 	</command>
 
 	<command name="editImageResolution">
@@ -168,7 +192,7 @@
 						<contains string="${maxHeightEdit}" substring="{maxHeightEdit}" />
 					</not>
 					<then>
-						<execute function="Type" locator1="TextInput#MAX_HEIGHT" value1="${maxHeightEdit}"  />
+						<execute function="Type" locator1="TextInput#MAX_HEIGHT" value1="${maxHeightEdit}" />
 					</then>
 				</if>
 
@@ -177,7 +201,7 @@
 						<contains string="${maxWidthEdit}" substring="{maxWidthEdit}" />
 					</not>
 					<then>
-						<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidthEdit}"  />
+						<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidthEdit}" />
 					</then>
 				</if>
 
@@ -188,13 +212,23 @@
 					<then>
 						<execute function="Click" locator1="Radio#CUSTOM_URL" />
 
-						<execute function="Type" locator1="TextInput#IMAGE_ID" value1="${imageIDEdit}"  />
+						<execute function="Type" locator1="TextInput#IMAGE_ID" value1="${imageIDEdit}" />
 					</then>
 				</if>
 			</else>
 		</if>
 
-		<execute macro="PortletEntry#save" />
+		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
+		<if>
+			<isset var="noDimensions" />
+			<then>
+				<execute function="AssertTextEquals" locator1="Message#REQUIRED_INFO" value1="At least one value is required." />
+			</then>
+			<else>
+				<execute macro="Alert#viewSuccessMessage" />
+			</else>
+		</if>
 	</command>
 
 	<command name="enableImageResolution">
@@ -250,6 +284,10 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#MAX_HEIGHT" value1="${maxHeight}" />
 	</command>
 
+	<command name="viewImageVariantDescription">
+		<execute function="AssertTextEquals" locator1="TextArea#DESCRIPTION" value1="${description}" />
+	</command>
+
 	<command name="viewImageVariantID">
 		<execute function="AssertTextEquals" locator1="TextInput#IMAGE_ID" value1="${imageVariantID}" />
 	</command>
@@ -272,5 +310,7 @@
 		<var name="key_numberOfAdaptedImages" value="${numberOfAdaptedImages}" />
 
 		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#IMAGE_INFO_DETAILS_ADAPTED_IMAGES" value1="${numberOfAdaptedImages}" />
+
+		<execute function="Click" locator1="AdaptiveMediaTable#INFO_ICON" />
 	</command>
 </definition>

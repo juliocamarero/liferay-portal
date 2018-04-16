@@ -32,8 +32,10 @@ import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
@@ -77,7 +79,11 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
 			{ "layoutPageTemplateCollectionId", Types.BIGINT },
-			{ "name", Types.VARCHAR }
+			{ "classNameId", Types.BIGINT },
+			{ "classTypeId", Types.BIGINT },
+			{ "name", Types.VARCHAR },
+			{ "htmlPreviewEntryId", Types.BIGINT },
+			{ "defaultTemplate", Types.BOOLEAN }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -90,10 +96,14 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("layoutPageTemplateCollectionId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("classNameId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("classTypeId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("htmlPreviewEntryId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("defaultTemplate", Types.BOOLEAN);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table LayoutPageTemplateEntry (layoutPageTemplateEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,layoutPageTemplateCollectionId LONG,name VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table LayoutPageTemplateEntry (layoutPageTemplateEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,layoutPageTemplateCollectionId LONG,classNameId LONG,classTypeId LONG,name VARCHAR(75) null,htmlPreviewEntryId LONG,defaultTemplate BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table LayoutPageTemplateEntry";
 	public static final String ORDER_BY_JPQL = " ORDER BY layoutPageTemplateEntry.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY LayoutPageTemplateEntry.name ASC";
@@ -109,9 +119,11 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.layout.page.template.service.util.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.layout.page.template.model.LayoutPageTemplateEntry"),
 			true);
-	public static final long GROUPID_COLUMN_BITMASK = 1L;
-	public static final long LAYOUTPAGETEMPLATECOLLECTIONID_COLUMN_BITMASK = 2L;
-	public static final long NAME_COLUMN_BITMASK = 4L;
+	public static final long CLASSNAMEID_COLUMN_BITMASK = 1L;
+	public static final long DEFAULTTEMPLATE_COLUMN_BITMASK = 2L;
+	public static final long GROUPID_COLUMN_BITMASK = 4L;
+	public static final long LAYOUTPAGETEMPLATECOLLECTIONID_COLUMN_BITMASK = 8L;
+	public static final long NAME_COLUMN_BITMASK = 16L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -135,7 +147,11 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
 		model.setLayoutPageTemplateCollectionId(soapModel.getLayoutPageTemplateCollectionId());
+		model.setClassNameId(soapModel.getClassNameId());
+		model.setClassTypeId(soapModel.getClassTypeId());
 		model.setName(soapModel.getName());
+		model.setHtmlPreviewEntryId(soapModel.getHtmlPreviewEntryId());
+		model.setDefaultTemplate(soapModel.getDefaultTemplate());
 
 		return model;
 	}
@@ -211,7 +227,11 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("layoutPageTemplateCollectionId",
 			getLayoutPageTemplateCollectionId());
+		attributes.put("classNameId", getClassNameId());
+		attributes.put("classTypeId", getClassTypeId());
 		attributes.put("name", getName());
+		attributes.put("htmlPreviewEntryId", getHtmlPreviewEntryId());
+		attributes.put("defaultTemplate", getDefaultTemplate());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -271,10 +291,34 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 			setLayoutPageTemplateCollectionId(layoutPageTemplateCollectionId);
 		}
 
+		Long classNameId = (Long)attributes.get("classNameId");
+
+		if (classNameId != null) {
+			setClassNameId(classNameId);
+		}
+
+		Long classTypeId = (Long)attributes.get("classTypeId");
+
+		if (classTypeId != null) {
+			setClassTypeId(classTypeId);
+		}
+
 		String name = (String)attributes.get("name");
 
 		if (name != null) {
 			setName(name);
+		}
+
+		Long htmlPreviewEntryId = (Long)attributes.get("htmlPreviewEntryId");
+
+		if (htmlPreviewEntryId != null) {
+			setHtmlPreviewEntryId(htmlPreviewEntryId);
+		}
+
+		Boolean defaultTemplate = (Boolean)attributes.get("defaultTemplate");
+
+		if (defaultTemplate != null) {
+			setDefaultTemplate(defaultTemplate);
 		}
 	}
 
@@ -418,6 +462,60 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		return _originalLayoutPageTemplateCollectionId;
 	}
 
+	@Override
+	public String getClassName() {
+		if (getClassNameId() <= 0) {
+			return "";
+		}
+
+		return PortalUtil.getClassName(getClassNameId());
+	}
+
+	@Override
+	public void setClassName(String className) {
+		long classNameId = 0;
+
+		if (Validator.isNotNull(className)) {
+			classNameId = PortalUtil.getClassNameId(className);
+		}
+
+		setClassNameId(classNameId);
+	}
+
+	@JSON
+	@Override
+	public long getClassNameId() {
+		return _classNameId;
+	}
+
+	@Override
+	public void setClassNameId(long classNameId) {
+		_columnBitmask |= CLASSNAMEID_COLUMN_BITMASK;
+
+		if (!_setOriginalClassNameId) {
+			_setOriginalClassNameId = true;
+
+			_originalClassNameId = _classNameId;
+		}
+
+		_classNameId = classNameId;
+	}
+
+	public long getOriginalClassNameId() {
+		return _originalClassNameId;
+	}
+
+	@JSON
+	@Override
+	public long getClassTypeId() {
+		return _classTypeId;
+	}
+
+	@Override
+	public void setClassTypeId(long classTypeId) {
+		_classTypeId = classTypeId;
+	}
+
 	@JSON
 	@Override
 	public String getName() {
@@ -442,6 +540,46 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 
 	public String getOriginalName() {
 		return GetterUtil.getString(_originalName);
+	}
+
+	@JSON
+	@Override
+	public long getHtmlPreviewEntryId() {
+		return _htmlPreviewEntryId;
+	}
+
+	@Override
+	public void setHtmlPreviewEntryId(long htmlPreviewEntryId) {
+		_htmlPreviewEntryId = htmlPreviewEntryId;
+	}
+
+	@JSON
+	@Override
+	public boolean getDefaultTemplate() {
+		return _defaultTemplate;
+	}
+
+	@JSON
+	@Override
+	public boolean isDefaultTemplate() {
+		return _defaultTemplate;
+	}
+
+	@Override
+	public void setDefaultTemplate(boolean defaultTemplate) {
+		_columnBitmask |= DEFAULTTEMPLATE_COLUMN_BITMASK;
+
+		if (!_setOriginalDefaultTemplate) {
+			_setOriginalDefaultTemplate = true;
+
+			_originalDefaultTemplate = _defaultTemplate;
+		}
+
+		_defaultTemplate = defaultTemplate;
+	}
+
+	public boolean getOriginalDefaultTemplate() {
+		return _originalDefaultTemplate;
 	}
 
 	public long getColumnBitmask() {
@@ -483,7 +621,11 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		layoutPageTemplateEntryImpl.setCreateDate(getCreateDate());
 		layoutPageTemplateEntryImpl.setModifiedDate(getModifiedDate());
 		layoutPageTemplateEntryImpl.setLayoutPageTemplateCollectionId(getLayoutPageTemplateCollectionId());
+		layoutPageTemplateEntryImpl.setClassNameId(getClassNameId());
+		layoutPageTemplateEntryImpl.setClassTypeId(getClassTypeId());
 		layoutPageTemplateEntryImpl.setName(getName());
+		layoutPageTemplateEntryImpl.setHtmlPreviewEntryId(getHtmlPreviewEntryId());
+		layoutPageTemplateEntryImpl.setDefaultTemplate(getDefaultTemplate());
 
 		layoutPageTemplateEntryImpl.resetOriginalValues();
 
@@ -554,7 +696,15 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 
 		layoutPageTemplateEntryModelImpl._setOriginalLayoutPageTemplateCollectionId = false;
 
+		layoutPageTemplateEntryModelImpl._originalClassNameId = layoutPageTemplateEntryModelImpl._classNameId;
+
+		layoutPageTemplateEntryModelImpl._setOriginalClassNameId = false;
+
 		layoutPageTemplateEntryModelImpl._originalName = layoutPageTemplateEntryModelImpl._name;
+
+		layoutPageTemplateEntryModelImpl._originalDefaultTemplate = layoutPageTemplateEntryModelImpl._defaultTemplate;
+
+		layoutPageTemplateEntryModelImpl._setOriginalDefaultTemplate = false;
 
 		layoutPageTemplateEntryModelImpl._columnBitmask = 0;
 	}
@@ -599,6 +749,10 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 
 		layoutPageTemplateEntryCacheModel.layoutPageTemplateCollectionId = getLayoutPageTemplateCollectionId();
 
+		layoutPageTemplateEntryCacheModel.classNameId = getClassNameId();
+
+		layoutPageTemplateEntryCacheModel.classTypeId = getClassTypeId();
+
 		layoutPageTemplateEntryCacheModel.name = getName();
 
 		String name = layoutPageTemplateEntryCacheModel.name;
@@ -607,12 +761,16 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 			layoutPageTemplateEntryCacheModel.name = null;
 		}
 
+		layoutPageTemplateEntryCacheModel.htmlPreviewEntryId = getHtmlPreviewEntryId();
+
+		layoutPageTemplateEntryCacheModel.defaultTemplate = getDefaultTemplate();
+
 		return layoutPageTemplateEntryCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{layoutPageTemplateEntryId=");
 		sb.append(getLayoutPageTemplateEntryId());
@@ -630,8 +788,16 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		sb.append(getModifiedDate());
 		sb.append(", layoutPageTemplateCollectionId=");
 		sb.append(getLayoutPageTemplateCollectionId());
+		sb.append(", classNameId=");
+		sb.append(getClassNameId());
+		sb.append(", classTypeId=");
+		sb.append(getClassTypeId());
 		sb.append(", name=");
 		sb.append(getName());
+		sb.append(", htmlPreviewEntryId=");
+		sb.append(getHtmlPreviewEntryId());
+		sb.append(", defaultTemplate=");
+		sb.append(getDefaultTemplate());
 		sb.append("}");
 
 		return sb.toString();
@@ -639,7 +805,7 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append(
@@ -679,8 +845,24 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 		sb.append(getLayoutPageTemplateCollectionId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>classNameId</column-name><column-value><![CDATA[");
+		sb.append(getClassNameId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>classTypeId</column-name><column-value><![CDATA[");
+		sb.append(getClassTypeId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>htmlPreviewEntryId</column-name><column-value><![CDATA[");
+		sb.append(getHtmlPreviewEntryId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>defaultTemplate</column-name><column-value><![CDATA[");
+		sb.append(getDefaultTemplate());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -705,8 +887,16 @@ public class LayoutPageTemplateEntryModelImpl extends BaseModelImpl<LayoutPageTe
 	private long _layoutPageTemplateCollectionId;
 	private long _originalLayoutPageTemplateCollectionId;
 	private boolean _setOriginalLayoutPageTemplateCollectionId;
+	private long _classNameId;
+	private long _originalClassNameId;
+	private boolean _setOriginalClassNameId;
+	private long _classTypeId;
 	private String _name;
 	private String _originalName;
+	private long _htmlPreviewEntryId;
+	private boolean _defaultTemplate;
+	private boolean _originalDefaultTemplate;
+	private boolean _setOriginalDefaultTemplate;
 	private long _columnBitmask;
 	private LayoutPageTemplateEntry _escapedModel;
 }

@@ -193,9 +193,9 @@ catch (NoSuchFolderException nsfe) {
 								function(event) {
 									var folderData = {
 										idString: 'rootFolderId',
-										idValue: event.folderid,
+										idValue: event.entityid,
 										nameString: 'rootFolderName',
-										nameValue: event.name
+										nameValue: event.entityname
 									};
 
 									Liferay.Util.selectFolder(folderData, '<portlet:namespace />');
@@ -253,7 +253,7 @@ catch (NoSuchFolderException nsfe) {
 	</div>
 
 	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button type="submit" />
 	</aui:button-row>
 </aui:form>
 

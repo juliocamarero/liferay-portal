@@ -1,5 +1,6 @@
 @import "bourbon";
 @import "utilities";
+
 @import "field-type-checkbox-switch";
 
 %flex-space-between {
@@ -22,6 +23,25 @@
 	}
 }
 
+body .ddm-user-view-content {
+	.liferay-ddm-form-renderer-wizard {
+		padding: 40px 34px 31px;
+	}
+
+	.multi-step-item.active .multi-step-divider {
+		background-color: #1865FB;
+	}
+
+	.multi-step-indicator-label {
+		margin-top: -28px;
+	}
+}
+
+.portlet-forms .ddm-form-basic-info .ddm-form-name {
+	color: #000;
+	font-weight: 500;
+}
+
 .lfr-ddm-form-container {
 	word-break: normal;
 
@@ -33,6 +53,10 @@
 		font-size: inherit;
 	}
 
+	.input-group-addon .form-control-feedback {
+		left: -18px;
+	}
+
 	.required-warning {
 		margin-bottom: 25px;
 
@@ -41,15 +65,15 @@
 		}
 	}
 
-	.input-group-addon .form-control-feedback {
-		left: -18px;
+	.select-arrow-down-container:focus {
+		outline: none;
 	}
 
 	.lfr-ddm-form-field-container {
 		position: relative;
 
 		&.has-error .liferay-ddm-form-field-date .input-group-addon {
-			border-width: 0 0 2px 0;
+			border-width: 0 0 2px;
 		}
 
 		@include keyframes(spin) {
@@ -110,6 +134,10 @@
 
 	.lfr-ddm-form-pagination-controls {
 		padding-top: 20px;
+
+		button {
+			margin-bottom: 20px;
+		}
 	}
 
 	.row {
@@ -147,12 +175,24 @@
 .liferay-ddm-form-field-numeric {
 }
 
+.liferay-ddm-form-field-options .form-control-feedback {
+	margin-left: 0;
+
+	[class^="icon"] {
+		display: none;
+	}
+}
+
 .liferay-ddm-form-field-tip {
 	font-size: 11px;
 	font-weight: 400;
 }
 
 .liferay-ddm-form-field-grid {
+	.table {
+		margin-bottom: 0.1rem;
+	}
+
 	th, td:not(:first-child) {
 		text-align: center;
 	}
@@ -201,8 +241,19 @@
 .form-builder-select-field {
 	position: relative;
 
+	.dropdown-menu {
+		display: block;
+		max-width: initial;
+		min-width: 0;
+		width: 100%;
+
+		.dropdown-section, .dropdown-item, .no-results-list {
+			padding: 0.5rem 1rem;
+		}
+	}
+
 	.select-arrow-down-container {
-		color: #869CAD;
+		color: #6B6C7E;
 	}
 
 	.search-chosen {
@@ -236,6 +287,7 @@
 
 	.select-field-trigger {
 		@extend %flex-space-between;
+		height: inherit;
 
 		.option-selected {
 			@extend %text-ellipsis;
@@ -245,7 +297,6 @@
 
 	.drop-chosen {
 		background-color: #FFF;
-		border: solid 1px #E4E9EC;
 		border-radius: 0 0 4px 4px;
 		box-shadow: 0 2px 14px 0 rgba(58, 75, 87, 0.1);
 		left: 0;
@@ -253,60 +304,20 @@
 		right: 0;
 		z-index: 1010;
 
-		input[type="text"] {
-			background: transparent;
-			border-width: 0;
-			color: #869CAD;
-			font-size: 16px;
-			outline: 0;
-			padding: 8px 16px;
-			padding-left: 40px;
-			width: 100%;
+		.dropdown-visible {
+			display: block;
 		}
 
 		.results-chosen {
 			margin: 0;
 			max-height: 438px;
+			min-width: 100%;
 			overflow-x: hidden;
 			overflow-y: auto;
 			padding: 0;
 
-			li {
-				@extend %text-ellipsis;
-				color: #869CAD;
-				cursor: pointer;
-				line-height: 15px;
-				list-style: none;
-				margin: 0;
-				overflow: hidden;
-				padding: 12px 16px;
-
-				&.option-selected {
-					color: #65B6F0;
-				}
-
-				input[type='checkbox'] {
-					margin: 0;
-					margin-right: 10px;
-				}
-			}
-
-			li:last-child {
-				border-bottom-left-radius: 4px;
-				border-bottom-right-radius: 4px;
-			}
-
-			li:hover {
-				background-color: #F7FAFA;
-			}
-
-			.no-results-list {
-				color: rgba(134, 156, 173, 0.4);
-				cursor: default;
-
-				&:hover {
-					background-color: #FFF;
-				}
+			.inline-scroller > span {
+				padding-left: 16px;
 			}
 		}
 	}
@@ -323,22 +334,23 @@
 
 		li {
 			overflow: hidden;
+			padding-top: 10px;
 		}
 
 		.multiple-badge {
 			@extend %text-ellipsis;
-			margin-bottom: 0;
+			margin-bottom: 4px;
 			margin-right: 6px;
 			margin-top: 0;
 			overflow: hidden;
-			padding-bottom: 3px;
 			padding-right: 20px;
 			position: relative;
 
 			a {
+				font-size: 6px;
 				position: absolute;
-				right: 8px;
-				top: 4px;
+				right: 5px;
+				top: 1px;
 
 				.icon-monospaced.lexicon-icon {
 					margin-bottom: 1px;
@@ -348,6 +360,10 @@
 			}
 		}
 	}
+}
+
+.lfr-ddm-form-paginated .pagination {
+	justify-content: center;
 }
 
 .liferay-ddm-form-field-fieldset {
@@ -367,14 +383,6 @@
 
 	&.border-bottom {
 		margin-bottom: 50px !important;
-
-		& > fieldset {
-			border-bottom-width: 1px;
-		}
-	}
-
-	&.border-top > fieldset {
-		border-top-width: 1px;
 	}
 
 	& > fieldset {
@@ -384,6 +392,7 @@
 		padding: 10px 10px 0 10px;
 
 		& > div {
+			margin-bottom: 0;
 			padding-left: 0;
 
 			div div.form-group {
@@ -404,4 +413,14 @@
 			width: auto;
 		}
 	}
+}
+
+.liferay-ddm-form-renderer-pagination-content {
+	a {
+		pointer-events: none;
+	}
+}
+
+.form-check-inline .custom-control-label {
+	line-height: 24px;
 }

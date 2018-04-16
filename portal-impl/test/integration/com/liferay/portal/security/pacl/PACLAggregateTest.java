@@ -15,22 +15,23 @@
 package com.liferay.portal.security.pacl;
 
 import com.liferay.petra.log4j.Log4JUtil;
-import com.liferay.portal.kernel.process.ProcessCallable;
-import com.liferay.portal.kernel.process.ProcessChannel;
-import com.liferay.portal.kernel.process.ProcessConfig;
-import com.liferay.portal.kernel.process.ProcessConfig.Builder;
-import com.liferay.portal.kernel.process.ProcessException;
-import com.liferay.portal.kernel.process.local.LocalProcessExecutor;
-import com.liferay.portal.kernel.process.local.LocalProcessLauncher.ProcessContext;
+import com.liferay.petra.process.ProcessCallable;
+import com.liferay.petra.process.ProcessChannel;
+import com.liferay.petra.process.ProcessConfig;
+import com.liferay.petra.process.ProcessConfig.Builder;
+import com.liferay.petra.process.ProcessException;
+import com.liferay.petra.process.local.LocalProcessExecutor;
+import com.liferay.petra.process.local.LocalProcessLauncher.ProcessContext;
+import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.resiliency.mpi.MPIHelperUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.ci.AutoBalanceTestCase;
 import com.liferay.portal.kernel.test.junit.BridgeJUnitTestRunner;
 import com.liferay.portal.kernel.test.junit.BridgeJUnitTestRunner.BridgeRunListener;
 import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.test.log.CaptureAppender;
@@ -93,23 +94,16 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 	public void testPACLTests() throws Exception {
 		LocalProcessExecutor localProcessExecutor = new LocalProcessExecutor();
 
-		try {
-			List<Class<?>> classes = scanTestClasses();
+		List<Class<?>> classes = scanTestClasses();
 
-			Assume.assumeFalse("No PACL tests available", classes.isEmpty());
+		Assume.assumeFalse("No PACL tests available", classes.isEmpty());
 
-			ProcessChannel<Result> processChannel =
-				localProcessExecutor.execute(
-					createProcessConfig(),
-					new PACLTestsProcessCallable(classes));
+		ProcessChannel<Result> processChannel = localProcessExecutor.execute(
+			createProcessConfig(), new PACLTestsProcessCallable(classes));
 
-			Future<Result> future = processChannel.getProcessNoticeableFuture();
+		Future<Result> future = processChannel.getProcessNoticeableFuture();
 
-			future.get();
-		}
-		finally {
-			localProcessExecutor.destroy();
-		}
+		future.get();
 	}
 
 	protected ProcessConfig createProcessConfig() {
@@ -303,6 +297,7 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 			System.setProperty("catalina.base", ".");
 
 			List<CaptureAppender> captureAppenders = null;
+			IOException ioException = null;
 
 			String originalTempDirName = System.getProperty(
 				SystemProperties.TMP_DIR);
@@ -322,8 +317,7 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 					"portal:" + PropsKeys.MODULE_FRAMEWORK_STATE_DIR,
 					tempStatePath.toString());
 
-				com.liferay.portal.kernel.util.PropsUtil.setProps(
-					new PropsImpl());
+				PropsUtil.setProps(new PropsImpl());
 
 				SystemProperties.set(
 					"log4j.configure.on.startup", StringPool.FALSE);
@@ -339,6 +333,8 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 					_classes.toArray(new Class<?>[_classes.size()]));
 			}
 			catch (IOException ioe) {
+				ioException = ioe;
+
 				throw new ProcessException(ioe);
 			}
 			finally {
@@ -362,7 +358,7 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 										Path path, IOException ioe)
 									throws IOException {
 
-									Files.delete(path);
+									Files.deleteIfExists(path);
 
 									return FileVisitResult.CONTINUE;
 								}
@@ -373,7 +369,7 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 										BasicFileAttributes basicFileAttributes)
 									throws IOException {
 
-									Files.delete(path);
+									Files.deleteIfExists(path);
 
 									return FileVisitResult.CONTINUE;
 								}
@@ -381,6 +377,10 @@ public class PACLAggregateTest extends AutoBalanceTestCase {
 							});
 					}
 					catch (IOException ioe) {
+						if (ioException != null) {
+							ioe.addSuppressed(ioException);
+						}
+
 						throw new ProcessException(ioe);
 					}
 

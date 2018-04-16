@@ -136,9 +136,7 @@
 	<command name="definePermissionPG">
 		<execute function="Check" locator1="//tr[contains(.,'${teamName}')]/td/input[contains(@id,'${permissionDefinitionKey}')]" />
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 
 		<execute function="AssertChecked" locator1="//tr[contains(.,'${teamName}')]/td/input[contains(@id,'${permissionDefinitionKey}')]" />
 	</command>
@@ -215,9 +213,7 @@
 	<command name="removePermissionPG">
 		<execute function="Uncheck" locator1="//tr[contains(.,'${teamName}')]/td/input[contains(@id,'${permissionDefinitionKey}')]" />
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 
 		<execute function="AssertNotChecked" locator1="//tr[contains(.,'${teamName}')]/td/input[contains(@id,'${permissionDefinitionKey}')]" />
 	</command>
@@ -287,7 +283,10 @@
 	<command name="viewDefaultCP">
 		<var name="key_teamName" value="${teamName}" />
 
-		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no site teams. You can add a site team by clicking the plus button on the bottom right corner." />
+		<execute macro="PortletEntry#viewEmptyMessage">
+			<var name="entity" value="Site Teams" />
+		</execute>
+
 		<execute function="AssertTextNotPresent" locator1="SiteTeams#TEAM_TABLE_NAME" value1="${teamName}" />
 	</command>
 
@@ -328,7 +327,9 @@
 				<var name="navItem" value="${navItem}" />
 			</execute>
 
-			<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no members. You can add a member by clicking the plus button on the bottom right corner." />
+			<var method="StringUtil#lowerCase('${navItem}')" name="lowercaseNavItem" />
+
+			<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="No ${lowercaseNavItem} were found." />
 		</for>
 	</command>
 </definition>

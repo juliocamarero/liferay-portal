@@ -14,6 +14,7 @@
 
 package com.liferay.social.networking.web.internal.members.social;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -23,7 +24,6 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.social.kernel.model.BaseSocialRequestInterpreter;
 import com.liferay.social.kernel.model.SocialRequest;
 import com.liferay.social.kernel.model.SocialRequestConstants;
@@ -31,8 +31,6 @@ import com.liferay.social.kernel.model.SocialRequestFeedEntry;
 import com.liferay.social.kernel.model.SocialRequestInterpreter;
 import com.liferay.social.kernel.service.SocialActivityLocalService;
 import com.liferay.social.networking.constants.SocialNetworkingPortletKeys;
-import com.liferay.social.networking.members.social.MembersActivityKeys;
-import com.liferay.social.networking.members.social.MembersRequestKeys;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,7 +40,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author M Murali Krishna Reddy
  */
 @Component(
-	property = {"javax.portlet.name=" + SocialNetworkingPortletKeys.MEMBERS},
+	property = "javax.portlet.name=" + SocialNetworkingPortletKeys.MEMBERS,
 	service = SocialRequestInterpreter.class
 )
 public class MembersRequestInterpreter extends BaseSocialRequestInterpreter {

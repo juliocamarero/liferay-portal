@@ -60,7 +60,7 @@
 	<command name="AddPagesFullPageApplication" priority="4">
 		<property name="testray.component.names" value="Site Pages Administration" />
 
-		<for list="Blogs,Documents and Media,Wiki,Media Gallery,Message Boards,Dynamic Data Lists Form,Hello Soy Portlet" param="portlet">
+		<for list="Blogs,Documents and Media,Wiki,Media Gallery,Message Boards,Dynamic Data Mapping Form,Hello Soy Portlet,RSS" param="portlet">
 			<execute macro="ProductMenu#gotoPortlet">
 				<var name="category" value="Navigation" />
 				<var name="panel" value="Site Administration" />
@@ -69,7 +69,13 @@
 
 			<execute macro="SitePages#addPublicPage">
 				<var name="pageName" value="${portlet} Full Page Application" />
+				<var name="sitePageType" value="Full Page Application" />
+			</execute>
+
+			<execute macro="SitePages#configurePage">
+				<var name="pageName" value="${portlet} Full Page Application" />
 				<var name="portlet" value="${portlet}" />
+				<var name="privacy" value="Public" />
 				<var name="sitePageType" value="Full Page Application" />
 			</execute>
 
@@ -78,21 +84,28 @@
 			</execute>
 
 			<if>
-				<equals arg1="${portlet}" arg2="Dynamic Data Lists Form" />
+				<equals arg1="${portlet}" arg2="Dynamic Data Mapping Form" />
 				<then>
-					<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="Form">
+					<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="Form">
 						<var name="key_portletTitleName" value="Form" />
 					</execute>
 				</then>
+				<elseif>
+					<equals arg1="${portlet}" arg2="RSS" />
+					<then>
+						<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="RSS Publisher">
+							<var name="key_portletTitleName" value="RSS Publisher" />
+						</execute>
+					</then>
+				</elseif>
 				<else>
-					<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="${portlet}">
+					<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="${portlet}">
 						<var name="key_portletTitleName" value="${portlet}" />
 					</execute>
 				</else>
 			</if>
 
 			<execute function="AssertElementNotPresent" locator1="ControlMenu#ADD" />
-			<execute function="AssertElementNotPresent" locator1="ControlMenu#EDIT_COG" />
 		</for>
 	</command>
 
@@ -101,11 +114,14 @@
 
 		<execute macro="NavigationMenu#gotoAddPage" />
 
-		<execute macro="PortletEntry#inputName">
-			<var name="name" value="Test Page Name" />
+		<execute macro="SitePages#_addPage">
+			<var name="pageName" value="Test Page Name" />
 		</execute>
 
-		<execute macro="Page#saveAddPage" />
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Test Page Name" />
+			<var name="siteName" value="Liferay" />
+		</execute>
 
 		<execute function="AssertLocation" value1="${portalURL}/web/guest/test-page-name" />
 	</command>
@@ -147,15 +163,16 @@
 			<var name="pageName" value="Site Page" />
 		</execute>
 
-		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName" >
+		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName">
 			<execute macro="SitePages#addPublicChildPage">
 				<var name="childPageName" value="${childPageName}" />
 				<var name="parentPageName" value="Site Page" />
 			</execute>
 		</for>
 
-		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName" >
+		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName">
 			<execute macro="Page#view">
+				<var name="depth" value="1" />
 				<var name="pageName" value="${childPageName}" />
 				<var name="privacy" value="Public" />
 			</execute>
@@ -197,11 +214,10 @@
 			<var name="url" value="${portalURL}/group/site-name/site-child-page" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoPrivatePages" />
-
 		<execute macro="Page#view">
+			<var name="depth" value="1" />
 			<var name="pageName" value="Site Child Page" />
-			<var name="privacy" value="Public" />
+			<var name="privacy" value="Private" />
 		</execute>
 	</command>
 
@@ -316,6 +332,7 @@
 		</execute>
 
 		<execute macro="Page#view">
+			<var name="depth" value="1" />
 			<var name="pageName" value="Site Child Page" />
 			<var name="privacy" value="Public" />
 		</execute>
@@ -425,7 +442,7 @@
 			<var name="columnName" value="1 Column" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -446,7 +463,7 @@
 			<var name="columnName" value="1-2-1 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -471,7 +488,7 @@
 			<var name="columnName" value="Freeform" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -492,7 +509,7 @@
 			<var name="columnName" value="2 Columns (50/50)" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -513,7 +530,7 @@
 			<var name="columnName" value="2 Columns (70/30)" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -534,7 +551,7 @@
 			<var name="columnName" value="3 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -555,7 +572,7 @@
 			<var name="columnName" value="1-2 Columns (30/70)" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -580,7 +597,7 @@
 			<var name="columnName" value="1-2 Columns (70/30)" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -601,7 +618,7 @@
 			<var name="columnName" value="2-2 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -622,7 +639,7 @@
 			<var name="columnName" value="1-3-1 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -643,7 +660,7 @@
 			<var name="columnName" value="1-3-2 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -664,7 +681,7 @@
 			<var name="columnName" value="2-1-2 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -685,7 +702,7 @@
 			<var name="columnName" value="3-2-3 Columns" />
 			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
-			<var name="sitePageType" value="Empty Page" />
+			<var name="sitePageType" value="Layout" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -805,9 +822,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="Site Page" />
+			<var name="pageName" value="Site Page" />
 		</execute>
 
 		<execute macro="Page#editName">
@@ -825,9 +842,9 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
+		<execute macro="SitePages#gotoPageMenuItem">
 			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="Welcome" />
+			<var name="pageName" value="Welcome" />
 		</execute>
 
 		<execute macro="Page#viewSelectedLayoutColumn">
@@ -871,6 +888,7 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Site Page" />
+			<var name="sitePageType" value="Embedded" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -884,13 +902,11 @@
 			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoEntryMenuItem">
-			<var name="menuItem" value="Configure" />
-			<var name="rowEntry" value="Site Page" />
-		</execute>
-
-		<execute macro="Page#editSelectPageType">
-			<var name="pageType" value="Embedded" />
+		<execute macro="SitePages#configurePage">
+			<var name="pageName" value="Site Page" />
+			<var name="pageTypeURL" value="https://www.liferay.com" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Embedded" />
 		</execute>
 
 		<execute macro="Navigator#gotoSpecificURLPage">

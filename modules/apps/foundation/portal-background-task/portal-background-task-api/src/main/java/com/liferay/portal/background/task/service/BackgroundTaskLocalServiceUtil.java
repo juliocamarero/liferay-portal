@@ -16,7 +16,8 @@ package com.liferay.portal.background.task.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -383,6 +384,15 @@ public class BackgroundTaskLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasks(
+		long[] groupIds, java.lang.String name,
+		java.lang.String[] taskExecutorClassNames, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.background.task.model.BackgroundTask> orderByComparator) {
+		return getService()
+				   .getBackgroundTasks(groupIds, name, taskExecutorClassNames,
+			start, end, orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasks(
 		long[] groupIds, java.lang.String[] taskExecutorClassNames) {
 		return getService().getBackgroundTasks(groupIds, taskExecutorClassNames);
 	}
@@ -440,6 +450,22 @@ public class BackgroundTaskLocalServiceUtil {
 			end, orderByComparator);
 	}
 
+	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasksByDuration(
+		long[] groupIds, java.lang.String[] taskExecutorClassNames,
+		boolean completed, int start, int end, boolean orderByType) {
+		return getService()
+				   .getBackgroundTasksByDuration(groupIds,
+			taskExecutorClassNames, completed, start, end, orderByType);
+	}
+
+	public static java.util.List<com.liferay.portal.background.task.model.BackgroundTask> getBackgroundTasksByDuration(
+		long[] groupIds, java.lang.String[] taskExecutorClassNames, int start,
+		int end, boolean orderByType) {
+		return getService()
+				   .getBackgroundTasksByDuration(groupIds,
+			taskExecutorClassNames, start, end, orderByType);
+	}
+
 	/**
 	* Returns the number of background tasks.
 	*
@@ -489,6 +515,13 @@ public class BackgroundTaskLocalServiceUtil {
 		return getService()
 				   .getBackgroundTasksCount(groupIds, name,
 			taskExecutorClassName, completed);
+	}
+
+	public static int getBackgroundTasksCount(long[] groupIds,
+		java.lang.String name, java.lang.String[] taskExecutorClassName) {
+		return getService()
+				   .getBackgroundTasksCount(groupIds, name,
+			taskExecutorClassName);
 	}
 
 	public static int getBackgroundTasksCount(long[] groupIds,
@@ -551,6 +584,17 @@ public class BackgroundTaskLocalServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<BackgroundTaskLocalService, BackgroundTaskLocalService> _serviceTracker =
-		ServiceTrackerFactory.open(BackgroundTaskLocalService.class);
+	private static ServiceTracker<BackgroundTaskLocalService, BackgroundTaskLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(BackgroundTaskLocalService.class);
+
+		ServiceTracker<BackgroundTaskLocalService, BackgroundTaskLocalService> serviceTracker =
+			new ServiceTracker<BackgroundTaskLocalService, BackgroundTaskLocalService>(bundle.getBundleContext(),
+				BackgroundTaskLocalService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

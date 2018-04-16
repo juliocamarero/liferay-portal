@@ -15,12 +15,15 @@
 package com.liferay.message.boards.internal.messaging;
 
 import com.liferay.mail.kernel.model.Account;
+import com.liferay.message.boards.constants.MBMessageConstants;
+import com.liferay.message.boards.internal.util.MBMailMessage;
+import com.liferay.message.boards.internal.util.MBMailUtil;
 import com.liferay.message.boards.internal.util.MailingListThreadLocal;
-import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.model.MBMessageConstants;
-import com.liferay.message.boards.kernel.service.MBMessageLocalService;
-import com.liferay.message.boards.kernel.service.MBMessageService;
+import com.liferay.message.boards.model.MBMessage;
+import com.liferay.message.boards.service.MBMessageLocalService;
+import com.liferay.message.boards.service.MBMessageService;
 import com.liferay.petra.mail.MailEngine;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
@@ -34,10 +37,7 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.permission.PermissionCheckerUtil;
-import com.liferay.portlet.messageboards.util.MBMailMessage;
-import com.liferay.portlet.messageboards.util.MBUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,9 +62,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"destination.name=" + DestinationNames.MESSAGE_BOARDS_MAILING_LIST
-	},
+	property = "destination.name=" + DestinationNames.MESSAGE_BOARDS_MAILING_LIST,
 	service = MessageListener.class
 )
 public class MailingListMessageListener extends BaseMessageListener {
@@ -162,7 +160,7 @@ public class MailingListMessageListener extends BaseMessageListener {
 			MailingListRequest mailingListRequest, Message mailMessage)
 		throws Exception {
 
-		if (MBUtil.hasMailIdHeader(mailMessage)) {
+		if (MBMailUtil.hasMailIdHeader(mailMessage)) {
 			return;
 		}
 
@@ -204,7 +202,7 @@ public class MailingListMessageListener extends BaseMessageListener {
 				companyId, mailingListRequest.getUserId());
 		}
 
-		long parentMessageId = MBUtil.getParentMessageId(mailMessage);
+		long parentMessageId = MBMailUtil.getParentMessageId(mailMessage);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Parent message id " + parentMessageId);
@@ -223,13 +221,13 @@ public class MailingListMessageListener extends BaseMessageListener {
 
 		MBMailMessage mbMailMessage = new MBMailMessage();
 
-		MBUtil.collectPartContent(mailMessage, mbMailMessage);
+		MBMailUtil.collectPartContent(mailMessage, mbMailMessage);
 
 		PermissionCheckerUtil.setThreadValues(user);
 
 		MailingListThreadLocal.setSourceMailingList(true);
 
-		String subject = MBUtil.getSubjectWithoutMessageId(mailMessage);
+		String subject = MBMailUtil.getSubjectWithoutMessageId(mailMessage);
 
 		ServiceContext serviceContext = new ServiceContext();
 

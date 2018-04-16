@@ -27,7 +27,7 @@
 	</command>
 
 	<command name="addCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="${siteTemplateName}" />
@@ -51,62 +51,24 @@
 			</then>
 		</if>
 
-		<execute macro="Button#clickSave" />
-
-		<execute macro="Alert#viewSuccessMessage" />
+		<execute macro="PortletEntry#save" />
 	</command>
 
 	<command name="addSitePageViaSiteTemplateCP">
-		<var name="key_siteTemplateName" value="${siteTemplateName}" />
-
-		<execute function="Click" locator1="SiteTemplates#SITE_TEMPLATE_TABLE_ACTIONS" value1="${siteTemplateName}" />
-
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Manage">
-			<var name="key_menuItem" value="Manage" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Manage" />
+			<var name="rowEntry" value="${siteTemplateName}" />
 		</execute>
 
-		<execute macro="ProductMenuHelper#openProductMenu" />
-
-		<execute macro="ProductMenuHelper#expandCategory">
+		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
 		</execute>
 
-		<execute macro="LexiconEntry#gotoAdd" />
-
-		<execute macro="PortletEntry#inputName">
-			<var name="name" value="${pageName}" />
+		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="${pageName}" />
 		</execute>
-
-		<if>
-			<isset var="pageType" />
-			<then>
-				<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_SELECT" value1="${pageType}" />
-
-				<if>
-					<equals arg1="${pageTemplateAutoApplyChanges}" arg2="true" />
-					<then>
-						<var name="key_pageType" value="${pageType}" />
-
-						<execute function="MouseOver" locator1="Icon#INHERIT_CHANGES_TOOLTIP" />
-
-						<execute function="AssertTextEquals" locator1="Message#TOOLTIP"  value1="Automatically apply changes done to the page template." />
-						<execute function="Check#checkToggleSwitch" locator1="SitePagesEditPage#PAGE_TYPE_TEMPLATE_AUTOMATICALLY_APPLY_CHANGES_CHECKBOX" value1="${pageType}" />
-					</then>
-				</if>
-
-				<if>
-					<equals arg1="${pageType}" arg2="Link to URL" />
-					<then>
-						<execute macro="Page#_addPageTypeLinkToURL">
-							<var name="pageTypeDescription" value="${pageTypeDescription}" />
-							<var name="pageTypeURL" value="${pageTypeURL}" />
-						</execute>
-					</then>
-				</if>
-			</then>
-		</if>
-
-		<execute macro="SitePages#_addPage" />
 	</command>
 
 	<command name="allowChangesToPageTemplateCP">
@@ -235,7 +197,7 @@
 
 		<execute function="AssertClick#assertPartialTextClickAt" locator1="SiteTemplates#SITE_TEMPLATE_TABLE_NAME" value1="${siteTemplateName}" />
 
-		<execute function="SelectWindow" locator1="home - ${siteTemplateName} - ${siteName}" />
+		<execute function="SelectWindow" locator1="Home - ${siteTemplateName} - ${siteName}" />
 	</command>
 
 	<command name="resetPageChanges">
@@ -246,7 +208,7 @@
 
 		<var name="key_portletTitleName" value="${portletName}" />
 
-		<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_${columnNumberTo}_PORTLET_TITLE" value1="${portletName}" />
+		<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_${columnNumberTo}_PORTLET_TITLE" value1="${portletName}" />
 
 		<execute function="AssertClick" locator1="Button#RESET_CHANGES" value1="Reset Changes" />
 
@@ -309,7 +271,7 @@
 	</command>
 
 	<command name="viewDefaultCP">
-		<for list="${siteTemplateNameList}" param="siteTemplateName" >
+		<for list="${siteTemplateNameList}" param="siteTemplateName">
 			<var name="key_siteTemplateName" value="${siteTemplateName}" />
 
 			<execute function="AssertTextEquals#assertPartialText" locator1="SiteTemplates#SITE_TEMPLATE_TABLE_NAME" value1="${siteTemplateName}" />
@@ -319,13 +281,13 @@
 	</command>
 
 	<command name="viewDefaultDataLocalizedCP">
-		<for list="${siteTemplateNameList}" param="siteTemplateNameTranslation" >
+		<for list="${siteTemplateNameList}" param="siteTemplateNameTranslation">
 			<var name="key_siteTemplateName" value="${siteTemplateNameTranslation}" />
 
 			<execute function="AssertTextEquals#assertPartialText" locator1="SiteTemplates#SITE_TEMPLATE_TABLE_NAME" value1="${siteTemplateNameTranslation}" />
 		</for>
 
-		<for list="${siteTemplateDescriptionList}" param="DescriptionTranslation" >
+		<for list="${siteTemplateDescriptionList}" param="DescriptionTranslation">
 			<var name="key_siteTemplateDescription" value="${DescriptionTranslation}" />
 
 			<execute function="AssertTextEquals" locator1="SiteTemplates#SITE_TEMPLATE_TABLE_DESCRIPTION" value1="${DescriptionTranslation}" />
@@ -365,14 +327,14 @@
 
 		<var name="key_portletCategoryName" value="${portletCategoryName}" />
 
-		<execute function="AssertElementNotPresent" locator1="Home#SITE_ADMINISTRATION_CATEGORY_COLLAPSED" value1="Users" />
+		<execute function="AssertElementNotPresent" locator1="Home#SITE_ADMINISTRATION_CATEGORY_COLLAPSED" />
 	</command>
 
 	<command name="viewNoTemplatesDisplay">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 		<var name="key_siteTemplateName" value="${siteTemplateName}" />
 
-		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="${siteTemplateName}">
+		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM">
 			<var name="key_menuItem" value="${siteTemplateName}" />
 		</execute>
 	</command>
@@ -383,7 +345,7 @@
 
 		<var name="key_portletTitleName" value="${portletName}" />
 
-		<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_${columnNumberFrom}_PORTLET_TITLE" value1="${portletName}" />
+		<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_${columnNumberFrom}_PORTLET_TITLE" value1="${portletName}" />
 	</command>
 
 	<command name="viewTemplateStatusCP">

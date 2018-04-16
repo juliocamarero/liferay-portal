@@ -16,34 +16,16 @@
 
 <%@ include file="/permissions/init.jsp" %>
 
-<%
-String inputTitle = StringPool.BLANK;
-String inputDescription = StringPool.BLANK;
+<aui:fieldset cssClass="options-group" markupView="lexicon">
+	<div class="sheet-section">
+		<h3 class="sheet-subtitle"><liferay-ui:message key="permissions" /></h3>
 
-if (action.equals("publish")) {
-	inputTitle = "publish-permissions";
-}
-else if (action.equals("export")) {
-	inputTitle = "export-permissions";
-}
-else {
-	inputTitle = "import-permissions";
-}
-
-if (global) {
-	inputDescription = "publish-global-permissions-help";
-}
-else {
-	inputDescription = "export-import-permissions-help";
-}
-
-String inputLabel = LanguageUtil.get(request, inputTitle) + ": <span style='font-weight: normal;'>" + LanguageUtil.get(request, inputDescription) + "</span> ";
-%>
-
-<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" cssClass="options-group" label="permissions" markupView="lexicon">
-	<span class="<%= labelCSSClass %>">
-		<aui:input disabled="<%= disableInputs %>" name="<%= PortletDataHandlerKeys.PERMISSIONS %>" type="checkbox" label="<%= inputLabel %>"
-			value="<%= MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PERMISSIONS, false) %>"
+		<liferay-staging:checkbox
+			checked="<%= MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PERMISSIONS, false) %>"
+			description="<%= inputDescription %>"
+			disabled="<%= disableInputs %>"
+			label="<%= inputTitle %>"
+			name="<%= PortletDataHandlerKeys.PERMISSIONS %>"
 		/>
-	</span>
+	</div>
 </aui:fieldset>

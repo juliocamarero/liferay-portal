@@ -1,5 +1,4 @@
 import core from 'metal';
-import Alert from 'metal-alert';
 import dom from 'metal-dom';
 import { EventHandler } from 'metal-events';
 
@@ -225,6 +224,6 @@ EditAdaptiveMediaConfig.STATE = {
 		validator: core.isString,
 		value: '.error-wrapper'
 	}
-}
+};
 
 export default EditAdaptiveMediaConfig;

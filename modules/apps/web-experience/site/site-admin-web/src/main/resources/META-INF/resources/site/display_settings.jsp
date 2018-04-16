@@ -20,7 +20,10 @@
 Group liveGroup = (Group)request.getAttribute("site.liveGroup");
 %>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="display-settings" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="display-settings"
+/>
 
 <h4 class="text-default"><liferay-ui:message key="language" /></h4>
 
@@ -144,8 +147,17 @@ if (publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayo
 
 		List leftList = new ArrayList();
 
-		for (Locale siteAvailableLocale : siteAvailableLocales) {
-			leftList.add(new KeyValuePair(LocaleUtil.toLanguageId(siteAvailableLocale), siteAvailableLocale.getDisplayName(locale)));
+		String groupLanguageIds = typeSettingsProperties.getProperty(PropsKeys.LOCALES);
+
+		if (groupLanguageIds != null) {
+			for (Locale currentLocale : LocaleUtil.fromLanguageIds(StringUtil.split(groupLanguageIds))) {
+				leftList.add(new KeyValuePair(LanguageUtil.getLanguageId(currentLocale), currentLocale.getDisplayName(locale)));
+			}
+		}
+		else {
+			for (Locale siteAvailableLocale : siteAvailableLocales) {
+				leftList.add(new KeyValuePair(LocaleUtil.toLanguageId(siteAvailableLocale), siteAvailableLocale.getDisplayName(locale)));
+			}
 		}
 
 		// Right list

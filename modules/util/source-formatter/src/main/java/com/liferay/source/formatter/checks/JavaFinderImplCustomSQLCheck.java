@@ -14,14 +14,12 @@
 
 package com.liferay.source.formatter.checks;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.source.formatter.checks.util.JavaSourceUtil;
 import com.liferay.source.formatter.parser.JavaClass;
-import com.liferay.source.formatter.parser.JavaMethod;
 import com.liferay.source.formatter.parser.JavaTerm;
-import com.liferay.source.formatter.parser.JavaVariable;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -66,12 +64,12 @@ public class JavaFinderImplCustomSQLCheck extends BaseJavaTermCheck {
 		List<JavaTerm> childJavaTerms = javaClass.getChildJavaTerms();
 
 		for (JavaTerm childJavaTerm : childJavaTerms) {
-			if (childJavaTerm instanceof JavaMethod) {
+			if (childJavaTerm.isJavaMethod()) {
 				_checkCustomSQL(
 					fileName, childJavaTerm.getContent(), fileContent,
 					customSQLDocument, finderName);
 			}
-			else if (childJavaTerm instanceof JavaVariable) {
+			else if (childJavaTerm.isJavaVariable()) {
 				_checkCustomSQLVariable(
 					fileName, childJavaTerm.getName(),
 					childJavaTerm.getContent(), fileContent, customSQLDocument);
