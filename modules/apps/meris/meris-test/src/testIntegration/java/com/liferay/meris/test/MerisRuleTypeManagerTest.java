@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.meris.demo.test;
+package com.liferay.meris.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.meris.MerisRuleType;
@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
  * @author Eduardo Garcia
  */
 @RunWith(Arquillian.class)
-public class DemoMerisRuleTypeManagerTest {
+public class MerisRuleTypeManagerTest {
 
 	@ClassRule
 	@Rule
