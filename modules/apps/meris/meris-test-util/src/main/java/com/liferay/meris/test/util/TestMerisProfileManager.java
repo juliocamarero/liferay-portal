@@ -83,7 +83,8 @@ public class TestMerisProfileManager
 					list.sort(comparator);
 
 					return ListUtil.subList(list, start, end);
-				}));
+				})
+		);
 	}
 
 	@Override
