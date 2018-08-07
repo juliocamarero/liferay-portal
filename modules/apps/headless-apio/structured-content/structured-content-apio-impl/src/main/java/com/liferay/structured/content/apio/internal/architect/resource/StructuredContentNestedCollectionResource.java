@@ -57,6 +57,7 @@ import com.liferay.structured.content.apio.architect.form.StructuredContentCreat
 import com.liferay.structured.content.apio.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.architect.identifier.StructuredContentIdentifier;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
+import com.liferay.structured.content.apio.architect.query.Query;
 import com.liferay.structured.content.apio.architect.router.StructuredContentRouter;
 import com.liferay.structured.content.apio.architect.util.StructuredContentUtil;
 import com.liferay.structured.content.apio.internal.model.RenderedJournalArticle;
@@ -89,7 +90,8 @@ public class StructuredContentNestedCollectionResource
 				builder) {
 
 		return builder.addGetter(
-			_structuredContentRouter::getPageItems, ThemeDisplay.class
+			_structuredContentRouter::getPageItems, Query.class,
+			ThemeDisplay.class
 		).addCreator(
 			_structuredContentRouter::addJournalArticle, ThemeDisplay.class,
 			_hasPermission.forAddingIn(ContentSpaceIdentifier.class),

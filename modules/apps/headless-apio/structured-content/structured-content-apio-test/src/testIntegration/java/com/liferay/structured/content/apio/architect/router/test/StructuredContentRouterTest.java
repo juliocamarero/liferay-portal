@@ -45,12 +45,15 @@ import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
 import com.liferay.structured.content.apio.architect.router.StructuredContentRouter;
 import com.liferay.structured.content.apio.architect.util.test.PaginationTestUtil;
+import com.liferay.structured.content.apio.architect.query.Query;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -85,18 +88,16 @@ public class StructuredContentRouterTest {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
 
-		Map<Locale, String> keywordsMap = new HashMap<>();
+		Map<Locale, String> titleMap = new HashMap<>();
 
-		String keywords = "keywords";
-
-		keywordsMap.put(LocaleUtil.getDefault(), keywords);
-		keywordsMap.put(LocaleUtil.GERMANY, keywords);
-		keywordsMap.put(LocaleUtil.SPAIN, keywords);
+		titleMap.put(LocaleUtil.getDefault(), "title");
+		titleMap.put(LocaleUtil.GERMANY, "titel");
+		titleMap.put(LocaleUtil.SPAIN, "titulo");
 
 		String articleId = "Article.Id";
 
 		String content = DDMStructureTestUtil.getSampleStructuredContent(
-			keywordsMap, LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
+			titleMap, LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
 
 		DDMForm ddmForm = DDMStructureTestUtil.getSampleDDMForm(
 			_locales, LocaleUtil.getDefault());
@@ -119,8 +120,8 @@ public class StructuredContentRouterTest {
 			serviceContext.getUserId(), _group.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, 0, articleId, true,
-			JournalArticleConstants.VERSION_DEFAULT, keywordsMap, keywordsMap,
-			content, ddmStructure.getStructureKey(),
+			JournalArticleConstants.VERSION_DEFAULT, titleMap,
+			Collections.emptyMap(), content, ddmStructure.getStructureKey(),
 			ddmTemplate.getTemplateKey(), null, displayCal.get(Calendar.MONTH),
 			displayCal.get(Calendar.DATE), displayCal.get(Calendar.YEAR),
 			displayCal.get(Calendar.HOUR_OF_DAY),
@@ -131,6 +132,14 @@ public class StructuredContentRouterTest {
 		PageItems<JournalArticleWrapper> pageItems =
 			_structuredContentRouter.getPageItems(
 				PaginationTestUtil.of(10, 1), _group.getGroupId(),
+				new Query() {
+
+					@Override
+					public Optional<String> getTitleOptional() {
+						return Optional.of("title");
+					}
+
+				},
 				_getThemeDisplay(_group));
 
 		//Then: The Article is returned
