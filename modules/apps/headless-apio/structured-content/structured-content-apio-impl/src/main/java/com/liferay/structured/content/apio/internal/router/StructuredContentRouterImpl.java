@@ -25,27 +25,24 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
 import com.liferay.structured.content.apio.architect.router.StructuredContentRouter;
+import com.liferay.structured.content.apio.internal.odata.ODataQueryMapper;
 
 import java.io.Serializable;
 
@@ -53,7 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -180,34 +176,11 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(new long[] {groupId});
 
-		if (filter != null && filter.hasValue()) {
-			Optional<String> optionalValue = filter.getValue();
+		Query query = _oDataQueryMapper.map(filter, searchContext.getLocale());
 
-			String filterValue = optionalValue.get();
-
-			String title = filterValue.substring(
-				filterValue.indexOf(StringPool.APOSTROPHE),
-				filterValue.lastIndexOf(StringPool.APOSTROPHE));
-
-			System.out.println("title: " + title);
-
-			String localizedFieldName = Field.getLocalizedName(
-				searchContext.getLocale(), "title");
-
-			Query localizedFieldQuery = null;
-
-			try {
-				BooleanQuery localizedQuery = new BooleanQueryImpl();
-
-				localizedFieldQuery = localizedQuery.addTerm(
-					localizedFieldName, title, false);
-			}
-			catch (ParseException pe) {
-				_log.error(pe, pe);
-			}
-
+		if (query != null) {
 			BooleanClause booleanClause = BooleanClauseFactoryUtil.create(
-				localizedFieldQuery, BooleanClauseOccur.MUST.getName());
+				query, BooleanClauseOccur.MUST.getName());
 
 			searchContext.setBooleanClauses(
 				new BooleanClause[] {booleanClause});
@@ -252,5 +225,8 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 
 	@Reference
 	private JournalArticleService _journalArticleService;
+
+	@Reference
+	private ODataQueryMapper _oDataQueryMapper;
 
 }
