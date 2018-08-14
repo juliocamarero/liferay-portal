@@ -36,16 +36,15 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
 import com.liferay.structured.content.apio.architect.router.StructuredContentRouter;
 import com.liferay.structured.content.apio.architect.util.test.PaginationTestUtil;
-import com.liferay.structured.content.apio.architect.query.Query;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -85,58 +84,17 @@ public class StructuredContentRouterTest {
 
 		//Given: A Journal article has been created
 
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
-
-		Map<Locale, String> titleMap = new HashMap<>();
-
-		titleMap.put(LocaleUtil.getDefault(), "title");
-		titleMap.put(LocaleUtil.GERMANY, "titel");
-		titleMap.put(LocaleUtil.SPAIN, "titulo");
-
-		String articleId = "Article.Id";
-
-		String content = DDMStructureTestUtil.getSampleStructuredContent(
-			titleMap, LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
-
-		DDMForm ddmForm = DDMStructureTestUtil.getSampleDDMForm(
-			_locales, LocaleUtil.getDefault());
-
-		long ddmGroupId = GetterUtil.getLong(
-			serviceContext.getAttribute("ddmGroupId"), _group.getGroupId());
-
-		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
-			ddmGroupId, JournalArticle.class.getName(), ddmForm,
-			LocaleUtil.getDefault());
-
-		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
-			ddmGroupId, ddmStructure.getStructureId(),
-			PortalUtil.getClassNameId(JournalArticle.class));
-
-		Calendar displayCal = CalendarFactoryUtil.getCalendar(
-			TestPropsValues.getUser().getTimeZone());
-
-		JournalArticle journalArticle = _journalArticleLocalService.addArticle(
-			serviceContext.getUserId(), _group.getGroupId(),
-			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, 0, articleId, true,
-			JournalArticleConstants.VERSION_DEFAULT, titleMap,
-			Collections.emptyMap(), content, ddmStructure.getStructureKey(),
-			ddmTemplate.getTemplateKey(), null, displayCal.get(Calendar.MONTH),
-			displayCal.get(Calendar.DATE), displayCal.get(Calendar.YEAR),
-			displayCal.get(Calendar.HOUR_OF_DAY),
-			displayCal.get(Calendar.MINUTE), 0, 0, 0, 0, 0, true, 0, 0, 0, 0, 0,
-			true, true, false, null, null, null, null, serviceContext);
+		JournalArticle journalArticle = _addJournalArticle("title1");
 
 		//When: The Journal Articles are requested
 		PageItems<JournalArticleWrapper> pageItems =
 			_structuredContentRouter.getPageItems(
 				PaginationTestUtil.of(10, 1), _group.getGroupId(),
-				new Query() {
+				new Filter() {
 
 					@Override
 					public Optional<String> getTitleOptional() {
-						return Optional.of("title");
+						return Optional.of("title1");
 					}
 
 				},
@@ -149,6 +107,72 @@ public class StructuredContentRouterTest {
 		Collection<JournalArticleWrapper> items = pageItems.getItems();
 
 		Assert.assertTrue("Items " + items, items.contains(journalArticle));
+	}
+
+	@Test
+	public void testGetNonExistingJournalArticle() throws Exception {
+
+		//Given: A Journal article has been created named title1
+
+		_addJournalArticle("title1");
+
+		//When: The Journal Articles are requested by a non existing title
+		PageItems<JournalArticleWrapper> pageItems =
+			_structuredContentRouter.getPageItems(
+				PaginationTestUtil.of(10, 1), _group.getGroupId(),
+				new Filter() {
+
+					@Override
+					public Optional<String> getTitleOptional() {
+						return Optional.of("nonExistingTitle");
+					}
+
+				},
+				_getThemeDisplay(_group));
+
+		//Then: The Article is not found
+
+		Assert.assertEquals(0, pageItems.getTotalCount());
+	}
+
+	private JournalArticle _addJournalArticle(String title) throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		Map<Locale, String> titleMap = new HashMap<>();
+
+		titleMap.put(LocaleUtil.getDefault(), title);
+		titleMap.put(LocaleUtil.GERMANY, title + " DE");
+		titleMap.put(LocaleUtil.SPAIN, title + " ES");
+
+		String content = DDMStructureTestUtil.getSampleStructuredContent(
+			titleMap, LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
+
+		DDMForm ddmForm = DDMStructureTestUtil.getSampleDDMForm(
+			_locales, LocaleUtil.getDefault());
+
+		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
+			_group.getGroupId(), JournalArticle.class.getName(), ddmForm,
+			LocaleUtil.getDefault());
+
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
+			_group.getGroupId(), ddmStructure.getStructureId(),
+			PortalUtil.getClassNameId(JournalArticle.class));
+
+		Calendar displayCal = CalendarFactoryUtil.getCalendar(
+			TestPropsValues.getUser().getTimeZone());
+
+		return _journalArticleLocalService.addArticle(
+			serviceContext.getUserId(), _group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, 0, null, true,
+			JournalArticleConstants.VERSION_DEFAULT, titleMap,
+			Collections.emptyMap(), content, ddmStructure.getStructureKey(),
+			ddmTemplate.getTemplateKey(), null, displayCal.get(Calendar.MONTH),
+			displayCal.get(Calendar.DATE), displayCal.get(Calendar.YEAR),
+			displayCal.get(Calendar.HOUR_OF_DAY),
+			displayCal.get(Calendar.MINUTE), 0, 0, 0, 0, 0, true, 0, 0, 0, 0, 0,
+			true, true, false, null, null, null, null, serviceContext);
 	}
 
 	private ThemeDisplay _getThemeDisplay(Group group) throws Exception {
