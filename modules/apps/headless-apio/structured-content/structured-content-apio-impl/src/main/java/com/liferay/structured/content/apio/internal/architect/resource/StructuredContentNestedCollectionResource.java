@@ -53,11 +53,11 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structure.apio.architect.identifier.ContentStructureIdentifier;
+import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.architect.identifier.StructuredContentIdentifier;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
-import com.liferay.structured.content.apio.architect.query.Query;
 import com.liferay.structured.content.apio.architect.router.StructuredContentRouter;
 import com.liferay.structured.content.apio.architect.util.StructuredContentUtil;
 import com.liferay.structured.content.apio.internal.model.RenderedJournalArticle;
@@ -90,7 +90,7 @@ public class StructuredContentNestedCollectionResource
 				builder) {
 
 		return builder.addGetter(
-			_structuredContentRouter::getPageItems, Query.class,
+			_structuredContentRouter::getPageItems, Filter.class,
 			ThemeDisplay.class
 		).addCreator(
 			_structuredContentRouter::addJournalArticle, ThemeDisplay.class,

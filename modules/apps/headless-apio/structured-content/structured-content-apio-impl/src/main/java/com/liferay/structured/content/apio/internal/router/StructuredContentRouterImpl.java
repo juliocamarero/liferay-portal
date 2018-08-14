@@ -33,11 +33,11 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
 import com.liferay.structured.content.apio.architect.router.StructuredContentRouter;
-import com.liferay.structured.content.apio.architect.query.Query;
 
 import java.io.Serializable;
 
@@ -103,7 +103,7 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 
 	@Override
 	public PageItems<JournalArticleWrapper> getPageItems(
-			Pagination pagination, long contentSpaceId, Query query,
+			Pagination pagination, long contentSpaceId, Filter filter,
 			ThemeDisplay themeDisplay)
 		throws PortalException {
 
@@ -113,7 +113,7 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 		Hits hits = indexer.search(
 			buildSearchContext(
 				themeDisplay.getCompanyId(), contentSpaceId,
-				query.getTitleOptional(), pagination.getStartPosition(),
+				filter.getTitleOptional(), pagination.getStartPosition(),
 				pagination.getEndPosition()));
 
 		List<JournalArticleWrapper> journalArticleWrappers = Stream.of(

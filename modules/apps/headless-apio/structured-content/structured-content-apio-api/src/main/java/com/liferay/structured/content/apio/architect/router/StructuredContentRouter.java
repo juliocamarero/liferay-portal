@@ -18,10 +18,10 @@ import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.architect.model.JournalArticleWrapper;
-import com.liferay.structured.content.apio.architect.query.Query;
 
 /**
  * Public API for the Structured Content Router.
@@ -40,7 +40,7 @@ public interface StructuredContentRouter {
 		throws PortalException;
 
 	public PageItems<JournalArticleWrapper> getPageItems(
-			Pagination pagination, long contentSpaceId, Query query,
+			Pagination pagination, long contentSpaceId, Filter filter,
 			ThemeDisplay themeDisplay)
 		throws PortalException;
 

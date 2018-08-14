@@ -15,7 +15,7 @@
 package com.liferay.structured.content.apio.internal.provider;
 
 import com.liferay.apio.architect.provider.Provider;
-import com.liferay.structured.content.apio.architect.query.Query;
+import com.liferay.structured.content.apio.architect.filter.Filter;
 
 import java.util.Optional;
 
@@ -27,10 +27,10 @@ import org.osgi.service.component.annotations.Component;
  * @author Cristina González
  */
 @Component
-public class QueryProvider implements Provider<Query> {
+public class FilterProvider implements Provider<Filter> {
 
 	@Override
-	public Query createContext(HttpServletRequest httpServletRequest) {
+	public Filter createContext(HttpServletRequest httpServletRequest) {
 		return () -> Optional.ofNullable(
 			httpServletRequest.getParameter("filter")
 		).filter(

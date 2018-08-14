@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.structured.content.apio.architect.query;
+package com.liferay.structured.content.apio.architect.filter;
 
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ import java.util.Optional;
  *
  * @author Cristina González
  */
-public interface Query {
+public interface Filter {
 
 	/**
 	 * Returns the title to search for.
