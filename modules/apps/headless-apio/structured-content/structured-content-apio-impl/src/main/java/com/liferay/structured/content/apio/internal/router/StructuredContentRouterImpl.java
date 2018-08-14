@@ -22,13 +22,20 @@ import com.liferay.journal.service.JournalArticleService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.BooleanClause;
+import com.liferay.portal.kernel.search.BooleanClauseFactoryUtil;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -168,13 +175,34 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 			Field.CLASS_NAME_ID, JournalArticleConstants.CLASSNAME_ID_DEFAULT);
 		attributes.put(Field.STATUS, WorkflowConstants.STATUS_APPROVED);
 
-		optionalTitle.ifPresent(title -> attributes.put(Field.TITLE, title));
-
 		searchContext.setAttributes(attributes);
 
 		searchContext.setCompanyId(companyId);
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(new long[] {groupId});
+
+		if (optionalTitle.isPresent()) {
+			String localizedFieldName = Field.getLocalizedName(
+				searchContext.getLocale(), "title");
+
+			Query localizedFieldQuery = null;
+
+			try {
+				BooleanQuery localizedQuery = new BooleanQueryImpl();
+
+				localizedFieldQuery = localizedQuery.addTerm(
+					localizedFieldName, optionalTitle.get(), false);
+			}
+			catch (ParseException pe) {
+				_log.error(pe, pe);
+			}
+
+			BooleanClause booleanClause = BooleanClauseFactoryUtil.create(
+				localizedFieldQuery, BooleanClauseOccur.MUST.getName());
+
+			searchContext.setBooleanClauses(
+				new BooleanClause[] {booleanClause});
+		}
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
