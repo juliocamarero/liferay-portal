@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.form.StructuredContentCreatorForm;
@@ -119,9 +120,8 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 
 		Hits hits = indexer.search(
 			buildSearchContext(
-				themeDisplay.getCompanyId(), contentSpaceId,
-				filter.getTitleOptional(), pagination.getStartPosition(),
-				pagination.getEndPosition()));
+				themeDisplay.getCompanyId(), contentSpaceId, filter,
+				pagination.getStartPosition(), pagination.getEndPosition()));
 
 		List<JournalArticleWrapper> journalArticleWrappers = Stream.of(
 			hits.toList()
@@ -164,8 +164,7 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 	}
 
 	protected SearchContext buildSearchContext(
-		long companyId, long groupId, Optional<String> optionalTitle, int start,
-		int end) {
+		long companyId, long groupId, Filter filter, int start, int end) {
 
 		SearchContext searchContext = new SearchContext();
 
@@ -181,7 +180,17 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 		searchContext.setEnd(end);
 		searchContext.setGroupIds(new long[] {groupId});
 
-		if (optionalTitle.isPresent()) {
+		if (filter != null && filter.hasValue()) {
+			Optional<String> optionalValue = filter.getValue();
+
+			String filterValue = optionalValue.get();
+
+			String title = filterValue.substring(
+				filterValue.indexOf(StringPool.APOSTROPHE),
+				filterValue.lastIndexOf(StringPool.APOSTROPHE));
+
+			System.out.println("title: " + title);
+
 			String localizedFieldName = Field.getLocalizedName(
 				searchContext.getLocale(), "title");
 
@@ -191,7 +200,7 @@ public class StructuredContentRouterImpl implements StructuredContentRouter {
 				BooleanQuery localizedQuery = new BooleanQueryImpl();
 
 				localizedFieldQuery = localizedQuery.addTerm(
-					localizedFieldName, optionalTitle.get(), false);
+					localizedFieldName, title, false);
 			}
 			catch (ParseException pe) {
 				_log.error(pe, pe);

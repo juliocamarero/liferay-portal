@@ -52,7 +52,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -90,15 +89,7 @@ public class StructuredContentRouterTest {
 		PageItems<JournalArticleWrapper> pageItems =
 			_structuredContentRouter.getPageItems(
 				PaginationTestUtil.of(10, 1), _group.getGroupId(),
-				new Filter() {
-
-					@Override
-					public Optional<String> getTitleOptional() {
-						return Optional.of("title1");
-					}
-
-				},
-				_getThemeDisplay(_group));
+				new Filter("(title eq 'title1')"), _getThemeDisplay(_group));
 
 		//Then: The Article is returned
 
@@ -120,14 +111,7 @@ public class StructuredContentRouterTest {
 		PageItems<JournalArticleWrapper> pageItems =
 			_structuredContentRouter.getPageItems(
 				PaginationTestUtil.of(10, 1), _group.getGroupId(),
-				new Filter() {
-
-					@Override
-					public Optional<String> getTitleOptional() {
-						return Optional.of("nonExistingTitle");
-					}
-
-				},
+				new Filter("(title eq 'nonExistingTitle')"),
 				_getThemeDisplay(_group));
 
 		//Then: The Article is not found

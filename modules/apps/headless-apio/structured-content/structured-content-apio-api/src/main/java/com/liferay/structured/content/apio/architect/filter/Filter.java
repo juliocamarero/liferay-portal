@@ -17,18 +17,36 @@ package com.liferay.structured.content.apio.architect.filter;
 import java.util.Optional;
 
 /**
- * Instances of this interface represent a query for retrieving structured
- * content by title.
+ * Instances of this interface represent a Filter for retrieving structured
+ * content by different fields.
  *
  * @author Cristina González
+ * @review
  */
-public interface Filter {
+public class Filter {
+
+	public Filter(String value) {
+		_optionalValue = Optional.ofNullable(value);
+	}
 
 	/**
-	 * Returns the title to search for.
+	 * Returns the filter _optionalValue.
 	 *
-	 * @return the structured content name
+	 * @return the filter _optionalValue
 	 */
-	public Optional<String> getTitleOptional();
+	public Optional<String> getValue() {
+		return _optionalValue;
+	}
+
+	/**
+	 * Returns <code>true</code> if the filter has a value.
+	 *
+	 * @return <code>true</code> if the filter has a value
+	 */
+	public boolean hasValue() {
+		return _optionalValue.isPresent();
+	}
+
+	private final Optional<String> _optionalValue;
 
 }

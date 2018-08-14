@@ -17,8 +17,6 @@ package com.liferay.structured.content.apio.internal.provider;
 import com.liferay.apio.architect.provider.Provider;
 import com.liferay.structured.content.apio.architect.filter.Filter;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
@@ -31,15 +29,7 @@ public class FilterProvider implements Provider<Filter> {
 
 	@Override
 	public Filter createContext(HttpServletRequest httpServletRequest) {
-		return () -> Optional.ofNullable(
-			httpServletRequest.getParameter("filter")
-		).filter(
-			string -> string.startsWith("title=")
-		).map(
-			string -> string.substring(6)
-		);
-
-		//&filter=(name eq 'Jon')
+		return new Filter(httpServletRequest.getParameter("filter"));
 	}
 
 }
