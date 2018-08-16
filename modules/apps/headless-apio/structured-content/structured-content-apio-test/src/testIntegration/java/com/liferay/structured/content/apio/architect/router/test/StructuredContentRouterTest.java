@@ -100,6 +100,22 @@ public class StructuredContentRouterTest {
 		Assert.assertTrue("Items " + items, items.contains(journalArticle));
 	}
 
+	@Test(expected = RuntimeException.class)
+	public void testGetJournalArticleWithFilterWithNonExistingField()
+		throws Exception {
+
+		//When: The Journal Articles are requested with a filter with a non
+
+		// existing field
+
+		_structuredContentRouter.getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			new Filter("(nonexistingField eq 'someValue')"),
+			_getThemeDisplay(_group));
+
+		//Then: A Runtime exception is thrown
+	}
+
 	@Test
 	public void testGetNonExistingJournalArticle() throws Exception {
 
