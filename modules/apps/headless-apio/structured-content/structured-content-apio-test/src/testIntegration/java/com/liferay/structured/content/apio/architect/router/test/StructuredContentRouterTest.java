@@ -116,6 +116,21 @@ public class StructuredContentRouterTest {
 		//Then: A Runtime exception is thrown
 	}
 
+	@Test(expected = RuntimeException.class)
+	public void testGetJournalArticleWithInvalidFilter() throws Exception {
+
+		//When: The Journal Articles are requested with a filter with an invalid
+
+		// expression
+
+		_structuredContentRouter.getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			new Filter("(title eq 'incompleteExpression "),
+			_getThemeDisplay(_group));
+
+		//Then: A Runtime exception is thrown
+	}
+
 	@Test
 	public void testGetNonExistingJournalArticle() throws Exception {
 
