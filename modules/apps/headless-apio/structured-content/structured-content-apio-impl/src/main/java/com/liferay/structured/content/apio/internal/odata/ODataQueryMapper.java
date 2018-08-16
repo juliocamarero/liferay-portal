@@ -14,23 +14,30 @@
 
 package com.liferay.structured.content.apio.internal.odata;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
-import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.structured.content.apio.architect.filter.Filter;
 
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.olingo.commons.api.ex.ODataException;
+import org.apache.olingo.commons.core.Encoder;
+import org.apache.olingo.server.api.uri.UriInfo;
+import org.apache.olingo.server.api.uri.queryoption.FilterOption;
+import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
+ * Component that converts an OData {@link Filter} into a Liferay Search {@link
+ * Query}.
+ *
  * @author Julio Camarero
+ * @review
  */
 @Component(immediate = true, service = ODataQueryMapper.class)
 public class ODataQueryMapper {
@@ -44,27 +51,66 @@ public class ODataQueryMapper {
 
 		String filterValue = optionalValue.get();
 
-		String title = filterValue.substring(
-			filterValue.indexOf(StringPool.APOSTROPHE),
-			filterValue.lastIndexOf(StringPool.APOSTROPHE));
+		if (Validator.isNull(filterValue)) {
+			return null;
+		}
 
-		System.out.println("title: " + title);
+		UriInfo uriInfo = _getUriInfo(filterValue);
 
-		String localizedFieldName = Field.getLocalizedName(locale, "title");
+		FilterOption filterOption = uriInfo.getFilterOption();
+
+		Expression expression = filterOption.getExpression();
 
 		try {
-			BooleanQuery localizedQuery = new BooleanQueryImpl();
-
-			return localizedQuery.addTerm(localizedFieldName, title, false);
+			return (Query)expression.accept(new ODataExpressionVisitor(locale));
 		}
-		catch (ParseException pe) {
-			_log.error(pe, pe);
+		catch (ODataException ode) {
+			throw new RuntimeException(ode);
+		}
+	}
 
-			return null; // TODO: Propagate Exception
+	private String _encodeODataQuery(String oDataQuery) {
+		return Encoder.encode(oDataQuery);
+	}
+
+	private UriInfo _getUriInfo(String filter) {
+		String odataQueryFilterEncoded = "$filter=" + _encodeODataQuery(filter);
+
+		try {
+			return _oDataParser.parse(odataQueryFilterEncoded);
+		}
+		catch (ODataException ode) {
+			String errorMessage = String.format(
+				"Invalid query computed from filter and apply values. %n " +
+					"OData query with encoded values: %s %n Filter: %n%s %n " +
+						"Message (ODataException): %s",
+				odataQueryFilterEncoded, filter, ode.getMessage());
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(errorMessage, ode);
+			}
+
+			throw new RuntimeException(errorMessage, ode);
+		}
+		catch (Exception e) {
+			String errorMessage = String.format(
+				"Unexpected error parsing query formed by filter and apply " +
+					"values. %n OData query with encoded values: %s %n " +
+						"Filter: %s %n Message: %s",
+				odataQueryFilterEncoded, filter, e.getMessage());
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(errorMessage, e);
+			}
+
+			throw new RuntimeException(errorMessage, e);
 		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ODataQueryMapper.class);
+
+	@Reference
+	private ODataParser _oDataParser;
 
 }
