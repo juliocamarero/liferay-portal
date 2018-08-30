@@ -18,6 +18,9 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.structured.content.apio.architect.filter.FilterParser;
+import com.liferay.structured.content.apio.architect.filter.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
+import com.liferay.structured.content.apio.internal.architect.filter.expression.ODataExpressionToExpressionVisitor;
 
 import org.apache.olingo.commons.api.edm.Edm;
 import org.apache.olingo.commons.api.ex.ODataException;
@@ -26,7 +29,6 @@ import org.apache.olingo.commons.core.edm.EdmProviderImpl;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.queryoption.FilterOption;
-import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
 import org.apache.olingo.server.core.uri.parser.Parser;
 
 import org.osgi.service.component.annotations.Activate;
@@ -43,7 +45,9 @@ import org.osgi.service.component.annotations.Component;
 public class FilterParserImpl implements FilterParser {
 
 	@Override
-	public Expression parse(String filterString) {
+	public Expression parse(String filterString)
+		throws ExpressionVisitException {
+
 		if (_log.isDebugEnabled()) {
 			_log.debug(String.format("Parsing the filter '%s'", filterString));
 		}
@@ -56,7 +60,15 @@ public class FilterParserImpl implements FilterParser {
 
 		FilterOption filterOption = uriInfo.getFilterOption();
 
-		return filterOption.getExpression();
+		org.apache.olingo.server.api.uri.queryoption.expression.Expression
+			expression = filterOption.getExpression();
+
+		try {
+			return expression.accept(new ODataExpressionToExpressionVisitor());
+		}
+		catch (Exception e) {
+			throw new ExpressionVisitException(e.getMessage(), e);
+		}
 	}
 
 	@Activate
