@@ -14,9 +14,9 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
-import org.apache.olingo.server.api.uri.queryoption.expression.Binary;
-import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
-import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.Binary;
+import com.liferay.structured.content.apio.architect.filter.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.Assertions;
@@ -92,27 +92,29 @@ public class FilterParserTest {
 	}
 
 	@Test
-	public void testParseWithSingleQuotes() {
+	public void testParseWithSingleQuotes() throws ExpressionVisitException {
 		Expression expression = _filterParser.parse("title eq 'title1'");
 
 		Assert.assertNotNull(expression);
 
 		Binary binary = (Binary)expression;
 
-		Assert.assertEquals(BinaryOperatorKind.EQ, binary.getOperator());
+		Assert.assertEquals(Binary.Operation.EQ, binary.getOperation());
 		Assert.assertEquals("[title]", binary.getLeftOperand().toString());
 		Assert.assertEquals("'title1'", binary.getRightOperand().toString());
 	}
 
 	@Test
-	public void testParseWithSingleQuotesAndParentheses() {
+	public void testParseWithSingleQuotesAndParentheses()
+		throws ExpressionVisitException {
+
 		Expression expression = _filterParser.parse("(title eq 'title1')");
 
 		Assert.assertNotNull(expression);
 
 		Binary binary = (Binary)expression;
 
-		Assert.assertEquals(BinaryOperatorKind.EQ, binary.getOperator());
+		Assert.assertEquals(Binary.Operation.EQ, binary.getOperation());
 		Assert.assertEquals("[title]", binary.getLeftOperand().toString());
 		Assert.assertEquals("'title1'", binary.getRightOperand().toString());
 	}

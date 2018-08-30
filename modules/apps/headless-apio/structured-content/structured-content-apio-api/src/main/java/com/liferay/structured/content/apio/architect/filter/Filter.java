@@ -14,7 +14,7 @@
 
 package com.liferay.structured.content.apio.architect.filter;
 
-import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.Expression;
 
 /**
  * Represents a Filter for retrieving structured content by different fields. A

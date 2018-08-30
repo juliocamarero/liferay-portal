@@ -14,7 +14,8 @@
 
 package com.liferay.structured.content.apio.architect.filter;
 
-import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 
 /**
  * <code>FilterLexer</code> transforms a sequence of characters in an manageable
@@ -32,6 +33,7 @@ public interface FilterParser {
 	 * @return The OData Expression
 	 * @review
 	 */
-	public Expression parse(String filterString);
+	public Expression parse(String filterString)
+		throws ExpressionVisitException;
 
 }
