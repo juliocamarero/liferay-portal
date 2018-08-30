@@ -7,4 +7,4 @@ Export-Package:\
 	com.liferay.structured.content.apio.architect.sort,\
 	com.liferay.structured.content.apio.architect.util,\
 	\
-	org.apache.olingo.server.api.uri.queryoption
+	org.apache.olingo.server.api.uri.queryoption.expression
