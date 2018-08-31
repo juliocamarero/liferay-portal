@@ -14,10 +14,8 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
-import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.structured.content.apio.architect.filter.expression.Binary.Operation;
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitor;
 import com.liferay.structured.content.apio.architect.filter.expression.Literal;
@@ -65,20 +63,6 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
 		return String.valueOf(resourcePath.get(0));
 	}
 
-	private static String _removeLeadingAndTrailingSingleQuotes(String s) {
-		if (Validator.isNull(s) || (s.length() == 1)) {
-			return s;
-		}
-
-		if ((s.charAt(0) == CharPool.APOSTROPHE) &&
-			(s.charAt(s.length() - 1) == CharPool.APOSTROPHE)) {
-
-			return s.substring(1, s.length() - 1);
-		}
-
-		return s;
-	}
-
 	private Map<String, Object> _createFilterMap(String left, Object right) {
 		Map<String, Object> filterMap = new HashMap<>();
 
@@ -87,11 +71,12 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
 		return filterMap;
 	}
 
-	private Object _processStringLiteral(String input) {
-		String value = _removeLeadingAndTrailingSingleQuotes(input);
+	private Object _processStringLiteral(String literal) {
+		String unquotedLiteral = StringUtil.unquote(literal);
 
 		return StringUtil.replace(
-			value, StringPool.DOUBLE_APOSTROPHE, StringPool.APOSTROPHE);
+			unquotedLiteral, StringPool.DOUBLE_APOSTROPHE,
+			StringPool.APOSTROPHE);
 	}
 
 }
