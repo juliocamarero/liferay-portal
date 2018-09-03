@@ -98,6 +98,8 @@ public class StructuredContentNestedCollectionResource
 		<JournalArticleWrapper, Long, StructuredContentIdentifier, Long,
 			ContentSpaceIdentifier> {
 
+	public static final String FIELD_TITLE = "title";
+
 	@Override
 	public NestedCollectionRoutes<JournalArticleWrapper, Long, Long>
 		collectionRoutes(
@@ -162,7 +164,7 @@ public class StructuredContentNestedCollectionResource
 		).addLocalizedStringByLocale(
 			"description", JournalArticleWrapper::getDescription
 		).addLocalizedStringByLocale(
-			"title", JournalArticle::getTitle
+			FIELD_TITLE, JournalArticle::getTitle
 		).addNestedList(
 			"renderedContentsByTemplate", this::_getRenderedJournalArticles,
 			nestedBuilder -> nestedBuilder.types(
@@ -373,7 +375,7 @@ public class StructuredContentNestedCollectionResource
 		for (SortField sortField : sortFields) {
 			String fieldName = sortField.getFieldName();
 
-			if (fieldName.equals("title")) {
+			if (fieldName.equals(FIELD_TITLE)) {
 				orderByComparator = new ArticleTitleComparator(
 					sortField.isAscending());
 
@@ -456,15 +458,17 @@ public class StructuredContentNestedCollectionResource
 
 		Map<String, Object> filterMap = getFilterMap(filter);
 
+		String title = (String)filterMap.get(FIELD_TITLE);
+
 		List<JournalArticleWrapper> journalArticleWrappers = Stream.of(
 			_journalArticleService.search(
 				themeDisplay.getCompanyId(), contentSpaceId,
 				Collections.emptyList(),
-				JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null,
-				(String)filterMap.get("title"), null, null, new String[0],
-				new String[0], null, null, WorkflowConstants.STATUS_APPROVED,
-				null, true, pagination.getStartPosition(),
-				pagination.getEndPosition(), orderByComparator)
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, title,
+				null, null, new String[0], new String[0], null, null,
+				WorkflowConstants.STATUS_APPROVED, null, true,
+				pagination.getStartPosition(), pagination.getEndPosition(),
+				orderByComparator)
 		).flatMap(
 			List::stream
 		).map(
@@ -477,10 +481,9 @@ public class StructuredContentNestedCollectionResource
 		int count = _journalArticleService.searchCount(
 			themeDisplay.getCompanyId(), contentSpaceId,
 			Collections.emptyList(),
-			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null,
-			(String)filterMap.get("title"), null, null, new String[0],
-			new String[0], null, null, WorkflowConstants.STATUS_APPROVED, null,
-			true);
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, title,
+			null, null, new String[0], new String[0], null, null,
+			WorkflowConstants.STATUS_APPROVED, null, true);
 
 		return new PageItems<>(journalArticleWrappers, count);
 	}

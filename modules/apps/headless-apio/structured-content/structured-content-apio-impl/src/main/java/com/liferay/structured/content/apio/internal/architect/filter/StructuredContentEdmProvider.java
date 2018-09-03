@@ -14,6 +14,8 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import com.liferay.structured.content.apio.internal.architect.resource.StructuredContentNestedCollectionResource;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +70,8 @@ public class StructuredContentEdmProvider
 		List<CsdlProperty> csdlProperties = new ArrayList<>();
 
 		CsdlProperty csdlProperty = _createCsdlProperty(
-			_TITLE_FIELD, EdmPrimitiveTypeKind.String.getFullQualifiedName());
+			StructuredContentNestedCollectionResource.FIELD_TITLE,
+			EdmPrimitiveTypeKind.String.getFullQualifiedName());
 
 		csdlProperties.add(csdlProperty);
 
@@ -105,7 +108,5 @@ public class StructuredContentEdmProvider
 	private static final String _ENTITY_NAME = "StructuredContent";
 
 	private static final String _NAMESPACE = "HypermediaRestApis";
-
-	private static final String _TITLE_FIELD = "title";
 
 }
