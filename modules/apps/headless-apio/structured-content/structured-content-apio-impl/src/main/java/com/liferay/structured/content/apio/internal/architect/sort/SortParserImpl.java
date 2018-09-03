@@ -15,6 +15,7 @@
 package com.liferay.structured.content.apio.internal.architect.sort;
 
 import com.liferay.petra.string.StringUtil;
+import com.liferay.structured.content.apio.architect.sort.InvalidSortException;
 import com.liferay.structured.content.apio.architect.sort.SortField;
 import com.liferay.structured.content.apio.architect.sort.SortParser;
 
@@ -84,7 +85,7 @@ public class SortParserImpl implements SortParser {
 		}
 
 		if (list.size() > 2) {
-			throw new RuntimeException("Unable to parse sort string");
+			throw new InvalidSortException("Unable to parse sort string");
 		}
 
 		String fieldName = list.get(0);
