@@ -74,9 +74,9 @@ public class ExpressionParserImpl implements ExpressionParser {
 
 	@Activate
 	protected void activate() {
-		_singleEntitySchemaBaseProvider = new StructuredContentEdmProvider();
+		_baseSingleEntitySchemaBasedEdmProvider = new StructuredContentEdmProvider();
 
-		Edm edm = new EdmProviderImpl(_singleEntitySchemaBaseProvider);
+		Edm edm = new EdmProviderImpl(_baseSingleEntitySchemaBasedEdmProvider);
 
 		_parser = new Parser(edm, OData.newInstance());
 	}
@@ -87,7 +87,7 @@ public class ExpressionParserImpl implements ExpressionParser {
 
 		try {
 			return _parser.parseUri(
-				_singleEntitySchemaBaseProvider.getSingleEntityTypeName(),
+				_baseSingleEntitySchemaBasedEdmProvider.getSingleEntityTypeName(),
 				encodedFilter, null, null);
 		}
 		catch (ODataException ode) {
@@ -105,6 +105,6 @@ public class ExpressionParserImpl implements ExpressionParser {
 		ExpressionParserImpl.class);
 
 	private Parser _parser;
-	private SingleEntitySchemaBaseProvider _singleEntitySchemaBaseProvider;
+	private BaseSingleEntitySchemaBasedEdmProvider _baseSingleEntitySchemaBasedEdmProvider;
 
 }

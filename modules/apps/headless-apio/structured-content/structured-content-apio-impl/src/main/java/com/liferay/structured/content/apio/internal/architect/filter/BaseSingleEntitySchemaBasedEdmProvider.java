@@ -30,7 +30,7 @@ import org.apache.olingo.server.core.SchemaBasedEdmProvider;
  * @author David Arques
  * @review
  */
-public abstract class SingleEntitySchemaBaseProvider
+public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	extends SchemaBasedEdmProvider {
 
 	/**

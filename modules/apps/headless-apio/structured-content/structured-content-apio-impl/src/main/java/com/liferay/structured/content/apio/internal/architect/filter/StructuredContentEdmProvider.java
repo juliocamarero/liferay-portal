@@ -33,7 +33,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
  * @review
  */
 public class StructuredContentEdmProvider
-	extends SingleEntitySchemaBaseProvider {
+	extends BaseSingleEntitySchemaBasedEdmProvider {
 
 	public StructuredContentEdmProvider() {
 		addSchema(_createCsdlSchema());
