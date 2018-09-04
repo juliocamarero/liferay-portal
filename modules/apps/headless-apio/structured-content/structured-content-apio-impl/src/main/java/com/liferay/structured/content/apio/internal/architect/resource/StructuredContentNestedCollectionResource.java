@@ -39,6 +39,7 @@ import com.liferay.dynamic.data.mapping.kernel.DDMFormValues;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleService;
 import com.liferay.journal.util.JournalContent;
@@ -59,18 +60,25 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.structure.apio.architect.identifier.ContentStructureIdentifier;
+import com.liferay.structured.content.apio.architect.filter.Filter;
+import com.liferay.structured.content.apio.architect.filter.expression.Expression;
+import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 import com.liferay.structured.content.apio.architect.identifier.StructuredContentIdentifier;
 import com.liferay.structured.content.apio.architect.sort.Sort;
 import com.liferay.structured.content.apio.architect.sort.SortField;
 import com.liferay.structured.content.apio.architect.util.StructuredContentUtil;
+import com.liferay.structured.content.apio.internal.architect.filter.FilterExpressionVisitor;
+import com.liferay.structured.content.apio.internal.architect.filter.InvalidFilterException;
 import com.liferay.structured.content.apio.internal.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.internal.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.internal.model.JournalArticleWrapper;
 import com.liferay.structured.content.apio.internal.model.RenderedJournalArticle;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,6 +98,8 @@ public class StructuredContentNestedCollectionResource
 		<JournalArticleWrapper, Long, StructuredContentIdentifier, Long,
 			ContentSpaceIdentifier> {
 
+	public static final String FIELD_TITLE = "title";
+
 	@Override
 	public NestedCollectionRoutes<JournalArticleWrapper, Long, Long>
 		collectionRoutes(
@@ -97,7 +107,7 @@ public class StructuredContentNestedCollectionResource
 				builder) {
 
 		return builder.addGetter(
-			this::_getPageItems, ThemeDisplay.class, Sort.class
+			this::_getPageItems, ThemeDisplay.class, Filter.class, Sort.class
 		).addCreator(
 			this::_addJournalArticle, ThemeDisplay.class,
 			_hasPermission.forAddingIn(ContentSpaceIdentifier.class),
@@ -154,7 +164,7 @@ public class StructuredContentNestedCollectionResource
 		).addLocalizedStringByLocale(
 			"description", JournalArticleWrapper::getDescription
 		).addLocalizedStringByLocale(
-			"title", JournalArticle::getTitle
+			FIELD_TITLE, JournalArticle::getTitle
 		).addNestedList(
 			"renderedContentsByTemplate", this::_getRenderedJournalArticles,
 			nestedBuilder -> nestedBuilder.types(
@@ -210,6 +220,26 @@ public class StructuredContentNestedCollectionResource
 		).addStringList(
 			"keywords", this::_getJournalArticleAssetTags
 		).build();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Map<String, Object> getFilterMap(Filter filter) {
+		if (filter == null) {
+			return Collections.emptyMap();
+		}
+
+		try {
+			FilterExpressionVisitor expressionVisitor =
+				new FilterExpressionVisitor();
+
+			Expression expression = filter.getExpression();
+
+			return (Map<String, Object>)expression.accept(expressionVisitor);
+		}
+		catch (ExpressionVisitException eve) {
+			throw new InvalidFilterException(
+				String.format("Invalid filter: %s", eve.getMessage()), eve);
+		}
 	}
 
 	private JournalArticleWrapper _addJournalArticle(
@@ -345,7 +375,7 @@ public class StructuredContentNestedCollectionResource
 		for (SortField sortField : sortFields) {
 			String fieldName = sortField.getFieldName();
 
-			if (fieldName.equals("title")) {
+			if (fieldName.equals(FIELD_TITLE)) {
 				orderByComparator = new ArticleTitleComparator(
 					sortField.isAscending());
 
@@ -421,14 +451,22 @@ public class StructuredContentNestedCollectionResource
 
 	private PageItems<JournalArticleWrapper> _getPageItems(
 		Pagination pagination, long contentSpaceId, ThemeDisplay themeDisplay,
-		Sort sort) {
+		Filter filter, Sort sort) {
 
 		OrderByComparator<JournalArticle> orderByComparator =
 			_getJournalArticleOrderByComparator(sort.getSortFields());
 
+		Map<String, Object> filterMap = getFilterMap(filter);
+
+		String title = (String)filterMap.get(FIELD_TITLE);
+
 		List<JournalArticleWrapper> journalArticleWrappers = Stream.of(
-			_journalArticleService.getLatestArticles(
-				contentSpaceId, WorkflowConstants.STATUS_APPROVED,
+			_journalArticleService.search(
+				themeDisplay.getCompanyId(), contentSpaceId,
+				Collections.emptyList(),
+				JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, title,
+				null, null, new String[0], new String[0], null, null,
+				WorkflowConstants.STATUS_APPROVED, null, true,
 				pagination.getStartPosition(), pagination.getEndPosition(),
 				orderByComparator)
 		).flatMap(
@@ -440,8 +478,12 @@ public class StructuredContentNestedCollectionResource
 			Collectors.toList()
 		);
 
-		int count = _journalArticleService.getLatestArticlesCount(
-			contentSpaceId, WorkflowConstants.STATUS_APPROVED);
+		int count = _journalArticleService.searchCount(
+			themeDisplay.getCompanyId(), contentSpaceId,
+			Collections.emptyList(),
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, title,
+			null, null, new String[0], new String[0], null, null,
+			WorkflowConstants.STATUS_APPROVED, null, true);
 
 		return new PageItems<>(journalArticleWrappers, count);
 	}
