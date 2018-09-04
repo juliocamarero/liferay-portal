@@ -12,9 +12,7 @@
  * details.
  */
 
-package com.liferay.structured.content.apio.internal.provider;
-
-import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentSingleEntitySchemaBasedEdmProvider;
+package com.liferay.structured.content.apio.internal.architect.filter;
 
 import java.util.List;
 
