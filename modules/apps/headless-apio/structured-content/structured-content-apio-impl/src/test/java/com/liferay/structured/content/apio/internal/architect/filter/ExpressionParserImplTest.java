@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * @author David Arques
  */
-public class ExpressionParserTest {
+public class ExpressionParserImplTest {
 
 	@Before
 	public void setUp() {
