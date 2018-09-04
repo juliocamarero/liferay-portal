@@ -73,7 +73,7 @@ public class StructuredContentEdmProvider
 		List<CsdlProperty> csdlProperties = new ArrayList<>();
 
 		CsdlProperty csdlProperty = _createCsdlProperty(
-			_TITLE_FIELD, EdmPrimitiveTypeKind.String.getFullQualifiedName());
+			"title", EdmPrimitiveTypeKind.String.getFullQualifiedName());
 
 		csdlProperties.add(csdlProperty);
 
@@ -107,7 +107,5 @@ public class StructuredContentEdmProvider
 	private static final String _ENTITY_TYPE_NAME = "StructuredContent";
 
 	private static final String _NAMESPACE = "HypermediaRestApis";
-
-	private static final String _TITLE_FIELD = "title";
 
 }
