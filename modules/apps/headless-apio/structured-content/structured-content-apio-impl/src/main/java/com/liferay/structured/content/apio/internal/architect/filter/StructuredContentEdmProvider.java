@@ -68,6 +68,8 @@ public class StructuredContentEdmProvider
 	private CsdlEntityType _createCsdlEntityType() {
 		CsdlEntityType csdlEntityType = new CsdlEntityType();
 
+		csdlEntityType.setName(_ENTITY_NAME);
+
 		List<CsdlProperty> csdlProperties = new ArrayList<>();
 
 		CsdlProperty csdlProperty = _createCsdlProperty(
@@ -75,7 +77,6 @@ public class StructuredContentEdmProvider
 
 		csdlProperties.add(csdlProperty);
 
-		csdlEntityType.setName(_ENTITY_NAME);
 		csdlEntityType.setProperties(csdlProperties);
 
 		return csdlEntityType;
