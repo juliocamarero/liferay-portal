@@ -34,7 +34,7 @@ public class FilterProvider implements Provider<Filter> {
 
 	@Override
 	public Filter createContext(HttpServletRequest httpServletRequest) {
-		String expressionString = httpServletRequest.getParameter("filter");
+		String expressionString = httpServletRequest.getParameter("xxx");
 
 		if (Validator.isNull(expressionString)) {
 			return null;
