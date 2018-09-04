@@ -41,14 +41,14 @@ public class StructuredContentEdmProvider
 
 	@Override
 	public String getSingleEntityTypeName() {
-		return _ENTITY_NAME;
+		return _ENTITY_TYPE_NAME;
 	}
 
 	private CsdlEntityContainer _createCsdlEntityContainer() {
 		CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
 
 		csdlEntityContainer.setEntitySets(_createCsdlEntitySets());
-		csdlEntityContainer.setName(_ENTITY_NAME);
+		csdlEntityContainer.setName(_ENTITY_TYPE_NAME);
 
 		return csdlEntityContainer;
 	}
@@ -68,7 +68,7 @@ public class StructuredContentEdmProvider
 	private CsdlEntityType _createCsdlEntityType() {
 		CsdlEntityType csdlEntityType = new CsdlEntityType();
 
-		csdlEntityType.setName(_ENTITY_NAME);
+		csdlEntityType.setName(_ENTITY_TYPE_NAME);
 
 		List<CsdlProperty> csdlProperties = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class StructuredContentEdmProvider
 		return csdlSchema;
 	}
 
-	private static final String _ENTITY_NAME = "StructuredContent";
+	private static final String _ENTITY_TYPE_NAME = "StructuredContent";
 
 	private static final String _NAMESPACE = "HypermediaRestApis";
 
