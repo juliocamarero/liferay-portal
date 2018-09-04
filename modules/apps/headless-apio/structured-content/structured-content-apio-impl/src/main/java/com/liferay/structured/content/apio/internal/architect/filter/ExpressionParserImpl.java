@@ -74,7 +74,8 @@ public class ExpressionParserImpl implements ExpressionParser {
 
 	@Activate
 	protected void activate() {
-		_baseSingleEntitySchemaBasedEdmProvider = new StructuredContentSingleEntitySchemaBasedEdmProvider();
+		_baseSingleEntitySchemaBasedEdmProvider =
+			new StructuredContentSingleEntitySchemaBasedEdmProvider();
 
 		Edm edm = new EdmProviderImpl(_baseSingleEntitySchemaBasedEdmProvider);
 
@@ -87,7 +88,8 @@ public class ExpressionParserImpl implements ExpressionParser {
 
 		try {
 			return _parser.parseUri(
-				_baseSingleEntitySchemaBasedEdmProvider.getSingleEntityTypeName(),
+				_baseSingleEntitySchemaBasedEdmProvider.
+					getSingleEntityTypeName(),
 				encodedFilter, null, null);
 		}
 		catch (ODataException ode) {
@@ -104,7 +106,8 @@ public class ExpressionParserImpl implements ExpressionParser {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ExpressionParserImpl.class);
 
+	private BaseSingleEntitySchemaBasedEdmProvider
+		_baseSingleEntitySchemaBasedEdmProvider;
 	private Parser _parser;
-	private BaseSingleEntitySchemaBasedEdmProvider _baseSingleEntitySchemaBasedEdmProvider;
 
 }
