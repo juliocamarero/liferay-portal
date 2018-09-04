@@ -34,14 +34,14 @@ public class FilterProvider implements Provider<Filter> {
 
 	@Override
 	public Filter createContext(HttpServletRequest httpServletRequest) {
-		String filterString = httpServletRequest.getParameter("filter");
+		String expressionString = httpServletRequest.getParameter("filter");
 
-		if (Validator.isNull(filterString)) {
+		if (Validator.isNull(expressionString)) {
 			return null;
 		}
 
 		try {
-			return new Filter(_expressionParser.parse(filterString));
+			return new Filter(_expressionParser.parse(expressionString));
 		}
 		catch (ExpressionVisitException eve) {
 			throw new InvalidFilterException(eve.getMessage(), eve);
