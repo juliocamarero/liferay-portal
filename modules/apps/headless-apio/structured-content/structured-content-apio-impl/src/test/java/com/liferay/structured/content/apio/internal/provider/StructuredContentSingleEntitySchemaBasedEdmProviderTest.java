@@ -14,7 +14,7 @@
 
 package com.liferay.structured.content.apio.internal.provider;
 
-import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentEdmProvider;
+import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentSingleEntitySchemaBasedEdmProvider;
 
 import java.util.List;
 
@@ -30,24 +30,28 @@ import org.junit.Test;
 /**
  * @author David Arques
  */
-public class StructuredContentEdmProviderTest {
+public class StructuredContentSingleEntitySchemaBasedEdmProviderTest {
 
 	@Test
 	public void testGetSingleEntityTypeName() {
-		StructuredContentEdmProvider structuredContentEdmProvider =
-			new StructuredContentEdmProvider();
+		StructuredContentSingleEntitySchemaBasedEdmProvider
+			structuredContentSingleEntitySchemaBasedEdmProvider =
+				new StructuredContentSingleEntitySchemaBasedEdmProvider();
 
 		Assert.assertEquals(
 			"StructuredContent",
-			structuredContentEdmProvider.getSingleEntityTypeName());
+			structuredContentSingleEntitySchemaBasedEdmProvider.
+				getSingleEntityTypeName());
 	}
 
 	@Test
 	public void testModelCreation() throws ODataException {
-		StructuredContentEdmProvider structuredContentEdmProvider =
-			new StructuredContentEdmProvider();
+		StructuredContentSingleEntitySchemaBasedEdmProvider
+			structuredContentSingleEntitySchemaBasedEdmProvider =
+				new StructuredContentSingleEntitySchemaBasedEdmProvider();
 
-		List<CsdlSchema> schemas = structuredContentEdmProvider.getSchemas();
+		List<CsdlSchema> schemas =
+			structuredContentSingleEntitySchemaBasedEdmProvider.getSchemas();
 
 		Assert.assertEquals(schemas.toString(), 1, schemas.size());
 

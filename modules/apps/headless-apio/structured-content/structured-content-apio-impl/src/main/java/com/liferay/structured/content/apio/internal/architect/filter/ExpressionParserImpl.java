@@ -74,7 +74,7 @@ public class ExpressionParserImpl implements ExpressionParser {
 
 	@Activate
 	protected void activate() {
-		_baseSingleEntitySchemaBasedEdmProvider = new StructuredContentEdmProvider();
+		_baseSingleEntitySchemaBasedEdmProvider = new StructuredContentSingleEntitySchemaBasedEdmProvider();
 
 		Edm edm = new EdmProviderImpl(_baseSingleEntitySchemaBasedEdmProvider);
 
