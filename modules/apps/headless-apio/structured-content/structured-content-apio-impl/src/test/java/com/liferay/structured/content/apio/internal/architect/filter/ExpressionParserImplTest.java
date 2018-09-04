@@ -32,9 +32,9 @@ public class ExpressionParserImplTest {
 
 	@Before
 	public void setUp() {
-		_expressionParser = new ExpressionParserImpl();
+		_expressionParserImpl = new ExpressionParserImpl();
 
-		_expressionParser.activate();
+		_expressionParserImpl.activate();
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class ExpressionParserImplTest {
 		String expressionString = "(nonExistingField eq 'value')";
 
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
-			() -> _expressionParser.parse(expressionString)
+			() -> _expressionParserImpl.parse(expressionString)
 		).isInstanceOf(
 			InvalidFilterException.class
 		);
@@ -57,7 +57,7 @@ public class ExpressionParserImplTest {
 	@Test
 	public void testParseWithEmptyFilter() {
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
-			() -> _expressionParser.parse("")
+			() -> _expressionParserImpl.parse("")
 		).isInstanceOf(
 			InvalidFilterException.class
 		);
@@ -70,7 +70,7 @@ public class ExpressionParserImplTest {
 		String expressionString = "(title eq title1)";
 
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
-			() -> _expressionParser.parse(expressionString)
+			() -> _expressionParserImpl.parse(expressionString)
 		).isInstanceOf(
 			InvalidFilterException.class
 		);
@@ -85,7 +85,7 @@ public class ExpressionParserImplTest {
 	@Test
 	public void testParseWithNullExpression() {
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
-			() -> _expressionParser.parse(null)
+			() -> _expressionParserImpl.parse(null)
 		).isInstanceOf(
 			InvalidFilterException.class
 		);
@@ -95,7 +95,7 @@ public class ExpressionParserImplTest {
 
 	@Test
 	public void testParseWithSingleQuotes() throws ExpressionVisitException {
-		Expression expression = _expressionParser.parse("title eq 'title1'");
+		Expression expression = _expressionParserImpl.parse("title eq 'title1'");
 
 		Assert.assertNotNull(expression);
 
@@ -115,7 +115,7 @@ public class ExpressionParserImplTest {
 	public void testParseWithSingleQuotesAndParentheses()
 		throws ExpressionVisitException {
 
-		Expression expression = _expressionParser.parse("(title eq 'title1')");
+		Expression expression = _expressionParserImpl.parse("(title eq 'title1')");
 
 		Assert.assertNotNull(expression);
 
@@ -131,6 +131,6 @@ public class ExpressionParserImplTest {
 			binaryExpression.getRightOperationExpression().toString());
 	}
 
-	private ExpressionParserImpl _expressionParser;
+	private ExpressionParserImpl _expressionParserImpl;
 
 }
