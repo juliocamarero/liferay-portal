@@ -47,13 +47,11 @@ public class StructuredContentEdmProvider
 	private CsdlEntityContainer _createCsdlEntityContainer() {
 		CsdlEntityType csdlEntityType = _createCsdlEntityType();
 
-		FullQualifiedName fullQualifiedName = new FullQualifiedName(
-			_NAMESPACE, csdlEntityType.getName());
-
 		CsdlEntitySet csdlEntitySet = new CsdlEntitySet();
 
 		csdlEntitySet.setName(csdlEntityType.getName());
-		csdlEntitySet.setType(fullQualifiedName);
+		csdlEntitySet.setType(
+			new FullQualifiedName(_NAMESPACE, csdlEntityType.getName()));
 
 		CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
 
