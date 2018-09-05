@@ -17,7 +17,7 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.structured.content.apio.architect.filter.ExpressionParser;
+import com.liferay.structured.content.apio.architect.filter.FilterParser;
 import com.liferay.structured.content.apio.architect.filter.expression.Expression;
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 import com.liferay.structured.content.apio.internal.architect.filter.expression.ODataExpressionToExpressionVisitor;
@@ -35,29 +35,28 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * <code>ExpressionParserImpl</code> transforms a String containing an oData filter
+ * <code>FilterParserImpl</code> transforms a String containing an oData filter
  * in a manageable expression {@link Expression}.
  *
  * @author David Arques
  * @review
  */
-@Component(immediate = true, service = ExpressionParser.class)
-public class ExpressionParserImpl implements ExpressionParser {
+@Component(immediate = true, service = FilterParser.class)
+public class FilterParserImpl implements FilterParser {
 
 	@Override
-	public Expression parse(String expressionString)
+	public Expression parse(String filterString)
 		throws ExpressionVisitException {
 
 		if (_log.isDebugEnabled()) {
-			_log.debug(
-				String.format("Parsing the expression '%s'", expressionString));
+			_log.debug(String.format("Parsing the filter '%s'", filterString));
 		}
 
-		if (Validator.isNull(expressionString)) {
-			throw new InvalidFilterException("Expression is empty");
+		if (Validator.isNull(filterString)) {
+			throw new InvalidFilterException("Filter is empty");
 		}
 
-		UriInfo uriInfo = _getUriInfo(expressionString);
+		UriInfo uriInfo = _getUriInfo(filterString);
 
 		FilterOption filterOption = uriInfo.getFilterOption();
 
@@ -82,9 +81,9 @@ public class ExpressionParserImpl implements ExpressionParser {
 		_parser = new Parser(edm, OData.newInstance());
 	}
 
-	private UriInfo _getUriInfo(String expressionString) {
+	private UriInfo _getUriInfo(String filterString) {
 		String encodedFilter =
-			_FILTER_EXPRESSION_PREFIX + Encoder.encode(expressionString);
+			_FILTER_EXPRESSION_PREFIX + Encoder.encode(filterString);
 
 		try {
 			return _parser.parseUri(
@@ -95,8 +94,8 @@ public class ExpressionParserImpl implements ExpressionParser {
 		catch (ODataException ode) {
 			throw new InvalidFilterException(
 				String.format(
-					"Invalid query computed from expression '%s': '%s'",
-					expressionString, ode.getMessage()),
+					"Invalid query computed from filter '%s': '%s'",
+					filterString, ode.getMessage()),
 				ode);
 		}
 	}
@@ -104,7 +103,7 @@ public class ExpressionParserImpl implements ExpressionParser {
 	private static final String _FILTER_EXPRESSION_PREFIX = "$filter=";
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		ExpressionParserImpl.class);
+		FilterParserImpl.class);
 
 	private BaseSingleEntitySchemaBasedEdmProvider
 		_baseSingleEntitySchemaBasedEdmProvider;
