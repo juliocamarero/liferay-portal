@@ -85,7 +85,7 @@ public class FilterParserImpl implements FilterParser {
 			return _parser.parseUri(
 				_baseSingleEntitySchemaBasedEdmProvider.
 					getSingleEntityTypeName(),
-				_FILTER_EXPRESSION_PREFIX + Encoder.encode(filterString), null,
+				"$filter=" + Encoder.encode(filterString), null,
 				null);
 		}
 		catch (ODataException ode) {
@@ -96,8 +96,6 @@ public class FilterParserImpl implements FilterParser {
 				ode);
 		}
 	}
-
-	private static final String _FILTER_EXPRESSION_PREFIX = "$filter=";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		FilterParserImpl.class);
