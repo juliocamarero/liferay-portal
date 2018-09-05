@@ -315,9 +315,6 @@ public class StructuredContentNestedCollectionResourceTest {
 	@DeleteAfterTestRun
 	private Group _group;
 
-	@Inject
-	private JournalArticleLocalService _journalArticleLocalService;
-
 	@Inject(
 		filter = "component.name=com.liferay.structured.content.apio.internal.architect.resource.StructuredContentNestedCollectionResource"
 	)
