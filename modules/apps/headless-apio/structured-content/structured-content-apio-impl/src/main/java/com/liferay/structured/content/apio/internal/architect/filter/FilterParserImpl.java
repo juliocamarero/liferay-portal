@@ -22,7 +22,6 @@ import com.liferay.structured.content.apio.architect.filter.expression.Expressio
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 import com.liferay.structured.content.apio.internal.architect.filter.expression.ODataExpressionToExpressionVisitor;
 
-import org.apache.olingo.commons.api.edm.Edm;
 import org.apache.olingo.commons.api.ex.ODataException;
 import org.apache.olingo.commons.core.Encoder;
 import org.apache.olingo.commons.core.edm.EdmProviderImpl;
@@ -76,20 +75,18 @@ public class FilterParserImpl implements FilterParser {
 		_baseSingleEntitySchemaBasedEdmProvider =
 			new StructuredContentSingleEntitySchemaBasedEdmProvider();
 
-		Edm edm = new EdmProviderImpl(_baseSingleEntitySchemaBasedEdmProvider);
-
-		_parser = new Parser(edm, OData.newInstance());
+		_parser = new Parser(
+			new EdmProviderImpl(_baseSingleEntitySchemaBasedEdmProvider),
+			OData.newInstance());
 	}
 
 	private UriInfo _getUriInfo(String filterString) {
-		String encodedFilter =
-			_FILTER_EXPRESSION_PREFIX + Encoder.encode(filterString);
-
 		try {
 			return _parser.parseUri(
 				_baseSingleEntitySchemaBasedEdmProvider.
 					getSingleEntityTypeName(),
-				encodedFilter, null, null);
+				_FILTER_EXPRESSION_PREFIX + Encoder.encode(filterString), null,
+				null);
 		}
 		catch (ODataException ode) {
 			throw new InvalidFilterException(
