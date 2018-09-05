@@ -302,6 +302,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		themeDisplay.setCompany(company);
 
+		themeDisplay.setLocale(LocaleUtil.getDefault());
 		themeDisplay.setScopeGroupId(group.getGroupId());
 
 		return themeDisplay;
