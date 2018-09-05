@@ -257,6 +257,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		themeDisplay.setScopeGroupId(group.getGroupId());
 
+		themeDisplay.setLocale(LocaleUtil.getDefault());
+
 		return themeDisplay;
 	}
 
