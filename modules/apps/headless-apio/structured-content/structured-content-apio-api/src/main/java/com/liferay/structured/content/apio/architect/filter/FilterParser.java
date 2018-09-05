@@ -18,8 +18,8 @@ import com.liferay.structured.content.apio.architect.filter.expression.Expressio
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 
 /**
- * <code>FilterParser</code> transforms a String containing an oData filter
- * in a manageable expression {@link Expression}.
+ * <code>FilterParser</code> transforms a String containing an oData filter in a
+ * manageable expression {@link Expression}.
  *
  * @author David Arques
  * @review
