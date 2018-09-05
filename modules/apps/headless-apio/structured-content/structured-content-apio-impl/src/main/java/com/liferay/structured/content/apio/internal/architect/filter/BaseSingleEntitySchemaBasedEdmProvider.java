@@ -17,7 +17,6 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
@@ -49,6 +48,15 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	}
 
 	/**
+	 * Returns the list of properties of the single entity used to create the
+	 * EDM.
+	 *
+	 * @return the list of properties
+	 * @review
+	 */
+	public abstract List<CsdlProperty> getCsdlProperties();
+
+	/**
 	 * Returns the name of the single entity used to create the EDM.
 	 *
 	 * @return the entity name
@@ -56,12 +64,13 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	 */
 	public abstract String getSingleEntityTypeName();
 
-	protected CsdlProperty _createCsdlProperty(String name) {
+	protected static final CsdlProperty createCsdlProperty(
+		String name, FullQualifiedName fullQualifiedName) {
+
 		CsdlProperty csdlProperty = new CsdlProperty();
 
 		csdlProperty.setName(name);
-		csdlProperty.setType(
-			EdmPrimitiveTypeKind.String.getFullQualifiedName());
+		csdlProperty.setType(fullQualifiedName);
 
 		return csdlProperty;
 	}
@@ -94,8 +103,7 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 
 		csdlEntityType.setName(entityTypeName);
 
-		csdlEntityType.setProperties(
-			Collections.singletonList(_createCsdlProperty("title")));
+		csdlEntityType.setProperties(getCsdlProperties());
 
 		return csdlEntityType;
 	}

@@ -14,6 +14,12 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
+import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+
 /**
  * Provides the entity data model from the Indexed Entity (JournalArticle).
  *
@@ -24,8 +30,18 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	extends BaseSingleEntitySchemaBasedEdmProvider {
 
 	@Override
+	public List<CsdlProperty> getCsdlProperties() {
+		return _csdlProperties;
+	}
+
+	@Override
 	public String getSingleEntityTypeName() {
 		return "StructuredContent";
 	}
+
+	private static final List<CsdlProperty> _csdlProperties =
+		Collections.singletonList(
+			createCsdlProperty(
+				"title", EdmPrimitiveTypeKind.String.getFullQualifiedName()));
 
 }
