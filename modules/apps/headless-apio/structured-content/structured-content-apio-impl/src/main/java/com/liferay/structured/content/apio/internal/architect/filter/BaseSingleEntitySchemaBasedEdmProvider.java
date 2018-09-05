@@ -14,6 +14,16 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
+import org.apache.olingo.commons.api.edm.FullQualifiedName;
+import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
+import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
+import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.server.core.SchemaBasedEdmProvider;
 
 /**
@@ -33,6 +43,11 @@ import org.apache.olingo.server.core.SchemaBasedEdmProvider;
 public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	extends SchemaBasedEdmProvider {
 
+	public BaseSingleEntitySchemaBasedEdmProvider() {
+		addSchema(
+			_createCsdlSchema("HypermediaRestApis", getSingleEntityTypeName()));
+	}
+
 	/**
 	 * Returns the name of the single entity used to create the EDM.
 	 *
@@ -40,5 +55,65 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	 * @review
 	 */
 	public abstract String getSingleEntityTypeName();
+
+	protected CsdlProperty _createCsdlProperty(String name) {
+		CsdlProperty csdlProperty = new CsdlProperty();
+
+		csdlProperty.setName(name);
+		csdlProperty.setType(
+			EdmPrimitiveTypeKind.String.getFullQualifiedName());
+
+		return csdlProperty;
+	}
+
+	private CsdlEntityContainer _createCsdlEntityContainer(
+		String namespace, String entityTypeName) {
+
+		CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
+
+		csdlEntityContainer.setEntitySets(
+			_createCsdlEntitySets(namespace, entityTypeName));
+		csdlEntityContainer.setName(entityTypeName);
+
+		return csdlEntityContainer;
+	}
+
+	private List<CsdlEntitySet> _createCsdlEntitySets(
+		String namespace, String entityNameType) {
+
+		CsdlEntitySet csdlEntitySet = new CsdlEntitySet();
+
+		csdlEntitySet.setName(entityNameType);
+		csdlEntitySet.setType(new FullQualifiedName(namespace, entityNameType));
+
+		return Collections.singletonList(csdlEntitySet);
+	}
+
+	private CsdlEntityType _createCsdlEntityType(String entityTypeName) {
+		CsdlEntityType csdlEntityType = new CsdlEntityType();
+
+		csdlEntityType.setName(entityTypeName);
+
+		csdlEntityType.setProperties(
+			Collections.singletonList(_createCsdlProperty("title")));
+
+		return csdlEntityType;
+	}
+
+	private CsdlSchema _createCsdlSchema(
+		String namespace, String entityTypeNames) {
+
+		CsdlSchema csdlSchema = new CsdlSchema();
+
+		csdlSchema.setNamespace(namespace);
+
+		csdlSchema.setEntityTypes(
+			Collections.singletonList(_createCsdlEntityType(entityTypeNames)));
+
+		csdlSchema.setEntityContainer(
+			_createCsdlEntityContainer(namespace, entityTypeNames));
+
+		return csdlSchema;
+	}
 
 }
