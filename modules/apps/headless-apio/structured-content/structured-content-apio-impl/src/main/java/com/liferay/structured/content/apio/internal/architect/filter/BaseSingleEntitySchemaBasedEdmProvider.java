@@ -16,7 +16,12 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
@@ -44,45 +49,41 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 
 	public BaseSingleEntitySchemaBasedEdmProvider() {
 		addSchema(
-			_createCsdlSchema("HypermediaRestApis", getSingleEntityTypeName()));
+			_createCsdlSchema(
+				"HypermediaRestApis", getName(),
+				_createCsdlProperties(getEntityTypesMap())));
 	}
 
 	/**
-	 * Returns the list of properties of the single entity used to create the
-	 * EDM.
+	 * Returns the properties of the entity type used to create the EDM.
 	 *
-	 * @return the list of properties
+	 * @return the entity type properties
 	 * @review
 	 */
-	public abstract List<CsdlProperty> getCsdlProperties();
+	public abstract Map<String, EntityType> getEntityTypesMap();
 
 	/**
-	 * Returns the name of the single entity used to create the EDM.
+	 * Returns the name of the single entity type used to create the EDM.
 	 *
-	 * @return the entity name
+	 * @return the entity type name
 	 * @review
 	 */
-	public abstract String getSingleEntityTypeName();
+	public abstract String getName();
 
-	protected static final CsdlProperty createCsdlProperty(
-		String name, FullQualifiedName fullQualifiedName) {
+	public enum EntityType {
 
-		CsdlProperty csdlProperty = new CsdlProperty();
+		DATE, STRING
 
-		csdlProperty.setName(name);
-		csdlProperty.setType(fullQualifiedName);
-
-		return csdlProperty;
 	}
 
 	private CsdlEntityContainer _createCsdlEntityContainer(
-		String namespace, String entityTypeName) {
+		String namespace, String name) {
 
 		CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
 
 		csdlEntityContainer.setEntitySets(
-			_createCsdlEntitySets(namespace, entityTypeName));
-		csdlEntityContainer.setName(entityTypeName);
+			_createCsdlEntitySets(namespace, name));
+		csdlEntityContainer.setName(name);
 
 		return csdlEntityContainer;
 	}
@@ -98,28 +99,68 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 		return Collections.singletonList(csdlEntitySet);
 	}
 
-	private CsdlEntityType _createCsdlEntityType(String entityTypeName) {
+	private CsdlEntityType _createCsdlEntityType(
+		String name, List<CsdlProperty> csdlProperties) {
+
 		CsdlEntityType csdlEntityType = new CsdlEntityType();
 
-		csdlEntityType.setName(entityTypeName);
+		csdlEntityType.setName(name);
 
-		csdlEntityType.setProperties(getCsdlProperties());
+		csdlEntityType.setProperties(csdlProperties);
 
 		return csdlEntityType;
 	}
 
+	private List<CsdlProperty> _createCsdlProperties(
+		Map<String, EntityType> entityTypesMap) {
+
+		Set<Map.Entry<String, EntityType>> entries = entityTypesMap.entrySet();
+
+		Stream<Map.Entry<String, EntityType>> stream = entries.stream();
+
+		return stream.map(
+			entry -> _createCsdlProperty(entry.getKey(), entry.getValue())
+		).collect(
+			Collectors.toList()
+		);
+	}
+
+	private CsdlProperty _createCsdlProperty(
+		String name, EntityType entityType) {
+
+		CsdlProperty csdlProperty = new CsdlProperty();
+
+		csdlProperty.setName(name);
+
+		FullQualifiedName fullQualifiedName = null;
+
+		if (entityType.equals(EntityType.STRING)) {
+			fullQualifiedName =
+				EdmPrimitiveTypeKind.String.getFullQualifiedName();
+		}
+		else if (entityType.equals(EntityType.DATE)) {
+			fullQualifiedName =
+				EdmPrimitiveTypeKind.Date.getFullQualifiedName();
+		}
+
+		csdlProperty.setType(fullQualifiedName);
+
+		return csdlProperty;
+	}
+
 	private CsdlSchema _createCsdlSchema(
-		String namespace, String entityTypeNames) {
+		String namespace, String name, List<CsdlProperty> csdlProperties) {
 
 		CsdlSchema csdlSchema = new CsdlSchema();
 
 		csdlSchema.setNamespace(namespace);
 
 		csdlSchema.setEntityTypes(
-			Collections.singletonList(_createCsdlEntityType(entityTypeNames)));
+			Collections.singletonList(
+				_createCsdlEntityType(name, csdlProperties)));
 
 		csdlSchema.setEntityContainer(
-			_createCsdlEntityContainer(namespace, entityTypeNames));
+			_createCsdlEntityContainer(namespace, name));
 
 		return csdlSchema;
 	}

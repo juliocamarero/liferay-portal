@@ -38,8 +38,7 @@ public class StructuredContentSingleEntitySchemaBasedEdmProviderTest {
 
 		Assert.assertEquals(
 			"StructuredContent",
-			structuredContentSingleEntitySchemaBasedEdmProvider.
-				getSingleEntityTypeName());
+			structuredContentSingleEntitySchemaBasedEdmProvider.getName());
 	}
 
 	@Test

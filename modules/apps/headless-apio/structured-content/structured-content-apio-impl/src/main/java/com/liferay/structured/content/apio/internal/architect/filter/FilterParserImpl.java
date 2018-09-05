@@ -83,8 +83,7 @@ public class FilterParserImpl implements FilterParser {
 	private UriInfo _getUriInfo(String filterString) {
 		try {
 			return _parser.parseUri(
-				_baseSingleEntitySchemaBasedEdmProvider.
-					getSingleEntityTypeName(),
+				_baseSingleEntitySchemaBasedEdmProvider.getName(),
 				"$filter=" + Encoder.encode(filterString), null, null);
 		}
 		catch (ODataException ode) {
