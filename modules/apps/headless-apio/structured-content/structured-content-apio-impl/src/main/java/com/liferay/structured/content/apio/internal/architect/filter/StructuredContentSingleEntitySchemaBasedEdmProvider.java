@@ -14,7 +14,6 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,48 +35,48 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	extends BaseSingleEntitySchemaBasedEdmProvider {
 
 	public StructuredContentSingleEntitySchemaBasedEdmProvider() {
-		addSchema(_createCsdlSchema());
+		addSchema(
+			_createCsdlSchema("HypermediaRestApis", getSingleEntityTypeName()));
 	}
 
 	@Override
 	public String getSingleEntityTypeName() {
-		return _ENTITY_TYPE_NAME;
+		return "StructuredContent";
 	}
 
-	private CsdlEntityContainer _createCsdlEntityContainer() {
+	private CsdlEntityContainer _createCsdlEntityContainer(
+		String namespace, String entityTypeName) {
+
 		CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
 
-		csdlEntityContainer.setEntitySets(_createCsdlEntitySets());
-		csdlEntityContainer.setName(_ENTITY_TYPE_NAME);
+		csdlEntityContainer.setEntitySets(
+			_createCsdlEntitySets(namespace, entityTypeName));
+		csdlEntityContainer.setName(entityTypeName);
 
 		return csdlEntityContainer;
 	}
 
-	private List<CsdlEntitySet> _createCsdlEntitySets() {
+	private List<CsdlEntitySet> _createCsdlEntitySets(
+		String namespace, String entityNameType) {
+
 		CsdlEntitySet csdlEntitySet = new CsdlEntitySet();
 
-		CsdlEntityType csdlEntityType = _createCsdlEntityType();
-
-		csdlEntitySet.setName(csdlEntityType.getName());
-		csdlEntitySet.setType(
-			new FullQualifiedName(_NAMESPACE, csdlEntityType.getName()));
+		csdlEntitySet.setName(entityNameType);
+		csdlEntitySet.setType(new FullQualifiedName(namespace, entityNameType));
 
 		return Collections.singletonList(csdlEntitySet);
 	}
 
-	private CsdlEntityType _createCsdlEntityType() {
+	private CsdlEntityType _createCsdlEntityType(String entityTypeName) {
 		CsdlEntityType csdlEntityType = new CsdlEntityType();
 
-		csdlEntityType.setName(_ENTITY_TYPE_NAME);
+		csdlEntityType.setName(entityTypeName);
 
-		List<CsdlProperty> csdlProperties = new ArrayList<>();
-
-		CsdlProperty csdlProperty = _createCsdlProperty(
-			"title", EdmPrimitiveTypeKind.String.getFullQualifiedName());
-
-		csdlProperties.add(csdlProperty);
-
-		csdlEntityType.setProperties(csdlProperties);
+		csdlEntityType.setProperties(
+			Collections.singletonList(
+				_createCsdlProperty(
+					"title",
+					EdmPrimitiveTypeKind.String.getFullQualifiedName())));
 
 		return csdlEntityType;
 	}
@@ -93,19 +92,20 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 		return csdlProperty;
 	}
 
-	private CsdlSchema _createCsdlSchema() {
+	private CsdlSchema _createCsdlSchema(
+		String namespace, String entityTypeNames) {
+
 		CsdlSchema csdlSchema = new CsdlSchema();
 
-		csdlSchema.setEntityContainer(_createCsdlEntityContainer());
+		csdlSchema.setNamespace(namespace);
+
 		csdlSchema.setEntityTypes(
-			Collections.singletonList(_createCsdlEntityType()));
-		csdlSchema.setNamespace(_NAMESPACE);
+			Collections.singletonList(_createCsdlEntityType(entityTypeNames)));
+
+		csdlSchema.setEntityContainer(
+			_createCsdlEntityContainer(namespace, entityTypeNames));
 
 		return csdlSchema;
 	}
-
-	private static final String _ENTITY_TYPE_NAME = "StructuredContent";
-
-	private static final String _NAMESPACE = "HypermediaRestApis";
 
 }
