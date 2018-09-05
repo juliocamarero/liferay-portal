@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.structured.content.apio.architect.filter.FilterParser;
 import com.liferay.structured.content.apio.architect.filter.expression.Expression;
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
-import com.liferay.structured.content.apio.internal.architect.filter.expression.ODataExpressionToExpressionVisitor;
+import com.liferay.structured.content.apio.internal.architect.filter.expression.ExpressionVisitorImpl;
 
 import org.apache.olingo.commons.api.ex.ODataException;
 import org.apache.olingo.commons.core.Encoder;
@@ -63,7 +63,7 @@ public class FilterParserImpl implements FilterParser {
 			expression = filterOption.getExpression();
 
 		try {
-			return expression.accept(new ODataExpressionToExpressionVisitor());
+			return expression.accept(new ExpressionVisitorImpl());
 		}
 		catch (Exception e) {
 			throw new ExpressionVisitException(e.getMessage(), e);
@@ -85,8 +85,7 @@ public class FilterParserImpl implements FilterParser {
 			return _parser.parseUri(
 				_baseSingleEntitySchemaBasedEdmProvider.
 					getSingleEntityTypeName(),
-				"$filter=" + Encoder.encode(filterString), null,
-				null);
+				"$filter=" + Encoder.encode(filterString), null, null);
 		}
 		catch (ODataException ode) {
 			throw new InvalidFilterException(

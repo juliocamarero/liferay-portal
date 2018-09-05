@@ -37,8 +37,7 @@ import org.apache.olingo.server.api.uri.queryoption.expression.UnaryOperatorKind
 /**
  * @author Cristina González
  */
-public class ODataExpressionToExpressionVisitor
-	implements ExpressionVisitor<Expression> {
+public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 
 	@Override
 	public Expression visitAlias(String alias) {
@@ -100,10 +99,9 @@ public class ODataExpressionToExpressionVisitor
 	public Expression visitMember(Member member) {
 		UriInfoResource uriInfoResource = member.getResourcePath();
 
-		List<UriResource> uriResourceParts =
-			uriInfoResource.getUriResourceParts();
+		List<UriResource> uriResources = uriInfoResource.getUriResourceParts();
 
-		Stream<UriResource> stream = uriResourceParts.stream();
+		Stream<UriResource> stream = uriResources.stream();
 
 		List<String> list = stream.map(
 			UriResource::getSegmentValue
@@ -116,7 +114,7 @@ public class ODataExpressionToExpressionVisitor
 
 	@Override
 	public Expression visitMethodCall(
-		MethodKind methodKind, List<Expression> list) {
+		MethodKind methodKind, List<Expression> expressions) {
 
 		throw new UnsupportedOperationException("Unsupported visitMethodCall");
 	}
