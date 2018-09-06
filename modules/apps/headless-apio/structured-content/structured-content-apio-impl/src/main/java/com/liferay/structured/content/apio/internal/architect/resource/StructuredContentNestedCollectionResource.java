@@ -222,7 +222,7 @@ public class StructuredContentNestedCollectionResource
 
 	@SuppressWarnings("unchecked")
 	protected Map<String, Object> getFilterFieldsMap(Filter filter) {
-		if (filter == null) {
+		if ((filter == null) || (filter == Filter.emptyFilter())) {
 			return Collections.emptyMap();
 		}
 

@@ -37,7 +37,7 @@ public class FilterProvider implements Provider<Filter> {
 		String filterString = httpServletRequest.getParameter("filter");
 
 		if (Validator.isNull(filterString)) {
-			return null;
+			return Filter.emptyFilter();
 		}
 
 		try {

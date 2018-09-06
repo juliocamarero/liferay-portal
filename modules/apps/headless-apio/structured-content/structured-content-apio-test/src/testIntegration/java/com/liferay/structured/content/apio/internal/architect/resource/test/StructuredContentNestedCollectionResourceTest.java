@@ -96,7 +96,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), null, Sort.emptySort());
+			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
 
@@ -140,7 +140,7 @@ public class StructuredContentNestedCollectionResourceTest {
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
 			_getThemeDisplay(_group),
 			new Filter(_filterParser.parse("(title eq 'title1')")),
-			new Sort(_sortParser.parse(null)));
+			Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
 
@@ -180,7 +180,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), null,
+			_getThemeDisplay(_group), Filter.emptyFilter(),
 			new Sort(_sortParser.parse("title:asc")));
 
 		Assert.assertEquals(2, pageItems.getTotalCount());
@@ -222,7 +222,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), null,
+			_getThemeDisplay(_group), Filter.emptyFilter(),
 			new Sort(_sortParser.parse("title")));
 
 		Assert.assertEquals(2, pageItems.getTotalCount());
@@ -264,7 +264,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), null,
+			_getThemeDisplay(_group), Filter.emptyFilter(),
 			new Sort(_sortParser.parse("title:desc")));
 
 		Assert.assertEquals(2, pageItems.getTotalCount());
