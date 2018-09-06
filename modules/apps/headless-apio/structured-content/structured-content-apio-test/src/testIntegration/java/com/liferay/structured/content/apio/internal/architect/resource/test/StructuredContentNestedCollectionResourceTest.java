@@ -21,7 +21,6 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolderConstants;
-import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -302,9 +301,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		themeDisplay.setCompany(company);
 
-		themeDisplay.setScopeGroupId(group.getGroupId());
-
 		themeDisplay.setLocale(LocaleUtil.getDefault());
+		themeDisplay.setScopeGroupId(group.getGroupId());
 
 		return themeDisplay;
 	}

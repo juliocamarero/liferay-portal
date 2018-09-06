@@ -83,6 +83,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -295,10 +297,12 @@ public class StructuredContentNestedCollectionResource
 		searchContext.setGroupIds(new long[] {groupId});
 		searchContext.setStart(start);
 
-		com.liferay.portal.kernel.search.Sort[] sorts = _getSorts(sort, locale);
+		List<com.liferay.portal.kernel.search.Sort> sorts = _getSorts(
+			sort.getSortFields(), locale);
 
-		if (sorts.length != 0) {
-			searchContext.setSorts(sorts);
+		if (!sorts.isEmpty()) {
+			searchContext.setSorts(
+				sorts.toArray(new com.liferay.portal.kernel.search.Sort[0]));
 		}
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
@@ -531,24 +535,40 @@ public class StructuredContentNestedCollectionResource
 		);
 	}
 
-	private com.liferay.portal.kernel.search.Sort[] _getSorts(
-		Sort sort, Locale locale) {
+	private Optional<com.liferay.portal.kernel.search.Sort> _getSortOptional(
+		SortField sortField, Locale locale) {
 
-		for (SortField sortField : sort.getSortFields()) {
-			String fieldName = sortField.getFieldName();
+		String fieldName = null;
 
-			if (fieldName.equals("title")) {
-				return new com.liferay.portal.kernel.search.Sort[] {
-					new com.liferay.portal.kernel.search.Sort(
-						Field.getSortableFieldName(
-							"localized_title_".concat(
-								LocaleUtil.toLanguageId(locale))),
-						!sortField.isAscending())
-				};
-			}
+		if (Objects.equals(sortField.getFieldName(), "title")) {
+			fieldName = "localized_title_".concat(
+				LocaleUtil.toLanguageId(locale));
+		}
+		else {
+			return Optional.empty();
 		}
 
-		return new com.liferay.portal.kernel.search.Sort[0];
+		return Optional.of(
+			new com.liferay.portal.kernel.search.Sort(
+				fieldName, !sortField.isAscending()));
+	}
+
+	private List<com.liferay.portal.kernel.search.Sort> _getSorts(
+		List<SortField> sortFields, Locale locale) {
+
+		Stream<SortField> stream = sortFields.stream();
+
+		return stream.map(
+			sortField -> _getSortOptional(sortField, locale)
+		).flatMap(
+			sortFieldOptional -> sortFieldOptional.map(
+				Stream::of
+			).orElseGet(
+				Stream::empty
+			)
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	private Long _getStructuredContentId(DDMFormFieldValue ddmFormFieldValue) {
