@@ -63,7 +63,6 @@ import com.liferay.structure.apio.architect.identifier.ContentStructureIdentifie
 import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.filter.expression.Expression;
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
-import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitor;
 import com.liferay.structured.content.apio.architect.identifier.StructuredContentIdentifier;
 import com.liferay.structured.content.apio.architect.sort.Sort;
 import com.liferay.structured.content.apio.architect.sort.SortField;
@@ -228,11 +227,10 @@ public class StructuredContentNestedCollectionResource
 		}
 
 		try {
-			ExpressionVisitor expressionVisitor = new ExpressionVisitorImpl();
-
 			Expression expression = filter.getExpression();
 
-			return (Map<String, Object>)expression.accept(expressionVisitor);
+			return (Map<String, Object>)expression.accept(
+				new ExpressionVisitorImpl());
 		}
 		catch (ExpressionVisitException eve) {
 			throw new InvalidFilterException(
