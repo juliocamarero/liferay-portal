@@ -56,6 +56,16 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 				leftBinaryOperationExpression, BinaryExpression.Operation.EQ,
 				rightBinaryOperationExpression);
 		}
+		else if (binaryOperatorKind == BinaryOperatorKind.GE) {
+			return new BinaryExpressionImpl(
+				leftBinaryOperationExpression, BinaryExpression.Operation.GE,
+				rightBinaryOperationExpression);
+		}
+		else if (binaryOperatorKind == BinaryOperatorKind.LE) {
+			return new BinaryExpressionImpl(
+				leftBinaryOperationExpression, BinaryExpression.Operation.LE,
+				rightBinaryOperationExpression);
+		}
 
 		throw new UnsupportedOperationException(
 			"Unsupported method visitBinaryOperator");
