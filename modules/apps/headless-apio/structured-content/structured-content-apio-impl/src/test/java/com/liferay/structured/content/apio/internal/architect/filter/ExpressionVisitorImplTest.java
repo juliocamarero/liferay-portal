@@ -30,54 +30,58 @@ public class ExpressionVisitorImplTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testVisitBinaryExpressionOperatorWithEqualOperator() {
+	public void testVisitBinaryExpressionOperationWithEqualOperation() {
 		String left = "title";
 		String right = "title1";
 
-		Map<String, Object> map =
+		Map<String, Object> filterFieldsMap =
 			(Map<String, Object>)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
 					BinaryExpression.Operation.EQ, left, right);
 
-		Assert.assertEquals(map.toString(), 1, map.size());
-		Assert.assertEquals(right, map.get(left));
+		Assert.assertEquals(
+			filterFieldsMap.toString(), 1, filterFieldsMap.size());
+		Assert.assertEquals(right, filterFieldsMap.get(left));
 	}
 
 	@Test
-	public void testVisitLiteralExpressionStringMultipleDoubleSingleQuotes() {
-		LiteralExpression literal = new LiteralExpressionImpl(
+	public void testVisitLiteralExpressionWithDoubleSingleQuotes() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
+			"'L''Oreal'", LiteralExpression.Type.STRING);
+
+		Assert.assertEquals(
+			"L'Oreal",
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
+	}
+
+	@Test
+	public void testVisitLiteralExpressionWithMultipleDoubleSingleQuotes() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'L''Oreal and L''Oreal'", LiteralExpression.Type.STRING);
 
 		Assert.assertEquals(
 			"L'Oreal and L'Oreal",
-			_expressionVisitorImpl.visitLiteralExpression(literal));
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
 	}
 
 	@Test
-	public void testVisitLiteralExpressionStringOneSingleQuotes() {
-		LiteralExpression literal = new LiteralExpressionImpl(
+	public void testVisitLiteralExpressionWithOneSingleQuote() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'L'Oreal'", LiteralExpression.Type.STRING);
 
 		Assert.assertEquals(
-			"L'Oreal", _expressionVisitorImpl.visitLiteralExpression(literal));
+			"L'Oreal",
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
 	}
 
 	@Test
-	public void testVisitLiteralExpressionStringTwoSingleQuotes() {
-		LiteralExpression literal = new LiteralExpressionImpl(
-			"'L''Oreal'", LiteralExpression.Type.STRING);
-
-		Assert.assertEquals(
-			"L'Oreal", _expressionVisitorImpl.visitLiteralExpression(literal));
-	}
-
-	@Test
-	public void testVisitLiteralExpressionStringWithLeadingAndTrailingSingleQuotes() {
-		LiteralExpression literal = new LiteralExpressionImpl(
+	public void testVisitLiteralExpressionWithSurroundingSingleQuotes() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'LOreal'", LiteralExpression.Type.STRING);
 
 		Assert.assertEquals(
-			"LOreal", _expressionVisitorImpl.visitLiteralExpression(literal));
+			"LOreal",
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
 	}
 
 	private static final ExpressionVisitorImpl _expressionVisitorImpl =

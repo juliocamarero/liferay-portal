@@ -221,7 +221,7 @@ public class StructuredContentNestedCollectionResource
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Map<String, Object> getFilterMap(Filter filter) {
+	protected Map<String, Object> getFilterFieldsMap(Filter filter) {
 		if (filter == null) {
 			return Collections.emptyMap();
 		}
@@ -234,7 +234,7 @@ public class StructuredContentNestedCollectionResource
 		}
 		catch (ExpressionVisitException eve) {
 			throw new InvalidFilterException(
-				String.format("Invalid filter: %s", eve.getMessage()), eve);
+				"Invalid filter: " + eve.getMessage(), eve);
 		}
 	}
 
@@ -452,14 +452,14 @@ public class StructuredContentNestedCollectionResource
 		OrderByComparator<JournalArticle> orderByComparator =
 			_getJournalArticleOrderByComparator(sort.getSortFields());
 
-		Map<String, Object> filterMap = getFilterMap(filter);
+		Map<String, Object> filterFieldsMap = getFilterFieldsMap(filter);
 
 		List<JournalArticleWrapper> journalArticleWrappers = Stream.of(
 			_journalArticleService.search(
 				themeDisplay.getCompanyId(), contentSpaceId,
 				Collections.emptyList(),
 				JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null,
-				(String)filterMap.get("title"), null, null, new String[0],
+				(String)filterFieldsMap.get("title"), null, null, new String[0],
 				new String[0], null, null, WorkflowConstants.STATUS_APPROVED,
 				null, true, pagination.getStartPosition(),
 				pagination.getEndPosition(), orderByComparator)
@@ -476,7 +476,7 @@ public class StructuredContentNestedCollectionResource
 			themeDisplay.getCompanyId(), contentSpaceId,
 			Collections.emptyList(),
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null,
-			(String)filterMap.get("title"), null, null, new String[0],
+			(String)filterFieldsMap.get("title"), null, null, new String[0],
 			new String[0], null, null, WorkflowConstants.STATUS_APPROVED, null,
 			true);
 

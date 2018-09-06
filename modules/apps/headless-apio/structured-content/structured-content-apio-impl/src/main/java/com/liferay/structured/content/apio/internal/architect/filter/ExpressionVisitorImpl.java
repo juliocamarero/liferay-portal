@@ -23,7 +23,7 @@ import com.liferay.structured.content.apio.architect.filter.expression.MemberExp
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Julio Camarero
@@ -32,23 +32,27 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 
 	@Override
 	public Object visitBinaryExpressionOperation(
-		BinaryExpression.Operation operation, Object leftBinaryOperationObject,
-		Object rightBinaryOperationObject) {
+		BinaryExpression.Operation operation, Object left, Object right) {
 
 		if (operation == BinaryExpression.Operation.EQ) {
-			return _createMap(
-				(String)leftBinaryOperationObject, rightBinaryOperationObject);
+			return new HashMap<String, Object>() {
+				{
+					put((String)left, right);
+				}
+			};
 		}
 		else {
-			throw new InvalidFilterException(
+			throw new UnsupportedOperationException(
 				"Unsupported method visitBinaryExpressionOperation with " +
-					"operation" + operation);
+					"operation " + operation);
 		}
 	}
 
 	@Override
 	public Object visitLiteralExpression(LiteralExpression literalExpression) {
-		if (LiteralExpression.Type.STRING.equals(literalExpression.getType())) {
+		if (Objects.equals(
+				LiteralExpression.Type.STRING, literalExpression.getType())) {
+
 			return _normalizeLiteral(literalExpression.getText());
 		}
 
@@ -60,16 +64,6 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		List<String> resourcePath = memberExpression.getResourcePath();
 
 		return String.valueOf(resourcePath.get(0));
-	}
-
-	private Map<String, Object> _createMap(
-		String leftBinaryOperationObject, Object rightBinaryOperationObject) {
-
-		return new HashMap<String, Object>() {
-			{
-				put(leftBinaryOperationObject, rightBinaryOperationObject);
-			}
-		};
 	}
 
 	private Object _normalizeLiteral(String literal) {

@@ -14,6 +14,7 @@
 
 package com.liferay.structured.content.apio.internal.architect.resource;
 
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.LiteralExpression;
@@ -33,31 +34,32 @@ import org.junit.Test;
 public class StructuredContentNestedCollectionResourceTest {
 
 	@Test
-	public void testGetFilterMapWithExistingProperty() {
-		Filter filter = new Filter(
-			new BinaryExpressionImpl(
-				new MemberExpressionImpl(Collections.singletonList("title")),
-				BinaryExpression.Operation.EQ,
-				new LiteralExpressionImpl(
-					"Title Value", LiteralExpression.Type.STRING)));
+	public void testGetFilterFieldsMapWithExistingProperty() {
+		Filter filter = _getFilter("title", "Title Value");
 
-		Map<String, Object> filterMap = _resource.getFilterMap(filter);
+		Map<String, Object> filterFieldsMap = _resource.getFilterFieldsMap(
+			filter);
 
-		Assert.assertEquals("Title Value", filterMap.get("title"));
+		Assert.assertEquals("Title Value", filterFieldsMap.get("title"));
 	}
 
 	@Test
-	public void testGetFilterMapWithNonexistingProperty() {
-		Filter filter = new Filter(
+	public void testGetFilterFieldsMapWithNonexistingProperty() {
+		Filter filter = _getFilter("title", RandomTestUtil.randomString());
+
+		Map<String, Object> filterFieldsMap = _resource.getFilterFieldsMap(
+			filter);
+
+		Assert.assertNull(filterFieldsMap.get("nonexistingProperty"));
+	}
+
+	private Filter _getFilter(String fieldName, String fieldValue) {
+		return new Filter(
 			new BinaryExpressionImpl(
-				new MemberExpressionImpl(Collections.singletonList("title")),
+				new MemberExpressionImpl(Collections.singletonList(fieldName)),
 				BinaryExpression.Operation.EQ,
 				new LiteralExpressionImpl(
-					"Title Value", LiteralExpression.Type.STRING)));
-
-		Map<String, Object> filterMap = _resource.getFilterMap(filter);
-
-		Assert.assertNull(filterMap.get("nonexistingProperty"));
+					fieldValue, LiteralExpression.Type.STRING)));
 	}
 
 	private static final StructuredContentNestedCollectionResource _resource =
