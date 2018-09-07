@@ -46,6 +46,7 @@ import com.liferay.journal.util.JournalContent;
 import com.liferay.journal.util.JournalHelper;
 import com.liferay.media.object.apio.architect.identifier.MediaObjectIdentifier;
 import com.liferay.person.apio.architect.identifier.PersonIdentifier;
+import com.liferay.petra.string.CharPool;
 import com.liferay.portal.apio.identifier.ClassNameClassPK;
 import com.liferay.portal.apio.permission.HasPermission;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -68,6 +69,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.structure.apio.architect.identifier.ContentStructureIdentifier;
 import com.liferay.structured.content.apio.architect.filter.Filter;
@@ -353,7 +355,10 @@ public class StructuredContentNestedCollectionResource
 
 			BooleanClause booleanClause = BooleanClauseFactoryUtil.create(
 				booleanQuery.addTerm(
-					localizedFieldName, String.valueOf(fieldValue), false),
+					localizedFieldName,
+					StringUtil.quote(
+						String.valueOf(fieldValue), CharPool.QUOTE),
+					false),
 				BooleanClauseOccur.MUST.getName());
 
 			return Optional.of(booleanClause);
