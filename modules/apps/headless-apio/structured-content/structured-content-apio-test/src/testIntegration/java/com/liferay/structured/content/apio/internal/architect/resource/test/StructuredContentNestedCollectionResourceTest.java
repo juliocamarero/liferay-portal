@@ -195,7 +195,7 @@ public class StructuredContentNestedCollectionResourceTest {
 	public void testGetPageItemsSortByTitleDefault() throws Exception {
 		Map<Locale, String> stringMap1 = new HashMap<>();
 
-		stringMap1.put(LocaleUtil.getDefault(), "title1");
+		stringMap1.put(LocaleUtil.getDefault(), "title B");
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -210,7 +210,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		Map<Locale, String> stringMap2 = new HashMap<>();
 
-		stringMap2.put(LocaleUtil.getDefault(), "title2");
+		stringMap2.put(LocaleUtil.getDefault(), "title A");
 
 		JournalArticle journalArticle2 = JournalTestUtil.addArticle(
 			_group.getGroupId(),
@@ -229,15 +229,15 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
 
-		Assert.assertEquals(journalArticle1, items.get(0));
-		Assert.assertEquals(journalArticle2, items.get(1));
+		Assert.assertEquals(journalArticle2, items.get(0));
+		Assert.assertEquals(journalArticle1, items.get(1));
 	}
 
 	@Test
 	public void testGetPageItemsSortByTitleDesc() throws Exception {
 		Map<Locale, String> stringMap1 = new HashMap<>();
 
-		stringMap1.put(LocaleUtil.getDefault(), "title1");
+		stringMap1.put(LocaleUtil.getDefault(), "title A");
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -252,7 +252,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		Map<Locale, String> stringMap2 = new HashMap<>();
 
-		stringMap2.put(LocaleUtil.getDefault(), "title2");
+		stringMap2.put(LocaleUtil.getDefault(), "title B");
 
 		JournalArticle journalArticle2 = JournalTestUtil.addArticle(
 			_group.getGroupId(),
