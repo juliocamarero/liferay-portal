@@ -52,18 +52,18 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 		Expression leftBinaryOperationExpression,
 		Expression rightBinaryOperationExpression) {
 
-		Optional<BinaryExpression.Operation> operationOptional =
+		Optional<BinaryExpression.Operation> binaryExpressionOperationOptional =
 			_getOperationOptional(binaryOperatorKind);
 
-		BinaryExpression.Operation binaryExpressionOperation =
-			operationOptional.orElseThrow(
-				() -> new UnsupportedOperationException(
-					"Unsupported method visitBinaryOperator with operation " +
-						binaryOperatorKind));
-
-		return new BinaryExpressionImpl(
-			leftBinaryOperationExpression, binaryExpressionOperation,
-			rightBinaryOperationExpression);
+		return binaryExpressionOperationOptional.map(
+			binaryExpressionOperation -> new BinaryExpressionImpl(
+				leftBinaryOperationExpression, binaryExpressionOperation,
+				rightBinaryOperationExpression)
+		).orElseThrow(
+			() -> new UnsupportedOperationException(
+				"Unsupported method visitBinaryOperator with operation " +
+					binaryOperatorKind)
+		);
 	}
 
 	@Override
