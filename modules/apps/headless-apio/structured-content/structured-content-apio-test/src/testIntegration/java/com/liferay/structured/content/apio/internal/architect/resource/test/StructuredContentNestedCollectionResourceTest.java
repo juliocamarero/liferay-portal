@@ -278,6 +278,58 @@ public class StructuredContentNestedCollectionResourceTest {
 	}
 
 	@Test
+	public void testGetPageItemsWith2VersionsAnd1Scheduled() throws Exception {
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), "Version 1");
+		stringMap.put(LocaleUtil.GERMANY, RandomTestUtil.randomString());
+		stringMap.put(LocaleUtil.SPAIN, RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, null, true, true,
+			serviceContext);
+
+		// Create new version scheduled for tomorrow
+
+		stringMap.put(LocaleUtil.getDefault(), "Version 2");
+
+		Date displayDate = new Date(
+			System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+
+		JournalTestUtil.updateArticle(
+			serviceContext.getUserId(), journalArticle, stringMap,
+			journalArticle.getContent(), displayDate, true, true,
+			serviceContext);
+
+		int journalArticlesCount = _journalArticleLocalService.getArticlesCount(
+			journalArticle.getGroupId(), journalArticle.getArticleId());
+
+		Assert.assertEquals(2, journalArticlesCount);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+
+		Assert.assertEquals(1, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertTrue("Items " + items, items.contains(journalArticle));
+
+		JournalArticle foundJournalArticle = items.get(0);
+
+		Assert.assertEquals(
+			"Version 1", foundJournalArticle.getTitle(LocaleUtil.getDefault()));
+	}
+
+	@Test
 	public void testGetPageItemsWith2VersionsAndOnly1Approved()
 		throws Exception {
 
@@ -423,6 +475,40 @@ public class StructuredContentNestedCollectionResourceTest {
 			serviceContext.getUserId(), journalArticle,
 			WorkflowConstants.STATUS_EXPIRED, null, serviceContext,
 			new HashMap<>());
+
+		int journalArticlesCount = _journalArticleLocalService.getArticlesCount(
+			journalArticle.getGroupId(), journalArticle.getArticleId());
+
+		Assert.assertEquals(1, journalArticlesCount);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+
+		Assert.assertEquals(0, pageItems.getTotalCount());
+	}
+
+	@Test
+	public void testGetPageItemsWithOnlyOneSheduledVersion() throws Exception {
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), "Version 1");
+		stringMap.put(LocaleUtil.GERMANY, RandomTestUtil.randomString());
+		stringMap.put(LocaleUtil.SPAIN, RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		Date displayDate = new Date(
+			System.currentTimeMillis() + 24 * 60 * 60 * 1000); // Tomorrow
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), displayDate, null, true,
+			true, serviceContext);
 
 		int journalArticlesCount = _journalArticleLocalService.getArticlesCount(
 			journalArticle.getGroupId(), journalArticle.getArticleId());
