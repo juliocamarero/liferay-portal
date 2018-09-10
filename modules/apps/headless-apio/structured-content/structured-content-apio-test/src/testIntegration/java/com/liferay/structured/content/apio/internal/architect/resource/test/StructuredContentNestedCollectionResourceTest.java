@@ -369,6 +369,73 @@ public class StructuredContentNestedCollectionResourceTest {
 			"Version 2", foundJournalArticle.getTitle(LocaleUtil.getDefault()));
 	}
 
+	@Test
+	public void testGetPageItemsWithOnlyOneDraftVersion() throws Exception {
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), "Version 1");
+		stringMap.put(LocaleUtil.GERMANY, RandomTestUtil.randomString());
+		stringMap.put(LocaleUtil.SPAIN, RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, null, true, false,
+			serviceContext);
+
+		int journalArticlesCount = _journalArticleLocalService.getArticlesCount(
+			journalArticle.getGroupId(), journalArticle.getArticleId());
+
+		Assert.assertEquals(1, journalArticlesCount);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+
+		Assert.assertEquals(0, pageItems.getTotalCount());
+	}
+
+	@Test
+	public void testGetPageItemsWithOnlyOneExpiredVersion() throws Exception {
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), "Version 1");
+		stringMap.put(LocaleUtil.GERMANY, RandomTestUtil.randomString());
+		stringMap.put(LocaleUtil.SPAIN, RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, null, true, true,
+			serviceContext);
+
+		_journalArticleLocalService.updateStatus(
+			serviceContext.getUserId(), journalArticle,
+			WorkflowConstants.STATUS_EXPIRED, null, serviceContext,
+			new HashMap<>());
+
+		int journalArticlesCount = _journalArticleLocalService.getArticlesCount(
+			journalArticle.getGroupId(), journalArticle.getArticleId());
+
+		Assert.assertEquals(1, journalArticlesCount);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+
+		Assert.assertEquals(0, pageItems.getTotalCount());
+	}
+
 	private PageItems<JournalArticle> _getPageItems(
 			Pagination pagination, long contentSpaceId,
 			ThemeDisplay themeDisplay, Filter filter, Sort sort)
