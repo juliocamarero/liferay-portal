@@ -79,6 +79,7 @@ import com.liferay.structured.content.apio.architect.sort.Sort;
 import com.liferay.structured.content.apio.architect.sort.SortField;
 import com.liferay.structured.content.apio.architect.util.StructuredContentUtil;
 import com.liferay.structured.content.apio.internal.architect.filter.ExpressionVisitorImpl;
+import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentSingleEntitySchemaBasedEdmProvider;
 import com.liferay.structured.content.apio.internal.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.internal.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.internal.model.JournalArticleWrapper;
@@ -89,7 +90,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -345,21 +345,22 @@ public class StructuredContentNestedCollectionResource
 	private Optional<BooleanClause<Query>> _getBooleanClauseOptional(
 		String fieldName, Object fieldValue, Locale locale) {
 
-		if (Objects.equals(fieldName, "title")) {
-			String localizedFieldName = Field.getSortableFieldName(
-				"localized_title_".concat(LocaleUtil.toLanguageId(locale)));
+		Optional<String> sortableFieldName =
+			_structuredContentSingleEntitySchemaBasedEdmProvider.
+				getSortableFieldName(locale, fieldName);
 
-			BooleanQueryImpl booleanQuery = new BooleanQueryImpl();
-
-			BooleanClause booleanClause = BooleanClauseFactoryUtil.create(
-				booleanQuery.addTerm(
-					localizedFieldName, String.valueOf(fieldValue), false),
-				BooleanClauseOccur.MUST.getName());
-
-			return Optional.of(booleanClause);
+		if (!sortableFieldName.isPresent()) {
+			return Optional.empty();
 		}
 
-		return Optional.empty();
+		BooleanQueryImpl booleanQuery = new BooleanQueryImpl();
+
+		BooleanClause booleanClause = BooleanClauseFactoryUtil.create(
+			booleanQuery.addTerm(
+				sortableFieldName.get(), String.valueOf(fieldValue), false),
+			BooleanClauseOccur.MUST.getName());
+
+		return Optional.of(booleanClause);
 	}
 
 	private List<BooleanClause<Query>> _getBooleanClauses(
@@ -595,19 +596,17 @@ public class StructuredContentNestedCollectionResource
 	private Optional<com.liferay.portal.kernel.search.Sort> _getSortOptional(
 		SortField sortField, Locale locale) {
 
-		String fieldName = null;
+		Optional<String> sortableFieldNameOptional =
+			_structuredContentSingleEntitySchemaBasedEdmProvider.
+				getSortableFieldName(locale, sortField.getFieldName());
 
-		if (Objects.equals(sortField.getFieldName(), "title")) {
-			fieldName = Field.getSortableFieldName(
-				"localized_title_".concat(LocaleUtil.toLanguageId(locale)));
-		}
-		else {
+		if (!sortableFieldNameOptional.isPresent()) {
 			return Optional.empty();
 		}
 
 		return Optional.of(
 			new com.liferay.portal.kernel.search.Sort(
-				fieldName, !sortField.isAscending()));
+				sortableFieldNameOptional.get(), !sortField.isAscending()));
 	}
 
 	private List<com.liferay.portal.kernel.search.Sort> _getSorts(
@@ -695,5 +694,9 @@ public class StructuredContentNestedCollectionResource
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private StructuredContentSingleEntitySchemaBasedEdmProvider
+		_structuredContentSingleEntitySchemaBasedEdmProvider;
 
 }

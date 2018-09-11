@@ -17,7 +17,10 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,6 +72,31 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	 * @review
 	 */
 	public abstract String getName();
+
+	/**
+	 * Returns an Optional sortable fieldName given a locale and a
+	 * entityFieldName.
+	 *
+	 * @param  locale - The Locale
+	 * @param  entityFieldName - The entityFieldName
+	 * @return a Optional of a sortable field name
+	 * @review
+	 */
+	public Optional<String> getSortableFieldName(
+		Locale locale, String entityFieldName) {
+
+		Map<String, EntityField> entityFieldsMap = getEntityFieldsMap();
+
+		EntityField entityField = entityFieldsMap.get(entityFieldName);
+
+		if (entityField == null) {
+			return Optional.empty();
+		}
+
+		Function<Locale, String> function = entityField.getFunction();
+
+		return Optional.of(function.apply(locale));
+	}
 
 	private CsdlEntityContainer _createCsdlEntityContainer(
 		String namespace, String name) {

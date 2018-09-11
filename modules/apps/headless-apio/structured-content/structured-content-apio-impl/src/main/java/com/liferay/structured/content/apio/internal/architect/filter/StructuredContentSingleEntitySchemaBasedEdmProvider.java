@@ -22,12 +22,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * Provides the entity data model from the Indexed Entity (JournalArticle).
  *
  * @author Julio Camarero
  * @review
  */
+@Component(
+	immediate = true,
+	service = StructuredContentSingleEntitySchemaBasedEdmProvider.class
+)
 public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	extends BaseSingleEntitySchemaBasedEdmProvider {
 
