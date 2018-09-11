@@ -14,6 +14,9 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import java.util.Locale;
+import java.util.function.Function;
+
 /**
  * Models a <code>EntityField</code>.
  *
@@ -25,15 +28,19 @@ public class EntityField {
 	/**
 	 * Creates a new <code>EntityField</code>
 	 *
-	 * @param entityFieldName - the name of the EntityField
-	 * @param entityFieldType - the {@link EntityField}
+	 * @param  entityFieldName - the name of the EntityField
+	 * @param  entityFieldType - the {@link EntityField}
+	 * @param  function - the {@link Function} to convert the entityFieldName to
+	 *         the a searchable/sortable field name given a locale
 	 * @review
 	 */
 	public EntityField(
-		String entityFieldName, EntityFieldType entityFieldType) {
+		String entityFieldName, EntityFieldType entityFieldType,
+		Function<Locale, String> function) {
 
 		_entityFieldName = entityFieldName;
 		_entityFieldType = entityFieldType;
+		_function = function;
 	}
 
 	/**
@@ -56,6 +63,17 @@ public class EntityField {
 		return _entityFieldType;
 	}
 
+	/**
+	 * Returns the {@link Function} of the <code>EntityField</code>
+	 *
+	 * @return the {@link Function} that converts the entity field name to a
+	 *         searchable/sortable field name.
+	 * @review
+	 */
+	public Function<Locale, String> getFunction() {
+		return _function;
+	}
+
 	public enum EntityFieldType {
 
 		DATE, STRING
@@ -64,5 +82,6 @@ public class EntityField {
 
 	private final String _entityFieldName;
 	private final EntityFieldType _entityFieldType;
+	private final Function<Locale, String> _function;
 
 }
