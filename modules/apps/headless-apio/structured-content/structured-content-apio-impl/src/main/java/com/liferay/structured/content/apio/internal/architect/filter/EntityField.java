@@ -25,16 +25,32 @@ public class EntityField {
 	/**
 	 * Creates a new <code>EntityField</code>
 	 *
+	 * @param entityFieldName - the name of the EntityField
 	 * @param entityFieldType - the {@link EntityField}
+	 * @review
 	 */
-	public EntityField(EntityFieldType entityFieldType) {
+	public EntityField(
+		String entityFieldName, EntityFieldType entityFieldType) {
+
+		_entityFieldName = entityFieldName;
 		_entityFieldType = entityFieldType;
+	}
+
+	/**
+	 * Returns the name of the <code>EntityField</code>
+	 *
+	 * @return the name of the <code>EntityField</code>
+	 * @review
+	 */
+	public String getEntityFieldName() {
+		return _entityFieldName;
 	}
 
 	/**
 	 * Returns the {@link EntityFieldType} of the <code>EntityField</code>
 	 *
 	 * @return the {@link EntityFieldType}
+	 * @review
 	 */
 	public EntityFieldType getEntityFieldType() {
 		return _entityFieldType;
@@ -46,6 +62,7 @@ public class EntityField {
 
 	}
 
+	private final String _entityFieldName;
 	private final EntityFieldType _entityFieldType;
 
 }

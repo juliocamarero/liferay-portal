@@ -41,10 +41,12 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 			{
 				put(
 					"datePublished",
-					new EntityField(EntityField.EntityFieldType.DATE));
+					new EntityField(
+						"datePublished", EntityField.EntityFieldType.DATE));
 				put(
 					"title",
-					new EntityField(EntityField.EntityFieldType.STRING));
+					new EntityField(
+						"title", EntityField.EntityFieldType.STRING));
 			}
 		};
 
