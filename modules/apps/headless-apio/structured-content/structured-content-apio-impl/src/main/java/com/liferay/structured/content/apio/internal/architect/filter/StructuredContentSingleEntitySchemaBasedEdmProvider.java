@@ -16,6 +16,9 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.structured.content.apio.architect.entity.EntityField;
 
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.util.LocaleUtil;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,7 +35,7 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 
 	@Override
 	public Map<String, EntityField> getEntityFieldsMap() {
-		return _entityFieldTypesMap;
+		return _entityFieldsMap;
 	}
 
 	@Override
@@ -40,13 +43,16 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 		return "StructuredContent";
 	}
 
-	private static final Map<String, EntityField> _entityFieldTypesMap =
-		Stream.of(
-			new EntityField("datePublished", EntityField.Type.DATE),
-			new EntityField("title", EntityField.Type.STRING)
-		).collect(
-			Collectors.toMap(
-				EntityField::getName, Function.identity())
-		);
+	private static final Map<String, EntityField> _entityFieldsMap = Stream.of(
+		new EntityField(
+			"datePublished", EntityField.Type.DATE,
+			locale -> Field.getSortableFieldName("datePublished")),
+		new EntityField(
+			"title", EntityField.Type.STRING,
+			locale -> Field.getSortableFieldName(
+				"localized_title_".concat(LocaleUtil.toLanguageId(locale))))
+	).collect(
+		Collectors.toMap(EntityField::getName, Function.identity())
+	);
 
 }

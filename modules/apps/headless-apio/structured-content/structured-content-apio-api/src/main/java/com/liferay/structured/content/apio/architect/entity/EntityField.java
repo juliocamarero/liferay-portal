@@ -16,6 +16,9 @@ package com.liferay.structured.content.apio.architect.entity;
 
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.Locale;
+import java.util.function.Function;
+
 /**
  * Models a <code>EntityField</code>.
  *
@@ -27,10 +30,17 @@ public class EntityField {
 	/**
 	 * Creates a new <code>EntityField</code>
 	 *
-	 * @param name - the name of the EntityField
-	 * @param type - the {@link Type}
+	 * @param  name - the name of the EntityField
+	 * @param  type - the {@link Type}
+	 * @param  sortableFieldNameFunction - the {@link Function} to convert the
+	 *         entity field name to a searchable/sortable field name given a
+	 *         locale
+	 * @review
 	 */
-	public EntityField(String name, Type type) {
+	public EntityField(
+		String name, Type type,
+		Function<Locale, String> sortableFieldNameFunction) {
+
 		if (Validator.isNull(name)) {
 			throw new IllegalArgumentException("Name is null");
 		}
@@ -39,8 +49,14 @@ public class EntityField {
 			throw new IllegalArgumentException("Type is null");
 		}
 
+		if (sortableFieldNameFunction == null) {
+			throw new IllegalArgumentException(
+				"sortableFieldNameFunction is null");
+		}
+
 		_name = name;
 		_type = type;
+		_sortableNameFunction = sortableFieldNameFunction;
 	}
 
 	/**
@@ -50,6 +66,17 @@ public class EntityField {
 	 */
 	public String getName() {
 		return _name;
+	}
+
+	/**
+	 * Returns the sortable name of the <code>EntityField</code>
+	 *
+	 * @param  locale
+	 * @return the sortable name of the <code>EntityField</code>
+	 * @review
+	 */
+	public String getSortableName(Locale locale) {
+		return _sortableNameFunction.apply(locale);
 	}
 
 	/**
@@ -68,6 +95,7 @@ public class EntityField {
 	}
 
 	private final String _name;
+	private final Function<Locale, String> _sortableNameFunction;
 	private final Type _type;
 
 }
