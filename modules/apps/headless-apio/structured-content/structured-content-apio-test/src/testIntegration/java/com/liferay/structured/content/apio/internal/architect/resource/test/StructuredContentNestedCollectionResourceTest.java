@@ -203,6 +203,102 @@ public class StructuredContentNestedCollectionResourceTest {
 	}
 
 	@Test
+	public void testGetPageItemsFilterByTitleInLocaleWithDifferentDefaultLocale()
+		throws Exception {
+
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.SPAIN, "titulo1");
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		// Default Locale of Article is in Spanish (no English content or title)
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.SPAIN, null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			new Filter(_filterParser.parse("(title eq 'titulo1')")),
+			Sort.emptySort());
+
+		Assert.assertEquals(1, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertEquals(journalArticle, items.get(0));
+	}
+
+	@Test
+	public void testGetPageItemsFilterByTitleInLocaleWithDifferentLocale()
+		throws Exception {
+
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+		stringMap.put(LocaleUtil.SPAIN, "titulo1");
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			new Filter(_filterParser.parse("(title eq 'titulo1')")),
+			Sort.emptySort());
+
+		Assert.assertEquals(0, pageItems.getTotalCount());
+	}
+
+	@Test
+	public void testGetPageItemsFilterByTitleInLocaleWithSameLocale()
+		throws Exception {
+
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+		stringMap.put(LocaleUtil.SPAIN, "titulo1");
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = _getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			_getThemeDisplay(_group, LocaleUtil.SPAIN),
+			new Filter(_filterParser.parse("(title eq 'titulo1')")),
+			Sort.emptySort());
+
+		Assert.assertEquals(1, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertEquals(journalArticle, items.get(0));
+	}
+
+	@Test
 	public void testGetPageItemsSortByTitleAsc() throws Exception {
 		Map<Locale, String> stringMap1 = new HashMap<>();
 
