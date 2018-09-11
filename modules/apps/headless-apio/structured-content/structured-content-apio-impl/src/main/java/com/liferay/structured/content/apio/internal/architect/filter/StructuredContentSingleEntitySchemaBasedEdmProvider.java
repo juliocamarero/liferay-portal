@@ -14,6 +14,8 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import com.liferay.structured.content.apio.architect.entity.EntityField;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	extends BaseSingleEntitySchemaBasedEdmProvider {
 
 	@Override
-	public Map<String, EntityFieldType> getEntityFieldTypesMap() {
+	public Map<String, EntityField.Type> getEntityFieldTypesMap() {
 		return _entityFieldTypesMap;
 	}
 
@@ -36,11 +38,11 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 		return "StructuredContent";
 	}
 
-	private static final Map<String, EntityFieldType> _entityFieldTypesMap =
-		new HashMap<String, EntityFieldType>() {
+	private static final Map<String, EntityField.Type> _entityFieldTypesMap =
+		new HashMap<String, EntityField.Type>() {
 			{
-				put("datePublished", EntityFieldType.DATE);
-				put("title", EntityFieldType.STRING);
+				put("datePublished", EntityField.Type.DATE);
+				put("title", EntityField.Type.STRING);
 			}
 		};
 

@@ -14,6 +14,8 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import com.liferay.structured.content.apio.architect.entity.EntityField;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +62,7 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	 * @return the entity type properties
 	 * @review
 	 */
-	public abstract Map<String, EntityFieldType> getEntityFieldTypesMap();
+	public abstract Map<String, EntityField.Type> getEntityFieldTypesMap();
 
 	/**
 	 * Returns the name of the single entity type used to create the EDM.
@@ -69,12 +71,6 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	 * @review
 	 */
 	public abstract String getName();
-
-	public enum EntityFieldType {
-
-		DATE, STRING
-
-	}
 
 	private CsdlEntityContainer _createCsdlEntityContainer(
 		String namespace, String name) {
@@ -111,11 +107,12 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	}
 
 	private List<CsdlProperty> _createCsdlProperties(
-		Map<String, EntityFieldType> entityTypesMap) {
+		Map<String, EntityField.Type> entityTypesMap) {
 
-		Set<Map.Entry<String, EntityFieldType>> entries = entityTypesMap.entrySet();
+		Set<Map.Entry<String, EntityField.Type>> entries =
+			entityTypesMap.entrySet();
 
-		Stream<Map.Entry<String, EntityFieldType>> stream = entries.stream();
+		Stream<Map.Entry<String, EntityField.Type>> stream = entries.stream();
 
 		return stream.map(
 			entry -> _createCsdlProperty(entry.getKey(), entry.getValue())
@@ -125,7 +122,7 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	}
 
 	private CsdlProperty _createCsdlProperty(
-		String name, EntityFieldType entityFieldType) {
+		String name, EntityField.Type entityFieldType) {
 
 		CsdlProperty csdlProperty = new CsdlProperty();
 
@@ -133,11 +130,11 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 
 		FullQualifiedName fullQualifiedName = null;
 
-		if (entityFieldType.equals(EntityFieldType.STRING)) {
+		if (entityFieldType.equals(EntityField.Type.STRING)) {
 			fullQualifiedName =
 				EdmPrimitiveTypeKind.String.getFullQualifiedName();
 		}
-		else if (entityFieldType.equals(EntityFieldType.DATE)) {
+		else if (entityFieldType.equals(EntityField.Type.DATE)) {
 			fullQualifiedName =
 				EdmPrimitiveTypeKind.Date.getFullQualifiedName();
 		}
