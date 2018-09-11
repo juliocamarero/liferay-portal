@@ -25,13 +25,19 @@ import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.test.context.ContextUserReplace;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -158,6 +164,46 @@ public class StructuredContentNestedCollectionResourceTest {
 			Sort.emptySort());
 
 		Assert.assertEquals(0, pageItems.getTotalCount());
+	}
+
+	@Test
+	public void testGetPageItemsFilterByPermission() throws Exception {
+		Map<Locale, String> stringMap = new HashMap<>();
+
+		stringMap.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		serviceContext.setAddGuestPermissions(false);
+		serviceContext.setAddGroupPermissions(false);
+
+		JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		User user = UserTestUtil.addUser();
+
+		PermissionChecker permissionChecker =
+			PermissionCheckerFactoryUtil.create(user);
+
+		try (ContextUserReplace contextUserReplace =
+				new ContextUserReplace(user, permissionChecker)) {
+
+			PageItems<JournalArticle> pageItems = _getPageItems(
+				PaginationTestUtil.of(10, 1), _group.getGroupId(),
+				_getThemeDisplay(_group, LocaleUtil.getDefault()),
+				Filter.emptyFilter(), Sort.emptySort());
+
+			Assert.assertEquals(0, pageItems.getTotalCount());
+		}
+		finally {
+			_userLocalService.deleteUser(user);
+		}
 	}
 
 	@Test
@@ -817,5 +863,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 	@Inject
 	private SortParser _sortParser;
+
+	@Inject
+	private UserLocalService _userLocalService;
 
 }
