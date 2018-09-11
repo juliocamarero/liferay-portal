@@ -27,8 +27,8 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	extends BaseSingleEntitySchemaBasedEdmProvider {
 
 	@Override
-	public Map<String, EntityType> getEntityTypesMap() {
-		return _entityTypesMap;
+	public Map<String, EntityFieldType> getEntityFieldTypesMap() {
+		return _entityFieldTypesMap;
 	}
 
 	@Override
@@ -36,11 +36,11 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 		return "StructuredContent";
 	}
 
-	private static final Map<String, EntityType> _entityTypesMap =
-		new HashMap<String, EntityType>() {
+	private static final Map<String, EntityFieldType> _entityFieldTypesMap =
+		new HashMap<String, EntityFieldType>() {
 			{
-				put("datePublished", EntityType.DATE);
-				put("title", EntityType.STRING);
+				put("datePublished", EntityFieldType.DATE);
+				put("title", EntityFieldType.STRING);
 			}
 		};
 
