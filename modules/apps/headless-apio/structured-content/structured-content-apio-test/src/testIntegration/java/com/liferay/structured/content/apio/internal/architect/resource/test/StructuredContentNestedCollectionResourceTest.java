@@ -110,9 +110,9 @@ public class StructuredContentNestedCollectionResourceTest {
 
 	@Test
 	public void testGetPageItemsFilterByPartialTitle() throws Exception {
-		Map<Locale, String> stringMap1 = new HashMap<>();
+		Map<Locale, String> stringMap = new HashMap<>();
 
-		stringMap1.put(LocaleUtil.getDefault(), "hello world");
+		stringMap.put(LocaleUtil.getDefault(), "hello world");
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -121,8 +121,8 @@ public class StructuredContentNestedCollectionResourceTest {
 			_group.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-			RandomTestUtil.randomString(), false, stringMap1, stringMap1,
-			stringMap1, null, LocaleUtil.getDefault(), null, true, true,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, true, true,
 			serviceContext);
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
@@ -136,9 +136,9 @@ public class StructuredContentNestedCollectionResourceTest {
 
 	@Test
 	public void testGetPageItemsFilterByPartialTitleWord() throws Exception {
-		Map<Locale, String> stringMap1 = new HashMap<>();
+		Map<Locale, String> stringMap = new HashMap<>();
 
-		stringMap1.put(LocaleUtil.getDefault(), "hello world");
+		stringMap.put(LocaleUtil.getDefault(), "hello world");
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -147,8 +147,8 @@ public class StructuredContentNestedCollectionResourceTest {
 			_group.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-			RandomTestUtil.randomString(), false, stringMap1, stringMap1,
-			stringMap1, null, LocaleUtil.getDefault(), null, true, true,
+			RandomTestUtil.randomString(), false, stringMap, stringMap,
+			stringMap, null, LocaleUtil.getDefault(), null, true, true,
 			serviceContext);
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
@@ -164,9 +164,7 @@ public class StructuredContentNestedCollectionResourceTest {
 	public void testGetPageItemsFilterByTitle() throws Exception {
 		Map<Locale, String> stringMap1 = new HashMap<>();
 
-		String title1 = "title1";
-
-		stringMap1.put(LocaleUtil.getDefault(), title1);
+		stringMap1.put(LocaleUtil.getDefault(), "title1");
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
