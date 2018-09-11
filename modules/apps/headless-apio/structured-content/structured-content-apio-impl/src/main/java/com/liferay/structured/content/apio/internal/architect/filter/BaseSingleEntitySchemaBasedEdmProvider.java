@@ -53,16 +53,16 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 		addSchema(
 			_createCsdlSchema(
 				"HypermediaRestApis", getName(),
-				_createCsdlProperties(getEntityFieldTypesMap())));
+				_createCsdlProperties(getEntityFieldsMap())));
 	}
 
 	/**
-	 * Returns the properties of the entity field type used to create the EDM.
+	 * Returns a Map with all the entity fields used to create the EDM.
 	 *
-	 * @return the entity type properties
+	 * @return the entity field map
 	 * @review
 	 */
-	public abstract Map<String, EntityField.Type> getEntityFieldTypesMap();
+	public abstract Map<String, EntityField> getEntityFieldsMap();
 
 	/**
 	 * Returns the name of the single entity type used to create the EDM.
@@ -107,12 +107,12 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	}
 
 	private List<CsdlProperty> _createCsdlProperties(
-		Map<String, EntityField.Type> entityTypesMap) {
+		Map<String, EntityField> entityFieldsMap) {
 
-		Set<Map.Entry<String, EntityField.Type>> entries =
-			entityTypesMap.entrySet();
+		Set<Map.Entry<String, EntityField>> entries =
+			entityFieldsMap.entrySet();
 
-		Stream<Map.Entry<String, EntityField.Type>> stream = entries.stream();
+		Stream<Map.Entry<String, EntityField>> stream = entries.stream();
 
 		return stream.map(
 			entry -> _createCsdlProperty(entry.getKey(), entry.getValue())
@@ -122,13 +122,15 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	}
 
 	private CsdlProperty _createCsdlProperty(
-		String name, EntityField.Type entityFieldType) {
+		String name, EntityField entityField) {
 
 		CsdlProperty csdlProperty = new CsdlProperty();
 
 		csdlProperty.setName(name);
 
 		FullQualifiedName fullQualifiedName = null;
+
+		EntityField.Type entityFieldType = entityField.getType();
 
 		if (entityFieldType.equals(EntityField.Type.STRING)) {
 			fullQualifiedName =
