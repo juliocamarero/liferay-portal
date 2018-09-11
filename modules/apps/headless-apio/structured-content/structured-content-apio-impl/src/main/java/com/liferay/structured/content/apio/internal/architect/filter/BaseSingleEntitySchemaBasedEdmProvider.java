@@ -16,10 +16,10 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.structured.content.apio.architect.entity.EntityField;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -109,24 +109,21 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	private List<CsdlProperty> _createCsdlProperties(
 		Map<String, EntityField> entityFieldsMap) {
 
-		Set<Map.Entry<String, EntityField>> entries =
-			entityFieldsMap.entrySet();
+		Collection<EntityField> entityFields = entityFieldsMap.values();
 
-		Stream<Map.Entry<String, EntityField>> stream = entries.stream();
+		Stream<EntityField> stream = entityFields.stream();
 
 		return stream.map(
-			entry -> _createCsdlProperty(entry.getKey(), entry.getValue())
+			this::_createCsdlProperty
 		).collect(
 			Collectors.toList()
 		);
 	}
 
-	private CsdlProperty _createCsdlProperty(
-		String name, EntityField entityField) {
-
+	private CsdlProperty _createCsdlProperty(EntityField entityField) {
 		CsdlProperty csdlProperty = new CsdlProperty();
 
-		csdlProperty.setName(name);
+		csdlProperty.setName(entityField.getName());
 
 		FullQualifiedName fullQualifiedName = null;
 

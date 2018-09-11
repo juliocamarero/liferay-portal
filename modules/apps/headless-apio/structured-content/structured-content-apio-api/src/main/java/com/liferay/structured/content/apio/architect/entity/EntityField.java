@@ -14,6 +14,8 @@
 
 package com.liferay.structured.content.apio.architect.entity;
 
+import com.liferay.portal.kernel.util.Validator;
+
 /**
  * Models a <code>EntityField</code>.
  *
@@ -25,14 +27,29 @@ public class EntityField {
 	/**
 	 * Creates a new <code>EntityField</code>
 	 *
+	 * @param name - the name of the EntityField
 	 * @param type - the {@link Type}
 	 */
-	public EntityField(Type type) {
+	public EntityField(String name, Type type) {
+		if (Validator.isNull(name)) {
+			throw new IllegalArgumentException("Name is null");
+		}
+
 		if (type == null) {
 			throw new IllegalArgumentException("Type is null");
 		}
 
+		_name = name;
 		_type = type;
+	}
+
+	/**
+	 * Returns the name of the <code>EntityField</code>
+	 *
+	 * @return the name of the <code>EntityField</code>
+	 */
+	public String getName() {
+		return _name;
 	}
 
 	/**
@@ -50,6 +67,7 @@ public class EntityField {
 
 	}
 
+	private final String _name;
 	private final Type _type;
 
 }

@@ -16,8 +16,10 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.structured.content.apio.architect.entity.EntityField;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Provides the entity data model from the Indexed Entity (JournalArticle).
@@ -39,11 +41,12 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	}
 
 	private static final Map<String, EntityField> _entityFieldTypesMap =
-		new HashMap<String, EntityField>() {
-			{
-				put("datePublished", new EntityField(EntityField.Type.DATE));
-				put("title", new EntityField(EntityField.Type.STRING));
-			}
-		};
+		Stream.of(
+			new EntityField("datePublished", EntityField.Type.DATE),
+			new EntityField("title", EntityField.Type.STRING)
+		).collect(
+			Collectors.toMap(
+				EntityField::getName, Function.identity())
+		);
 
 }
