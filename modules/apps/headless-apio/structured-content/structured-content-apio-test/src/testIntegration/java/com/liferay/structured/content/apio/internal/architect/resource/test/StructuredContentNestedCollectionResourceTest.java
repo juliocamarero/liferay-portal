@@ -98,7 +98,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
 
@@ -126,7 +127,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group),
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
 			new Filter(_filterParser.parse("(title eq 'hello')")),
 			Sort.emptySort());
 
@@ -152,7 +153,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group),
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
 			new Filter(_filterParser.parse("(title eq 'hel')")),
 			Sort.emptySort());
 
@@ -192,7 +193,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group),
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
 			new Filter(_filterParser.parse("(title eq 'title1')")),
 			Sort.emptySort());
 
@@ -234,8 +235,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(),
-			new Sort(_sortParser.parse("title:asc")));
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), new Sort(_sortParser.parse("title:asc")));
 
 		Assert.assertEquals(2, pageItems.getTotalCount());
 
@@ -276,8 +277,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(),
-			new Sort(_sortParser.parse("title")));
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), new Sort(_sortParser.parse("title")));
 
 		Assert.assertEquals(2, pageItems.getTotalCount());
 
@@ -318,8 +319,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(),
-			new Sort(_sortParser.parse("title:desc")));
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), new Sort(_sortParser.parse("title:desc")));
 
 		Assert.assertEquals(2, pageItems.getTotalCount());
 
@@ -367,7 +368,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
 
@@ -415,7 +417,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
 
@@ -459,7 +462,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
 
@@ -499,7 +503,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(0, pageItems.getTotalCount());
 	}
@@ -535,7 +540,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(0, pageItems.getTotalCount());
 	}
@@ -569,7 +575,8 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		PageItems<JournalArticle> pageItems = _getPageItems(
 			PaginationTestUtil.of(10, 1), _group.getGroupId(),
-			_getThemeDisplay(_group), Filter.emptyFilter(), Sort.emptySort());
+			_getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(), Sort.emptySort());
 
 		Assert.assertEquals(0, pageItems.getTotalCount());
 	}
@@ -593,7 +600,9 @@ public class StructuredContentNestedCollectionResourceTest {
 			filter, sort);
 	}
 
-	private ThemeDisplay _getThemeDisplay(Group group) throws Exception {
+	private ThemeDisplay _getThemeDisplay(Group group, Locale locale)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 
 		Company company = CompanyLocalServiceUtil.getCompanyById(
@@ -601,7 +610,7 @@ public class StructuredContentNestedCollectionResourceTest {
 
 		themeDisplay.setCompany(company);
 
-		themeDisplay.setLocale(LocaleUtil.getDefault());
+		themeDisplay.setLocale(locale);
 		themeDisplay.setScopeGroupId(group.getGroupId());
 
 		return themeDisplay;
