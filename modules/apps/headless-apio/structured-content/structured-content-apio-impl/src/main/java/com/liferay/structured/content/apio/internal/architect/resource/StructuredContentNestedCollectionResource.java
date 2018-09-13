@@ -80,6 +80,7 @@ import com.liferay.structured.content.apio.architect.sort.Sort;
 import com.liferay.structured.content.apio.architect.sort.SortField;
 import com.liferay.structured.content.apio.architect.util.StructuredContentUtil;
 import com.liferay.structured.content.apio.internal.architect.filter.ExpressionVisitorImpl;
+import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentSingleEntitySchemaBasedEdmProvider;
 import com.liferay.structured.content.apio.internal.architect.form.StructuredContentCreatorForm;
 import com.liferay.structured.content.apio.internal.architect.form.StructuredContentUpdaterForm;
 import com.liferay.structured.content.apio.internal.model.JournalArticleWrapper;
@@ -695,5 +696,9 @@ public class StructuredContentNestedCollectionResource
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private StructuredContentSingleEntitySchemaBasedEdmProvider
+		_structuredContentSingleEntitySchemaBasedEdmProvider;
 
 }

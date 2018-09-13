@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.structured.content.apio.architect.sort.InvalidSortException;
 import com.liferay.structured.content.apio.architect.sort.SortField;
 import com.liferay.structured.content.apio.architect.sort.SortParser;
+import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentSingleEntitySchemaBasedEdmProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * Utility for parsing Sort strings. It uses a model to create a list of {@link
@@ -76,6 +78,15 @@ public class SortParserImpl implements SortParser {
 		).collect(
 			Collectors.toList()
 		);
+	}
+
+	@Reference(unbind = "-")
+	public void setStructuredContentSingleEntitySchemaBasedEdmProvider(
+		StructuredContentSingleEntitySchemaBasedEdmProvider
+			structuredContentSingleEntitySchemaBasedEdmProvider) {
+
+		_structuredContentSingleEntitySchemaBasedEdmProvider =
+			structuredContentSingleEntitySchemaBasedEdmProvider;
 	}
 
 	protected Optional<SortField> getSortFieldOptional(String sortString) {
@@ -128,5 +139,8 @@ public class SortParserImpl implements SortParser {
 	private static final String _ORDER_BY_ASC = "asc";
 
 	private static final String _ORDER_BY_DESC = "desc";
+
+	private StructuredContentSingleEntitySchemaBasedEdmProvider
+		_structuredContentSingleEntitySchemaBasedEdmProvider;
 
 }

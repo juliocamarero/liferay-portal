@@ -14,15 +14,16 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
-import com.liferay.structured.content.apio.architect.entity.EntityField;
-
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.structured.content.apio.architect.entity.EntityField;
 
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * Provides the entity data model from the Indexed Entity (JournalArticle).
@@ -30,6 +31,10 @@ import java.util.stream.Stream;
  * @author Julio Camarero
  * @review
  */
+@Component(
+	immediate = true,
+	service = StructuredContentSingleEntitySchemaBasedEdmProvider.class
+)
 public class StructuredContentSingleEntitySchemaBasedEdmProvider
 	extends BaseSingleEntitySchemaBasedEdmProvider {
 
