@@ -593,37 +593,15 @@ public class StructuredContentNestedCollectionResource
 		);
 	}
 
-	private Optional<com.liferay.portal.kernel.search.Sort> _getSortOptional(
-		SortField sortField, Locale locale) {
-
-		String fieldName = null;
-
-		if (Objects.equals(sortField.getFieldName(), "title")) {
-			fieldName = Field.getSortableFieldName(
-				"localized_title_".concat(LocaleUtil.toLanguageId(locale)));
-		}
-		else {
-			return Optional.empty();
-		}
-
-		return Optional.of(
-			new com.liferay.portal.kernel.search.Sort(
-				fieldName, !sortField.isAscending()));
-	}
-
 	private List<com.liferay.portal.kernel.search.Sort> _getSorts(
 		List<SortField> sortFields, Locale locale) {
 
 		Stream<SortField> stream = sortFields.stream();
 
 		return stream.map(
-			sortField -> _getSortOptional(sortField, locale)
-		).flatMap(
-			sortFieldOptional -> sortFieldOptional.map(
-				Stream::of
-			).orElseGet(
-				Stream::empty
-			)
+			sortField -> new com.liferay.portal.kernel.search.Sort(
+				sortField.getSortableFieldName(locale),
+				!sortField.isAscending())
 		).collect(
 			Collectors.toList()
 		);

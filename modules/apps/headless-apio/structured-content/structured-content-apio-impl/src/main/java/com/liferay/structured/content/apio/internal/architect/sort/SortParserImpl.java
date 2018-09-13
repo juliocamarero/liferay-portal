@@ -16,6 +16,7 @@ package com.liferay.structured.content.apio.internal.architect.sort;
 
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.structured.content.apio.architect.entity.EntityField;
 import com.liferay.structured.content.apio.architect.sort.InvalidSortException;
 import com.liferay.structured.content.apio.architect.sort.SortField;
 import com.liferay.structured.content.apio.architect.sort.SortParser;
@@ -23,6 +24,7 @@ import com.liferay.structured.content.apio.internal.architect.filter.StructuredC
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -109,7 +111,18 @@ public class SortParserImpl implements SortParser {
 			ascending = isAscending(list.get(1));
 		}
 
-		return Optional.of(new SortField(fieldName, ascending));
+		Map<String, EntityField> entityFieldsMap =
+			_structuredContentSingleEntitySchemaBasedEdmProvider.
+				getEntityFieldsMap();
+
+		EntityField entityField = entityFieldsMap.get(fieldName);
+
+		if (entityField == null) {
+			throw new InvalidSortException(
+				"Unable to sort by field: " + fieldName);
+		}
+
+		return Optional.of(new SortField(entityField, ascending));
 	}
 
 	protected boolean isAscending(String orderBy) {
