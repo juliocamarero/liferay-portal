@@ -14,10 +14,13 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,16 +54,16 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 		addSchema(
 			_createCsdlSchema(
 				"HypermediaRestApis", getName(),
-				_createCsdlProperties(getEntityTypesMap())));
+				_createCsdlProperties(getEntityFieldsMap())));
 	}
 
 	/**
-	 * Returns the properties of the entity type used to create the EDM.
+	 * Returns a Map with all the entity fields used to create the EDM.
 	 *
-	 * @return the entity type properties
+	 * @return the entity field map
 	 * @review
 	 */
-	public abstract Map<String, EntityType> getEntityTypesMap();
+	public abstract Map<String, EntityField> getEntityFieldsMap();
 
 	/**
 	 * Returns the name of the single entity type used to create the EDM.
@@ -70,10 +73,29 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	 */
 	public abstract String getName();
 
-	public enum EntityType {
+	/**
+	 * Returns an Optional sortable fieldName given a locale and a
+	 * entityFieldName.
+	 *
+	 * @param  locale - The Locale
+	 * @param  entityFieldName - The entityFieldName
+	 * @return a Optional of a sortable field name
+	 * @review
+	 */
+	public Optional<String> getSortableFieldName(
+		Locale locale, String entityFieldName) {
 
-		DATE, STRING
+		Map<String, EntityField> entityFieldsMap = getEntityFieldsMap();
 
+		EntityField entityField = entityFieldsMap.get(entityFieldName);
+
+		if (entityField == null) {
+			return Optional.empty();
+		}
+
+		Function<Locale, String> function = entityField.getFunction();
+
+		return Optional.of(function.apply(locale));
 	}
 
 	private CsdlEntityContainer _createCsdlEntityContainer(
@@ -111,33 +133,34 @@ public abstract class BaseSingleEntitySchemaBasedEdmProvider
 	}
 
 	private List<CsdlProperty> _createCsdlProperties(
-		Map<String, EntityType> entityTypesMap) {
+		Map<String, EntityField> entityFieldsMap) {
 
-		Set<Map.Entry<String, EntityType>> entries = entityTypesMap.entrySet();
+		Collection<EntityField> entityFields = entityFieldsMap.values();
 
-		Stream<Map.Entry<String, EntityType>> stream = entries.stream();
+		Stream<EntityField> stream = entityFields.stream();
 
 		return stream.map(
-			entry -> _createCsdlProperty(entry.getKey(), entry.getValue())
+			this::_createCsdlProperty
 		).collect(
 			Collectors.toList()
 		);
 	}
 
-	private CsdlProperty _createCsdlProperty(
-		String name, EntityType entityType) {
-
+	private CsdlProperty _createCsdlProperty(EntityField entityField) {
 		CsdlProperty csdlProperty = new CsdlProperty();
 
-		csdlProperty.setName(name);
+		csdlProperty.setName(entityField.getEntityFieldName());
 
 		FullQualifiedName fullQualifiedName = null;
 
-		if (entityType.equals(EntityType.STRING)) {
+		EntityField.EntityFieldType entityFieldType =
+			entityField.getEntityFieldType();
+
+		if (entityFieldType.equals(EntityField.EntityFieldType.STRING)) {
 			fullQualifiedName =
 				EdmPrimitiveTypeKind.String.getFullQualifiedName();
 		}
-		else if (entityType.equals(EntityType.DATE)) {
+		else if (entityFieldType.equals(EntityField.EntityFieldType.DATE)) {
 			fullQualifiedName =
 				EdmPrimitiveTypeKind.Date.getFullQualifiedName();
 		}

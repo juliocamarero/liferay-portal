@@ -14,11 +14,20 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import com.liferay.portal.kernel.search.BooleanClause;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.Query;
+import com.liferay.portal.kernel.search.QueryTerm;
+import com.liferay.portal.kernel.search.generic.TermQueryImpl;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.LiteralExpression;
 import com.liferay.structured.content.apio.internal.architect.filter.expression.LiteralExpressionImpl;
 
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,17 +40,28 @@ public class ExpressionVisitorImplTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testVisitBinaryExpressionOperationWithEqualOperation() {
-		String left = "title";
-		String right = "title1";
+		Map<String, EntityField> entityFieldsMap =
+			_baseSingleEntitySchemaBasedEdmProvider.getEntityFieldsMap();
 
-		Map<String, Object> filterFieldsMap =
-			(Map<String, Object>)_expressionVisitorImpl.
-				visitBinaryExpressionOperation(
-					BinaryExpression.Operation.EQ, left, right);
+		EntityField entityField = entityFieldsMap.get("title");
+
+		String value = "title1";
+
+		BooleanClause<Query> queryBooleanClause =
+			_expressionVisitorImpl.visitBinaryExpressionOperation(
+				BinaryExpression.Operation.EQ, entityField, value);
 
 		Assert.assertEquals(
-			filterFieldsMap.toString(), 1, filterFieldsMap.size());
-		Assert.assertEquals(right, filterFieldsMap.get(left));
+			BooleanClauseOccur.MUST,
+			queryBooleanClause.getBooleanClauseOccur());
+
+		TermQueryImpl termQuery = (TermQueryImpl)queryBooleanClause.getClause();
+
+		QueryTerm queryTerm = termQuery.getQueryTerm();
+
+		Assert.assertEquals(
+			entityField.getEntityFieldName(), queryTerm.getField());
+		Assert.assertEquals(value, queryTerm.getValue());
 	}
 
 	@Test
@@ -84,7 +104,32 @@ public class ExpressionVisitorImplTest {
 			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
 	}
 
+	private static final BaseSingleEntitySchemaBasedEdmProvider
+		_baseSingleEntitySchemaBasedEdmProvider =
+			new BaseSingleEntitySchemaBasedEdmProvider() {
+
+				@Override
+				public Map<String, EntityField> getEntityFieldsMap() {
+					return Stream.of(
+						new EntityField(
+							"title", EntityField.EntityFieldType.STRING,
+							locale -> "title")
+					).collect(
+						Collectors.toMap(
+							EntityField::getEntityFieldName,
+							Function.identity())
+					);
+				}
+
+				@Override
+				public String getName() {
+					return "SomeEntityName";
+				}
+
+			};
+
 	private static final ExpressionVisitorImpl _expressionVisitorImpl =
-		new ExpressionVisitorImpl();
+		new ExpressionVisitorImpl(
+			LocaleUtil.getDefault(), _baseSingleEntitySchemaBasedEdmProvider);
 
 }
