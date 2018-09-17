@@ -4,10 +4,13 @@ Bundle-Version: 1.0.0
 Import-Package:\
 	!com.fasterxml.jackson.*,\
 	\
+	!com.jayway.jsonpath.*,\
+	\
 	!javax.validation.*,\
 	\
 	!org.apache.aries.blueprint,\
 	!org.apache.aries.blueprint.*,\
+	!org.apache.http.*,\
 	\
 	!org.osgi.service.blueprint.*,\
 	\

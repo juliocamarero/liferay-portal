@@ -9,7 +9,9 @@ dependencies {
 	compileOnly group: "org.apache.cxf", name: "cxf-rt-frontend-jaxrs", version: "3.2.4"
 	compileOnly group: "org.assertj", name: "assertj-core", version: "3.10.0"
 
+	testIntegrationCompile group: "com.jayway.jsonpath", name: "json-path", version: "2.2.0"
 	testIntegrationCompile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
+	testIntegrationCompile group: "org.apache.httpcomponents", name: "httpclient", version: "4.3.5"
 	testIntegrationCompile project(":apps:apio-architect:apio-architect-api")
 	testIntegrationCompile project(":apps:dynamic-data-mapping:dynamic-data-mapping-api")
 	testIntegrationCompile project(":apps:dynamic-data-mapping:dynamic-data-mapping-test-util")
