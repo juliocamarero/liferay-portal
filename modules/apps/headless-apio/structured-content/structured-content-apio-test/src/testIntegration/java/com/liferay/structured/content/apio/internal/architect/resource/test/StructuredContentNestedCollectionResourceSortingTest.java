@@ -118,7 +118,7 @@ public class StructuredContentNestedCollectionResourceSortingTest
 	}
 
 	@Test
-	public void testGetPageItemsSortByDateMCreatedDesc() throws Exception {
+	public void testGetPageItemsSortByDateCreatedDesc() throws Exception {
 		Map<Locale, String> stringMap1 = new HashMap<>();
 
 		stringMap1.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
