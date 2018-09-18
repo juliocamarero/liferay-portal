@@ -73,6 +73,186 @@ public class StructuredContentNestedCollectionResourceSortingTest
 	}
 
 	@Test
+	public void testGetPageItemsSortByDateCreatedAsc() throws Exception {
+		Map<Locale, String> stringMap1 = new HashMap<>();
+
+		stringMap1.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle1 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap1, stringMap1,
+			stringMap1, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		Thread.sleep(1000);
+
+		Map<Locale, String> stringMap2 = new HashMap<>();
+
+		stringMap2.put(LocaleUtil.getDefault(), "title2");
+
+		JournalArticle journalArticle2 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap2, stringMap2,
+			stringMap2, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(),
+			new Sort(_sortParser.parse("dateCreated:asc")));
+
+		Assert.assertEquals(2, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertEquals(journalArticle1, items.get(0));
+		Assert.assertEquals(journalArticle2, items.get(1));
+	}
+
+	@Test
+	public void testGetPageItemsSortByDateMCreatedDesc() throws Exception {
+		Map<Locale, String> stringMap1 = new HashMap<>();
+
+		stringMap1.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle1 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap1, stringMap1,
+			stringMap1, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		Thread.sleep(1000);
+
+		Map<Locale, String> stringMap2 = new HashMap<>();
+
+		stringMap2.put(LocaleUtil.getDefault(), "title2");
+
+		JournalArticle journalArticle2 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap2, stringMap2,
+			stringMap2, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(),
+			new Sort(_sortParser.parse("dateCreated:desc")));
+
+		Assert.assertEquals(2, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertEquals(journalArticle1, items.get(1));
+		Assert.assertEquals(journalArticle2, items.get(0));
+	}
+
+	@Test
+	public void testGetPageItemsSortByDateModifiedAsc() throws Exception {
+		Map<Locale, String> stringMap1 = new HashMap<>();
+
+		stringMap1.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle1 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap1, stringMap1,
+			stringMap1, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		Thread.sleep(1000);
+
+		Map<Locale, String> stringMap2 = new HashMap<>();
+
+		stringMap2.put(LocaleUtil.getDefault(), "title2");
+
+		JournalArticle journalArticle2 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap2, stringMap2,
+			stringMap2, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(),
+			new Sort(_sortParser.parse("dateModified:asc")));
+
+		Assert.assertEquals(2, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertEquals(journalArticle1, items.get(0));
+		Assert.assertEquals(journalArticle2, items.get(1));
+	}
+
+	@Test
+	public void testGetPageItemsSortByDateModifiedDesc() throws Exception {
+		Map<Locale, String> stringMap1 = new HashMap<>();
+
+		stringMap1.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalArticle journalArticle1 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap1, stringMap1,
+			stringMap1, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		Thread.sleep(1000);
+
+		Map<Locale, String> stringMap2 = new HashMap<>();
+
+		stringMap2.put(LocaleUtil.getDefault(), "title2");
+
+		JournalArticle journalArticle2 = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT,
+			RandomTestUtil.randomString(), false, stringMap2, stringMap2,
+			stringMap2, null, LocaleUtil.getDefault(), null, true, true,
+			serviceContext);
+
+		PageItems<JournalArticle> pageItems = getPageItems(
+			PaginationTestUtil.of(10, 1), _group.getGroupId(),
+			getThemeDisplay(_group, LocaleUtil.getDefault()),
+			Filter.emptyFilter(),
+			new Sort(_sortParser.parse("dateModified:desc")));
+
+		Assert.assertEquals(2, pageItems.getTotalCount());
+
+		List<JournalArticle> items = (List<JournalArticle>)pageItems.getItems();
+
+		Assert.assertEquals(journalArticle1, items.get(1));
+		Assert.assertEquals(journalArticle2, items.get(0));
+	}
+
+	@Test
 	public void testGetPageItemsSortByDatePublishedAsc() throws Exception {
 		Map<Locale, String> stringMap1 = new HashMap<>();
 
