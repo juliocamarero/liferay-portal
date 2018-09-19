@@ -54,7 +54,8 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		BinaryExpression.Operation operation, Object left, Object right) {
 
 		Optional<BooleanClause<Query>> booleanClauseOptional =
-			_getBooleanClause(operation, (EntityField)left, right, _locale);
+			_getBooleanClauseOptional(
+				operation, (EntityField)left, right, _locale);
 
 		return booleanClauseOptional.orElseThrow(
 			() -> new UnsupportedOperationException(
@@ -84,7 +85,7 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		return entityFieldsMap.get(resourcePath.get(0));
 	}
 
-	private Optional<BooleanClause<Query>> _getBooleanClause(
+	private Optional<BooleanClause<Query>> _getBooleanClauseOptional(
 		BinaryExpression.Operation operation, EntityField entityField,
 		Object fieldValue, Locale locale) {
 
