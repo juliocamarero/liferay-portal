@@ -21,9 +21,6 @@ import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.search.BooleanClause;
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryTerm;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -70,25 +67,6 @@ public class StructuredContentNestedCollectionResourceFilteringTest
 	@Before
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
-	}
-
-	@Test
-	public void testGetBooleanClauseWithExistingProperty() throws Exception {
-		BooleanClause<Query> queryBooleanClause = getBooleanClause(
-			new Filter(_filterParser.parse("title eq 'Title Value'")),
-			LocaleUtil.US);
-
-		Assert.assertEquals(
-			BooleanClauseOccur.MUST,
-			queryBooleanClause.getBooleanClauseOccur());
-
-		TermQueryImpl termQuery = (TermQueryImpl)queryBooleanClause.getClause();
-
-		QueryTerm queryTerm = termQuery.getQueryTerm();
-
-		Assert.assertEquals(
-			"localized_title_en_US_sortable", queryTerm.getField());
-		Assert.assertEquals("title value", queryTerm.getValue());
 	}
 
 	@Test
@@ -653,6 +631,19 @@ public class StructuredContentNestedCollectionResourceFilteringTest
 
 		Assert.assertTrue(journalArticles.contains(journalArticle1));
 		Assert.assertTrue(journalArticles.contains(journalArticle2));
+	}
+
+	@Test
+	public void testGetQueryWithExistingProperty() throws Exception {
+		TermQueryImpl termQuery = (TermQueryImpl)getQuery(
+			new Filter(_filterParser.parse("title eq 'Title Value'")),
+			LocaleUtil.US);
+
+		QueryTerm queryTerm = termQuery.getQueryTerm();
+
+		Assert.assertEquals(
+			"localized_title_en_US_sortable", queryTerm.getField());
+		Assert.assertEquals("title value", queryTerm.getValue());
 	}
 
 	@Inject

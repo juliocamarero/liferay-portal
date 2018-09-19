@@ -56,6 +56,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.ClassName;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.search.BooleanClause;
+import com.liferay.portal.kernel.search.BooleanClauseFactoryUtil;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -236,9 +238,7 @@ public class StructuredContentNestedCollectionResource
 	}
 
 	@SuppressWarnings("unchecked")
-	protected BooleanClause<Query> getBooleanClause(
-		Filter filter, Locale locale) {
-
+	protected Query getQuery(Filter filter, Locale locale) {
 		if ((filter == null) || (filter == Filter.emptyFilter())) {
 			return null;
 		}
@@ -246,7 +246,7 @@ public class StructuredContentNestedCollectionResource
 		try {
 			Expression expression = filter.getExpression();
 
-			return (BooleanClause<Query>)expression.accept(
+			return (Query)expression.accept(
 				new ExpressionVisitorImpl(
 					locale,
 					_structuredContentSingleEntitySchemaBasedEdmProvider));
@@ -318,11 +318,14 @@ public class StructuredContentNestedCollectionResource
 		searchContext.setAttribute(
 			Field.STATUS, WorkflowConstants.STATUS_APPROVED);
 
-		BooleanClause<Query> booleanClause = getBooleanClause(filter, locale);
+		Query query = getQuery(filter, locale);
 
-		if (booleanClause != null) {
+		if (query != null) {
 			searchContext.setBooleanClauses(
-				new BooleanClause[] {booleanClause});
+				new BooleanClause[] {
+					BooleanClauseFactoryUtil.create(
+						query, BooleanClauseOccur.MUST.getName())
+				});
 		}
 
 		searchContext.setCompanyId(companyId);
