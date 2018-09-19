@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.structured.content.apio.external.test;
+package com.liferay.structured.content.apio.client.test;
 
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.structured.content.apio.external.util.test.HttpTestUtil;
-import com.liferay.structured.content.apio.external.util.test.JSONTestUtil;
+import com.liferay.structured.content.apio.client.util.test.HttpTestUtil;
+import com.liferay.structured.content.apio.client.util.test.JSONTestUtil;
 
 import java.io.IOException;
 
@@ -139,10 +139,10 @@ public class StructuredContentApioTest {
 		return (String)jsonObject.get("@id");
 	}
 
-	private JSONObject _getManagesJSONObject(String s) throws JSONException {
+	private JSONObject _getManagesJSONObject(String schema) throws JSONException {
 		JSONObject managesJSONObject = new JSONObject();
 
-		managesJSONObject.put("object", "schema:" + s);
+		managesJSONObject.put("object", "schema:" + schema);
 		managesJSONObject.put("property", "rdf:type");
 
 		return managesJSONObject;

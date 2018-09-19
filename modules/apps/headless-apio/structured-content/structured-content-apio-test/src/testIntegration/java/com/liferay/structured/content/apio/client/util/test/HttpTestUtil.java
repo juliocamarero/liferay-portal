@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.structured.content.apio.external.util.test;
+package com.liferay.structured.content.apio.client.util.test;
 
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.StringUtil;

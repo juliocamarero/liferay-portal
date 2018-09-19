@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.structured.content.apio.external.util.test;
+package com.liferay.structured.content.apio.client.util.test;
 
 import java.util.Optional;
 
