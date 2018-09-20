@@ -9,7 +9,11 @@ Import-Package:\
 	!org.apache.aries.blueprint,\
 	!org.apache.aries.blueprint.*,\
 	\
+	!org.json.*,\
+	\
 	!org.osgi.service.blueprint.*,\
+	\
+	!org.skyscreamer.jsonassert.*,\
 	\
 	*
 -includeresource:\
