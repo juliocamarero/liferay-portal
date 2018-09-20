@@ -14,7 +14,6 @@
 
 package com.liferay.structured.content.apio.client.test;
 
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.structured.content.apio.client.util.test.HttpTestUtil;
 import com.liferay.structured.content.apio.client.util.test.JSONTestUtil;
 
@@ -36,9 +35,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-
 /**
  * @author Ruben Pulido
  */
@@ -48,142 +44,108 @@ public class StructuredContentApioTest {
 
 	@Test
 	public void testContentSpaceExistsInRootEndpoint() throws Exception {
-		String contentSpaceURLString = _getManagesContentSpacesURL();
+		String contentSpacesHref = _getContentSpacesHref();
 
 		Assert.assertNotNull(
 			"Content space URL should not be empty in root end point",
-			contentSpaceURLString);
+			contentSpacesHref);
 	}
 
 	@Test
-	public void testStructuredContentsEndpointIsRegistered() throws Exception {
-		String contentSpaceURLString = _getManagesContentSpacesURL();
+	public void testLiferayContentSpaceStructuredContentsContainsSelfLink()
+		throws Exception {
 
-		String structuredContentsUrlString = _getManagesStructuredContentURL(
-			contentSpaceURLString, "Liferay");
+		String contentSpacesHref = _getContentSpacesHref();
+
+		String structuredContentsHref = _getStructuredContentsHref(
+			contentSpacesHref, "Liferay");
 
 		String structuredContentsResponse =
 			HttpTestUtil.getResponseFromURLWithBasicAuth(
-				structuredContentsUrlString);
+				structuredContentsHref);
 
 		Assert.assertNotNull(
-			"Structured contents Response should not be empty",
+			"Structured contents response should not be empty",
 			structuredContentsResponse);
 
-		JSONObject structuredContentsResponseJSONObject = new JSONObject(
+		JSONObject responseJSONObject = new JSONObject(
 			structuredContentsResponse);
+
+		String href = _getHref(responseJSONObject, "self");
 
 		Assert.assertNotNull(
-			"Structured contents Response id should not be empty",
-			structuredContentsResponseJSONObject.get("@id"));
-
-		JSONObject managesStructuredContentJSONObject = _getManagesJSONObject(
-			"StructuredContent");
-
-		JSONObject manages =
-			(JSONObject)structuredContentsResponseJSONObject.get("manages");
-
-		JSONAssert.assertEquals(
-			managesStructuredContentJSONObject, manages,
-			JSONCompareMode.LENIENT);
+			"Structured contents self link href should not be empty", href);
 	}
 
 	@Test
 	public void testStructuredContentsExistsInContentSpaceEndpoint()
 		throws Exception {
 
-		String contentSpaceURLString = _getManagesContentSpacesURL();
+		String contentSpacesHref = _getContentSpacesHref();
 
 		String contentSpaceName = "Liferay";
 
-		String structuredContentsUrlString = _getManagesStructuredContentURL(
-			contentSpaceURLString, contentSpaceName);
+		String structuredContentsHref = _getStructuredContentsHref(
+			contentSpacesHref, contentSpaceName);
 
 		Assert.assertNotNull(
-			"Structured contents URL should not be empty in content space " +
+			"Structured contents href should not be empty in content space " +
 				"with name " + contentSpaceName,
-			structuredContentsUrlString);
+			structuredContentsHref);
 	}
 
-	private String _getManagesContentSpacesURL() throws Exception {
+	private String _getContentSpacesHref() throws Exception {
 		URL apiURL = new URL(_url, "/o/api");
 
-		JSONObject contentSpaceExpectedJSONObject = new JSONObject();
+		String apiResponse = HttpTestUtil.getResponseFromURLWithBasicAuth(
+			apiURL.toString());
 
-		JSONObject managesJSONObject = _getManagesJSONObject("ContentSpace");
+		JSONObject responseJSONObject = new JSONObject(apiResponse);
 
-		contentSpaceExpectedJSONObject.put("manages", managesJSONObject);
-
-		contentSpaceExpectedJSONObject.put(
-			"@type", new JSONArray("[Collection]"));
-
-		String apiResponseString = StringUtil.read(apiURL.openStream());
-
-		JSONObject responseJSONObject = new JSONObject(apiResponseString);
-
-		JSONArray collectionJSONArray = (JSONArray)responseJSONObject.get(
-			"collection");
-
-		Optional<JSONObject> jsonObjectOptional =
-			JSONTestUtil.getJsonObjectFromJsonArrayOptional(
-				contentSpaceExpectedJSONObject, collectionJSONArray);
-
-		if (!jsonObjectOptional.isPresent()) {
-			throw new Exception(
-				"Expected JSON object " + contentSpaceExpectedJSONObject +
-					" not found in response " + apiResponseString);
-		}
-
-		JSONObject jsonObject = jsonObjectOptional.get();
-
-		return (String)jsonObject.get("@id");
+		return _getHref(responseJSONObject, "content-space");
 	}
 
-	private JSONObject _getManagesJSONObject(String schema) throws JSONException {
-		JSONObject managesJSONObject = new JSONObject();
+	private String _getHref(JSONObject jsonObject, String linkName)
+		throws JSONException {
 
-		managesJSONObject.put("object", "schema:" + schema);
-		managesJSONObject.put("property", "rdf:type");
+		JSONObject linksJSONObject = (JSONObject)jsonObject.get("_links");
 
-		return managesJSONObject;
+		JSONObject hrefJSONObject = (JSONObject)linksJSONObject.get(linkName);
+
+		return (String)hrefJSONObject.get("href");
 	}
 
-	private String _getManagesStructuredContentURL(
-			String contentSpaceURLString, String contentSpaceName)
+	private String _getStructuredContentsHref(
+			String contentSpaceHref, String contentSpaceName)
 		throws IOException, JSONException {
 
 		String contentSpaceResponse =
-			HttpTestUtil.getResponseFromURLWithBasicAuth(contentSpaceURLString);
+			HttpTestUtil.getResponseFromURLWithBasicAuth(contentSpaceHref);
 
 		JSONObject contentSpaceResponseJSONObject = new JSONObject(
 			contentSpaceResponse);
 
-		JSONArray memberJSONArray =
-			(JSONArray)contentSpaceResponseJSONObject.get("member");
+		JSONObject embeddedJSONObject =
+			(JSONObject)contentSpaceResponseJSONObject.get("_embedded");
+
+		JSONArray jsonArray = (JSONArray)embeddedJSONObject.get("ContentSpace");
 
 		Assert.assertTrue(
-			"Member JSON array length should be greater than 0",
-			memberJSONArray.length() > 0);
+			"JSON array length should be greater than 0",
+			jsonArray.length() > 0);
 
-		JSONObject jsonObject1 = new JSONObject();
+		JSONObject expectedContentSpaceJSONObject = new JSONObject();
 
-		jsonObject1.put("name", contentSpaceName);
+		expectedContentSpaceJSONObject.put("name", contentSpaceName);
 
-		Optional<JSONObject> liferayContentSpaceJSONObjectOptional =
+		Optional<JSONObject> contentSpaceJSONObjectOptional =
 			JSONTestUtil.getJsonObjectFromJsonArrayOptional(
-				jsonObject1, memberJSONArray);
+				expectedContentSpaceJSONObject, jsonArray);
 
-		JSONObject liferayContentSpaceJSONObject =
-			liferayContentSpaceJSONObjectOptional.get();
+		JSONObject contentSpaceJSONObject =
+			contentSpaceJSONObjectOptional.get();
 
-		String structuredContentsUrlString =
-			liferayContentSpaceJSONObject.getString("structuredContents");
-
-		Assert.assertNotNull(
-			"Structured contents URL should be present",
-			structuredContentsUrlString);
-
-		return structuredContentsUrlString;
+		return _getHref(contentSpaceJSONObject, "structuredContents");
 	}
 
 	@ArquillianResource

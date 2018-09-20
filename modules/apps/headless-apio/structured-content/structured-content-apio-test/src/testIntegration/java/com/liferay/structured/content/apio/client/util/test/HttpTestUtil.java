@@ -50,6 +50,8 @@ public class HttpTestUtil {
 
 		request.setHeader(HttpHeaders.AUTHORIZATION, authorizationHeader);
 
+		request.setHeader(HttpHeaders.ACCEPT, "application/hal+json");
+
 		HttpResponse httpResponse = httpClient.execute(request);
 
 		HttpEntity httpEntity = httpResponse.getEntity();
