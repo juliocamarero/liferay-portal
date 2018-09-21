@@ -16,10 +16,10 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.Query;
-import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-import com.liferay.portal.kernel.search.generic.TermQueryImpl;
-import com.liferay.portal.kernel.search.generic.TermRangeQueryImpl;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.search.filter.RangeTermFilter;
+import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.structured.content.apio.architect.entity.EntityField;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
@@ -49,13 +49,13 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 	}
 
 	@Override
-	public Query visitBinaryExpressionOperation(
+	public Filter visitBinaryExpressionOperation(
 		BinaryExpression.Operation operation, Object left, Object right) {
 
-		Optional<Query> queryOptional = _getQueryOptional(
+		Optional<Filter> filterOptional = _getFilterOptional(
 			operation, left, right, _locale);
 
-		return queryOptional.orElseThrow(
+		return filterOptional.orElseThrow(
 			() -> new UnsupportedOperationException(
 				"Unsupported method visitBinaryExpressionOperation with " +
 					"operation " + operation));
@@ -83,73 +83,73 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		return entityFieldsMap.get(resourcePath.get(0));
 	}
 
-	private Query _getANDQuery(Query leftQuery, Query rightQuery) {
-		BooleanQueryImpl booleanQuery = new BooleanQueryImpl();
+	private Filter _getANDFilter(Filter leftFilter, Filter rightFilter) {
+		BooleanFilter booleanFilter = new BooleanFilter();
 
-		booleanQuery.add(leftQuery, BooleanClauseOccur.MUST);
-		booleanQuery.add(rightQuery, BooleanClauseOccur.MUST);
+		booleanFilter.add(leftFilter, BooleanClauseOccur.MUST);
+		booleanFilter.add(rightFilter, BooleanClauseOccur.MUST);
 
-		return booleanQuery;
+		return booleanFilter;
 	}
 
-	private Query _getEQQuery(
+	private Filter _getEQFilter(
 		EntityField entityField, Object fieldValue, Locale locale) {
 
-		return new TermQueryImpl(
+		return new TermFilter(
 			entityField.getSortableName(locale), String.valueOf(fieldValue));
 	}
 
-	private Query _getGEQuery(
-		EntityField entityField, Object fieldValue, Locale locale) {
-
-		return new TermRangeQueryImpl(
-			entityField.getSortableName(locale), String.valueOf(fieldValue),
-			null, true, true);
-	}
-
-	private Query _getLEQuery(
-		EntityField entityField, Object fieldValue, Locale locale) {
-
-		return new TermRangeQueryImpl(
-			entityField.getSortableName(locale), null,
-			String.valueOf(fieldValue), false, true);
-	}
-
-	private Query _getORQuery(Query leftQuery, Query rightQuery) {
-		BooleanQueryImpl booleanQuery = new BooleanQueryImpl();
-
-		booleanQuery.add(leftQuery, BooleanClauseOccur.SHOULD);
-		booleanQuery.add(rightQuery, BooleanClauseOccur.SHOULD);
-
-		return booleanQuery;
-	}
-
-	private Optional<Query> _getQueryOptional(
+	private Optional<Filter> _getFilterOptional(
 		BinaryExpression.Operation operation, Object left, Object right,
 		Locale locale) {
 
-		Query query = null;
+		Filter filter = null;
 
 		if (Objects.equals(BinaryExpression.Operation.AND, operation)) {
-			query = _getANDQuery((Query)left, (Query)right);
+			filter = _getANDFilter((Filter)left, (Filter)right);
 		}
 		else if (Objects.equals(BinaryExpression.Operation.EQ, operation)) {
-			query = _getEQQuery((EntityField)left, right, locale);
+			filter = _getEQFilter((EntityField)left, right, locale);
 		}
 		else if (Objects.equals(BinaryExpression.Operation.GE, operation)) {
-			query = _getGEQuery((EntityField)left, right, locale);
+			filter = _getGEFilter((EntityField)left, right, locale);
 		}
 		else if (Objects.equals(BinaryExpression.Operation.LE, operation)) {
-			query = _getLEQuery((EntityField)left, right, locale);
+			filter = _getLEFilter((EntityField)left, right, locale);
 		}
 		else if (Objects.equals(BinaryExpression.Operation.OR, operation)) {
-			query = _getORQuery((Query)left, (Query)right);
+			filter = _getORFilter((Filter)left, (Filter)right);
 		}
 		else {
 			return Optional.empty();
 		}
 
-		return Optional.of(query);
+		return Optional.of(filter);
+	}
+
+	private Filter _getGEFilter(
+		EntityField entityField, Object fieldValue, Locale locale) {
+
+		return new RangeTermFilter(
+			entityField.getSortableName(locale), true, true,
+			String.valueOf(fieldValue), null);
+	}
+
+	private Filter _getLEFilter(
+		EntityField entityField, Object fieldValue, Locale locale) {
+
+		return new RangeTermFilter(
+			entityField.getSortableName(locale), false, true, null,
+			String.valueOf(fieldValue));
+	}
+
+	private Filter _getORFilter(Filter leftFilter, Filter rightFilter) {
+		BooleanFilter booleanFilter = new BooleanFilter();
+
+		booleanFilter.add(leftFilter, BooleanClauseOccur.SHOULD);
+		booleanFilter.add(rightFilter, BooleanClauseOccur.SHOULD);
+
+		return booleanFilter;
 	}
 
 	private Object _normalizeLiteral(String literal) {

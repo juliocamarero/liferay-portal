@@ -21,7 +21,6 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleWrapper;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.test.rule.Inject;
@@ -80,16 +79,19 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 			filter, sort);
 	}
 
-	protected Query getQuery(Filter filter, Locale locale) throws Exception {
+	protected com.liferay.portal.kernel.search.filter.Filter getSearchFilter(
+		Filter filter, Locale locale) throws Exception {
+
 		Class<? extends NestedCollectionResource> clazz =
 			_nestedCollectionResource.getClass();
 
 		Method method = clazz.getDeclaredMethod(
-			"getQuery", Filter.class, Locale.class);
+			"_getSearchFilter", Filter.class, Locale.class);
 
 		method.setAccessible(true);
 
-		return (Query)method.invoke(_nestedCollectionResource, filter, locale);
+		return (com.liferay.portal.kernel.search.filter.Filter)method.invoke(
+			_nestedCollectionResource, filter, locale);
 	}
 
 	protected ThemeDisplay getThemeDisplay(Group group, Locale locale)

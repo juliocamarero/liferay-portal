@@ -62,7 +62,6 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.service.ClassNameService;
@@ -238,7 +237,9 @@ public class StructuredContentNestedCollectionResource
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Query getQuery(Filter filter, Locale locale) {
+	protected com.liferay.portal.kernel.search.filter.Filter getSearchFilter(
+		Filter filter, Locale locale) {
+
 		if ((filter == null) || (filter == Filter.emptyFilter())) {
 			return null;
 		}
@@ -246,10 +247,11 @@ public class StructuredContentNestedCollectionResource
 		try {
 			Expression expression = filter.getExpression();
 
-			return (Query)expression.accept(
-				new ExpressionVisitorImpl(
-					locale,
-					_structuredContentSingleEntitySchemaBasedEdmProvider));
+			return (com.liferay.portal.kernel.search.filter.Filter)
+				expression.accept(
+					new ExpressionVisitorImpl(
+						locale,
+						_structuredContentSingleEntitySchemaBasedEdmProvider));
 		}
 		catch (ExpressionVisitException eve) {
 			throw new InvalidFilterException(
@@ -318,13 +320,14 @@ public class StructuredContentNestedCollectionResource
 		searchContext.setAttribute(
 			Field.STATUS, WorkflowConstants.STATUS_APPROVED);
 
-		Query query = getQuery(filter, locale);
+		com.liferay.portal.kernel.search.filter.Filter searchFilter =
+			getSearchFilter(filter, locale);
 
-		if (query != null) {
+		if (searchFilter != null) {
 			searchContext.setBooleanClauses(
 				new BooleanClause[] {
-					BooleanClauseFactoryUtil.create(
-						query, BooleanClauseOccur.MUST.getName())
+					BooleanClauseFactoryUtil.createFilter(
+						searchFilter, BooleanClauseOccur.MUST)
 				});
 		}
 
