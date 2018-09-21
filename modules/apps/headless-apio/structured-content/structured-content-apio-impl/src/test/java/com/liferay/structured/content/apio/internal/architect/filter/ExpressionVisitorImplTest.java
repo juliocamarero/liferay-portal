@@ -16,16 +16,14 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
-import com.liferay.portal.kernel.search.Query;
-import com.liferay.portal.kernel.search.QueryTerm;
-import com.liferay.portal.kernel.search.TermRangeQuery;
-import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-import com.liferay.portal.kernel.search.generic.TermQueryImpl;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.search.filter.RangeTermFilter;
+import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structured.content.apio.architect.entity.EntityField;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.LiteralExpression;
-import com.liferay.structured.content.apio.internal.architect.filter.expression.LiteralExpressionImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +31,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.liferay.structured.content.apio.internal.architect.filter.expression.LiteralExpressionImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,33 +42,34 @@ public class ExpressionVisitorImplTest {
 
 	@Test
 	public void testVisitBinaryExpressionOperationWithAndOperation() {
-		TermQueryImpl leftTermQuery = new TermQueryImpl("title", "title1");
+		TermFilter leftTermFilter = new TermFilter("title", "title1");
 
-		TermQueryImpl rightTermQuery = new TermQueryImpl("title", "title2");
+		TermFilter rightTermFilter = new TermFilter("title", "title2");
 
-		BooleanQueryImpl booleanQuery =
-			(BooleanQueryImpl)_expressionVisitorImpl.
+		BooleanFilter booleanFilter =
+			(BooleanFilter)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
-					BinaryExpression.Operation.AND, leftTermQuery,
-					rightTermQuery);
+					BinaryExpression.Operation.AND, leftTermFilter,
+					rightTermFilter);
 
-		Assert.assertTrue(booleanQuery.hasClauses());
+		Assert.assertTrue(booleanFilter.hasClauses());
 
-		List<BooleanClause<Query>> booleanClauses = booleanQuery.clauses();
+		List<BooleanClause<Filter>> booleanClauses =
+			booleanFilter.getMustBooleanClauses();
 
 		Assert.assertEquals(
 			booleanClauses.toString(), 2, booleanClauses.size());
 
-		BooleanClause<Query> queryBooleanClause1 = booleanClauses.get(0);
+		BooleanClause<Filter> queryBooleanClause1 = booleanClauses.get(0);
 
-		Assert.assertEquals(leftTermQuery, queryBooleanClause1.getClause());
+		Assert.assertEquals(leftTermFilter, queryBooleanClause1.getClause());
 		Assert.assertEquals(
 			BooleanClauseOccur.MUST,
 			queryBooleanClause1.getBooleanClauseOccur());
 
-		BooleanClause<Query> queryBooleanClause2 = booleanClauses.get(1);
+		BooleanClause<Filter> queryBooleanClause2 = booleanClauses.get(1);
 
-		Assert.assertEquals(rightTermQuery, queryBooleanClause2.getClause());
+		Assert.assertEquals(rightTermFilter, queryBooleanClause2.getClause());
 		Assert.assertEquals(
 			BooleanClauseOccur.MUST,
 			queryBooleanClause2.getBooleanClauseOccur());
@@ -86,15 +86,13 @@ public class ExpressionVisitorImplTest {
 
 		String value = "title1";
 
-		TermQueryImpl termQuery =
-			(TermQueryImpl)_expressionVisitorImpl.
+		TermFilter termFilter =
+			(TermFilter)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
 					BinaryExpression.Operation.EQ, entityField, value);
 
-		QueryTerm queryTerm = termQuery.getQueryTerm();
-
-		Assert.assertEquals(entityField.getName(), queryTerm.getField());
-		Assert.assertEquals(value, queryTerm.getValue());
+		Assert.assertEquals(entityField.getName(), termFilter.getField());
+		Assert.assertEquals(value, termFilter.getValue());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,14 +106,14 @@ public class ExpressionVisitorImplTest {
 
 		String value = "title1";
 
-		TermRangeQuery termRangeQuery =
-			(TermRangeQuery)_expressionVisitorImpl.
+		RangeTermFilter rangeTermFilter =
+			(RangeTermFilter)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
 					BinaryExpression.Operation.GE, entityField, value);
 
-		Assert.assertEquals(entityField.getName(), termRangeQuery.getField());
-		Assert.assertEquals(value, termRangeQuery.getLowerTerm());
-		Assert.assertNull(termRangeQuery.getUpperTerm());
+		Assert.assertEquals(entityField.getName(), rangeTermFilter.getField());
+		Assert.assertEquals(value, rangeTermFilter.getLowerBound());
+		Assert.assertNull(rangeTermFilter.getUpperBound());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -129,45 +127,46 @@ public class ExpressionVisitorImplTest {
 
 		String value = "title1";
 
-		TermRangeQuery termRangeQuery =
-			(TermRangeQuery)_expressionVisitorImpl.
+		RangeTermFilter rangeTermFilter =
+			(RangeTermFilter)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
 					BinaryExpression.Operation.LE, entityField, value);
 
-		Assert.assertEquals(entityField.getName(), termRangeQuery.getField());
-		Assert.assertEquals(value, termRangeQuery.getUpperTerm());
-		Assert.assertNull(termRangeQuery.getLowerTerm());
+		Assert.assertEquals(entityField.getName(), rangeTermFilter.getField());
+		Assert.assertEquals(value, rangeTermFilter.getUpperBound());
+		Assert.assertNull(rangeTermFilter.getLowerBound());
 	}
 
 	@Test
 	public void testVisitBinaryExpressionOperationWithOrOperation() {
-		TermQueryImpl leftTermQuery = new TermQueryImpl("title", "title1");
+		TermFilter leftTermFilter = new TermFilter("title", "title1");
 
-		TermQueryImpl rightTermQuery = new TermQueryImpl("title", "title2");
+		TermFilter rightTermFilter = new TermFilter("title", "title2");
 
-		BooleanQueryImpl booleanQuery =
-			(BooleanQueryImpl)_expressionVisitorImpl.
+		BooleanFilter booleanFilter =
+			(BooleanFilter)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
-					BinaryExpression.Operation.OR, leftTermQuery,
-					rightTermQuery);
+					BinaryExpression.Operation.OR, leftTermFilter,
+					rightTermFilter);
 
-		Assert.assertTrue(booleanQuery.hasClauses());
+		Assert.assertTrue(booleanFilter.hasClauses());
 
-		List<BooleanClause<Query>> booleanClauses = booleanQuery.clauses();
+		List<BooleanClause<Filter>> booleanClauses =
+			booleanFilter.getShouldBooleanClauses();
 
 		Assert.assertEquals(
 			booleanClauses.toString(), 2, booleanClauses.size());
 
-		BooleanClause<Query> queryBooleanClause1 = booleanClauses.get(0);
+		BooleanClause<Filter> queryBooleanClause1 = booleanClauses.get(0);
 
-		Assert.assertEquals(leftTermQuery, queryBooleanClause1.getClause());
+		Assert.assertEquals(leftTermFilter, queryBooleanClause1.getClause());
 		Assert.assertEquals(
 			BooleanClauseOccur.SHOULD,
 			queryBooleanClause1.getBooleanClauseOccur());
 
-		BooleanClause<Query> queryBooleanClause2 = booleanClauses.get(1);
+		BooleanClause<Filter> queryBooleanClause2 = booleanClauses.get(1);
 
-		Assert.assertEquals(rightTermQuery, queryBooleanClause2.getClause());
+		Assert.assertEquals(rightTermFilter, queryBooleanClause2.getClause());
 		Assert.assertEquals(
 			BooleanClauseOccur.SHOULD,
 			queryBooleanClause2.getBooleanClauseOccur());
