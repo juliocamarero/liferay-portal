@@ -39,7 +39,7 @@
 				<plugin>
 					<groupId>com.liferay</groupId>
 					<artifactId>com.liferay.source.formatter</artifactId>
-					<version>1.0.737</version>
+					<version>1.0.738</version>
 				</plugin>
 				<plugin>
 					<groupId>com.liferay</groupId>
