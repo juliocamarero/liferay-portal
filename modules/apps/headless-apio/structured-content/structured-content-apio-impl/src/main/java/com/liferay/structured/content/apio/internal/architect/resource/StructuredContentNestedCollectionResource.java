@@ -566,7 +566,8 @@ public class StructuredContentNestedCollectionResource
 			SearchResultPermissionFilter searchResultPermissionFilter =
 				_searchResultPermissionFilterFactory.create(
 					searchContext1 -> IndexSearcherHelperUtil.search(
-						searchContext1, fullQuery), permissionChecker);
+						searchContext1, fullQuery),
+					permissionChecker);
 
 			hits = searchResultPermissionFilter.search(searchContext);
 		}

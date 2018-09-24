@@ -80,7 +80,8 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 	}
 
 	protected com.liferay.portal.kernel.search.filter.Filter getSearchFilter(
-		Filter filter, Locale locale) throws Exception {
+			Filter filter, Locale locale)
+		throws Exception {
 
 		Class<? extends NestedCollectionResource> clazz =
 			_nestedCollectionResource.getClass();

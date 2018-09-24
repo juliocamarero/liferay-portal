@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structured.content.apio.architect.entity.EntityField;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.LiteralExpression;
+import com.liferay.structured.content.apio.internal.architect.filter.expression.LiteralExpressionImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.liferay.structured.content.apio.internal.architect.filter.expression.LiteralExpressionImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -87,9 +87,8 @@ public class ExpressionVisitorImplTest {
 		String value = "title1";
 
 		TermFilter termFilter =
-			(TermFilter)_expressionVisitorImpl.
-				visitBinaryExpressionOperation(
-					BinaryExpression.Operation.EQ, entityField, value);
+			(TermFilter)_expressionVisitorImpl.visitBinaryExpressionOperation(
+				BinaryExpression.Operation.EQ, entityField, value);
 
 		Assert.assertEquals(entityField.getName(), termFilter.getField());
 		Assert.assertEquals(value, termFilter.getValue());
