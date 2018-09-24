@@ -43,7 +43,7 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 	@Override
 	public Expression visitAlias(String alias) {
 		throw new UnsupportedOperationException(
-			"Unsupported method visitAlias");
+			"Unsupported alias in filter expressions");
 	}
 
 	@Override
@@ -61,14 +61,15 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 				rightBinaryOperationExpression)
 		).orElseThrow(
 			() -> new UnsupportedOperationException(
-				"Unsupported method visitBinaryOperator with operation " +
-					binaryOperatorKind)
+				"Unsupported operation '" + binaryOperatorKind +
+					"' in filter expressions")
 		);
 	}
 
 	@Override
 	public Expression visitEnum(EdmEnumType edmEnumType, List<String> list) {
-		throw new UnsupportedOperationException("Unsupported method visitEnum");
+		throw new UnsupportedOperationException(
+			"Unsupported enum in filter expressions");
 	}
 
 	@Override
@@ -78,13 +79,13 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 			expression) {
 
 		throw new UnsupportedOperationException(
-			"Unsupported method visitLambdaExpression");
+			"Unsupported lambda expression in filter expressions");
 	}
 
 	@Override
 	public Expression visitLambdaReference(String lambdaReference) {
 		throw new UnsupportedOperationException(
-			"Unsupported method visitLambdaReference");
+			"Unsupported lambda reference in filter expressions");
 	}
 
 	@Override
@@ -97,7 +98,8 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 		}
 
 		throw new UnsupportedOperationException(
-			"Unsupported method visitLiteral");
+			"Unsupported liferal of type '" + edmType.getKind() +
+				"' in filter expressions");
 	}
 
 	@Override
@@ -122,13 +124,13 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Expression> {
 		MethodKind methodKind, List<Expression> expressions) {
 
 		throw new UnsupportedOperationException(
-			"Unsupported method visitMethodCall");
+			"Unsupported method '" + methodKind + "' in filter expressions");
 	}
 
 	@Override
 	public Expression visitTypeLiteral(EdmType edmType) {
 		throw new UnsupportedOperationException(
-			"Unsupported method visitTypeLiteral");
+			"Unsupported custom types for literals in filter expressions");
 	}
 
 	@Override
