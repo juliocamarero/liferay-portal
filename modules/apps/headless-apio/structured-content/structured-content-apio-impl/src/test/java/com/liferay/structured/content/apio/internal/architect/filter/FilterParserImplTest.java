@@ -15,7 +15,6 @@
 package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.structured.content.apio.architect.entity.EntityField;
-import com.liferay.structured.content.apio.architect.filter.InvalidFilterException;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.Expression;
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
@@ -55,13 +54,10 @@ public class FilterParserImplTest {
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
 			() -> _filterParserImpl.parse(filterString)
 		).isInstanceOf(
-			InvalidFilterException.class
+			ExpressionVisitException.class
 		);
 
-		exception.hasMessageStartingWith(
-			String.format(
-				"Invalid query computed from filter '%s': 'Unknown property.'",
-				filterString));
+		exception.hasMessage("Unknown property.");
 	}
 
 	@Test
@@ -75,9 +71,7 @@ public class FilterParserImplTest {
 		);
 
 		exception.hasMessageStartingWith(
-			String.format(
-				"Unsupported method 'contains' in filter expressions",
-				filterString));
+			"Unsupported method 'contains' in filter expressions");
 	}
 
 	@Test
@@ -85,7 +79,7 @@ public class FilterParserImplTest {
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
 			() -> _filterParserImpl.parse("")
 		).isInstanceOf(
-			InvalidFilterException.class
+			ExpressionVisitException.class
 		);
 
 		exception.hasMessage("Filter is null");
@@ -98,13 +92,10 @@ public class FilterParserImplTest {
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
 			() -> _filterParserImpl.parse(filterString)
 		).isInstanceOf(
-			InvalidFilterException.class
+			ExpressionVisitException.class
 		);
 
-		exception.hasMessageStartingWith(
-			String.format(
-				"Invalid query computed from filter '%s': 'Unknown property.'",
-				filterString));
+		exception.hasMessage("Unknown property.");
 	}
 
 	@Test
@@ -196,7 +187,7 @@ public class FilterParserImplTest {
 		AbstractThrowableAssert exception = Assertions.assertThatThrownBy(
 			() -> _filterParserImpl.parse(null)
 		).isInstanceOf(
-			InvalidFilterException.class
+			ExpressionVisitException.class
 		);
 
 		exception.hasMessage("Filter is null");
