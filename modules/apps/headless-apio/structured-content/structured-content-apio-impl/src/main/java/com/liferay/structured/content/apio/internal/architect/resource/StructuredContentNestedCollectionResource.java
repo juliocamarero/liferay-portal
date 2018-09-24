@@ -82,7 +82,6 @@ import com.liferay.structure.apio.architect.identifier.ContentStructureIdentifie
 import com.liferay.structured.content.apio.architect.filter.Filter;
 import com.liferay.structured.content.apio.architect.filter.InvalidFilterException;
 import com.liferay.structured.content.apio.architect.filter.expression.Expression;
-import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitException;
 import com.liferay.structured.content.apio.architect.identifier.StructuredContentIdentifier;
 import com.liferay.structured.content.apio.architect.sort.Sort;
 import com.liferay.structured.content.apio.architect.sort.SortField;
@@ -643,9 +642,9 @@ public class StructuredContentNestedCollectionResource
 						locale,
 						_structuredContentSingleEntitySchemaBasedEdmProvider));
 		}
-		catch (ExpressionVisitException eve) {
+		catch (Exception e) {
 			throw new InvalidFilterException(
-				"Invalid filter: " + eve.getMessage(), eve);
+				"Invalid filter: " + e.getMessage(), e);
 		}
 	}
 
