@@ -16,25 +16,13 @@ package com.liferay.structured.content.apio.client.test;
 
 import com.jayway.jsonpath.JsonPath;
 
-import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.util.Base64;
-import com.liferay.portal.kernel.util.StringUtil;
-
-import java.io.IOException;
+import com.liferay.petra.json.web.service.client.JSONWebServiceClient;
+import com.liferay.petra.json.web.service.client.internal.JSONWebServiceClientImpl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.nio.charset.StandardCharsets;
-
 import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -55,11 +43,21 @@ public class StructuredContentApioTest {
 	@Before
 	public void setUp() throws MalformedURLException {
 		_rootEndpointURL = new URL(_url, "/o/api");
+
+		_jsonWebServiceClient = new JSONWebServiceClientImpl();
+
+		_jsonWebServiceClient.setHostName(_rootEndpointURL.getHost());
+		_jsonWebServiceClient.setHostPort(_rootEndpointURL.getPort());
+		_jsonWebServiceClient.setProtocol(_rootEndpointURL.getProtocol());
+
+		_jsonWebServiceClient.setPassword("test");
+		_jsonWebServiceClient.setLogin("test@liferay.com");
 	}
 
 	@Test
 	public void testContentSpaceLinkExistsInRootEndpoint() throws Exception {
-		String response = _getWithBasicAuth(_rootEndpointURL.toExternalForm());
+		String response = _jsonWebServiceClient.doGet(
+			_rootEndpointURL.toExternalForm());
 
 		Assert.assertNotNull(
 			"Content space link should not be empty in root end point",
@@ -70,12 +68,14 @@ public class StructuredContentApioTest {
 	public void testStructuredContentsExistsInContentSpaceEndpoint()
 		throws Exception {
 
-		String response = _getWithBasicAuth(_rootEndpointURL.toExternalForm());
+		String response = _jsonWebServiceClient.doGet(
+			_rootEndpointURL.toExternalForm());
 
 		String contentSpacesHref = JsonPath.read(
 			response, "$._links.content-space.href");
 
-		String contentSpacesResponse = _getWithBasicAuth(contentSpacesHref);
+		String contentSpacesResponse = _jsonWebServiceClient.doGet(
+			contentSpacesHref);
 
 		List<String> liferayStructuredContentsHrefs = JsonPath.read(
 			contentSpacesResponse,
@@ -89,19 +89,21 @@ public class StructuredContentApioTest {
 
 	@Test
 	public void testStructuredContentsMatchesSelfLink() throws Exception {
-		String response = _getWithBasicAuth(_rootEndpointURL.toExternalForm());
+		String response = _jsonWebServiceClient.doGet(
+			_rootEndpointURL.toExternalForm());
 
 		String contentSpacesHref = JsonPath.read(
 			response, "$._links.content-space.href");
 
-		String contentSpacesResponse = _getWithBasicAuth(contentSpacesHref);
+		String contentSpacesResponse = _jsonWebServiceClient.doGet(
+			contentSpacesHref);
 
 		List<String> liferayStructuredContentsHrefs = JsonPath.read(
 			contentSpacesResponse,
 			"$._embedded.ContentSpace[?(@.name == 'Liferay')]._links." +
 				"structuredContents.href");
 
-		String liferayStructuredContentsResponse = _getWithBasicAuth(
+		String liferayStructuredContentsResponse = _jsonWebServiceClient.doGet(
 			liferayStructuredContentsHrefs.get(0));
 
 		String liferayStructuredContentsSelfHref = JsonPath.read(
@@ -112,30 +114,8 @@ public class StructuredContentApioTest {
 				liferayStructuredContentsHrefs.get(0)));
 	}
 
-	private String _getWithBasicAuth(String url) throws IOException {
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-
-		HttpClient httpClient = httpClientBuilder.build();
-
-		HttpGet httpGet = new HttpGet(url);
-
-		String base64 = "test@liferay.com" + StringPool.COLON + "test";
-
-		httpGet.setHeader(
-			HttpHeaders.AUTHORIZATION,
-			"Basic " +
-				Base64.encode(base64.getBytes(StandardCharsets.ISO_8859_1)));
-
-		httpGet.setHeader(HttpHeaders.ACCEPT, "application/hal+json");
-
-		HttpResponse httpResponse = httpClient.execute(httpGet);
-
-		HttpEntity httpEntity = httpResponse.getEntity();
-
-		return StringUtil.read(httpEntity.getContent());
-	}
-
-	private static URL _rootEndpointURL;
+	private JSONWebServiceClient _jsonWebServiceClient;
+	private URL _rootEndpointURL;
 
 	@ArquillianResource
 	private URL _url;
