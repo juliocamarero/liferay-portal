@@ -17,12 +17,14 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structured.content.apio.architect.entity.EntityField;
+import com.liferay.structured.content.apio.architect.entity.EntityModel;
 
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -33,10 +35,17 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	service = StructuredContentSingleEntitySchemaBasedEdmProvider.class
+	property = "entity.model.name=" + StructuredContentEntityModel.NAME,
+	service = EntityModel.class
 )
-public class StructuredContentSingleEntitySchemaBasedEdmProvider
-	extends BaseSingleEntitySchemaBasedEdmProvider {
+public class StructuredContentEntityModel implements EntityModel {
+
+	public static final String NAME = "StructuredContent";
+
+	@Activate
+	public void activate() {
+		System.out.println("Activating " + NAME);
+	}
 
 	@Override
 	public Map<String, EntityField> getEntityFieldsMap() {
@@ -45,7 +54,7 @@ public class StructuredContentSingleEntitySchemaBasedEdmProvider
 
 	@Override
 	public String getName() {
-		return "StructuredContent";
+		return NAME;
 	}
 
 	private static final Map<String, EntityField> _entityFieldsMap = Stream.of(
