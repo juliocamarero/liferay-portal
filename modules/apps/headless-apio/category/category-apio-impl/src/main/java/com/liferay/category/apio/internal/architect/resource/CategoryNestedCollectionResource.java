@@ -117,7 +117,7 @@ public class CategoryNestedCollectionResource
 		).addStringList(
 			"availableLanguages",
 			category -> Arrays.asList(
-				category.getAvailableLanguageIds())
+				LocaleUtil.toW3cLanguageIds(category.getAvailableLanguageIds()))
 		).build();
 	}
 
