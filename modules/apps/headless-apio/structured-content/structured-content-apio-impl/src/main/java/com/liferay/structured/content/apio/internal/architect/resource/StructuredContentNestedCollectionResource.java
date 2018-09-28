@@ -237,10 +237,11 @@ public class StructuredContentNestedCollectionResource
 		).addStringList(
 			"availableLanguages",
 			journalArticle -> Arrays.asList(
-				journalArticle.getAvailableLanguageIds())
-		).addStringList(
-			"keywords", this::_getJournalArticleAssetTags
-		).build();
+				LocaleUtil.toW3cLanguageIds(
+					journalArticle.getAvailableLanguageIds()))
+	).addStringList(
+		"keywords", this::_getJournalArticleAssetTags
+	).build();
 	}
 
 	private JournalArticleWrapper _addJournalArticle(
