@@ -116,8 +116,10 @@ public class CategoryNestedCollectionResource
 			"name", AssetCategory::getTitle
 		).addStringList(
 			"availableLanguages",
-			category -> Arrays.asList(
-				category.getAvailableLanguageIds())
+			category ->
+				Arrays.asList(
+					LocaleUtil.toW3cLanguageIds(
+						category.getAvailableLanguageIds()))
 		).build();
 	}
 

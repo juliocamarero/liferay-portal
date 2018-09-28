@@ -57,8 +57,10 @@ import com.liferay.portal.apio.user.CurrentUser;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
@@ -155,7 +157,9 @@ public class FormInstanceNestedCollectionResource
 			"defaultLanguage", DDMFormInstance::getDefaultLanguageId
 		).addStringList(
 			"availableLanguages",
-			FormInstanceRepresentorUtil::getAvailableLanguages
+			formInstance -> Arrays.asList(
+				LocaleUtil.toW3cLanguageIds(
+					formInstance.getAvailableLanguageIds()))
 		).build();
 	}
 
