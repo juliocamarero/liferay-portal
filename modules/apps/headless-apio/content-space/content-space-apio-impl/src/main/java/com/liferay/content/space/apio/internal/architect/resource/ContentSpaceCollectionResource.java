@@ -79,8 +79,6 @@ public class ContentSpaceCollectionResource
 			"ContentSpace"
 		).identifier(
 			Group::getGroupId
-		).addBoolean(
-			"active", Group::isActive
 		).addLinkedModel(
 			"creator", PersonIdentifier.class, Group::getCreatorUserId
 		).addLinkedModel(
