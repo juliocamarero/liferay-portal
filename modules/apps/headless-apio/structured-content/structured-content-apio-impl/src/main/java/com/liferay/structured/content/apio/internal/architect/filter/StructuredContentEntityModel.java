@@ -78,7 +78,10 @@ public class StructuredContentEntityModel implements EntityModel {
 		new EntityField(
 			"title", EntityField.Type.STRING,
 			locale -> Field.getSortableFieldName(
-				"localized_title_".concat(LocaleUtil.toLanguageId(locale))))
+				"localized_title_".concat(LocaleUtil.toLanguageId(locale)))),
+		new EntityField(
+			"description", EntityField.Type.STRING,
+			locale -> "description_".concat(LocaleUtil.toLanguageId(locale)))
 	).collect(
 		Collectors.toMap(EntityField::getName, Function.identity())
 	);
