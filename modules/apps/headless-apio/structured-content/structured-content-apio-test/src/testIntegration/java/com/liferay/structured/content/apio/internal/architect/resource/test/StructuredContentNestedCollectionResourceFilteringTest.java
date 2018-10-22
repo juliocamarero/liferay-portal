@@ -342,7 +342,12 @@ public class StructuredContentNestedCollectionResourceFilteringTest
 							journalArticle.getModifiedDate())))),
 			Sort.emptySort());
 
-		Assert.assertEquals(1, pageItems.getTotalCount());
+		Assert.assertEquals(
+			"Unable to find journal article with modified date: " +
+				journalArticle.getModifiedDate() +
+					" filtering with dateModified eq " +
+						ISO8601Utils.format(journalArticle.getModifiedDate()),
+			1, pageItems.getTotalCount());
 
 		List<JournalArticle> journalArticles =
 			(List<JournalArticle>)pageItems.getItems();
