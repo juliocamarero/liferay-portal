@@ -338,7 +338,8 @@ public class StructuredContentNestedCollectionResourceFilteringTest
 				_filterParser.parse(
 					String.format(
 						"(dateModified eq %s)",
-						ISO8601Utils.format(journalArticle.getCreateDate())))),
+						ISO8601Utils.format(
+							journalArticle.getModifiedDate())))),
 			Sort.emptySort());
 
 		Assert.assertEquals(1, pageItems.getTotalCount());
