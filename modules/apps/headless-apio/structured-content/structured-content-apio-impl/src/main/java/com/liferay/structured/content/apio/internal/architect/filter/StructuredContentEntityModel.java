@@ -64,6 +64,15 @@ public class StructuredContentEntityModel implements EntityModel {
 				return parts.get(parts.size() - 1);
 			}),
 		new EntityField(
+			"creator", EntityField.Type.ID,
+			locale -> Field.USER_ID, locale -> Field.USER_ID,
+			creatorLink -> {
+				List<String> parts = StringUtil.split(
+					String.valueOf(creatorLink), '/');
+
+				return parts.get(parts.size() - 1);
+			}),
+		new EntityField(
 			"dateCreated", EntityField.Type.DATE,
 			locale -> Field.getSortableFieldName(Field.CREATE_DATE),
 			locale -> Field.CREATE_DATE),
