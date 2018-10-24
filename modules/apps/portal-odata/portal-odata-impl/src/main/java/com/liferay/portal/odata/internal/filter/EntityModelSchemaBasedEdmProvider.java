@@ -14,6 +14,7 @@
 
 package com.liferay.portal.odata.internal.filter;
 
+import com.liferay.portal.odata.entity.ComplexEntityField;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 
@@ -22,11 +23,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
+import org.apache.olingo.commons.api.edm.provider.CsdlComplexType;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
@@ -51,8 +54,69 @@ public class EntityModelSchemaBasedEdmProvider extends SchemaBasedEdmProvider {
 	public EntityModelSchemaBasedEdmProvider(EntityModel entityModel) {
 		addSchema(
 			_createCsdlSchema(
-				"HypermediaRestApis", entityModel.getName(),
-				_createCsdlProperties(entityModel.getEntityFieldsMap())));
+				_NAMESPACE, entityModel.getName(),
+				_createCsdlProperties(
+					_NAMESPACE, entityModel.getEntityFieldsMap()),
+				_createCsdlComplexTypes(
+					_NAMESPACE, entityModel.getEntityFieldsMap())));
+	}
+
+	private Optional<CsdlComplexType> _createCsdlComplexType(
+		String namespace, EntityField entityField) {
+
+		if (!Objects.equals(entityField.getType(), EntityField.Type.COMPLEX)) {
+			return Optional.empty();
+		}
+
+		ComplexEntityField complexEntityField = (ComplexEntityField)entityField;
+
+		CsdlComplexType csdlComplexType = new CsdlComplexType();
+
+		csdlComplexType.setName(entityField.getName());
+
+		Map<String, EntityField> entityFieldsMap =
+			complexEntityField.getEntityFieldsMap();
+
+		Collection<EntityField> entityFields = entityFieldsMap.values();
+
+		Stream<EntityField> stream = entityFields.stream();
+
+		csdlComplexType.setProperties(
+			stream.map(
+				nestedEntityField -> _createCsdlProperty(
+					namespace, nestedEntityField)
+			).flatMap(
+				csdlPropertyOptional -> csdlPropertyOptional.map(
+					Stream::of
+				).orElseGet(
+					Stream::empty
+				)
+			).collect(
+				Collectors.toList()
+			)
+		);
+
+		return Optional.of(csdlComplexType);
+	}
+
+	private List<CsdlComplexType> _createCsdlComplexTypes(
+		String namespace, Map<String, EntityField> entityFieldsMap) {
+
+		Collection<EntityField> entityFields = entityFieldsMap.values();
+
+		Stream<EntityField> stream = entityFields.stream();
+
+		return stream.map(
+			entityField -> _createCsdlComplexType(namespace, entityField)
+		).flatMap(
+			csdlPropertyOptional -> csdlPropertyOptional.map(
+				Stream::of
+			).orElseGet(
+				Stream::empty
+			)
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	private CsdlEntityContainer _createCsdlEntityContainer(
@@ -90,51 +154,68 @@ public class EntityModelSchemaBasedEdmProvider extends SchemaBasedEdmProvider {
 	}
 
 	private List<CsdlProperty> _createCsdlProperties(
-		Map<String, EntityField> entityFieldsMap) {
+		String namespace, Map<String, EntityField> entityFieldsMap) {
 
 		Collection<EntityField> entityFields = entityFieldsMap.values();
 
 		Stream<EntityField> stream = entityFields.stream();
 
 		return stream.map(
-			this::_createCsdlProperty
+			entityField -> _createCsdlProperty(namespace, entityField)
+		).flatMap(
+			csdlPropertyOptional -> csdlPropertyOptional.map(
+				Stream::of
+			).orElseGet(
+				Stream::empty
+			)
 		).collect(
 			Collectors.toList()
 		);
 	}
 
-	private CsdlProperty _createCsdlProperty(EntityField entityField) {
-		CsdlProperty csdlProperty = new CsdlProperty();
-
-		csdlProperty.setName(entityField.getName());
-
-		FullQualifiedName fullQualifiedName = null;
+	private Optional<CsdlProperty> _createCsdlProperty(
+		String namespace, EntityField entityField) {
 
 		if (Objects.equals(entityField.getType(), EntityField.Type.DATE)) {
-			fullQualifiedName =
-				EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName();
+			return Optional.of(
+				_createPrimitiveCsdlProperty(
+					entityField,
+					EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName())
+			);
 		}
-		else if (Objects.equals(entityField.getType(), EntityField.Type.ID)) {
-			fullQualifiedName =
-				EdmPrimitiveTypeKind.String.getFullQualifiedName();
+		else if (Objects.equals(entityField.getType(), EntityField.Type.ID) ||
+				 Objects.equals(
+					 entityField.getType(), EntityField.Type.STRING)) {
+
+			return Optional.of(
+				_createPrimitiveCsdlProperty(
+					entityField,
+					EdmPrimitiveTypeKind.String.getFullQualifiedName())
+			);
 		}
 		else if (Objects.equals(
-					entityField.getType(), EntityField.Type.STRING)) {
+					entityField.getType(), EntityField.Type.COMPLEX)) {
 
-			fullQualifiedName =
-				EdmPrimitiveTypeKind.String.getFullQualifiedName();
+			CsdlProperty csdlProperty = new CsdlProperty();
+
+			csdlProperty.setName(entityField.getName());
+
+			csdlProperty.setType(
+				new FullQualifiedName(namespace, entityField.getName()));
+
+			return Optional.of(csdlProperty);
 		}
 
-		csdlProperty.setType(fullQualifiedName);
-
-		return csdlProperty;
+		return Optional.empty();
 	}
 
 	private CsdlSchema _createCsdlSchema(
-		String namespace, String name, List<CsdlProperty> csdlProperties) {
+		String namespace, String name, List<CsdlProperty> csdlProperties,
+		List<CsdlComplexType> csdlComplexTypes) {
 
 		CsdlSchema csdlSchema = new CsdlSchema();
 
+		csdlSchema.setComplexTypes(csdlComplexTypes);
 		csdlSchema.setEntityContainer(
 			_createCsdlEntityContainer(namespace, name));
 		csdlSchema.setEntityTypes(
@@ -144,5 +225,19 @@ public class EntityModelSchemaBasedEdmProvider extends SchemaBasedEdmProvider {
 
 		return csdlSchema;
 	}
+
+	private CsdlProperty _createPrimitiveCsdlProperty(
+		EntityField entityField, FullQualifiedName fullQualifiedName) {
+
+		CsdlProperty csdlProperty = new CsdlProperty();
+
+		csdlProperty.setName(entityField.getName());
+
+		csdlProperty.setType(fullQualifiedName);
+
+		return csdlProperty;
+	}
+
+	private static final String _NAMESPACE = "HypermediaRestApis";
 
 }
