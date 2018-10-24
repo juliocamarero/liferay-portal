@@ -107,6 +107,8 @@ import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * Provides the information necessary to expose a StructuredContent resources
@@ -257,6 +259,28 @@ public class StructuredContentNestedCollectionResource
 		).addStringList(
 			"keywords", this::_getJournalArticleAssetTags
 		).build();
+	}
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(entity.model.name=" + StructuredContentEntityModel.NAME + ")",
+		unbind = "unbind"
+	)
+	protected void setEntityModel(EntityModel entityModel) {
+		if (_log.isInfoEnabled()) {
+			_log.info("Binding " + entityModel);
+		}
+
+		_entityModel = entityModel;
+	}
+
+	protected void unbind(EntityModel entityModel) {
+		if (_log.isInfoEnabled()) {
+			_log.info("Unbinding " + entityModel);
+		}
+
+		_entityModel = null;
 	}
 
 	private JournalArticleWrapper _addJournalArticle(
@@ -767,10 +791,7 @@ public class StructuredContentNestedCollectionResource
 	@Reference
 	private DLAppService _dlAppService;
 
-	@Reference(
-		target = "(entity.model.name=" + StructuredContentEntityModel.NAME + ")"
-	)
-	private EntityModel _entityModel;
+	private volatile EntityModel _entityModel;
 
 	@Reference(
 		target = "(result.class.name=com.liferay.portal.kernel.search.filter.Filter)"

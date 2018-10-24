@@ -15,6 +15,8 @@
 package com.liferay.structured.content.apio.internal.architect.provider;
 
 import com.liferay.apio.architect.provider.Provider;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.odata.filter.Filter;
 import com.liferay.portal.odata.filter.FilterParser;
@@ -25,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Cristina González
@@ -53,12 +57,28 @@ public class FilterProvider implements Provider<Filter> {
 	}
 
 	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
 		target = "(entity.model.name=" + StructuredContentEntityModel.NAME + ")",
-		unbind = "-"
+		unbind = "unbind"
 	)
 	public void setFilterParser(FilterParser filterParser) {
+		if (_log.isInfoEnabled()) {
+			_log.info("Binding " + filterParser);
+		}
+
 		_filterParser = filterParser;
 	}
+
+	public void unbind(FilterParser filterParser) {
+		if (_log.isInfoEnabled()) {
+			_log.info("Unbinding " + filterParser);
+		}
+
+		_filterParser = null;
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(FilterProvider.class);
 
 	private FilterParser _filterParser;
 
