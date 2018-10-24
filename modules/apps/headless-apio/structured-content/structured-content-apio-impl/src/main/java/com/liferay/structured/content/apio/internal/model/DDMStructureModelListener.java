@@ -14,13 +14,44 @@
 
 package com.liferay.structured.content.apio.internal.model;
 
+import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
+import com.liferay.dynamic.data.mapping.storage.FieldConstants;
+import com.liferay.dynamic.data.mapping.util.DDMIndexer;
+import com.liferay.journal.model.JournalArticle;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.exception.ModelListenerException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
+import com.liferay.portal.odata.entity.StringEntityField;
 import com.liferay.structured.content.apio.internal.architect.filter.StructuredContentEntityModel;
+import com.liferay.structured.content.apio.internal.architect.resource.StructuredContentNestedCollectionResource;
+
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -37,8 +68,195 @@ public class DDMStructureModelListener extends BaseModelListener<DDMStructure> {
 
 	@Activate
 	public void activate(BundleContext bundleContext) {
-		_serviceRegistration = bundleContext.registerService(
-			EntityModel.class, new StructuredContentEntityModel(),
+		try {
+			_bundleContext = bundleContext;
+
+			_entityFieldsMap = _getEntityFieldsMap();
+
+			_serviceRegistration = _register(_bundleContext, _entityFieldsMap);
+		}
+		catch (PortalException pe) {
+			_log.error(pe, pe);
+		}
+	}
+
+	@Deactivate
+	public void deactivate() {
+		_unregister(_serviceRegistration);
+	}
+
+	@Override
+	public void onAfterCreate(DDMStructure ddmStructure)
+		throws ModelListenerException {
+
+		long classNameId = _classNameLocalService.getClassNameId(
+			JournalArticle.class.getName());
+
+		if (ddmStructure.getClassNameId() != classNameId) {
+			return;
+		}
+
+		try {
+			Map.Entry<Long, List<EntityField>> simpleEntry = _getEntry(
+				ddmStructure);
+
+			_entityFieldsMap.put(simpleEntry.getKey(), simpleEntry.getValue());
+
+			_serviceRegistration = _updateRegistry(
+				_bundleContext, _serviceRegistration, _entityFieldsMap);
+		}
+		catch (PortalException pe) {
+			throw new ModelListenerException(pe);
+		}
+	}
+
+	@Override
+	public void onAfterRemove(DDMStructure ddmStructure)
+		throws ModelListenerException {
+
+		long classNameId = _classNameLocalService.getClassNameId(
+			JournalArticle.class.getName());
+
+		if (ddmStructure.getClassNameId() != classNameId) {
+			return;
+		}
+
+		_entityFieldsMap.remove(ddmStructure.getStructureId());
+
+		_serviceRegistration = _updateRegistry(
+			_bundleContext, _serviceRegistration, _entityFieldsMap);
+	}
+
+	@Override
+	public void onAfterUpdate(DDMStructure ddmStructure)
+		throws ModelListenerException {
+
+		onAfterCreate(ddmStructure);
+	}
+
+	protected String encodeName(
+		long ddmStructureId, String fieldName, Locale locale,
+		String indexType) {
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append(DDMIndexer.DDM_FIELD_PREFIX);
+
+		if (Validator.isNotNull(indexType)) {
+			sb.append(indexType);
+			sb.append(DDMIndexer.DDM_FIELD_SEPARATOR);
+		}
+
+		sb.append(ddmStructureId);
+		sb.append(DDMIndexer.DDM_FIELD_SEPARATOR);
+		sb.append(fieldName);
+
+		if (locale != null) {
+			sb.append(StringPool.UNDERLINE);
+			sb.append(LocaleUtil.toLanguageId(locale));
+		}
+
+		//sb.append(StringPool.UNDERLINE);
+		//sb.append("String");
+
+		return sb.toString();
+	}
+
+	private Optional<EntityField> _createEntityField(
+			DDMStructure ddmStructure, DDMFormField ddmFormField)
+		throws PortalException {
+
+		String indexType = ddmStructure.getFieldProperty(
+			ddmFormField.getName(), "indexType");
+
+		if (Validator.isNull(indexType)) {
+			return Optional.empty();
+		}
+
+		if (Objects.equals(ddmFormField.getDataType(), FieldConstants.STRING)) {
+			return Optional.of(
+				new StringEntityField(
+					StructuredContentNestedCollectionResource.encodeKey(
+						ddmStructure, ddmFormField.getName()),
+					locale -> encodeName(
+						ddmStructure.getStructureId(), ddmFormField.getName(),
+						locale, indexType)));
+		}
+
+		return Optional.empty();
+	}
+
+	private Map<Long, List<EntityField>> _getEntityFieldsMap()
+		throws PortalException {
+
+		Map<Long, List<EntityField>> entityFieldsMap = new HashMap<>();
+
+		ActionableDynamicQuery actionableDynamicQuery =
+			_ddmStructureLocalService.getActionableDynamicQuery();
+
+		actionableDynamicQuery.setAddCriteriaMethod(
+			dynamicQuery -> {
+				Property classNameIdProperty = PropertyFactoryUtil.forName(
+					"classNameId");
+
+				long classNameId = _classNameLocalService.getClassNameId(
+					JournalArticle.class.getName());
+
+				dynamicQuery.add(classNameIdProperty.eq(classNameId));
+			});
+
+		actionableDynamicQuery.setPerformActionMethod(
+			(DDMStructure ddmStructure) -> {
+				Map.Entry<Long, List<EntityField>> simpleEntry = _getEntry(
+					ddmStructure);
+
+				entityFieldsMap.put(
+					simpleEntry.getKey(), simpleEntry.getValue());
+			});
+
+		actionableDynamicQuery.performActions();
+
+		return entityFieldsMap;
+	}
+
+	private Map.Entry<Long, List<EntityField>> _getEntry(
+			DDMStructure ddmStructure)
+		throws PortalException {
+
+		List<DDMFormField> ddmFormFields = ddmStructure.getDDMFormFields(false);
+
+		List<EntityField> entityFields = new ArrayList<>();
+
+		for (DDMFormField ddmFormField : ddmFormFields) {
+			Optional<EntityField> entityFieldOptional = _createEntityField(
+				ddmStructure, ddmFormField);
+
+			if (entityFieldOptional.isPresent()) {
+				entityFields.add(entityFieldOptional.get());
+			}
+		}
+
+		return new AbstractMap.SimpleEntry<>(
+			ddmStructure.getStructureId(), entityFields);
+	}
+
+	private ServiceRegistration<EntityModel> _register(
+		BundleContext bundleContext,
+		Map<Long, List<EntityField>> entityFieldsMap) {
+
+		Collection<List<EntityField>> entityFieldListCollection =
+			entityFieldsMap.values();
+
+		Stream<List<EntityField>> stream = entityFieldListCollection.stream();
+
+		List<EntityField> entityFields = stream.flatMap(
+			List::stream
+		).collect(
+			Collectors.toList()
+		);
+
+		return bundleContext.registerService(
+			EntityModel.class, new StructuredContentEntityModel(entityFields),
 			new HashMapDictionary<String, Object>() {
 				{
 					put("entity.model.name", StructuredContentEntityModel.NAME);
@@ -46,14 +264,34 @@ public class DDMStructureModelListener extends BaseModelListener<DDMStructure> {
 			});
 	}
 
-	@Deactivate
-	public void deactivate() {
-		_serviceRegistration.unregister();
+	private void _unregister(
+		ServiceRegistration<EntityModel> serviceRegistration) {
+
+		serviceRegistration.unregister();
 	}
 
-	@Reference
-	public DDMStructureLocalService _ddmStructureLocalService;
+	private ServiceRegistration<EntityModel> _updateRegistry(
+		BundleContext bundleContext,
+		ServiceRegistration<EntityModel> serviceRegistration,
+		Map<Long, List<EntityField>> entityFieldsMap) {
 
+		_unregister(serviceRegistration);
+
+		return _register(bundleContext, entityFieldsMap);
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DDMStructureModelListener.class);
+
+	private BundleContext _bundleContext;
+
+	@Reference
+	private ClassNameLocalService _classNameLocalService;
+
+	@Reference
+	private DDMStructureLocalService _ddmStructureLocalService;
+
+	private Map<Long, List<EntityField>> _entityFieldsMap = new HashMap<>();
 	private ServiceRegistration<EntityModel> _serviceRegistration;
 
 }
