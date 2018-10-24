@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.filter.RangeTermFilter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.search.generic.WildcardQueryImpl;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.odata.entity.ComplexEntityField;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.odata.filter.InvalidFilterException;
@@ -96,7 +97,21 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		Map<String, EntityField> entityFieldsMap =
 			_entityModel.getEntityFieldsMap();
 
-		return entityFieldsMap.get(resourcePath.get(0));
+		EntityField entityField = entityFieldsMap.get(resourcePath.get(0));
+
+		if ((resourcePath.size() == 2) &&
+			Objects.equals(entityField.getType(), EntityField.Type.COMPLEX)) {
+
+			ComplexEntityField complexEntityField =
+				(ComplexEntityField)entityField;
+
+			Map<String, EntityField> entityFieldMap =
+				complexEntityField.getEntityFieldsMap();
+
+			return entityFieldMap.get(resourcePath.get(1));
+		}
+
+		return entityField;
 	}
 
 	@Override
