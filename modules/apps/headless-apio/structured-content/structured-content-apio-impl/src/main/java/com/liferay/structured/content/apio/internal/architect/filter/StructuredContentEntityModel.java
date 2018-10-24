@@ -29,19 +29,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
  * Provides the entity data model from the indexed entity ({@code
  * com.liferay.journal.model.JournalArticle}).
  *
  * @author Julio Camarero
  */
-@Component(
-	immediate = true,
-	property = "entity.model.name=" + StructuredContentEntityModel.NAME,
-	service = EntityModel.class
-)
 public class StructuredContentEntityModel implements EntityModel {
 
 	public static final String NAME = "StructuredContent";
