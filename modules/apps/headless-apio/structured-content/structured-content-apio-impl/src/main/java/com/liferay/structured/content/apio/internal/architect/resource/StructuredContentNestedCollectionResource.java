@@ -50,6 +50,7 @@ import com.liferay.journal.util.JournalHelper;
 import com.liferay.media.object.apio.architect.identifier.MediaObjectIdentifier;
 import com.liferay.person.apio.architect.identifier.PersonIdentifier;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.apio.identifier.ClassNameClassPK;
 import com.liferay.portal.apio.permission.HasPermission;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -119,6 +120,12 @@ public class StructuredContentNestedCollectionResource
 	implements NestedCollectionResource
 		<JournalArticleWrapper, Long, StructuredContentIdentifier, Long,
 		 ContentSpaceIdentifier> {
+
+	public static String encodeKey(DDMStructure ddmStructure, String name) {
+		return StringBundler.concat(
+			StringPool.UNDERLINE, ddmStructure.getStructureId(),
+			StringPool.UNDERLINE, name);
+	}
 
 	@Override
 	public NestedCollectionRoutes<JournalArticleWrapper, Long, Long>
@@ -235,6 +242,8 @@ public class StructuredContentNestedCollectionResource
 				"label", StructuredContentField::getLocalizedLabel
 			).addString(
 				"name", StructuredContentField::getName
+			).addString(
+				"key", StructuredContentField::getKey
 			).build()
 		).addRelatedCollection(
 			"category", CategoryIdentifier.class
@@ -807,6 +816,10 @@ public class StructuredContentNestedCollectionResource
 
 		public DDMFormFieldValue getDDMFormFieldValue() {
 			return _ddmFormFieldValue;
+		}
+
+		public String getKey() {
+			return encodeKey(_ddmStructure, _ddmFormFieldValue.getName());
 		}
 
 		public String getLocalizedLabel(Locale locale) {
