@@ -27,11 +27,14 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.odata.filter.Filter;
 import com.liferay.portal.odata.sort.Sort;
-import com.liferay.portal.test.rule.Inject;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 
 /**
@@ -43,8 +46,11 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 			long journalArticleId, ThemeDisplay themeDisplay)
 		throws Throwable {
 
+		NestedCollectionResource nestedCollectionResource =
+			_getNestedCollectionResource();
+
 		Class<? extends NestedCollectionResource> clazz =
-			_nestedCollectionResource.getClass();
+			nestedCollectionResource.getClass();
 
 		Method method = clazz.getDeclaredMethod(
 			"_getJournalArticleWrapper", long.class, AcceptLanguage.class,
@@ -54,7 +60,7 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 
 		try {
 			return (JournalArticleWrapper)method.invoke(
-				_nestedCollectionResource, journalArticleId, _acceptLanguage,
+				nestedCollectionResource, journalArticleId, _acceptLanguage,
 				themeDisplay);
 		}
 		catch (InvocationTargetException ite) {
@@ -68,8 +74,11 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 			Filter filter, Sort sort)
 		throws Exception {
 
+		NestedCollectionResource nestedCollectionResource =
+			_getNestedCollectionResource();
+
 		Class<? extends NestedCollectionResource> clazz =
-			_nestedCollectionResource.getClass();
+			nestedCollectionResource.getClass();
 
 		Method method = clazz.getDeclaredMethod(
 			"_getPageItems", Pagination.class, long.class, AcceptLanguage.class,
@@ -78,7 +87,7 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 		method.setAccessible(true);
 
 		return (PageItems)method.invoke(
-			_nestedCollectionResource, pagination, contentSpaceId,
+			nestedCollectionResource, pagination, contentSpaceId,
 			acceptLanguage, themeDisplay, filter, sort);
 	}
 
@@ -86,8 +95,11 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 			Filter filter, Locale locale)
 		throws Exception {
 
+		NestedCollectionResource nestedCollectionResource =
+			_getNestedCollectionResource();
+
 		Class<? extends NestedCollectionResource> clazz =
-			_nestedCollectionResource.getClass();
+			nestedCollectionResource.getClass();
 
 		Method method = clazz.getDeclaredMethod(
 			"_getSearchFilter", Filter.class, Locale.class);
@@ -95,7 +107,7 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 		method.setAccessible(true);
 
 		return (com.liferay.portal.kernel.search.filter.Filter)method.invoke(
-			_nestedCollectionResource, filter, locale);
+			nestedCollectionResource, filter, locale);
 	}
 
 	protected ThemeDisplay getThemeDisplay(Group group, Locale locale)
@@ -114,12 +126,23 @@ public abstract class BaseStructuredContentNestedCollectionResourceTestCase {
 		return themeDisplay;
 	}
 
+	private NestedCollectionResource _getNestedCollectionResource()
+		throws Exception {
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Collection<NestedCollectionResource> services = registry.getServices(
+			NestedCollectionResource.class,
+			"(component.name=com.liferay.structured.content.apio.internal." +
+				"architect.resource." +
+					"StructuredContentNestedCollectionResource)");
+
+		Iterator<NestedCollectionResource> iterator = services.iterator();
+
+		return iterator.next();
+	}
+
 	private static final AcceptLanguage _acceptLanguage =
 		() -> LocaleUtil.getDefault();
-
-	@Inject(
-		filter = "component.name=com.liferay.structured.content.apio.internal.architect.resource.StructuredContentNestedCollectionResource"
-	)
-	private NestedCollectionResource _nestedCollectionResource;
 
 }
