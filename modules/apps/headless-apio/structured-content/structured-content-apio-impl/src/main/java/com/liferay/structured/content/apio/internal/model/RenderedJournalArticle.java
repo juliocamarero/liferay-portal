@@ -25,9 +25,15 @@ public interface RenderedJournalArticle {
 
 	public static RenderedJournalArticle create(
 		Function<Locale, String> templateNameFunction,
-		Function<Locale, String> renderedContentFunction) {
+		Function<Locale, String> renderedContentFunction,
+		String encondigFormat) {
 
 		return new RenderedJournalArticle() {
+
+			@Override
+			public String getEncodingFormat() {
+				return encondigFormat;
+			}
 
 			@Override
 			public String getRenderedContent(Locale locale) {
@@ -38,12 +44,12 @@ public interface RenderedJournalArticle {
 			public String getTemplateName(Locale locale) {
 				return templateNameFunction.apply(locale);
 			}
-
 		};
 	}
+
+	public String getEncodingFormat();
 
 	public String getRenderedContent(Locale locale);
 
 	public String getTemplateName(Locale locale);
-
 }

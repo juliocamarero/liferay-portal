@@ -15,8 +15,10 @@
 package com.liferay.structured.content.apio.internal.architect.resource;
 
 import static com.liferay.portal.apio.idempotent.Idempotent.idempotent;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.liferay.aggregate.rating.apio.architect.identifier.AggregateRatingIdentifier;
+import com.liferay.apio.architect.file.BinaryFile;
 import com.liferay.apio.architect.functional.Try;
 import com.liferay.apio.architect.language.AcceptLanguage;
 import com.liferay.apio.architect.pagination.PageItems;
@@ -96,6 +98,7 @@ import com.liferay.structured.content.apio.internal.model.JournalArticleWrapper;
 import com.liferay.structured.content.apio.internal.model.RenderedJournalArticle;
 import com.liferay.structured.content.apio.internal.util.JournalArticleContentHelper;
 
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -194,8 +197,23 @@ public class StructuredContentNestedCollectionResource
 				"templates"
 			).addLocalizedStringByLocale(
 				"template", RenderedJournalArticle::getTemplateName
-			).addLocalizedStringByLocale(
-				"renderedContent", RenderedJournalArticle::getRenderedContent
+			).addBinary(
+				"renderedContent",
+				renderedJournalArticle -> {
+					Locale locale = LocaleUtil.getDefault(); // TODO: use the right locale
+
+					String content = renderedJournalArticle.getRenderedContent(locale);
+
+					byte[] bytes = content.getBytes(UTF_8);
+
+					return new BinaryFile(
+						new ByteArrayInputStream(bytes),
+						Long.valueOf(bytes.length),
+						renderedJournalArticle.getEncodingFormat(),
+						renderedJournalArticle.getTemplateName(locale));
+				})
+			.addString(
+				"encodingFormat", RenderedJournalArticle::getEncodingFormat
 			).build()
 		).addNestedList(
 			"values", this::_getStructuredContentFields,
@@ -585,7 +603,7 @@ public class StructuredContentNestedCollectionResource
 			ddmTemplate -> RenderedJournalArticle.create(
 				ddmTemplate::getName,
 				locale -> _getRenderedContent(
-					journalArticleWrapper, ddmTemplate))
+					journalArticleWrapper, ddmTemplate), "text/html")
 		).collect(
 			Collectors.toList()
 		);
