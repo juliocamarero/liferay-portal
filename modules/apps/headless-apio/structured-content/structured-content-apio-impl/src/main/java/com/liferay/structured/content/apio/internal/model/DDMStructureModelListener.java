@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -138,7 +139,7 @@ public class DDMStructureModelListener extends BaseModelListener<DDMStructure> {
 		long ddmStructureId, String fieldName, Locale locale,
 		String indexType) {
 
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(10);
 
 		sb.append(DDMIndexer.DDM_FIELD_PREFIX);
 
@@ -156,10 +157,10 @@ public class DDMStructureModelListener extends BaseModelListener<DDMStructure> {
 			sb.append(LocaleUtil.toLanguageId(locale));
 		}
 
-		//sb.append(StringPool.UNDERLINE);
-		//sb.append("String");
+		sb.append(StringPool.UNDERLINE);
+		sb.append("String");
 
-		return sb.toString();
+		return Field.getSortableFieldName(sb.toString());
 	}
 
 	private Optional<EntityField> _createEntityField(
@@ -180,7 +181,8 @@ public class DDMStructureModelListener extends BaseModelListener<DDMStructure> {
 						ddmStructure, ddmFormField.getName()),
 					locale -> encodeName(
 						ddmStructure.getStructureId(), ddmFormField.getName(),
-						locale, indexType)));
+						locale, indexType))
+			);
 		}
 
 		return Optional.empty();

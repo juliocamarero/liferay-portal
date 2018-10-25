@@ -16,6 +16,8 @@ package com.liferay.structured.content.apio.internal.architect.filter;
 
 import com.liferay.portal.odata.entity.EntityModel;
 
+import java.util.Collections;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +28,8 @@ public class StructuredContentEntityModelTest {
 
 	@Test
 	public void testGetName() {
-		EntityModel entityModel = new StructuredContentEntityModel();
+		EntityModel entityModel = new StructuredContentEntityModel(
+			Collections.emptyList());
 
 		Assert.assertEquals("StructuredContent", entityModel.getName());
 	}
