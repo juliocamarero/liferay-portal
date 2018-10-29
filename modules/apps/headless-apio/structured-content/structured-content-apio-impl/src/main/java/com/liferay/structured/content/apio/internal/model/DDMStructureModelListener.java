@@ -115,6 +115,10 @@ public class DDMStructureModelListener extends BaseModelListener<DDMStructure> {
 	public void onAfterRemove(DDMStructure ddmStructure)
 		throws ModelListenerException {
 
+		if (ddmStructure == null) {
+			return;
+		}
+
 		long classNameId = _classNameLocalService.getClassNameId(
 			JournalArticle.class.getName());
 
